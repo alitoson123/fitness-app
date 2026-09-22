@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "572406151179",
+    "project_id": "coach-hub-app-522cd",
+    "storage_bucket": "coach-hub-app-522cd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:572406151179:android:be3ddad0f18e0cd569ef0e",
+        "android_client_info": {
+          "package_name": "com.example.fitness_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "572406151179-l6d7qbcbheglespjp5auq94iqsvvdsvm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9p0tIFxzDOCg8W2l2NuohNAddt5gGVQU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "572406151179-l6d7qbcbheglespjp5auq94iqsvvdsvm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
