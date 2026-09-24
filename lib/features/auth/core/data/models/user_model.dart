@@ -6,22 +6,19 @@ part 'user_model.g.dart';
 
 @HiveType(typeId: 0)
 class UserModel {
-  @HiveField(0)
+  @HiveField(0, defaultValue: '')
   final String uid;
 
-  @HiveField(1)
+  @HiveField(1, defaultValue: '')
   final String name;
 
-  @HiveField(2)
+  @HiveField(2, defaultValue: '')
   final String email;
 
-  @HiveField(3)
+  @HiveField(3, defaultValue: '')
   final String role; // 'trainee' | 'coach' | 'admin' | ''
 
-  @HiveField(4)
-  final String? photoUrl;
-
-  @HiveField(5)
+  @HiveField(4, defaultValue: 'active')
   final String status; // 'active' | 'suspended'
 
   UserModel({
@@ -29,7 +26,6 @@ class UserModel {
     required this.name,
     required this.email,
     this.role = '',
-    this.photoUrl,
     this.status = 'active',
   });
 
@@ -42,7 +38,6 @@ class UserModel {
     required User user,
     String? nameOverride,
     String role = '',
-    String? photoUrl,
     String status = 'active',
   }) {
     return UserModel(
@@ -50,7 +45,6 @@ class UserModel {
       name: nameOverride ?? user.displayName ?? 'CoachHub User',
       email: user.email ?? '',
       role: role,
-      photoUrl: photoUrl ?? user.photoURL,
       status: status,
     );
   }
@@ -61,7 +55,6 @@ class UserModel {
       name: json['name'] as String? ?? '',
       email: json['email'] as String? ?? '',
       role: json['role'] as String? ?? '',
-      photoUrl: json['photoUrl'] as String?,
       status: json['status'] as String? ?? 'active',
     );
   }
@@ -72,7 +65,6 @@ class UserModel {
       'name': name,
       'email': email,
       'role': role,
-      'photoUrl': photoUrl,
       'status': status,
       'createdAt': FieldValue.serverTimestamp(),
     };
@@ -83,7 +75,6 @@ class UserModel {
     String? name,
     String? email,
     String? role,
-    String? photoUrl,
     String? status,
   }) {
     return UserModel(
@@ -91,7 +82,6 @@ class UserModel {
       name: name ?? this.name,
       email: email ?? this.email,
       role: role ?? this.role,
-      photoUrl: photoUrl ?? this.photoUrl,
       status: status ?? this.status,
     );
   }

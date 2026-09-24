@@ -42,7 +42,7 @@ class SignInRemoteDataSource {
   }
 
   Future<UserModel?> signInWithGoogleMethod() async {
-    final credential = await authService.signInWithApple();
+    final credential = await authService.signInWithGoogle();
     if (credential == null || credential.user == null) {
       return null;
     }

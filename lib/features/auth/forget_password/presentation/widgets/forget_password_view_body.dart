@@ -20,7 +20,7 @@ class ForgetPasswordViewBody extends StatefulWidget {
 class _ForgetPasswordViewBodyState extends State<ForgetPasswordViewBody> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
-
+  AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   @override
   void dispose() {
     _emailController.dispose();
@@ -30,8 +30,12 @@ class _ForgetPasswordViewBodyState extends State<ForgetPasswordViewBody> {
   void _onResetPassword() {
     if (_formKey.currentState!.validate()) {
       context.read<ForgetPasswordCubit>().forgetPasswordMethod(
-            email: _emailController.text.trim(),
-          );
+        email: _emailController.text.trim(),
+      );
+    } else {
+      setState(() {
+        autovalidateMode = AutovalidateMode.always;
+      });
     }
   }
 
@@ -41,6 +45,7 @@ class _ForgetPasswordViewBodyState extends State<ForgetPasswordViewBody> {
       padding: AppSpacing.screenPadding,
       child: Form(
         key: _formKey,
+        autovalidateMode: autovalidateMode,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -55,7 +60,9 @@ class _ForgetPasswordViewBodyState extends State<ForgetPasswordViewBody> {
               hint: S.of(context).emailHint,
               keyboardType: TextInputType.emailAddress,
               prefixIcon: Icon(Icons.mail_outline_rounded, size: 20.r),
-              validator: (v) => v == null || v.trim().isEmpty ? S.of(context).pleaseEnterEmail : null,
+              validator: (v) => v == null || v.trim().isEmpty
+                  ? S.of(context).pleaseEnterEmail
+                  : null,
             ),
             SizedBox(height: AppSpacing.s6),
             AppButton(

@@ -28,8 +28,11 @@ class SignUpView extends StatelessWidget {
                 title: S.of(context).accountCreated,
                 message: S.of(context).accountCreatedMessage,
                 buttonText: S.of(context).goToSignIn,
-                onVerifyPressed: () {
-                  context.pushReplacement(AppRoutes.signIn);
+                onButtonPressed: () {
+                  context.pushReplacement(
+                    AppRoutes.signIn,
+                    extra: (state.email, state.password),
+                  );
                 },
               );
             } else if (state is SignUpErrorState) {

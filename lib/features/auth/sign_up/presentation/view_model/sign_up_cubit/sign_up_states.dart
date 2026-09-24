@@ -8,7 +8,14 @@ class SignUpLoadingState extends SignUpStates {}
 
 class SignUpSuccessState extends SignUpStates {
   final UserModel user;
-  SignUpSuccessState({required this.user});
+  final String email;
+  final String password;
+
+  SignUpSuccessState({
+    required this.user,
+    required this.email,
+    required this.password,
+  });
 }
 
 class SignUpErrorState extends SignUpStates {

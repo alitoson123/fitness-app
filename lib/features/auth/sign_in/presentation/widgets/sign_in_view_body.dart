@@ -32,12 +32,16 @@ class _SignInViewBodyState extends State<SignInViewBody> {
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
   bool _obscurePassword = true;
-
+  AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   @override
   void initState() {
     super.initState();
-    _emailController = TextEditingController(text: widget.initialParams?.$1 ?? '');
-    _passwordController = TextEditingController(text: widget.initialParams?.$2 ?? '');
+    _emailController = TextEditingController(
+      text: widget.initialParams?.$1 ?? '',
+    );
+    _passwordController = TextEditingController(
+      text: widget.initialParams?.$2 ?? '',
+    );
   }
 
   @override
@@ -50,9 +54,13 @@ class _SignInViewBodyState extends State<SignInViewBody> {
   void _onSignIn() {
     if (_formKey.currentState!.validate()) {
       context.read<SignInCubit>().signInMethod(
-            email: _emailController.text.trim(),
-            password: _passwordController.text,
-          );
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
+    } else {
+      setState(() {
+        autovalidateMode = AutovalidateMode.always;
+      });
     }
   }
 
@@ -62,6 +70,7 @@ class _SignInViewBodyState extends State<SignInViewBody> {
       padding: AppSpacing.screenPadding,
       child: Form(
         key: _formKey,
+        autovalidateMode: autovalidateMode,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -83,7 +92,9 @@ class _SignInViewBodyState extends State<SignInViewBody> {
               hint: S.of(context).emailHint,
               keyboardType: TextInputType.emailAddress,
               prefixIcon: Icon(Icons.mail_outline_rounded, size: 20.r),
-              validator: (v) => v == null || v.trim().isEmpty ? S.of(context).pleaseEnterEmail : null,
+              validator: (value) => value == null || value.trim().isEmpty
+                  ? S.of(context).pleaseEnterEmail
+                  : null,
             ),
             SizedBox(height: AppSpacing.s4),
             AppTextField(
@@ -94,13 +105,18 @@ class _SignInViewBodyState extends State<SignInViewBody> {
               prefixIcon: Icon(Icons.lock_outline_rounded, size: 20.r),
               suffixIcon: IconButton(
                 icon: Icon(
-                  _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                  _obscurePassword
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
                   size: 20.r,
                   color: AppColors.textTertiary,
                 ),
-                onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                onPressed: () =>
+                    setState(() => _obscurePassword = !_obscurePassword),
               ),
-              validator: (v) => v == null || v.isEmpty ? S.of(context).pleaseEnterPassword : null,
+              validator: (v) => v == null || v.isEmpty
+                  ? S.of(context).pleaseEnterPassword
+                  : null,
             ),
             SizedBox(height: AppSpacing.s2),
             Align(

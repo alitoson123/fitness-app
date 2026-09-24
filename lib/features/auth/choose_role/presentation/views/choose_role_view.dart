@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/helpers/message.dart';
-import '../../../../core/locator_service/service_locator.dart';
-import '../../../../core/navigator/app_routes.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/widgets/app_button.dart';
-import '../../../../generated/l10n.dart';
+import '../../../../../core/helpers/message.dart';
+import '../../../../../core/locator_service/service_locator.dart';
+import '../../../../../core/navigator/app_routes.dart';
+import '../../../../../core/theme/app_colors.dart';
+import '../../../../../core/theme/app_spacing.dart';
+import '../../../../../core/widgets/app_button.dart';
+import '../../../../../generated/l10n.dart';
 import '../view_model/choose_role_cubit/choose_role_cubit.dart';
 import '../view_model/choose_role_cubit/choose_role_states.dart';
-import 'widgets/role_card.dart';
+import '../widgets/role_card.dart';
 
 class ChooseRoleView extends StatefulWidget {
   const ChooseRoleView({super.key});
@@ -36,7 +36,7 @@ class _ChooseRoleViewState extends State<ChooseRoleView> {
                 if (state.role == 'coach') {
                   context.go(AppRoutes.coachDashboard);
                 } else {
-                  context.go(AppRoutes.traineeHome);
+                  context.go(AppRoutes.traineeSetup);
                 }
               } else if (state is ChooseRoleErrorState) {
                 Message.showError(context, state.errMessage);

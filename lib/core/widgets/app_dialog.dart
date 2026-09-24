@@ -11,6 +11,7 @@ class AppDialog extends StatelessWidget {
   final String message;
   final String? title;
   final String? buttonText;
+  final VoidCallback? onButtonPressed;
   final bool isVerifyButton;
   final VoidCallback? onVerifyPressed;
   final String? verifyButtonText;
@@ -21,6 +22,7 @@ class AppDialog extends StatelessWidget {
     required this.message,
     this.title,
     this.buttonText,
+    this.onButtonPressed,
     this.isVerifyButton = false,
     this.onVerifyPressed,
     this.verifyButtonText,
@@ -100,7 +102,10 @@ class AppDialog extends StatelessWidget {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      onButtonPressed?.call();
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: config.color,
                       foregroundColor: Colors.white,

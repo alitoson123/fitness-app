@@ -16,10 +16,7 @@ import '../view_model/sign_up_cubit/sign_up_cubit.dart';
 class SignUpViewBody extends StatefulWidget {
   final bool isLoading;
 
-  const SignUpViewBody({
-    super.key,
-    required this.isLoading,
-  });
+  const SignUpViewBody({super.key, required this.isLoading});
 
   @override
   State<SignUpViewBody> createState() => _SignUpViewBodyState();
@@ -31,7 +28,7 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
-
+  AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   @override
   void dispose() {
     _nameController.dispose();
@@ -43,10 +40,14 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
   void _onSignUp() {
     if (_formKey.currentState!.validate()) {
       context.read<SignUpCubit>().signUpMethod(
-            name: _nameController.text.trim(),
-            email: _emailController.text.trim(),
-            password: _passwordController.text,
-          );
+        name: _nameController.text.trim(),
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
+    } else {
+      setState(() {
+        autovalidateMode = AutovalidateMode.always;
+      });
     }
   }
 
@@ -56,6 +57,7 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
       padding: AppSpacing.screenPadding,
       child: Form(
         key: _formKey,
+        autovalidateMode: autovalidateMode,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -76,7 +78,9 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
               label: S.of(context).fullName,
               hint: S.of(context).fullNameHint,
               prefixIcon: Icon(Icons.person_outline_rounded, size: 20.r),
-              validator: (v) => v == null || v.trim().isEmpty ? S.of(context).pleaseEnterName : null,
+              validator: (v) => v == null || v.trim().isEmpty
+                  ? S.of(context).pleaseEnterName
+                  : null,
             ),
             SizedBox(height: AppSpacing.s4),
             AppTextField(
@@ -85,7 +89,9 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
               hint: S.of(context).emailHint,
               keyboardType: TextInputType.emailAddress,
               prefixIcon: Icon(Icons.mail_outline_rounded, size: 20.r),
-              validator: (v) => v == null || v.trim().isEmpty ? S.of(context).pleaseEnterEmail : null,
+              validator: (v) => v == null || v.trim().isEmpty
+                  ? S.of(context).pleaseEnterEmail
+                  : null,
             ),
             SizedBox(height: AppSpacing.s4),
             AppTextField(
@@ -96,13 +102,18 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
               prefixIcon: Icon(Icons.lock_outline_rounded, size: 20.r),
               suffixIcon: IconButton(
                 icon: Icon(
-                  _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                  _obscurePassword
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
                   size: 20.r,
                   color: AppColors.textTertiary,
                 ),
-                onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                onPressed: () =>
+                    setState(() => _obscurePassword = !_obscurePassword),
               ),
-              validator: (v) => v == null || v.length < 6 ? S.of(context).passwordMinLength : null,
+              validator: (v) => v == null || v.length < 6
+                  ? S.of(context).passwordMinLength
+                  : null,
             ),
             SizedBox(height: AppSpacing.s6),
             AppButton(

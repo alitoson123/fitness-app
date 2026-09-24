@@ -5,11 +5,16 @@ abstract class AppConstants {
   // Hive Local Box & Keys
   static const String userBox = 'user_box';
   static const String currentUserKey = 'current_user';
+  static const String traineeProfileBox = 'trainee_profile_box';
+  static const String currentTraineeProfileKey = 'current_trainee_profile';
+  static const String coachProfileBox = 'coach_profile_box';
+  static const String currentCoachProfileKey = 'current_coach_profile';
+  static const String appSettingsBox = 'app_settings_box';
+  static const String hasSeenOnboardingKey = 'has_seen_onboarding';
 
   // Firestore Collections
   static const String usersCollection = 'users';
   static const String coachProfilesCollection = 'coach_profiles';
-  static const String traineeProfilesCollection = 'trainee_profiles';
   static const String bookingsCollection = 'bookings';
   static const String verificationsCollection = 'coach_verifications';
 

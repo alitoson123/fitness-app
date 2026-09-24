@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../core/constant/app_constants.dart';
-import '../../../../../core/services/auth_service/auth_service.dart';
-import '../../../../../core/services/database_service/firestore_service.dart';
-import '../../../core/data/data_source/auth_local_data_source.dart';
+import '../../../../../../core/constant/app_constants.dart';
+import '../../../../../../core/services/auth_service/auth_service.dart';
+import '../../../../../../core/services/database_service/firestore_service.dart';
+import '../../../../core/data/data_source/auth_local_data_source.dart';
 import 'choose_role_states.dart';
 
 class ChooseRoleCubit extends Cubit<ChooseRoleStates> {
@@ -39,9 +39,6 @@ class ChooseRoleCubit extends Cubit<ChooseRoleStates> {
           collection: AppConstants.coachProfilesCollection,
           docId: uid,
           data: {
-            'userId': uid,
-            'name': cachedUser?.name ?? firebaseUser?.displayName ?? 'Coach',
-            'email': cachedUser?.email ?? firebaseUser?.email ?? '',
             'verificationStatus': 'pending',
             'isAvailable': false,
           },

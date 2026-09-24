@@ -33,7 +33,7 @@ class ForgetPasswordView extends StatelessWidget {
                 title: S.of(context).resetLinkSent,
                 message: S.of(context).resetLinkSentMessage,
                 buttonText: S.of(context).backToSignIn,
-                onVerifyPressed: () => context.pop(),
+                onButtonPressed: () => context.pop(),
               );
             } else if (state is ForgetPasswordErrorState) {
               Message.showAppDialog(

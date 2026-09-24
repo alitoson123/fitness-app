@@ -37,7 +37,7 @@ class AuthService {
     await _firebaseAuth.sendPasswordResetEmail(email: email.trim());
   }
 
- /* Future<UserCredential?> signInWithGoogle() async {
+  Future<UserCredential?> signInWithGoogle() async {
     LoggerService.info('Initiating Google Sign In', tag: 'AuthService');
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -56,7 +56,7 @@ class AuthService {
 
     return await _firebaseAuth.signInWithCredential(credential);
   }
-*/
+
   Future<UserCredential?> signInWithApple() async {
     LoggerService.info('Initiating Apple Sign In', tag: 'AuthService');
     final appleCredential = await SignInWithApple.getAppleIDCredential(
@@ -87,7 +87,7 @@ class AuthService {
   Future<void> signOut() async {
     LoggerService.info('Signing out current user', tag: 'AuthService');
     try {
-      //await GoogleSignIn().signOut();
+      await GoogleSignIn().signOut();
     } catch (_) {}
     await _firebaseAuth.signOut();
   }

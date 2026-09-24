@@ -23,7 +23,11 @@ class SignUpCubit extends Cubit<SignUpStates> {
       (failure) => emit(SignUpErrorState(errMessage: failure.errorMessage)),
       (user) async {
         await signUpRepoImpl.sendVerificationEmail();
-        emit(SignUpSuccessState(user: user));
+        emit(SignUpSuccessState(
+          user: user,
+          email: email,
+          password: password,
+        ));
       },
     );
   }

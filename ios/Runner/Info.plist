@@ -50,5 +50,16 @@
 		<string>en</string>
 		<string>ar</string>
 	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.572406151179-3rhod5iq4a3ttsonhj0kj8a96otl2thb</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

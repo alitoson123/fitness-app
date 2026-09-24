@@ -3,13 +3,17 @@ import '../../features/auth/core/data/data_source/auth_local_data_source.dart';
 import '../../features/auth/forget_password/data/data_source/forget_password_remote_data_source.dart';
 import '../../features/auth/forget_password/data/repo_impl/forget_password_repo_impl.dart';
 import '../../features/auth/forget_password/presentation/view_model/forget_password_cubit/forget_password_cubit.dart';
-import '../../features/auth/presentation/view_model/choose_role_cubit/choose_role_cubit.dart';
+import '../../features/auth/choose_role/presentation/view_model/choose_role_cubit/choose_role_cubit.dart';
 import '../../features/auth/sign_in/data/data_source/sign_in_remote_data_source.dart';
 import '../../features/auth/sign_in/data/repo_impl/sign_in_repo_impl.dart';
 import '../../features/auth/sign_in/presentation/view_model/sign_in_cubit/sign_in_cubit.dart';
 import '../../features/auth/sign_up/data/data_source/sign_up_remote_data_source.dart';
 import '../../features/auth/sign_up/data/repo_impl/sign_up_repo_impl.dart';
 import '../../features/auth/sign_up/presentation/view_model/sign_up_cubit/sign_up_cubit.dart';
+import '../../features/onboarding/data/data_source/onboarding_local_data_source.dart';
+import '../../features/onboarding/presentation/view_model/onboarding_cubit/onboarding_cubit.dart';
+import '../../features/trainee_setup/data/repos/trainee_setup_repo.dart';
+import '../../features/trainee_setup/presentation/view_model/trainee_setup_cubit/trainee_setup_cubit.dart';
 import '../services/Local_service/general_local_service.dart';
 import '../services/auth_service/auth_service.dart';
 import '../services/database_service/firestore_service.dart';
@@ -89,4 +93,32 @@ Future<void> setupServiceLocator() async {
       authService: getIt<AuthService>(),
     ),
   );
+
+  // 7. Onboarding Dependencies
+  getIt.registerLazySingleton<OnboardingLocalDataSource>(
+    () => OnboardingLocalDataSource(
+      generalLocalService: getIt<GeneralLocalService>(),
+    ),
+  );
+  getIt.registerFactory<OnboardingCubit>(
+    () => OnboardingCubit(
+      localDataSource: getIt<OnboardingLocalDataSource>(),
+    ),
+  );
+
+  // 8. Trainee Setup Dependencies
+  getIt.registerLazySingleton<TraineeSetupRepo>(
+    () => TraineeSetupRepo(
+      firestoreService: getIt<FirestoreService>(),
+      authService: getIt<AuthService>(),
+      authLocalDataSource: getIt<AuthLocalDataSource>(),
+      generalLocalService: getIt<GeneralLocalService>(),
+    ),
+  );
+  getIt.registerFactory<TraineeSetupCubit>(
+    () => TraineeSetupCubit(
+      repository: getIt<TraineeSetupRepo>(),
+    ),
+  );
 }
+
