@@ -34,17 +34,6 @@ class ChooseRoleCubit extends Cubit<ChooseRoleStates> {
         data: {'role': role},
       );
 
-      if (role == 'coach') {
-        await firestoreService.setData(
-          collection: AppConstants.coachProfilesCollection,
-          docId: uid,
-          data: {
-            'verificationStatus': 'pending',
-            'isAvailable': false,
-          },
-          merge: true,
-        );
-      }
 
       if (cachedUser != null) {
         await authLocalDataSource.saveUser(user: cachedUser.copyWith(role: role));

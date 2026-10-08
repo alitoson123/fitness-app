@@ -22,7 +22,7 @@ class AuthLocalDataSource {
 
     try {
       if (!Hive.isBoxOpen(AppConstants.userBox)) {
-        await Hive.openBox<UserModel>(AppConstants.userBox);
+        await Hive.openBox(AppConstants.userBox);
       }
     } catch (error, stackTrace) {
       LoggerService.error(
@@ -32,7 +32,7 @@ class AuthLocalDataSource {
         stackTrace: stackTrace,
       );
       await Hive.deleteBoxFromDisk(AppConstants.userBox);
-      await Hive.openBox<UserModel>(AppConstants.userBox);
+      await Hive.openBox(AppConstants.userBox);
     }
 
     _isInitialized = true;
@@ -61,13 +61,14 @@ class AuthLocalDataSource {
         error: error,
         stackTrace: stackTrace,
       );
-      await deleteUser();
+      await deleteUser(AppConstants.userBox);
       return null;
     }
   }
 
-  /// Delete user cache
-  Future<void> deleteUser() async {
-    await generalLocalService.clearBox(AppConstants.userBox);
+
+
+  Future<void> deleteUser(String boxName) async {
+    await generalLocalService.clearBox(boxName);
   }
 }

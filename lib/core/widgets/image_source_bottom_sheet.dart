@@ -1,0 +1,96 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../generated/l10n.dart';
+import '../theme/app_colors.dart';
+import '../theme/app_radius.dart';
+import '../theme/app_spacing.dart';
+import 'picker_option_tile.dart';
+
+enum ImagePickerAction { camera, gallery, remove }
+
+class ImageSourceBottomSheet extends StatelessWidget {
+  final bool hasExistingPhoto;
+
+  const ImageSourceBottomSheet({
+    super.key,
+    this.hasExistingPhoto = false,
+  });
+
+  static Future<ImagePickerAction?> show(
+    BuildContext context, {
+    bool hasExistingPhoto = false,
+  }) {
+    return showModalBottomSheet<ImagePickerAction>(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      builder: (_) => ImageSourceBottomSheet(hasExistingPhoto: hasExistingPhoto),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.textPrimary;
+    final primary = isDark ? AppColors.flameRed : AppColors.primary;
+    final cardBg = isDark ? AppColors.darkSurface : Colors.white;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: cardBg,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 28.h),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: 36.w,
+              height: 4.h,
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.darkBorder : const Color(0xFFE2E8F0),
+                borderRadius: AppRadius.fullAll,
+              ),
+            ),
+          ),
+          SizedBox(height: AppSpacing.s4),
+          Text(
+            S.of(context).choosePhotoSource,
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w700,
+              color: textPrimary,
+            ),
+          ),
+          SizedBox(height: AppSpacing.s4),
+          PickerOptionTile(
+            icon: Icons.photo_camera_rounded,
+            title: S.of(context).camera,
+            color: primary,
+            onTap: () => Navigator.of(context).pop(ImagePickerAction.camera),
+          ),
+          SizedBox(height: AppSpacing.s2),
+          PickerOptionTile(
+            icon: Icons.photo_library_rounded,
+            title: S.of(context).gallery,
+            color: AppColors.secondary,
+            onTap: () => Navigator.of(context).pop(ImagePickerAction.gallery),
+          ),
+          if (hasExistingPhoto) ...[
+            SizedBox(height: AppSpacing.s2),
+            PickerOptionTile(
+              icon: Icons.delete_outline_rounded,
+              title: S.of(context).removePhoto,
+              color: AppColors.error,
+              onTap: () => Navigator.of(context).pop(ImagePickerAction.remove),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+

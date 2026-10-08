@@ -9,20 +9,28 @@ class TraineeSetupInitialState extends TraineeSetupState {
 class TraineeSetupFormUpdatedState extends TraineeSetupState {
   final int currentStep;
   final String? photoUrl;
+  final String name;
+  final String country;
+  final String city;
+  final int age;
   final String gender;
-  final String location;
   final List<String> selectedSports;
   final String selectedLevel;
   final String selectedGoal;
+  final String? validationError;
 
   const TraineeSetupFormUpdatedState({
     required this.currentStep,
     this.photoUrl,
+    this.name = '',
+    this.country = '',
+    this.city = '',
+    this.age = 0,
     required this.gender,
-    required this.location,
     required this.selectedSports,
     required this.selectedLevel,
     required this.selectedGoal,
+    this.validationError,
   });
 }
 

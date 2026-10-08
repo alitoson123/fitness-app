@@ -39,13 +39,12 @@ class _SplashViewState extends State<SplashView> {
     final currentUser = await authLocalDataSource.getUser();
 
     if (currentUser != null && mounted) {
-      if (currentUser.isCoach) {
-        context.go(AppRoutes.coachDashboard);
-      } else if (currentUser.isTrainee) {
-        context.go(AppRoutes.traineeHome);
-      } else {
-        context.go(AppRoutes.chooseRole);
-      }
+      final routeResolver = getIt<AuthRouteResolver>();
+      final targetRoute = await routeResolver.resolveTargetRoute(
+        uid: currentUser.uid,
+        role: currentUser.role,
+      );
+      if (mounted) context.go(targetRoute);
       return;
     }
 */

@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../../core/helpers/message.dart';
 import '../../../../../core/locator_service/service_locator.dart';
-import '../../../../../core/navigator/app_routes.dart';
 import '../../../../../core/widgets/app_dialog.dart';
 import '../../../../../generated/l10n.dart';
 import '../view_model/sign_in_cubit/sign_in_cubit.dart';
@@ -31,13 +30,7 @@ class SignInView extends StatelessWidget {
                 context,
                 S.of(context).welcomeBackUser(state.user.name),
               );
-              if (!state.user.hasSelectedRole) {
-                context.go(AppRoutes.chooseRole);
-              } else if (state.user.isCoach) {
-                context.go(AppRoutes.coachDashboard);
-              } else {
-                context.go(AppRoutes.traineeHome);
-              }
+              context.go(state.targetRoute);
             } else if (state is SignInEmailNotVerifiedState) {
               Message.showAppDialog(
                 context: context,

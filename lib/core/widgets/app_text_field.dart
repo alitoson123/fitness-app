@@ -16,6 +16,9 @@ class AppTextField extends StatelessWidget {
   final bool enabled;
   final ValueChanged<String>? onChanged;
   final String? Function(String?)? validator;
+  final String? initialValue;
+  final int maxLines;
+  final int minLines;
 
   const AppTextField({
     super.key,
@@ -30,6 +33,9 @@ class AppTextField extends StatelessWidget {
     this.enabled = true,
     this.onChanged,
     this.validator,
+    this.initialValue,
+    this.minLines = 1,
+    this.maxLines = 1,
   });
 
   @override
@@ -57,12 +63,15 @@ class AppTextField extends StatelessWidget {
           SizedBox(height: AppSpacing.s2),
         ],
         TextFormField(
+          minLines: minLines,
+          maxLines: maxLines,
           controller: controller,
           keyboardType: keyboardType,
           obscureText: obscureText,
           enabled: enabled,
           onChanged: onChanged,
           validator: validator,
+          initialValue: initialValue,
           style: TextStyle(
             fontSize: 15.sp,
             fontWeight: FontWeight.w600,

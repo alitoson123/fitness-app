@@ -21,7 +21,6 @@ class GenderPillSelector extends StatelessWidget {
     final options = [
       {'key': 'male', 'label': S.of(context).male},
       {'key': 'female', 'label': S.of(context).female},
-      {'key': 'prefer_not_to_say', 'label': S.of(context).preferNotToSay},
     ];
 
     return Column(

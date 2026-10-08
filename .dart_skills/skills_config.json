@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "installations": {
+    "generic": {
+      "flutter": {
+        "skills": [
+          {
+            "name": "flutter-add-integration-test",
+            "installedAt": "2026-09-24T12:46:49.596711Z"
+          },
+          {
+            "name": "flutter-add-widget-preview",
+            "installedAt": "2026-09-24T12:46:49.598710Z"
+          },
+          {
+            "name": "flutter-add-widget-test",
+            "installedAt": "2026-09-24T12:46:49.602216Z"
+          },
+          {
+            "name": "flutter-apply-architecture-best-practices",
+            "installedAt": "2026-09-24T12:46:49.606251Z"
+          },
+          {
+            "name": "flutter-build-responsive-layout",
+            "installedAt": "2026-09-24T12:46:49.615432Z"
+          },
+          {
+            "name": "flutter-fix-layout-issues",
+            "installedAt": "2026-09-24T12:46:49.616946Z"
+          },
+          {
+            "name": "flutter-implement-json-serialization",
+            "installedAt": "2026-09-24T12:46:49.619946Z"
+          },
+          {
+            "name": "flutter-setup-declarative-routing",
+            "installedAt": "2026-09-24T12:46:49.621946Z"
+          },
+          {
+            "name": "flutter-setup-localization",
+            "installedAt": "2026-09-24T12:46:49.637989Z"
+          },
+          {
+            "name": "flutter-use-http-package",
+            "installedAt": "2026-09-24T12:46:49.644026Z"
+          }
+        ]
+      }
+    }
+  }
+}

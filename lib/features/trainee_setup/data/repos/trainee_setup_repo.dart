@@ -1,22 +1,21 @@
 import 'package:dartz/dartz.dart';
-import '../../../../core/constant/app_constants.dart';
-import '../../../../core/services/Local_service/general_local_service.dart';
 import '../../../../core/services/auth_service/auth_service.dart';
-import '../../../../core/services/database_service/firestore_service.dart';
 import '../../../auth/core/data/data_source/auth_local_data_source.dart';
+import '../data_source/trainee_setup_local_data_source.dart';
+import '../data_source/trainee_setup_remote_data_source.dart';
 import '../models/trainee_profile_model.dart';
 
 class TraineeSetupRepo {
-  final FirestoreService firestoreService;
+  final TraineeSetupRemoteDataSource remoteDataSource;
+  final TraineeSetupLocalDataSource localDataSource;
   final AuthService authService;
   final AuthLocalDataSource authLocalDataSource;
-  final GeneralLocalService generalLocalService;
 
   TraineeSetupRepo({
-    required this.firestoreService,
+    required this.remoteDataSource,
+    required this.localDataSource,
     required this.authService,
     required this.authLocalDataSource,
-    required this.generalLocalService,
   });
 
   Future<Either<String, void>> saveTraineeProfile(
@@ -31,30 +30,40 @@ class TraineeSetupRepo {
         return const Left('User session not found. Please log in again.');
       }
 
-      final resolvedName =
-          cachedUser?.name ?? authService.currentUser?.displayName ?? '';
+      final resolvedName = profile.name.trim().isNotEmpty
+          ? profile.name.trim()
+          : (cachedUser?.name ?? authService.currentUser?.displayName ?? '');
 
-      final updatedProfile = profile.copyWith(uid: uid, name: resolvedName);
+      final resolvedEmail = profile.email.trim().isNotEmpty
+          ? profile.email.trim()
+          : (cachedUser?.email ?? authService.currentUser?.email ?? '');
 
-      // 1. Save directly into user document in Firestore
-      await firestoreService.setData(
-        collection: AppConstants.usersCollection,
-        docId: uid,
-        data: updatedProfile.toMap(),
-        merge: true,
+      final updatedProfile = profile.copyWith(
+        uid: uid,
+        name: resolvedName,
+        email: resolvedEmail,
       );
 
-      // 2. Save trainee profile in dedicated Hive Box
-      await generalLocalService.put(
-        AppConstants.traineeProfileBox,
-        AppConstants.currentTraineeProfileKey,
-        Map<String, dynamic>.from(updatedProfile.toMap()),
+      // 1. Save profile to Firestore trainee_profiles collection
+      await remoteDataSource.saveTraineeProfile(updatedProfile);
+
+      // 2. Save profile to local Hive cache
+      await localDataSource.saveCachedProfile(updatedProfile);
+
+      // 3. Keep base user document in users collection consistent
+      await remoteDataSource.updateUserProfile(
+        uid: uid,
+        name: resolvedName,
+        role: 'trainee',
       );
 
-      // 3. Update auth user in user_box
+      // 4. Update auth user in local box
       if (cachedUser != null) {
         await authLocalDataSource.saveUser(
-          user: cachedUser.copyWith(role: 'trainee',),
+          user: cachedUser.copyWith(
+            name: resolvedName.isNotEmpty ? resolvedName : cachedUser.name,
+            role: 'trainee',
+          ),
         );
       }
 
@@ -66,14 +75,37 @@ class TraineeSetupRepo {
 
   Future<TraineeProfileModel?> getCachedTraineeProfile() async {
     try {
-      final data = await generalLocalService.get(
-        AppConstants.traineeProfileBox,
-        AppConstants.currentTraineeProfileKey,
-      );
-      if (data != null && data is Map) {
-        return TraineeProfileModel.fromJson(Map<String, dynamic>.from(data));
-      }
+      return await localDataSource.getCachedProfile();
+    } catch (_) {
       return null;
+    }
+  }
+
+  Future<TraineeProfileModel?> getTraineeProfile({
+    String? targetUid,
+    bool forceRefresh = false,
+  }) async {
+    try {
+      final uid = targetUid ??
+          authService.currentUser?.uid ??
+          (await authLocalDataSource.getUser())?.uid;
+      if (uid == null) return null;
+
+      // 1. Return from local cache first if fresh data is not explicitly requested
+      if (!forceRefresh) {
+        final cached = await localDataSource.getCachedProfile();
+        if (cached != null) return cached;
+      }
+
+      // 2. Fetch from Firestore trainee_profiles collection
+      final remote = await remoteDataSource.getTraineeProfile(uid);
+
+      // 3. Keep local cache updated automatically
+      if (remote != null) {
+        await localDataSource.saveCachedProfile(remote);
+      }
+
+      return remote;
     } catch (_) {
       return null;
     }

@@ -9,7 +9,12 @@ class SignInLoadingState extends SignInStates {}
 
 class SignInSuccessState extends SignInStates {
   final UserModel user;
-  SignInSuccessState({required this.user});
+  final String targetRoute;
+
+  SignInSuccessState({
+    required this.user,
+    required this.targetRoute,
+  });
 }
 
 class SignInErrorState extends SignInStates {

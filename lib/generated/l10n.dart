@@ -760,6 +760,16 @@ class S {
     );
   }
 
+  /// `Create your trainee profile and start your fitness journey`
+  String get traineeSetupSubtitle {
+    return Intl.message(
+      'Create your trainee profile and start your fitness journey',
+      name: 'traineeSetupSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Trainee Setup`
   String get traineeSetup {
     return Intl.message(
@@ -1207,6 +1217,2200 @@ class S {
     return Intl.message(
       'Other',
       name: 'sportOther',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Coach Application`
+  String get coachSetupTitle {
+    return Intl.message(
+      'Coach Application',
+      name: 'coachSetupTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create your professional coach profile and submit verification`
+  String get coachSetupSubtitle {
+    return Intl.message(
+      'Create your professional coach profile and submit verification',
+      name: 'coachSetupSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Personal Info`
+  String get stepPersonalInfo {
+    return Intl.message(
+      'Personal Info',
+      name: 'stepPersonalInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Professional Info`
+  String get stepProfessionalInfo {
+    return Intl.message(
+      'Professional Info',
+      name: 'stepProfessionalInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pricing & Schedule`
+  String get stepPricingAvailability {
+    return Intl.message(
+      'Pricing & Schedule',
+      name: 'stepPricingAvailability',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification`
+  String get stepVerificationDocs {
+    return Intl.message(
+      'Verification',
+      name: 'stepVerificationDocs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Review & Submit`
+  String get stepReviewSubmit {
+    return Intl.message(
+      'Review & Submit',
+      name: 'stepReviewSubmit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile photo is required`
+  String get coachPhotoRequired {
+    return Intl.message(
+      'Profile photo is required',
+      name: 'coachPhotoRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Phone Number`
+  String get phoneNumber {
+    return Intl.message(
+      'Phone Number',
+      name: 'phoneNumber',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `+966 50 123 4567`
+  String get phoneHint {
+    return Intl.message(
+      '+966 50 123 4567',
+      name: 'phoneHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter your phone number`
+  String get pleaseEnterPhone {
+    return Intl.message(
+      'Please enter your phone number',
+      name: 'pleaseEnterPhone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Professional Bio`
+  String get bio {
+    return Intl.message(
+      'Professional Bio',
+      name: 'bio',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tell trainees about your coaching philosophy, background, and experience (min 30 characters)...`
+  String get bioHint {
+    return Intl.message(
+      'Tell trainees about your coaching philosophy, background, and experience (min 30 characters)...',
+      name: 'bioHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bio must be at least 30 characters`
+  String get bioMinLength {
+    return Intl.message(
+      'Bio must be at least 30 characters',
+      name: 'bioMinLength',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Country`
+  String get country {
+    return Intl.message(
+      'Country',
+      name: 'country',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `e.g. Saudi Arabia, Egypt`
+  String get countryHint {
+    return Intl.message(
+      'e.g. Saudi Arabia, Egypt',
+      name: 'countryHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select Country`
+  String get selectCountry {
+    return Intl.message(
+      'Select Country',
+      name: 'selectCountry',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `City`
+  String get city {
+    return Intl.message(
+      'City',
+      name: 'city',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `e.g. Riyadh, Cairo`
+  String get cityHint {
+    return Intl.message(
+      'e.g. Riyadh, Cairo',
+      name: 'cityHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select City`
+  String get selectCity {
+    return Intl.message(
+      'Select City',
+      name: 'selectCity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please select a country first`
+  String get selectCountryFirst {
+    return Intl.message(
+      'Please select a country first',
+      name: 'selectCountryFirst',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Languages Spoken`
+  String get languages {
+    return Intl.message(
+      'Languages Spoken',
+      name: 'languages',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select Languages`
+  String get selectLanguages {
+    return Intl.message(
+      'Select Languages',
+      name: 'selectLanguages',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please select at least one language`
+  String get pleaseSelectLanguage {
+    return Intl.message(
+      'Please select at least one language',
+      name: 'pleaseSelectLanguage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sports & Specialties`
+  String get sportsAndSpecialties {
+    return Intl.message(
+      'Sports & Specialties',
+      name: 'sportsAndSpecialties',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select the sports you coach`
+  String get selectSportsYouCoach {
+    return Intl.message(
+      'Select the sports you coach',
+      name: 'selectSportsYouCoach',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please select at least one sport`
+  String get pleaseSelectSport {
+    return Intl.message(
+      'Please select at least one sport',
+      name: 'pleaseSelectSport',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Specialties & Focus Areas`
+  String get specialties {
+    return Intl.message(
+      'Specialties & Focus Areas',
+      name: 'specialties',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `e.g. Strength, Weight Loss, Technique`
+  String get specialtiesHint {
+    return Intl.message(
+      'e.g. Strength, Weight Loss, Technique',
+      name: 'specialtiesHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Years of Coaching Experience`
+  String get yearsOfExperience {
+    return Intl.message(
+      'Years of Coaching Experience',
+      name: 'yearsOfExperience',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hourly Training Rate`
+  String get pricingTitle {
+    return Intl.message(
+      'Hourly Training Rate',
+      name: 'pricingTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `e.g. 150`
+  String get hourlyRateHint {
+    return Intl.message(
+      'e.g. 150',
+      name: 'hourlyRateHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a valid hourly rate greater than 0`
+  String get hourlyRateRequired {
+    return Intl.message(
+      'Please enter a valid hourly rate greater than 0',
+      name: 'hourlyRateRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SAR / hr`
+  String get currencySAR {
+    return Intl.message(
+      'SAR / hr',
+      name: 'currencySAR',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weekly Availability Overview`
+  String get availabilityTitle {
+    return Intl.message(
+      'Weekly Availability Overview',
+      name: 'availabilityTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `e.g. Sun-Thu 5:00 PM - 10:00 PM, Sat 9:00 AM - 2:00 PM`
+  String get availabilityHint {
+    return Intl.message(
+      'e.g. Sun-Thu 5:00 PM - 10:00 PM, Sat 9:00 AM - 2:00 PM',
+      name: 'availabilityHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please provide your general availability schedule`
+  String get availabilityRequired {
+    return Intl.message(
+      'Please provide your general availability schedule',
+      name: 'availabilityRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload Verification Documents`
+  String get verificationDocsTitle {
+    return Intl.message(
+      'Upload Verification Documents',
+      name: 'verificationDocsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Government ID and at least one coaching certificate are mandatory for verification.`
+  String get verificationDocsSubtitle {
+    return Intl.message(
+      'Government ID and at least one coaching certificate are mandatory for verification.',
+      name: 'verificationDocsSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Government ID or Passport`
+  String get nationalIdOrPassport {
+    return Intl.message(
+      'Government ID or Passport',
+      name: 'nationalIdOrPassport',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload photo or PDF of your National ID or Passport`
+  String get nationalIdHint {
+    return Intl.message(
+      'Upload photo or PDF of your National ID or Passport',
+      name: 'nationalIdHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Coaching Certificate or Degree`
+  String get coachingCertificates {
+    return Intl.message(
+      'Coaching Certificate or Degree',
+      name: 'coachingCertificates',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload coaching certification, diploma, or sports degree`
+  String get coachingCertificatesHint {
+    return Intl.message(
+      'Upload coaching certification, diploma, or sports degree',
+      name: 'coachingCertificatesHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload Document`
+  String get uploadDocument {
+    return Intl.message(
+      'Upload Document',
+      name: 'uploadDocument',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Document Selected`
+  String get fileUploaded {
+    return Intl.message(
+      'Document Selected',
+      name: 'fileUploaded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `File size exceeds 10MB limit`
+  String get fileTooLarge {
+    return Intl.message(
+      'File size exceeds 10MB limit',
+      name: 'fileTooLarge',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please upload your government ID`
+  String get idRequired {
+    return Intl.message(
+      'Please upload your government ID',
+      name: 'idRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please upload at least one coaching certificate or degree`
+  String get certRequired {
+    return Intl.message(
+      'Please upload at least one coaching certificate or degree',
+      name: 'certRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Review Your Application`
+  String get reviewTitle {
+    return Intl.message(
+      'Review Your Application',
+      name: 'reviewTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please verify all details before submitting for moderation.`
+  String get reviewSubtitle {
+    return Intl.message(
+      'Please verify all details before submitting for moderation.',
+      name: 'reviewSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Submit Application`
+  String get submitApplication {
+    return Intl.message(
+      'Submit Application',
+      name: 'submitApplication',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Submitting application...`
+  String get submittingApplication {
+    return Intl.message(
+      'Submitting application...',
+      name: 'submittingApplication',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Application Submitted!`
+  String get applicationSubmitted {
+    return Intl.message(
+      'Application Submitted!',
+      name: 'applicationSubmitted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your application has been received and is currently under review by our administration team.`
+  String get applicationSubmittedDesc {
+    return Intl.message(
+      'Your application has been received and is currently under review by our administration team.',
+      name: 'applicationSubmittedDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification in Progress`
+  String get verificationPendingTitle {
+    return Intl.message(
+      'Verification in Progress',
+      name: 'verificationPendingTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Our moderation team is reviewing your profile and credentials.`
+  String get verificationPendingSubtitle {
+    return Intl.message(
+      'Our moderation team is reviewing your profile and credentials.',
+      name: 'verificationPendingSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your application is currently locked in read-only mode while under review. You will receive an update once the review is completed.`
+  String get underReviewNotice {
+    return Intl.message(
+      'Your application is currently locked in read-only mode while under review. You will receive an update once the review is completed.',
+      name: 'underReviewNotice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Application Needs Attention`
+  String get applicationNeedsAttention {
+    return Intl.message(
+      'Application Needs Attention',
+      name: 'applicationNeedsAttention',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Moderation Feedback:`
+  String get rejectionReasonLabel {
+    return Intl.message(
+      'Moderation Feedback:',
+      name: 'rejectionReasonLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit & Resubmit`
+  String get editAndResubmit {
+    return Intl.message(
+      'Edit & Resubmit',
+      name: 'editAndResubmit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Back to Role Selection`
+  String get backToRoleSelection {
+    return Intl.message(
+      'Back to Role Selection',
+      name: 'backToRoleSelection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign Out`
+  String get signOut {
+    return Intl.message(
+      'Sign Out',
+      name: 'signOut',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Refresh Status`
+  String get checkStatusAgain {
+    return Intl.message(
+      'Refresh Status',
+      name: 'checkStatusAgain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Resubmit Application`
+  String get resubmitApplication {
+    return Intl.message(
+      'Resubmit Application',
+      name: 'resubmitApplication',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `In-progress application draft restored.`
+  String get draftRestored {
+    return Intl.message(
+      'In-progress application draft restored.',
+      name: 'draftRestored',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear Draft`
+  String get clearDraft {
+    return Intl.message(
+      'Clear Draft',
+      name: 'clearDraft',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No active application found.`
+  String get applicationNotFound {
+    return Intl.message(
+      'No active application found.',
+      name: 'applicationNotFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Back`
+  String get back {
+    return Intl.message(
+      'Back',
+      name: 'back',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit`
+  String get edit {
+    return Intl.message(
+      'Edit',
+      name: 'edit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Required`
+  String get requiredBadge {
+    return Intl.message(
+      'Required',
+      name: 'requiredBadge',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Replace File`
+  String get replaceFile {
+    return Intl.message(
+      'Replace File',
+      name: 'replaceFile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Additional Certificate {index}`
+  String additionalCertificate(Object index) {
+    return Intl.message(
+      'Additional Certificate $index',
+      name: 'additionalCertificate',
+      desc: '',
+      args: [index],
+    );
+  }
+
+  /// `Additional certification or accreditation`
+  String get additionalCertificateHint {
+    return Intl.message(
+      'Additional certification or accreditation',
+      name: 'additionalCertificateHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Application submitted for verification!`
+  String get applicationSubmittedSuccess {
+    return Intl.message(
+      'Application submitted for verification!',
+      name: 'applicationSubmittedSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Application approved! Welcome Coach.`
+  String get applicationApprovedWelcome {
+    return Intl.message(
+      'Application approved! Welcome Coach.',
+      name: 'applicationApprovedWelcome',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Expected review: 24 - 48 hours`
+  String get expectedReviewTime {
+    return Intl.message(
+      'Expected review: 24 - 48 hours',
+      name: 'expectedReviewTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Application requires credential verification updates.`
+  String get defaultRejectionReason {
+    return Intl.message(
+      'Application requires credential verification updates.',
+      name: 'defaultRejectionReason',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quick Availability Templates`
+  String get quickAvailabilityTemplates {
+    return Intl.message(
+      'Quick Availability Templates',
+      name: 'quickAvailabilityTemplates',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weekdays (5:00 PM - 10:00 PM)`
+  String get availTemplateWeekdays {
+    return Intl.message(
+      'Weekdays (5:00 PM - 10:00 PM)',
+      name: 'availTemplateWeekdays',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mornings (6:00 AM - 12:00 PM)`
+  String get availTemplateMornings {
+    return Intl.message(
+      'Mornings (6:00 AM - 12:00 PM)',
+      name: 'availTemplateMornings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weekends (9:00 AM - 6:00 PM)`
+  String get availTemplateWeekends {
+    return Intl.message(
+      'Weekends (9:00 AM - 6:00 PM)',
+      name: 'availTemplateWeekends',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Full-time Flexible (Daily)`
+  String get availTemplateFullTime {
+    return Intl.message(
+      'Full-time Flexible (Daily)',
+      name: 'availTemplateFullTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location`
+  String get reviewLocation {
+    return Intl.message(
+      'Location',
+      name: 'reviewLocation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sports`
+  String get reviewSports {
+    return Intl.message(
+      'Sports',
+      name: 'reviewSports',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hourly Rate`
+  String get reviewHourlyRate {
+    return Intl.message(
+      'Hourly Rate',
+      name: 'reviewHourlyRate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Availability`
+  String get reviewAvailability {
+    return Intl.message(
+      'Availability',
+      name: 'reviewAvailability',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Government ID`
+  String get reviewGovernmentId {
+    return Intl.message(
+      'Government ID',
+      name: 'reviewGovernmentId',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Certificates`
+  String get reviewCertificates {
+    return Intl.message(
+      'Certificates',
+      name: 'reviewCertificates',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `None specified`
+  String get reviewNoneSpecified {
+    return Intl.message(
+      'None specified',
+      name: 'reviewNoneSpecified',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count, plural, =1{1 year} other{{count} years}}`
+  String reviewYearsCount(num count) {
+    return Intl.plural(
+      count,
+      one: '1 year',
+      other: '$count years',
+      name: 'reviewYearsCount',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Attached`
+  String get reviewAttached {
+    return Intl.message(
+      'Attached',
+      name: 'reviewAttached',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Missing`
+  String get reviewMissing {
+    return Intl.message(
+      'Missing',
+      name: 'reviewMissing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count, plural, =1{1 file attached} other{{count} files attached}}`
+  String reviewFilesAttached(num count) {
+    return Intl.plural(
+      count,
+      one: '1 file attached',
+      other: '$count files attached',
+      name: 'reviewFilesAttached',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Please upload a profile photo.`
+  String get validationPhotoRequired {
+    return Intl.message(
+      'Please upload a profile photo.',
+      name: 'validationPhotoRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter your full name.`
+  String get validationNameRequired {
+    return Intl.message(
+      'Please enter your full name.',
+      name: 'validationNameRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter your country.`
+  String get validationCountryRequired {
+    return Intl.message(
+      'Please enter your country.',
+      name: 'validationCountryRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter your city.`
+  String get validationCityRequired {
+    return Intl.message(
+      'Please enter your city.',
+      name: 'validationCityRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Professional bio must be at least 30 characters.`
+  String get validationBioMinLength {
+    return Intl.message(
+      'Professional bio must be at least 30 characters.',
+      name: 'validationBioMinLength',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please select at least one language.`
+  String get validationLanguageRequired {
+    return Intl.message(
+      'Please select at least one language.',
+      name: 'validationLanguageRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please select at least one sport.`
+  String get validationSportRequired {
+    return Intl.message(
+      'Please select at least one sport.',
+      name: 'validationSportRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please specify a valid hourly session rate.`
+  String get validationRateRequired {
+    return Intl.message(
+      'Please specify a valid hourly session rate.',
+      name: 'validationRateRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter your general availability.`
+  String get validationAvailabilityRequired {
+    return Intl.message(
+      'Please enter your general availability.',
+      name: 'validationAvailabilityRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Government ID or Passport upload is required.`
+  String get validationIdRequired {
+    return Intl.message(
+      'Government ID or Passport upload is required.',
+      name: 'validationIdRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `At least one coaching certificate or credential is required.`
+  String get validationCertRequired {
+    return Intl.message(
+      'At least one coaching certificate or credential is required.',
+      name: 'validationCertRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please check the required fields.`
+  String get validationCheckFields {
+    return Intl.message(
+      'Please check the required fields.',
+      name: 'validationCheckFields',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Arabic`
+  String get langArabic {
+    return Intl.message(
+      'Arabic',
+      name: 'langArabic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `English`
+  String get langEnglish {
+    return Intl.message(
+      'English',
+      name: 'langEnglish',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `French`
+  String get langFrench {
+    return Intl.message(
+      'French',
+      name: 'langFrench',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Spanish`
+  String get langSpanish {
+    return Intl.message(
+      'Spanish',
+      name: 'langSpanish',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `German`
+  String get langGerman {
+    return Intl.message(
+      'German',
+      name: 'langGerman',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Saudi Arabia`
+  String get countrySaudiArabia {
+    return Intl.message(
+      'Saudi Arabia',
+      name: 'countrySaudiArabia',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `United Arab Emirates`
+  String get countryUAE {
+    return Intl.message(
+      'United Arab Emirates',
+      name: 'countryUAE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Egypt`
+  String get countryEgypt {
+    return Intl.message(
+      'Egypt',
+      name: 'countryEgypt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kuwait`
+  String get countryKuwait {
+    return Intl.message(
+      'Kuwait',
+      name: 'countryKuwait',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Qatar`
+  String get countryQatar {
+    return Intl.message(
+      'Qatar',
+      name: 'countryQatar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bahrain`
+  String get countryBahrain {
+    return Intl.message(
+      'Bahrain',
+      name: 'countryBahrain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Oman`
+  String get countryOman {
+    return Intl.message(
+      'Oman',
+      name: 'countryOman',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Jordan`
+  String get countryJordan {
+    return Intl.message(
+      'Jordan',
+      name: 'countryJordan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Riyadh`
+  String get cityRiyadh {
+    return Intl.message(
+      'Riyadh',
+      name: 'cityRiyadh',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Jeddah`
+  String get cityJeddah {
+    return Intl.message(
+      'Jeddah',
+      name: 'cityJeddah',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dammam`
+  String get cityDammam {
+    return Intl.message(
+      'Dammam',
+      name: 'cityDammam',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mecca`
+  String get cityMecca {
+    return Intl.message(
+      'Mecca',
+      name: 'cityMecca',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Medina`
+  String get cityMedina {
+    return Intl.message(
+      'Medina',
+      name: 'cityMedina',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Khobar`
+  String get cityKhobar {
+    return Intl.message(
+      'Khobar',
+      name: 'cityKhobar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dubai`
+  String get cityDubai {
+    return Intl.message(
+      'Dubai',
+      name: 'cityDubai',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Abu Dhabi`
+  String get cityAbuDhabi {
+    return Intl.message(
+      'Abu Dhabi',
+      name: 'cityAbuDhabi',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sharjah`
+  String get citySharjah {
+    return Intl.message(
+      'Sharjah',
+      name: 'citySharjah',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ajman`
+  String get cityAjman {
+    return Intl.message(
+      'Ajman',
+      name: 'cityAjman',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ras Al Khaimah`
+  String get cityRasAlKhaimah {
+    return Intl.message(
+      'Ras Al Khaimah',
+      name: 'cityRasAlKhaimah',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cairo`
+  String get cityCairo {
+    return Intl.message(
+      'Cairo',
+      name: 'cityCairo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Alexandria`
+  String get cityAlexandria {
+    return Intl.message(
+      'Alexandria',
+      name: 'cityAlexandria',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Giza`
+  String get cityGiza {
+    return Intl.message(
+      'Giza',
+      name: 'cityGiza',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mansoura`
+  String get cityMansoura {
+    return Intl.message(
+      'Mansoura',
+      name: 'cityMansoura',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tanta`
+  String get cityTanta {
+    return Intl.message(
+      'Tanta',
+      name: 'cityTanta',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Aswan`
+  String get cityAswan {
+    return Intl.message(
+      'Aswan',
+      name: 'cityAswan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kuwait City`
+  String get cityKuwaitCity {
+    return Intl.message(
+      'Kuwait City',
+      name: 'cityKuwaitCity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hawally`
+  String get cityHawally {
+    return Intl.message(
+      'Hawally',
+      name: 'cityHawally',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Salmiya`
+  String get citySalmiya {
+    return Intl.message(
+      'Salmiya',
+      name: 'citySalmiya',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Al Ahmadi`
+  String get cityAlAhmadi {
+    return Intl.message(
+      'Al Ahmadi',
+      name: 'cityAlAhmadi',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Doha`
+  String get cityDoha {
+    return Intl.message(
+      'Doha',
+      name: 'cityDoha',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Al Rayyan`
+  String get cityAlRayyan {
+    return Intl.message(
+      'Al Rayyan',
+      name: 'cityAlRayyan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Al Wakrah`
+  String get cityAlWakrah {
+    return Intl.message(
+      'Al Wakrah',
+      name: 'cityAlWakrah',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Al Khor`
+  String get cityAlKhor {
+    return Intl.message(
+      'Al Khor',
+      name: 'cityAlKhor',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Manama`
+  String get cityManama {
+    return Intl.message(
+      'Manama',
+      name: 'cityManama',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Riffa`
+  String get cityRiffa {
+    return Intl.message(
+      'Riffa',
+      name: 'cityRiffa',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Muharraq`
+  String get cityMuharraq {
+    return Intl.message(
+      'Muharraq',
+      name: 'cityMuharraq',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hamad Town`
+  String get cityHamadTown {
+    return Intl.message(
+      'Hamad Town',
+      name: 'cityHamadTown',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Muscat`
+  String get cityMuscat {
+    return Intl.message(
+      'Muscat',
+      name: 'cityMuscat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Salalah`
+  String get citySalalah {
+    return Intl.message(
+      'Salalah',
+      name: 'citySalalah',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sohar`
+  String get citySohar {
+    return Intl.message(
+      'Sohar',
+      name: 'citySohar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nizwa`
+  String get cityNizwa {
+    return Intl.message(
+      'Nizwa',
+      name: 'cityNizwa',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Amman`
+  String get cityAmman {
+    return Intl.message(
+      'Amman',
+      name: 'cityAmman',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Zarqa`
+  String get cityZarqa {
+    return Intl.message(
+      'Zarqa',
+      name: 'cityZarqa',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Irbid`
+  String get cityIrbid {
+    return Intl.message(
+      'Irbid',
+      name: 'cityIrbid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Aqaba`
+  String get cityAqaba {
+    return Intl.message(
+      'Aqaba',
+      name: 'cityAqaba',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete Account`
+  String get deleteAccount {
+    return Intl.message(
+      'Delete Account',
+      name: 'deleteAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete Account?`
+  String get deleteAccountConfirmationTitle {
+    return Intl.message(
+      'Delete Account?',
+      name: 'deleteAccountConfirmationTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to delete your account? All your data and profile settings will be permanently removed. This action cannot be undone.`
+  String get deleteAccountConfirmationMessage {
+    return Intl.message(
+      'Are you sure you want to delete your account? All your data and profile settings will be permanently removed. This action cannot be undone.',
+      name: 'deleteAccountConfirmationMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Yes, Delete Account`
+  String get deleteAccountConfirm {
+    return Intl.message(
+      'Yes, Delete Account',
+      name: 'deleteAccountConfirm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your account has been deleted successfully.`
+  String get accountDeletedSuccess {
+    return Intl.message(
+      'Your account has been deleted successfully.',
+      name: 'accountDeletedSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Coach Dashboard`
+  String get fakeCoachDashboardTitle {
+    return Intl.message(
+      'Coach Dashboard',
+      name: 'fakeCoachDashboardTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Welcome Coach! This is a test screen to verify navigation, authentication, and role flows.`
+  String get fakeCoachDashboardSubtitle {
+    return Intl.message(
+      'Welcome Coach! This is a test screen to verify navigation, authentication, and role flows.',
+      name: 'fakeCoachDashboardSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Trainee Home`
+  String get fakeTraineeHomeTitle {
+    return Intl.message(
+      'Trainee Home',
+      name: 'fakeTraineeHomeTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Welcome Trainee! This is a test screen to verify navigation, authentication, and role flows.`
+  String get fakeTraineeHomeSubtitle {
+    return Intl.message(
+      'Welcome Trainee! This is a test screen to verify navigation, authentication, and role flows.',
+      name: 'fakeTraineeHomeSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Test Mode`
+  String get testModeBadge {
+    return Intl.message(
+      'Test Mode',
+      name: 'testModeBadge',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Signed in as: {email}`
+  String currentUserInfo(Object email) {
+    return Intl.message(
+      'Signed in as: $email',
+      name: 'currentUserInfo',
+      desc: '',
+      args: [email],
+    );
+  }
+
+  /// `Camera`
+  String get camera {
+    return Intl.message(
+      'Camera',
+      name: 'camera',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gallery`
+  String get gallery {
+    return Intl.message(
+      'Gallery',
+      name: 'gallery',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose Photo Source`
+  String get choosePhotoSource {
+    return Intl.message(
+      'Choose Photo Source',
+      name: 'choosePhotoSource',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Uploading photo...`
+  String get uploadingPhoto {
+    return Intl.message(
+      'Uploading photo...',
+      name: 'uploadingPhoto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Photo uploaded successfully`
+  String get photoUploadedSuccess {
+    return Intl.message(
+      'Photo uploaded successfully',
+      name: 'photoUploadedSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to upload photo. Please try again.`
+  String get photoUploadFailed {
+    return Intl.message(
+      'Failed to upload photo. Please try again.',
+      name: 'photoUploadFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remove Photo`
+  String get removePhoto {
+    return Intl.message(
+      'Remove Photo',
+      name: 'removePhoto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select the days and hours you're available for training.`
+  String get selectDaysAndHours {
+    return Intl.message(
+      'Select the days and hours you\'re available for training.',
+      name: 'selectDaysAndHours',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Available`
+  String get available {
+    return Intl.message(
+      'Available',
+      name: 'available',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unavailable`
+  String get unavailable {
+    return Intl.message(
+      'Unavailable',
+      name: 'unavailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `From`
+  String get fromTime {
+    return Intl.message(
+      'From',
+      name: 'fromTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To`
+  String get toTime {
+    return Intl.message(
+      'To',
+      name: 'toTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No days selected`
+  String get noDaysSelected {
+    return Intl.message(
+      'No days selected',
+      name: 'noDaysSelected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mon`
+  String get dayMon {
+    return Intl.message(
+      'Mon',
+      name: 'dayMon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tue`
+  String get dayTue {
+    return Intl.message(
+      'Tue',
+      name: 'dayTue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wed`
+  String get dayWed {
+    return Intl.message(
+      'Wed',
+      name: 'dayWed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thu`
+  String get dayThu {
+    return Intl.message(
+      'Thu',
+      name: 'dayThu',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fri`
+  String get dayFri {
+    return Intl.message(
+      'Fri',
+      name: 'dayFri',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sat`
+  String get daySat {
+    return Intl.message(
+      'Sat',
+      name: 'daySat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sun`
+  String get daySun {
+    return Intl.message(
+      'Sun',
+      name: 'daySun',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Monday`
+  String get dayMonday {
+    return Intl.message(
+      'Monday',
+      name: 'dayMonday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tuesday`
+  String get dayTuesday {
+    return Intl.message(
+      'Tuesday',
+      name: 'dayTuesday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wednesday`
+  String get dayWednesday {
+    return Intl.message(
+      'Wednesday',
+      name: 'dayWednesday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thursday`
+  String get dayThursday {
+    return Intl.message(
+      'Thursday',
+      name: 'dayThursday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Friday`
+  String get dayFriday {
+    return Intl.message(
+      'Friday',
+      name: 'dayFriday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Saturday`
+  String get daySaturday {
+    return Intl.message(
+      'Saturday',
+      name: 'daySaturday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sunday`
+  String get daySunday {
+    return Intl.message(
+      'Sunday',
+      name: 'daySunday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pricing`
+  String get stepPricing {
+    return Intl.message(
+      'Pricing',
+      name: 'stepPricing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weekly Availability`
+  String get stepAvailability {
+    return Intl.message(
+      'Weekly Availability',
+      name: 'stepAvailability',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Set your session price and preferred currency`
+  String get pricingStepSubtitle {
+    return Intl.message(
+      'Set your session price and preferred currency',
+      name: 'pricingStepSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Set a price per session.`
+  String get pricingTipText {
+    return Intl.message(
+      'Set a price per session.',
+      name: 'pricingTipText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Currency`
+  String get currency {
+    return Intl.message(
+      'Currency',
+      name: 'currency',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select Currency`
+  String get selectCurrency {
+    return Intl.message(
+      'Select Currency',
+      name: 'selectCurrency',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Price per Session`
+  String get pricePerSession {
+    return Intl.message(
+      'Price per Session',
+      name: 'pricePerSession',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `e.g. 150`
+  String get pricePerSessionHint {
+    return Intl.message(
+      'e.g. 150',
+      name: 'pricePerSessionHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `/ session`
+  String get perSessionUnit {
+    return Intl.message(
+      '/ session',
+      name: 'perSessionUnit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Set your weekly training schedule and working hours`
+  String get availabilityStepSubtitle {
+    return Intl.message(
+      'Set your weekly training schedule and working hours',
+      name: 'availabilityStepSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Supporting Document`
+  String get addSupportingDocument {
+    return Intl.message(
+      'Add Supporting Document',
+      name: 'addSupportingDocument',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Supporting Document`
+  String get supportingDocument {
+    return Intl.message(
+      'Supporting Document',
+      name: 'supportingDocument',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Retry`
+  String get retry {
+    return Intl.message(
+      'Retry',
+      name: 'retry',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Uploading...`
+  String get uploading {
+    return Intl.message(
+      'Uploading...',
+      name: 'uploading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Age`
+  String get age {
+    return Intl.message(
+      'Age',
+      name: 'age',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `e.g. 28`
+  String get ageHint {
+    return Intl.message(
+      'e.g. 28',
+      name: 'ageHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a valid age (18 - 80).`
+  String get validationAgeRequired {
+    return Intl.message(
+      'Please enter a valid age (18 - 80).',
+      name: 'validationAgeRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please select your gender.`
+  String get validationGenderRequired {
+    return Intl.message(
+      'Please select your gender.',
+      name: 'validationGenderRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Age`
+  String get reviewAge {
+    return Intl.message(
+      'Age',
+      name: 'reviewAge',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gender`
+  String get reviewGender {
+    return Intl.message(
+      'Gender',
+      name: 'reviewGender',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload failed. Please try again later`
+  String get uploadFailed {
+    return Intl.message(
+      'Upload failed. Please try again later',
+      name: 'uploadFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose Document Source`
+  String get chooseDocumentSource {
+    return Intl.message(
+      'Choose Document Source',
+      name: 'chooseDocumentSource',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PDF Document`
+  String get pdfDocument {
+    return Intl.message(
+      'PDF Document',
+      name: 'pdfDocument',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remove Document`
+  String get removeDocument {
+    return Intl.message(
+      'Remove Document',
+      name: 'removeDocument',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Document uploaded successfully`
+  String get documentUploadedSuccess {
+    return Intl.message(
+      'Document uploaded successfully',
+      name: 'documentUploadedSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PDF Document Selected`
+  String get pdfUploaded {
+    return Intl.message(
+      'PDF Document Selected',
+      name: 'pdfUploaded',
       desc: '',
       args: [],
     );

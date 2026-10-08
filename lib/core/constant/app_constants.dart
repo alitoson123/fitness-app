@@ -9,14 +9,25 @@ abstract class AppConstants {
   static const String currentTraineeProfileKey = 'current_trainee_profile';
   static const String coachProfileBox = 'coach_profile_box';
   static const String currentCoachProfileKey = 'current_coach_profile';
+  static const String currentCoachDraftKey = 'current_coach_draft';
   static const String appSettingsBox = 'app_settings_box';
   static const String hasSeenOnboardingKey = 'has_seen_onboarding';
 
   // Firestore Collections
   static const String usersCollection = 'users';
   static const String coachProfilesCollection = 'coach_profiles';
+  static const String traineeProfilesCollection = 'trainee_profiles';
   static const String bookingsCollection = 'bookings';
   static const String verificationsCollection = 'coach_verifications';
+
+  // Supported Languages
+  static const List<String> supportedLanguages = [
+    'Arabic',
+    'English',
+    'French',
+    'Spanish',
+    'German',
+  ];
 
   // Supported Sports
   static const List<String> sports = [
@@ -26,10 +37,6 @@ abstract class AppConstants {
     'Swimming',
     'Basketball',
     'Tennis',
-    'Running',
-    'Cycling',
-    'Yoga',
-    'Martial Arts',
     'Volleyball',
   ];
 
@@ -53,8 +60,8 @@ abstract class AppConstants {
   static const List<String> coachApplicationSteps = [
     'Personal Information',
     'Professional Information',
-    'Certifications & Experience',
+    'Pricing & Availability',
     'Verification Documents',
-    'Submit for Review',
+    'Review & Submit',
   ];
 }

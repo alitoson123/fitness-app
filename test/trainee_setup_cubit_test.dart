@@ -18,6 +18,15 @@ class FakeTraineeSetupRepo implements TraineeSetupRepo {
     savedProfile = profile;
     return const Right(null);
   }
+
+  @override
+  Future<TraineeProfileModel?> getCachedTraineeProfile() async => null;
+
+  @override
+  Future<TraineeProfileModel?> getTraineeProfile({
+    String? targetUid,
+    bool forceRefresh = false,
+  }) async => null;
 }
 
 void main() {
@@ -34,15 +43,29 @@ void main() {
       cubit.close();
     });
 
-    test('initial state contains default values and step 0', () {
+    test('initial state contains step 0 and empty form defaults', () {
       expect(cubit.currentStep, 0);
-      expect(cubit.gender, 'male');
-      expect(cubit.selectedLevel, 'intermediate');
-      expect(cubit.selectedGoal, 'fitness');
+      expect(cubit.gender, '');
+      expect(cubit.selectedLevel, '');
+      expect(cubit.selectedGoal, '');
       expect(cubit.state, isA<TraineeSetupFormUpdatedState>());
     });
 
-    test('nextStep advances step and previousStep goes back', () {
+    test('validation prevents advancing step 0 when required fields are empty', () {
+      cubit.nextStep();
+      expect(cubit.currentStep, 0);
+      expect(cubit.state, isA<TraineeSetupFormUpdatedState>());
+      final state = cubit.state as TraineeSetupFormUpdatedState;
+      expect(state.validationError, isNotNull);
+    });
+
+    test('nextStep advances step when valid and previousStep goes back', () {
+      cubit.setName('Alex');
+      cubit.setCountry('USA');
+      cubit.setCity('New York');
+      cubit.setAge(25);
+      cubit.setGender('male');
+
       cubit.nextStep();
       expect(cubit.currentStep, 1);
       cubit.nextStep();
@@ -52,11 +75,11 @@ void main() {
     });
 
     test('toggleSport adds and removes sport properly', () {
-      expect(cubit.selectedSports.contains('football'), true);
-      cubit.toggleSport('football');
       expect(cubit.selectedSports.contains('football'), false);
       cubit.toggleSport('football');
       expect(cubit.selectedSports.contains('football'), true);
+      cubit.toggleSport('football');
+      expect(cubit.selectedSports.contains('football'), false);
     });
 
     test('submitProfile calls repo and emits success state', () async {

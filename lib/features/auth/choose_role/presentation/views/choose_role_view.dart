@@ -34,7 +34,7 @@ class _ChooseRoleViewState extends State<ChooseRoleView> {
             listener: (context, state) {
               if (state is ChooseRoleSuccessState) {
                 if (state.role == 'coach') {
-                  context.go(AppRoutes.coachDashboard);
+                  context.go(AppRoutes.coachRegistration);
                 } else {
                   context.go(AppRoutes.traineeSetup);
                 }

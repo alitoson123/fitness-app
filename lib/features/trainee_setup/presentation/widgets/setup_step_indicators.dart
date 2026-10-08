@@ -5,39 +5,43 @@ import '../../../../core/theme/app_colors.dart';
 class SetupStepIndicators extends StatelessWidget {
   final int currentStep;
   final int totalSteps;
+  final ValueChanged<int>? onStepTapped;
 
   const SetupStepIndicators({
     super.key,
     required this.currentStep,
     this.totalSteps = 4,
+    this.onStepTapped,
   });
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primary = isDark ? AppColors.flameRed : AppColors.primary;
+    final inactiveColor = isDark ? AppColors.darkBorder : AppColors.border;
 
     return Row(
       children: List.generate(totalSteps, (index) {
-        final isActive = index <= currentStep;
+        final isActive = index == currentStep;
+        final isCompleted = index < currentStep;
+
         return Expanded(
-          child: Container(
-            height: 4.h,
-            margin: EdgeInsets.symmetric(horizontal: 2.w),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(2.r),
-              color: isActive
-                  ? (isDark ? AppColors.flameRed : Colors.white)
-                  : Colors.white.withValues(alpha: isDark ? 0.18 : 0.35),
-              boxShadow: isActive
-                  ? [
-                      BoxShadow(
-                        color: (isDark ? AppColors.flameRed : Colors.white)
-                            .withValues(alpha: 0.4),
-                        blurRadius: 6,
-                        offset: const Offset(0, 1),
-                      )
-                    ]
-                  : null,
+          child: GestureDetector(
+            onTap: isCompleted && onStepTapped != null
+                ? () => onStepTapped!(index)
+                : null,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              margin: EdgeInsets.symmetric(horizontal: 3.w),
+              height: 5.h,
+              decoration: BoxDecoration(
+                color: isCompleted
+                    ? primary
+                    : isActive
+                    ? primary
+                    : inactiveColor,
+                borderRadius: BorderRadius.circular(4.r),
+              ),
             ),
           ),
         );

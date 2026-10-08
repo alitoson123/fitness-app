@@ -1,15 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/auth/forget_password/presentation/views/forget_password_view.dart';
 import '../../features/auth/choose_role/presentation/views/choose_role_view.dart';
 import '../../features/auth/sign_in/presentation/views/sign_in_view.dart';
 import '../../features/auth/sign_up/presentation/views/sign_up_view.dart';
+import '../../features/coach_dashboard/presentation/views/coach_dashboard_view.dart';
+import '../../features/coach_setup/data/models/coach_application_model.dart';
+import '../../features/coach_setup/data/models/coach_profile_model.dart';
+import '../../features/coach_setup/presentation/views/coach_registration_view.dart';
+import '../../features/coach_setup/presentation/views/coach_verification_pending_view.dart';
 import '../../features/onboarding/presentation/views/onboarding_view.dart';
 import '../../features/splash/presentation/views/splash_view.dart';
+import '../../features/trainee_home/presentation/views/trainee_home_view.dart';
 import '../../features/trainee_setup/presentation/views/trainee_setup_view.dart';
 import '../../features/trainee_setup/presentation/views/trainee_success_view.dart';
-import '../../generated/l10n.dart';
 import 'app_routes.dart';
 
 abstract class AppRouter {
@@ -51,28 +54,22 @@ abstract class AppRouter {
         builder: (context, state) => const TraineeSuccessView(),
       ),
       GoRoute(
-        path: AppRoutes.traineeHome,
-        builder: (context, state) => Scaffold(
-          appBar: AppBar(title: Text(S.of(context).traineeDiscovery)),
-          body: Center(
-            child: Text(
-              S.of(context).traineeMarketplacePlaceholder,
-              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
-            ),
-          ),
+        path: AppRoutes.coachRegistration,
+        builder: (context, state) => CoachRegistrationView(
+          initialData: state.extra as (CoachProfileModel?, CoachApplicationModel?)?,
         ),
       ),
       GoRoute(
+        path: AppRoutes.coachVerificationPending,
+        builder: (context, state) => const CoachVerificationPendingView(),
+      ),
+      GoRoute(
+        path: AppRoutes.traineeHome,
+        builder: (context, state) => const TraineeHomeView(),
+      ),
+      GoRoute(
         path: AppRoutes.coachDashboard,
-        builder: (context, state) => Scaffold(
-          appBar: AppBar(title: Text(S.of(context).coachDashboard)),
-          body: Center(
-            child: Text(
-              S.of(context).coachDashboardPlaceholder,
-              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
-            ),
-          ),
-        ),
+        builder: (context, state) => const CoachDashboardView(),
       ),
     ],
   );
