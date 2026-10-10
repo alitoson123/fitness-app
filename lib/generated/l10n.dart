@@ -1493,10 +1493,10 @@ class S {
   }
 
   /// `Specialties & Focus Areas`
-  String get specialties {
+  String get specialties1 {
     return Intl.message(
       'Specialties & Focus Areas',
-      name: 'specialties',
+      name: 'specialties1',
       desc: '',
       args: [],
     );
@@ -3413,6 +3413,636 @@ class S {
       name: 'pdfUploaded',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `Account Suspended`
+  String get coachSuspendedTitle {
+    return Intl.message(
+      'Account Suspended',
+      name: 'coachSuspendedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your coach account has been suspended by administration.`
+  String get coachSuspendedSubtitle {
+    return Intl.message(
+      'Your coach account has been suspended by administration.',
+      name: 'coachSuspendedSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Access to coach features has been restricted. If you believe this is an error or need more information, please contact our support team.`
+  String get coachSuspendedNotice {
+    return Intl.message(
+      'Access to coach features has been restricted. If you believe this is an error or need more information, please contact our support team.',
+      name: 'coachSuspendedNotice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contact Support`
+  String get contactSupport {
+    return Intl.message(
+      'Contact Support',
+      name: 'contactSupport',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Support Assistance`
+  String get supportModalTitle {
+    return Intl.message(
+      'Support Assistance',
+      name: 'supportModalTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Our support team is available to assist you with your account and application inquiries.`
+  String get supportModalDesc {
+    return Intl.message(
+      'Our support team is available to assist you with your account and application inquiries.',
+      name: 'supportModalDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `support@coachhub.app`
+  String get supportEmail {
+    return Intl.message(
+      'support@coachhub.app',
+      name: 'supportEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Copy Email`
+  String get copyEmail {
+    return Intl.message(
+      'Copy Email',
+      name: 'copyEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Suspended`
+  String get suspendedStatusBadge {
+    return Intl.message(
+      'Suspended',
+      name: 'suspendedStatusBadge',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search coaches or sports...`
+  String get searchCoaches {
+    return Intl.message(
+      'Search coaches or sports...',
+      name: 'searchCoaches',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All`
+  String get allSports {
+    return Intl.message(
+      'All',
+      name: 'allSports',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Filter`
+  String get filter {
+    return Intl.message(
+      'Filter',
+      name: 'filter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Filters`
+  String get filters {
+    return Intl.message(
+      'Filters',
+      name: 'filters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reset`
+  String get reset {
+    return Intl.message(
+      'Reset',
+      name: 'reset',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Apply Filters`
+  String get applyFilters {
+    return Intl.message(
+      'Apply Filters',
+      name: 'applyFilters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Price Range`
+  String get priceRange {
+    return Intl.message(
+      'Price Range',
+      name: 'priceRange',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} yrs exp`
+  String experienceYearsCount(Object count) {
+    return Intl.message(
+      '$count yrs exp',
+      name: 'experienceYearsCount',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Minimum Experience`
+  String get minExperienceYears {
+    return Intl.message(
+      'Minimum Experience',
+      name: 'minExperienceYears',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Any experience`
+  String get anyExperience {
+    return Intl.message(
+      'Any experience',
+      name: 'anyExperience',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Coach Gender`
+  String get coachGender {
+    return Intl.message(
+      'Coach Gender',
+      name: 'coachGender',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All`
+  String get allGenders {
+    return Intl.message(
+      'All',
+      name: 'allGenders',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Male`
+  String get maleOnly {
+    return Intl.message(
+      'Male',
+      name: 'maleOnly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Female`
+  String get femaleOnly {
+    return Intl.message(
+      'Female',
+      name: 'femaleOnly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Minimum Rating`
+  String get minimumRating {
+    return Intl.message(
+      'Minimum Rating',
+      name: 'minimumRating',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Any rating`
+  String get anyRating {
+    return Intl.message(
+      'Any rating',
+      name: 'anyRating',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sort By`
+  String get sortBy {
+    return Intl.message(
+      'Sort By',
+      name: 'sortBy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recommended`
+  String get sortRecommended {
+    return Intl.message(
+      'Recommended',
+      name: 'sortRecommended',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Price: Low to High`
+  String get sortPriceLowToHigh {
+    return Intl.message(
+      'Price: Low to High',
+      name: 'sortPriceLowToHigh',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Price: High to Low`
+  String get sortPriceHighToLow {
+    return Intl.message(
+      'Price: High to Low',
+      name: 'sortPriceHighToLow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rating: Highest First`
+  String get sortRatingHighToLow {
+    return Intl.message(
+      'Rating: Highest First',
+      name: 'sortRatingHighToLow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Most Experienced`
+  String get sortExperienceHighToLow {
+    return Intl.message(
+      'Most Experienced',
+      name: 'sortExperienceHighToLow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No coaches found`
+  String get noCoachesFound {
+    return Intl.message(
+      'No coaches found',
+      name: 'noCoachesFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Try adjusting your search or filters to find available coaches.`
+  String get noCoachesFoundDesc {
+    return Intl.message(
+      'Try adjusting your search or filters to find available coaches.',
+      name: 'noCoachesFoundDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear Filters`
+  String get clearFilters {
+    return Intl.message(
+      'Clear Filters',
+      name: 'clearFilters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verified Coach`
+  String get verifiedCoach {
+    return Intl.message(
+      'Verified Coach',
+      name: 'verifiedCoach',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} reviews`
+  String reviewsCount(Object count) {
+    return Intl.message(
+      '$count reviews',
+      name: 'reviewsCount',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `View Profile`
+  String get viewProfile {
+    return Intl.message(
+      'View Profile',
+      name: 'viewProfile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New`
+  String get noReviewsYet {
+    return Intl.message(
+      'New',
+      name: 'noReviewsYet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to load coaches. Tap to retry.`
+  String get errorLoadingCoaches {
+    return Intl.message(
+      'Failed to load coaches. Tap to retry.',
+      name: 'errorLoadingCoaches',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email copied to clipboard`
+  String get emailCopied {
+    return Intl.message(
+      'Email copied to clipboard',
+      name: 'emailCopied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Coach Profile`
+  String get coachProfileDetails {
+    return Intl.message(
+      'Coach Profile',
+      name: 'coachProfileDetails',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `About Coach`
+  String get aboutCoach {
+    return Intl.message(
+      'About Coach',
+      name: 'aboutCoach',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Credentials & Experience`
+  String get credentialsAndQualifications {
+    return Intl.message(
+      'Credentials & Experience',
+      name: 'credentialsAndQualifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Spoken Languages`
+  String get spokenLanguages {
+    return Intl.message(
+      'Spoken Languages',
+      name: 'spokenLanguages',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Certifications`
+  String get certifications {
+    return Intl.message(
+      'Certifications',
+      name: 'certifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verified Credentials on File`
+  String get verifiedCertifications {
+    return Intl.message(
+      'Verified Credentials on File',
+      name: 'verifiedCertifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Session Pricing`
+  String get sessionPricing {
+    return Intl.message(
+      'Session Pricing',
+      name: 'sessionPricing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What's Included`
+  String get whatsIncluded {
+    return Intl.message(
+      'What\'s Included',
+      name: 'whatsIncluded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1-on-1 private coaching`
+  String get oneOnOneTraining {
+    return Intl.message(
+      '1-on-1 private coaching',
+      name: 'oneOnOneTraining',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Customized fitness guidance`
+  String get customWorkoutPlan {
+    return Intl.message(
+      'Customized fitness guidance',
+      name: 'customWorkoutPlan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Direct scheduling & support`
+  String get directSupport {
+    return Intl.message(
+      'Direct scheduling & support',
+      name: 'directSupport',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weekly Availability`
+  String get weeklyAvailabilityTitle {
+    return Intl.message(
+      'Weekly Availability',
+      name: 'weeklyAvailabilityTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Request Training Session`
+  String get requestTraining {
+    return Intl.message(
+      'Request Training Session',
+      name: 'requestTraining',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Available`
+  String get dayAvailable {
+    return Intl.message(
+      'Available',
+      name: 'dayAvailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Off`
+  String get dayUnavailable {
+    return Intl.message(
+      'Off',
+      name: 'dayUnavailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No fixed schedule listed. Discuss upon request.`
+  String get noAvailabilityListed {
+    return Intl.message(
+      'No fixed schedule listed. Discuss upon request.',
+      name: 'noAvailabilityListed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View Certificate`
+  String get viewCertificate {
+    return Intl.message(
+      'View Certificate',
+      name: 'viewCertificate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Close`
+  String get close {
+    return Intl.message(
+      'Close',
+      name: 'close',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to load coach profile. Tap to retry.`
+  String get errorLoadingCoachProfile {
+    return Intl.message(
+      'Failed to load coach profile. Tap to retry.',
+      name: 'errorLoadingCoachProfile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Certified professional coach dedicated to helping you achieve your personal fitness and performance goals.`
+  String get defaultCoachBio {
+    return Intl.message(
+      'Certified professional coach dedicated to helping you achieve your personal fitness and performance goals.',
+      name: 'defaultCoachBio',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Booking request flow opens next!`
+  String get bookingFeatureComingSoon {
+    return Intl.message(
+      'Booking request flow opens next!',
+      name: 'bookingFeatureComingSoon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Specialties`
+  String get specialties {
+    return Intl.message(
+      'Specialties',
+      name: 'specialties',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{age} yrs`
+  String coachAgeYears(Object age) {
+    return Intl.message(
+      '$age yrs',
+      name: 'coachAgeYears',
+      desc: '',
+      args: [age],
     );
   }
 }

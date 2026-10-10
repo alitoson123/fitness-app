@@ -21,6 +21,15 @@ class AuthRouteResolver {
     }
 
     try {
+      final userDoc = await _firestoreService.getDoc(
+        collection: AppConstants.usersCollection,
+        docId: uid,
+      );
+      final userStatus = userDoc.data()?['status'] as String? ?? 'active';
+      if (userStatus == 'suspended') {
+        return AppRoutes.signIn;
+      }
+
       if (role == 'coach') {
         final verificationDoc = await _firestoreService.getDoc(
           collection: AppConstants.verificationsCollection,

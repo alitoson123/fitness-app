@@ -45,6 +45,9 @@ class CoachSetupDraftHelper {
       sessionPrice: cubit.sessionPrice,
       currency: cubit.currency,
       availabilitySummary: cubit.availabilitySummary.trim(),
+      weeklyAvailability: cubit.weeklyAvailability,
+      certificateUrls:
+          cubit.certificateUrls.where((u) => u.isNotEmpty).toList(),
     );
   }
 

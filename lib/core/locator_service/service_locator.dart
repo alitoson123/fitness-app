@@ -25,6 +25,12 @@ import '../../features/coach_setup/presentation/view_model/coach_status_cubit/co
 import '../../features/auth/core/data/repo_impl/auth_session_repo_impl.dart';
 import '../../features/auth/core/domain/repo/auth_session_repo.dart';
 import '../../features/auth/core/presentation/view_model/auth_session_cubit/auth_session_cubit.dart';
+import '../../features/trainee_discovery/data/data_source/discovery_remote_data_source.dart';
+import '../../features/trainee_discovery/data/repos/discovery_repo.dart';
+import '../../features/trainee_discovery/presentation/view_model/coach_discovery_cubit/coach_discovery_cubit.dart';
+import '../../features/coach_profile_details/data/data_source/coach_profile_details_remote_data_source.dart';
+import '../../features/coach_profile_details/data/repos/coach_profile_details_repo.dart';
+import '../../features/coach_profile_details/presentation/view_model/coach_profile_details_cubit/coach_profile_details_cubit.dart';
 import '../services/Local_service/general_local_service.dart';
 import '../services/auth_service/auth_service.dart';
 import '../services/database_service/firestore_service.dart';
@@ -169,12 +175,13 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory<CoachSetupCubit>(
     () => CoachSetupCubit(repository: getIt<CoachSetupRepo>()),
   );
-  getIt.registerFactory<CoachStatusCubit>(
-    () => CoachStatusCubit(
+  getIt.registerFactory<CoachVerificationStatusCubit>(
+    () => CoachVerificationStatusCubit(
       repository: getIt<CoachSetupRepo>(),
       authService: getIt<AuthService>(),
     ),
   );
+
 
   // 10. Auth Session Dependencies
   getIt.registerLazySingleton<AuthSessionRepo>(
@@ -186,6 +193,34 @@ Future<void> setupServiceLocator() async {
   );
   getIt.registerFactory<AuthSessionCubit>(
     () => AuthSessionCubit(authSessionRepo: getIt<AuthSessionRepo>()),
+  );
+
+  // 11. Trainee Discovery Dependencies
+  getIt.registerLazySingleton<DiscoveryRemoteDataSource>(
+    () => DiscoveryRemoteDataSource(firestoreService: getIt<FirestoreService>()),
+  );
+  getIt.registerLazySingleton<DiscoveryRepo>(
+    () => DiscoveryRepo(remoteDataSource: getIt<DiscoveryRemoteDataSource>()),
+  );
+  getIt.registerFactory<CoachDiscoveryCubit>(
+    () => CoachDiscoveryCubit(repository: getIt<DiscoveryRepo>()),
+  );
+
+  // 12. Coach Profile Details Dependencies
+  getIt.registerLazySingleton<CoachProfileDetailsRemoteDataSource>(
+    () => CoachProfileDetailsRemoteDataSource(
+      firestoreService: getIt<FirestoreService>(),
+    ),
+  );
+  getIt.registerLazySingleton<CoachProfileDetailsRepo>(
+    () => CoachProfileDetailsRepo(
+      remoteDataSource: getIt<CoachProfileDetailsRemoteDataSource>(),
+    ),
+  );
+  getIt.registerFactory<CoachProfileDetailsCubit>(
+    () => CoachProfileDetailsCubit(
+      repository: getIt<CoachProfileDetailsRepo>(),
+    ),
   );
 }
 

@@ -3,12 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/constant/app_constants.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_chip.dart';
+import '../../../../core/widgets/app_gender_selector.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../trainee_setup/presentation/widgets/avatar_upload_circle.dart';
 import '../../../../generated/l10n.dart';
 import '../helpers/coach_setup_localization_helper.dart';
 import '../view_model/coach_setup_cubit/coach_setup_cubit.dart';
-import 'coach_gender_selector.dart';
 import 'country_city_selector.dart';
 
 class StepPersonalInfoWidget extends StatelessWidget {
@@ -53,7 +53,7 @@ class StepPersonalInfoWidget extends StatelessWidget {
             onChanged: (val) => cubit.setAge(int.tryParse(val.trim()) ?? 0),
           ),
           SizedBox(height: 14.h),
-          CoachGenderSelector(
+          AppGenderSelector(
             selectedGender: cubit.gender,
             onGenderChanged: cubit.setGender,
           ),

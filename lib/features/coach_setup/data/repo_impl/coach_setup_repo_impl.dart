@@ -77,6 +77,15 @@ class CoachSetupRepoImpl implements CoachSetupRepo {
   }
 
   @override
+  Stream<CoachApplicationModel?> streamCoachApplicationStatus() {
+    final uid = authService.currentUser?.uid;
+    if (uid == null) {
+      return const Stream.empty();
+    }
+    return remoteDataSource.streamCoachApplication(uid);
+  }
+
+  @override
   Future<Either<Failure, CoachProfileModel?>> getCoachProfile() async {
     try {
       final uid = authService.currentUser?.uid ?? (await authLocalDataSource.getUser())?.uid;

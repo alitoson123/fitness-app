@@ -60,7 +60,7 @@ class StepProfessionalInfoWidget extends StatelessWidget {
           ),
           SizedBox(height: 18.h),
           AppTextField(
-            label: S.of(context).specialties,
+            label: S.of(context).specialties1,
             hint: S.of(context).specialtiesHint,
             initialValue: cubit.specialties.join(', '),
             onChanged: (val) {

@@ -11,6 +11,8 @@ abstract class CoachSetupRepo {
 
   Future<Either<Failure, CoachApplicationModel?>> getCoachApplicationStatus();
 
+  Stream<CoachApplicationModel?> streamCoachApplicationStatus();
+
   Future<Either<Failure, CoachProfileModel?>> getCoachProfile();
 
   Future<Either<Failure, void>> saveDraftApplication({

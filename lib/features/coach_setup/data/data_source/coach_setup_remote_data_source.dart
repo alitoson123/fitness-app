@@ -35,7 +35,6 @@ class CoachSetupRemoteDataSource {
     );
   }
 
-  
   Future<CoachProfileModel?> getCoachProfile(String uid) async {
     LoggerService.debug('Fetching coach profile for $uid', tag: 'CoachSetup');
     final doc = await firestoreService.getDoc(
@@ -63,5 +62,18 @@ class CoachSetupRemoteDataSource {
     return null;
   }
 
-
+  Stream<CoachApplicationModel?> streamCoachApplication(String uid) {
+    LoggerService.debug(
+      'Streaming coach application for $uid',
+      tag: 'CoachSetup',
+    );
+    return firestoreService
+        .streamDoc(collection: AppConstants.verificationsCollection, docId: uid)
+        .map((snapshot) {
+          if (snapshot.exists && snapshot.data() != null) {
+            return CoachApplicationModel.fromJson(snapshot.data()!);
+          }
+          return null;
+        });
+  }
 }

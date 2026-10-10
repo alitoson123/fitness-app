@@ -8,8 +8,13 @@ import '../../data/models/coach_application_model.dart';
 
 class PendingStatusCard extends StatelessWidget {
   final CoachApplicationModel application;
+  final VoidCallback? onContactSupport;
 
-  const PendingStatusCard({super.key, required this.application});
+  const PendingStatusCard({
+    super.key,
+    required this.application,
+    this.onContactSupport,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +113,17 @@ class PendingStatusCard extends StatelessWidget {
               ),
             ],
           ),
+          if (onContactSupport != null) ...[
+            SizedBox(height: AppSpacing.s3),
+            TextButton.icon(
+              onPressed: onContactSupport,
+              icon: Icon(Icons.support_agent_rounded, size: 16.r),
+              label: Text(
+                S.of(context).contactSupport,
+                style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600),
+              ),
+            ),
+          ],
         ],
       ),
     );

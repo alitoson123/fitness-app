@@ -10,7 +10,8 @@ import '../../features/coach_setup/presentation/views/coach_registration_view.da
 import '../../features/coach_setup/presentation/views/coach_verification_pending_view.dart';
 import '../../features/onboarding/presentation/views/onboarding_view.dart';
 import '../../features/splash/presentation/views/splash_view.dart';
-import '../../features/trainee_home/presentation/views/trainee_home_view.dart';
+import '../../features/trainee_discovery/presentation/views/trainee_home_view.dart';
+import '../../features/coach_profile_details/presentation/views/coach_details_view.dart';
 import '../../features/trainee_setup/presentation/views/trainee_setup_view.dart';
 import '../../features/trainee_setup/presentation/views/trainee_success_view.dart';
 import 'app_routes.dart';
@@ -70,6 +71,18 @@ abstract class AppRouter {
       GoRoute(
         path: AppRoutes.coachDashboard,
         builder: (context, state) => const CoachDashboardView(),
+      ),
+      GoRoute(
+        path: AppRoutes.coachDetails,
+        builder: (context, state) {
+          final extra = state.extra;
+          if (extra is CoachProfileModel) {
+            return CoachDetailsView(initialCoach: extra, coachUid: extra.uid);
+          } else if (extra is String) {
+            return CoachDetailsView(coachUid: extra);
+          }
+          return const CoachDetailsView();
+        },
       ),
     ],
   );

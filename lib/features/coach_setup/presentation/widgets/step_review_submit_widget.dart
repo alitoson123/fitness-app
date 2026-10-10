@@ -88,7 +88,7 @@ class StepReviewSubmitWidget extends StatelessWidget {
             items: [
               (S.of(context).reviewSports, sportsText),
               (
-                S.of(context).specialties,
+                S.of(context).specialties1,
                 cubit.specialties.isNotEmpty
                     ? cubit.specialties.join(', ')
                     : S.of(context).reviewNoneSpecified,

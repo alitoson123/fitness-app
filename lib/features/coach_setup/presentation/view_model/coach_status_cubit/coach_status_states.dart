@@ -1,49 +1,64 @@
 import 'package:fitness_app/features/coach_setup/data/models/coach_application_model.dart';
 import 'package:fitness_app/features/coach_setup/data/models/coach_profile_model.dart';
 
-abstract class CoachStatusState {
-  const CoachStatusState();
+abstract class CoachVerificationStatusState {
+  const CoachVerificationStatusState();
 }
 
-class CoachStatusInitialState extends CoachStatusState {
-  const CoachStatusInitialState();
+class CoachVerificationStatusInitialState
+    extends CoachVerificationStatusState {
+  const CoachVerificationStatusInitialState();
 }
 
-class CoachStatusLoadingState extends CoachStatusState {
-  const CoachStatusLoadingState();
+class CoachVerificationStatusLoadingState
+    extends CoachVerificationStatusState {
+  const CoachVerificationStatusLoadingState();
 }
 
-class CoachStatusPendingState extends CoachStatusState {
+class CoachVerificationStatusPendingState
+    extends CoachVerificationStatusState {
   final CoachApplicationModel application;
   final CoachProfileModel? profile;
 
-  const CoachStatusPendingState({required this.application, this.profile});
+  const CoachVerificationStatusPendingState({
+    required this.application,
+    this.profile,
+  });
 }
 
-class CoachStatusRejectedState extends CoachStatusState {
+class CoachVerificationStatusApprovedState
+    extends CoachVerificationStatusState {
+  final CoachApplicationModel application;
+  final CoachProfileModel? profile;
+
+  const CoachVerificationStatusApprovedState({
+    required this.application,
+    this.profile,
+  });
+}
+
+class CoachVerificationStatusRejectedState
+    extends CoachVerificationStatusState {
   final CoachApplicationModel application;
   final CoachProfileModel? profile;
   final String rejectionReason;
 
-  const CoachStatusRejectedState({
+  const CoachVerificationStatusRejectedState({
     required this.application,
     this.profile,
     required this.rejectionReason,
   });
 }
 
-class CoachStatusApprovedState extends CoachStatusState {
-  final CoachProfileModel profile;
-
-  const CoachStatusApprovedState({required this.profile});
-}
-
-class CoachStatusErrorState extends CoachStatusState {
+class CoachVerificationStatusErrorState
+    extends CoachVerificationStatusState {
   final String errorMessage;
 
-  const CoachStatusErrorState({required this.errorMessage});
+  const CoachVerificationStatusErrorState({required this.errorMessage});
 }
 
-class CoachStatusSignedOutState extends CoachStatusState {
-  const CoachStatusSignedOutState();
+class CoachVerificationStatusSignedOutState
+    extends CoachVerificationStatusState {
+  const CoachVerificationStatusSignedOutState();
 }
+

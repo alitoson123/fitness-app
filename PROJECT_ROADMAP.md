@@ -1,540 +1,419 @@
-# Coach & Trainee Platform — MVP Roadmap
+# CoachHub Mobile App — MVP Implementation Roadmap
 
-## 1. Executive Summary
-
-Coach & Trainee is a mobile marketplace platform that connects people looking for sports training (**Trainees**) with qualified sports coaches (**Coaches**).
-
-The MVP will focus on one clear core workflow:
-
-> **Find a coach → View coach profile → Request training → Coach accepts or rejects**
-
-The platform will support multiple sports and target users across the Arab world. Trainees and Coaches will use the same Flutter mobile application, while platform administration will be handled through a separate web-based Admin Dashboard.
-
-### MVP Goals
-
-The MVP is intended to validate the core marketplace concept by enabling:
-
-- Trainees to create and manage their profiles.
-- Coaches to apply and submit professional/verification information.
-- Admins to review and approve or reject coach applications.
-- Approved coaches to become discoverable by trainees.
-- Trainees to search and filter coaches.
-- Trainees to view detailed coach profiles.
-- Coaches to define their availability.
-- Trainees to request training sessions.
-- Coaches to accept or reject training requests.
-- Both sides to receive relevant push notifications.
-- Admins to manage users, coaches, and bookings.
-
-### MVP Scope
-
-The first version intentionally excludes advanced platform functionality such as:
-
-- Online payments
-- Wallets and withdrawals
-- Subscriptions and packages
-- In-app chat
-- Voice/video calls
-- Workout and nutrition plans
-- Progress tracking
-- AI coach matching
-- Advanced analytics and reporting
-- Reviews and ratings
-
-These features may be introduced in future phases after the MVP has been validated.
-
-### Technology Direction
-
-The mobile application will be built with:
-
-- Flutter
-- Firebase Authentication
-- Cloud Firestore
-- Firebase Storage
-- Firebase Cloud Messaging
-- Hive for appropriate local persistence
-- Bloc/Cubit for state management
-- Clean Architecture
-- Material 3
-
-The Admin Dashboard will be a separate web application and will share the same backend/data model where appropriate.
+> **Project Name**: `fitness_app` (CoachHub Mobile)  
+> **Platform**: Flutter (Android & iOS)  
+> **Connected Firebase**: `coach-hub-app-522cd`  
+> **Target**: MVP Release (Phases 1 — 7 & 9, Core Marketplace Lifecycle)  
+> **Core Workflow**: `Find a coach → View coach profile → Request training → Coach accepts or rejects`
 
 ---
 
-## 2. Development Approach
+## 1. Architectural Standards & Rules
 
-The project will follow a **Spec-Driven Development** workflow using **Spec Kit**.
+Any agent or developer working on this project must strictly comply with the following standards:
 
-The project will not be implemented as one large specification.
-
-Instead, the product will be divided into independent implementation phases. Each phase represents a meaningful product capability and will go through its own Spec Kit workflow.
-
-### Standard Phase Workflow
-
-Each phase should follow this lifecycle:
-
-```text
-Define the Feature
-      ↓
-/speckit.specify
-      ↓
-spec.md
-      ↓
-/speckit.clarify
-      ↓
-/speckit.plan
-      ↓
-plan.md
-      ↓
-/speckit.tasks
-      ↓
-tasks.md
-      ↓
-/speckit.analyze
-      ↓
-/speckit.implement
-      ↓
-/speckit.converge
-      ↓
-Phase Complete
-```
-
-A phase should be considered complete only when its requirements, implementation tasks, integration points, and acceptance criteria have been satisfied.
-
-### Important Rule
-
-Specs should describe **what the product needs to do and why**, while the generated plan and tasks define **how that capability will be implemented**.
-
-The AI should not independently expand the MVP scope or introduce future features unless they are explicitly required by the current specification.
+1. **Pragmatic Architecture (Strictly Anti-Overengineering)**:
+   - `lib/core/`: Constants, database services, navigator/router, theme, shared widgets, helpers, service locator.
+   - `lib/features/<feature>/`: Divided strictly into:
+     - `data/`: Data models, concrete data sources (Firestore, Firebase Storage, Hive), and concrete repositories.
+     - `presentation/`: Views, sub-widgets, and Cubit state management.
+   - **NO Entities**: NEVER create separate domain entity classes that mirror models. Use models (e.g., `UserModel`, `CoachProfileModel`, `TraineeProfileModel`, `BookingModel`) directly across data, repositories, Cubits, and UI.
+   - **NO Use Cases**: NEVER create UseCase classes. Cubits MUST call concrete repositories or services directly.
+   - **NO Abstract Classes for Repositories or Data Sources**: Implement concrete repositories and data sources directly (e.g., `class TraineeSetupRepo`, `class CoachSetupRemoteDataSource`).
+2. **State Management**:
+   - `flutter_bloc` (`Cubit` pattern) is the default state management solution.
+   - UI widgets must never query Firestore or repositories directly; delegate state and async actions to the respective Cubit.
+   - Emit immutable states using `copyWith` or state subclasses.
+3. **Clean Code & Modularity**:
+   - **Keep all files under 150 lines**. If a file approaches this limit, split widgets and logic immediately.
+   - Screen files (`*_view.dart`) only handle high-level layout, `Scaffold`, and delegate to widgets.
+   - All sub-sections, cards, lists, bottom sheets, dialogs, and step forms must live in `presentation/widgets/`.
+   - Private widget classes (`_MyWidget`) are only acceptable for trivial wrappers (≤ 20 lines). Anything larger gets its own file.
+4. **Mobile UX & Design Standards**:
+   - Material 3 theming with responsive sizing via `flutter_screenutil`.
+   - Follow the 60-30-10 color rule. Always support both Light and Dark themes.
+   - Provide explicit loading indicators, friendly empty states, and retryable error states for all asynchronous operations.
+5. **Localization (l10n)**:
+   - **Never hardcode user-facing strings** in widgets. Every string must go through the localization system (`S.of(context)`).
+   - All strings must be defined in both `lib/l10n/intl_en.arb` and `lib/l10n/intl_ar.arb` simultaneously.
+   - Support both LTR (English) and RTL (Arabic) layouts seamlessly.
+6. **Push Notifications**:
+   - Integrate Firebase Cloud Messaging (FCM) for key transaction events: new training request, request accepted, and request rejected.
 
 ---
 
-# 3. Current Progress
+## 2. Firebase Configuration & Data Schema
 
-The following features have already been designed/implemented and should be treated as existing project functionality:
+### 2.1 Mobile Firebase Options
+Use the existing Firebase project (`coach-hub-app-522cd`) configured via `firebase_options.dart`:
+- **Android**: `1:572406151179:android:4b09b936d50ffc1769ef0e`
+- **iOS**: `1:572406151179:ios:9e89ff6ee57aee2969ef0e`
+- **Web / Admin**: `1:572406151179:web:7eb6de5ac187e7e869ef0e`
 
-- Splash
-- Authentication
-- Choose Role
-- Complete Trainee Profile
+### 2.2 Firestore Collections & Schemas
 
-These features should not be recreated as new phases unless changes are explicitly required by a future specification.
-
-The project continues from the current state.
-
----
-
-# 4. MVP Phases
-
-## Phase 1 — Coach Profile & Application
-
-### Objective
-
-Allow a user who chooses the Coach role to create a professional coach profile, upload verification documents, and submit an application for admin review.
-
-### Core capabilities
-
-- Coach profile creation
-- Profile photo
-- Bio
-- Sports
-- Specialties
-- Years of experience
-- Certifications
-- Languages
-- Location
-- Training price
-- Availability information
-- Identity document upload
-- Certificate/experience document upload
-- Application submission
-- Application status
-- Pending state
-- Rejected state
-- Resubmission after rejection
-
-### Expected result
-
-A coach can complete an application and submit it for review.
-
-The coach must not become visible to trainees before approval.
+| Collection | Document ID | Key Fields | Description |
+| :--- | :--- | :--- | :--- |
+| `users` | `uid` | `uid`, `name`, `email`, `role` (`'coach'` \| `'trainee'` \| `'admin'`), `status` (`'active'` \| `'suspended'`), `createdAt`, `updatedAt` | Base auth profile and account status |
+| `coach_verifications` | `coachUid` | `coachUid`, `status` (`'pending'` \| `'approved'` \| `'rejected'`), `identityDocumentUrl`, `certificateUrls` (`List<String>`), `rejectionReason`, `submittedAt`, `reviewedAt`, `updatedAt` | Professional verification review record |
+| `coach_profiles` | `coachUid` | `uid`, `name`, `email`, `photoUrl`, `bio`, `country`, `city`, `sports` (`List<String>`), `specialties`, `sessionPrice`, `currency`, `yearsOfExperience`, `rating`, `workingDays`, `workingHours`, `isProfileCompleted`, `updatedAt` | Public coach profile and marketplace data |
+| `trainee_profiles` | `uid` | `uid`, `name`, `email`, `photoUrl`, `country`, `city`, `age`, `gender`, `sports` (`List<String>`), `level`, `goal`, `trainingType`, `isProfileCompleted`, `updatedAt` | Trainee details and preferences |
+| `bookings` | `bookingId` | `id`, `coachUid`, `coachName`, `coachPhotoUrl`, `traineeUid`, `traineeName`, `traineePhotoUrl`, `sport`, `date`, `startTime`, `endTime`, `notes`, `status` (`'pending'` \| `'confirmed'` \| `'rejected'`), `createdAt`, `updatedAt` | Training session requests and bookings |
+| `fcm_tokens` | `uid` | `uid`, `token`, `platform` (`'android'` \| `'ios'`), `updatedAt` | Push notification device tokens |
 
 ---
 
-## Phase 2 — Admin Coach Verification
-
-### Objective
-
-Allow administrators to review and manage coach applications.
-
-### Core capabilities
-
-- Admin authentication/authorization
-- Admin dashboard
-- Coach application list
-- Pending applications
-- Coach profile review
-- Uploaded document review
-- Approve coach
-- Reject coach
-- Suspend coach
-- View application status
-- Support coach resubmission after rejection
-
-### Expected result
-
-Only approved coaches can become visible in the trainee marketplace.
-
----
-
-## Phase 3 — Sports & Coach Discovery
-
-### Objective
-
-Allow trainees to discover approved coaches based on sports and basic search/filter criteria.
-
-### Core capabilities
-
-- Sports browsing
-- Coach listing
-- Approved coaches only
-- Coach cards
-- Coach profile preview
-- Search
-- Sport filtering
-- Experience filtering
-- Price filtering
-- Gender filtering
-- Basic sorting
-- Empty states
-- Loading states
-- Error states
-
-### Expected result
-
-A trainee can select a sport and discover relevant approved coaches.
-
----
-
-## Phase 4 — Coach Availability
-
-### Objective
-
-Allow coaches to define when they are available for training sessions.
-
-### Core capabilities
-
-- Working days
-- Working hours
-- Available time slots
-- Add availability
-- Edit availability
-- Remove availability
-- Availability validation
-- Prevent overlapping/invalid availability
-
-### Expected result
-
-The system can determine which dates and times are available for a coach.
-
----
-
-## Phase 5 — Training Request & Booking
-
-### Objective
-
-Implement the core marketplace transaction: a trainee requests a training session with a coach.
-
-### Core flow
-
-```text
-Trainee
-   ↓
-Coach Profile
-   ↓
-Request Training
-   ↓
-Select Date
-   ↓
-Select Available Time
-   ↓
-Confirm Request
-   ↓
-Pending
-   ↓
-Coach Receives Request
-   ↓
-Accept / Reject
-```
-
-### Core capabilities
-
-- Create training request
-- Select date
-- Select available time
-- Validate availability
-- Booking status
-- Coach request list
-- Accept request
-- Reject request
-- Booking details
-
-### Initial booking states
-
-```text
-Pending
-Confirmed
-Rejected
-```
-
-Additional states such as cancellation should only be added if explicitly required by the MVP specification.
-
-### Expected result
-
-A trainee can request a session and a coach can accept or reject it.
-
----
-
-## Phase 6 — Notifications
-
-### Objective
-
-Notify users about important events in the marketplace.
-
-### Core notifications
-
-#### New Training Request
-
-Coach receives a notification when a trainee sends a request.
-
-#### Request Accepted
-
-Trainee receives a notification when the coach accepts.
-
-#### Request Rejected
-
-Trainee receives a notification when the coach rejects.
-
-### Technology
-
-Firebase Cloud Messaging (FCM).
-
-### Expected result
-
-Users receive timely notifications for the core booking lifecycle.
-
----
-
-## Phase 7 — Booking Management
-
-### Objective
-
-Provide both Trainees and Coaches with a clear view of their bookings.
-
-### Trainee capabilities
-
-- My bookings
-- Pending bookings
-- Confirmed bookings
-- Rejected bookings
-- Booking details
-
-### Coach capabilities
-
-- Training requests
-- Pending requests
-- Confirmed bookings
-- Rejected requests
-- Booking details
-
-### Expected result
-
-Both roles can manage and review their current booking activity.
-
----
-
-## Phase 8 — Admin Management
-
-### Objective
-
-Give the Admin control over the main marketplace entities.
-
-### Dashboard overview
-
-- Total coaches
-- Total trainees
-- Pending coach applications
-- Total bookings
-
-### Coach management
-
-- View coaches
-- View coach profiles
-- Review applications
-- View documents
-- Approve
-- Reject
-- Suspend
-
-### Trainee management
-
-- View trainees
-- View basic profile information
-- Suspend users when necessary
-
-### Booking management
-
-- View bookings
-- Coach
-- Trainee
-- Date
-- Time
-- Booking status
-
-### Expected result
-
-The Admin can operate and monitor the core marketplace without requiring direct database access.
-
----
-
-## Phase 9 — MVP Hardening & Release Preparation
-
-### Objective
-
-Stabilize the completed MVP and prepare it for release.
-
-### Areas
-
-- Input validation
-- Error handling
-- Loading states
-- Empty states
-- Permission handling
-- Firestore security rules
-- Required Firestore indexes
-- Notification reliability
-- Edge cases
-- Localization
-- Accessibility checks
-- Performance checks
-- Unit tests
-- Widget tests
-- Integration testing where appropriate
-- Release configuration
-- Android release preparation
-- iOS release preparation
-
-### Expected result
-
-The core MVP is stable, secure, testable, and ready for release.
-
----
-
-# 5. Overall MVP Roadmap
-
-```text
-COMPLETED
-│
-├── Splash
-├── Authentication
-├── Choose Role
-└── Complete Trainee Profile
-       │
-       ▼
-Phase 1
-Coach Profile & Application
-       │
-       ▼
-Phase 2
-Admin Coach Verification
-       │
-       ▼
-Phase 3
-Sports & Coach Discovery
-       │
-       ▼
-Phase 4
-Coach Availability
-       │
-       ▼
-Phase 5
-Training Request & Booking
-       │
-       ▼
-Phase 6
-Notifications
-       │
-       ▼
-Phase 7
-Booking Management
-       │
-       ▼
-Phase 8
-Admin Management
-       │
-       ▼
-Phase 9
-MVP Hardening & Release
-       │
-       ▼
-     MVP
+## 3. Recommended & Active Dependencies
+
+```yaml
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # Firebase
+  firebase_core: ^4.15.0
+  firebase_auth: ^6.7.0
+  cloud_firestore: ^6.10.0
+  firebase_storage: ^13.6.0
+
+  # State Management & DI
+  flutter_bloc: ^9.1.1
+  get_it: ^9.3.0
+
+  # Navigation
+  go_router: ^17.5.0
+
+  # Local Persistence
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  shared_preferences: ^2.5.5
+
+  # UI & Responsive
+  flutter_screenutil: ^5.9.3
+  google_fonts: ^6.2.1
+  cached_network_image: ^3.4.1
+  cupertino_icons: ^1.0.8
+  modal_progress_hud_nsn: ^0.5.1
+
+  # Media & File Handling
+  image_picker: ^1.2.3
+  file_picker: ^13.1.0
+
+  # Social Sign-in
+  google_sign_in: ^6.1.0
+  sign_in_with_apple: ^7.0.1
+
+  # Network & Utilities
+  internet_connection_checker_plus: ^3.1.2
+  dartz: ^0.10.1
+  intl: ^0.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  hive_generator: ^2.0.1
+  build_runner: ^2.4.13
+  intl_utils: ^2.8.7
 ```
 
 ---
 
-# 6. Future Expansion
+## 4. Step-by-Step Implementation Milestones
 
-Future functionality should be treated separately from the MVP and should not be implemented unless a dedicated specification is created.
+### Milestone 1: App Foundation & Architecture
+- [x] Configure Firebase initialization for Android and iOS (`DefaultFirebaseOptions.currentPlatform`).
+- [x] Implement centralized Service Locator (`get_it`) in `lib/core/locator_service/service_locator.dart`.
+- [x] Configure Light & Dark themes with Material 3 in `lib/core/theme/`.
+- [x] Set up responsive layout foundation using `flutter_screenutil`.
+- [x] Initialize Hive local boxes for caching (`user_box`, `trainee_profile_box`, `coach_profile_box`).
+- [x] Centralize route names in `lib/core/navigator/app_routes.dart` and define `GoRouter` in `app_router.dart`.
 
-Potential future phases include:
+### Milestone 2: Authentication & Role Selection
+- [x] Implement `SignInCubit` with email/password authentication.
+- [x] Implement `SignUpCubit` with validation and error handling.
+- [x] Integrate Google Sign-In and Apple Sign-In.
+- [x] Implement Forgot Password flow (`sendPasswordResetEmail`).
+- [x] Implement `ChooseRoleCubit` and `ChooseRoleView` (Trainee vs. Coach selection).
+- [x] Implement `AuthRouteResolver` to route users based on role and profile completion status.
+- [x] Implement `AuthSessionCubit` for global sign-out and account deletion.
 
-### Communication
+### Milestone 3: Trainee Setup & Profile Completion
+- [x] Implement `TraineeSetupCubit` with multi-step flow:
+  - Step 1: Personal info (Name, Age, Gender, City, Country, Avatar upload).
+  - Step 2: Sports selection & experience level (Beginner, Intermediate, Advanced).
+  - Step 3: Training goals & preferred training type (Gym, Personal, Online).
+- [x] Upload trainee avatar to Firebase Storage (`trainee_avatars/{uid}`).
+- [x] Save `TraineeProfileModel` to Firestore `trainee_profiles/{uid}` and sync to Hive.
+- [x] Update `users/{uid}` flag `isProfileCompleted: true`.
+- [x] Navigate to Trainee Home upon completion.
 
-- In-app chat
-- Voice calls
-- Video calls
+### Milestone 4: Coach Registration & Document Submission
+- [x] Implement `CoachSetupCubit` with 5-step registration wizard:
+  - Step 1: Personal info (Full name, Photo, Location, Bio).
+  - Step 2: Professional qualifications (Sports, Specialties, Years of experience, Languages).
+  - Step 3: Pricing & availability draft (Session price, Currency, Preliminary working days).
+  - Step 4: Verification document upload (National ID / Passport, Certificates, Proof of experience).
+  - Step 5: Review summary & final submission.
+- [x] Upload documents to Firebase Storage (`coach_documents/{uid}/`).
+- [x] Write `coach_profiles/{uid}` with `isProfileCompleted: true`.
+- [x] Write `coach_verifications/{uid}` with initial status `'pending'`.
+- [x] Implement `CoachVerificationPendingView` displaying waiting message and status explanation.
 
-### Payments
+### Milestone 5: Coach Verification Status & Access Control
+- [x] **State**: `CoachVerificationStatusCubit`:
+  - Listen to real-time status updates from `coach_verifications/{uid}` (`pending`, `approved`, `rejected`).
+  - Account suspension handled at the `UserModel` level (`users/{uid}` `status: 'active' | 'suspended'`).
+- [x] **Flows & Views**:
+  - **Pending**: Display status explanation card, contact support, and refresh button.
+  - **Approved**: Automatically navigate to `CoachDashboardView` with full coach feature access.
+  - **Rejected**: Display rejection reason banner from admin; enable coach to edit profile, re-upload documents, and resubmit application.
+  - **User Suspension**: Enforced at user session level (`UserModel.status`), blocking access across all user roles.
 
-- Online payments
-- Packages
-- Subscriptions
-- Coach wallet
-- Withdrawals
-- Platform commission
+### Milestone 6: Trainee Feature 1 — Sports & Coach Discovery
+- [x] **State**: `CoachDiscoveryCubit`:
+  - Fetch approved coaches from `coach_profiles` collection where verification status is `'approved'`.
+  - Filter state: Sport category, price range (`minPrice` / `maxPrice`), experience years, coach gender, minimum rating.
+  - Sorting state: Price: Low → High, Price: High → Low, Rating: High → Low.
+  - Text search: Search coaches by name or Sports.
+- [x] **Widgets**:
+  - `SportsHorizontalSelector`: Scrollable category chips (Gym, Football, Boxing, Swimming, Basketball, Tennis, etc.).
+  - `CoachSearchBar`: Search input with debounce and filter icon.
+  - `CoachFilterBottomSheet`: Sliders for price range, checkboxes for experience levels and gender, sort options.
+  - `CoachCard`: Avatar, Name, Sports badges, Rating star, Experience badge, Session price chip, and Tap to view profile.
+  - `EmptyDiscoveryState` & `ShimmerCoachListLoading`.
 
-### Training Management
+### Milestone 7: Trainee Feature 2 — Detailed Coach Profile
+- [x] **State**: `CoachProfileDetailsCubit`:
+  - Loads complete coach details, credentials, and schedule preview.
+- [x] **Widgets**:
+  - `CoachProfileHeader`: Avatar, verified badge, coach name, sport tags, city & country.
+  - `CoachBioSection`: Coach biography and about text.
+  - `CoachCredentialsSection`: Years of experience, certifications, spoken languages.
+  - `CoachPricingCard`: Highlighted session price and included service type.
+  - `CoachSchedulePreview`: Visual representation of available training days and hours.
+  - `RequestTrainingButton`: Prominent sticky bottom action to start booking flow.
 
-- Workout plans
-- Nutrition plans
-- Exercise library
-- Progress tracking
-- Measurements
-- Progress photos
+### Milestone 8: Coach Feature 1 — Coach Availability & Working Hours
+- [ ] **State**: `CoachAvailabilityCubit`:
+  - Load and update coach schedule in `coach_profiles/{uid}`: `workingDays`, `workingHours`, `sessionDurationMinutes`.
+- [ ] **Widgets**:
+  - `DaySelectorRow`: Toggle available days of the week (Monday — Sunday).
+  - `TimeSlotConfigurator`: Select start time and end time for each active day.
+  - `SlotDurationPicker`: Default session duration (e.g., 45 min, 60 min, 90 min).
+  - `SaveAvailabilityButton`: Persist availability to Firestore with validation against invalid time ranges.
 
-### Platform Intelligence
+### Milestone 9: Marketplace Transaction — Training Request & Booking
+- [ ] **State**: `BookingRequestCubit`:
+  - Validate selected date against coach working days.
+  - Compute available time slots for chosen date, filtering out already booked/pending sessions.
+  - Submit booking request with status `'pending'` to `bookings` collection.
+- [ ] **Widgets**:
+  - `BookingDatePicker`: Interactive calendar / horizontal date strip showing coach's working days.
+  - `TimeSlotsGridView`: Selectable time chips showing available slots for the selected day.
+  - `BookingNotesInput`: Optional field for trainee to specify goals, injuries, or notes.
+  - `BookingSummaryCard`: Price, coach name, sport, date, and selected time slot.
+  - `ConfirmRequestButton`: Submit request and transition to `BookingSuccessView`.
 
-- Smart coach matching
-- Personalized recommendations
-- Advanced search
+### Milestone 10: Coach Feature 2 — Coach Dashboard & Request Management
+- [ ] **State**: `CoachBookingsCubit`:
+  - Real-time listener for incoming booking requests (`bookings` where `coachUid == currentUid`).
+  - Filter tabs: `Pending Requests`, `Confirmed Sessions`, `Completed / Past`.
+- [ ] **Widgets**:
+  - `IncomingRequestCard`: Trainee avatar, name, requested sport, date & time, trainee notes, and Action Buttons:
+    - **Accept**: Changes booking status to `'confirmed'`.
+    - **Reject**: Opens dialog with optional rejection reason, updates status to `'rejected'`.
+  - `ConfirmedSessionCard`: Upcoming confirmed training sessions with countdown and trainee details.
+  - `EmptyBookingsState`: Illustrated placeholder when no requests are pending.
 
-### Trust & Community
+### Milestone 11: Trainee Feature 3 — Trainee Bookings & History
+- [ ] **State**: `TraineeBookingsCubit`:
+  - Real-time stream of trainee bookings (`bookings` where `traineeUid == currentUid`).
+  - Segmented view: `Active & Pending` vs. `Completed & History`.
+- [ ] **Widgets**:
+  - `TraineeBookingCard`: Coach name, photo, sport badge, date, time slot, and Status Badge (`pending` = orange, `confirmed` = green, `rejected` = red).
+  - `BookingDetailsModal`: Full session details, coach contact info (if confirmed), and status timeline.
+  - `CancelRequestButton`: Allows trainee to cancel a pending request before coach confirmation.
 
-- Reviews
-- Ratings
-- Verified coach badge
-- Reports and complaints
+### Milestone 12: Feature 4 — Push Notifications (FCM)
+- [ ] **Setup & Service**:
+  - Initialize Firebase Cloud Messaging in `lib/core/services/notification_service.dart`.
+  - Request user notification permissions on Android 13+ and iOS.
+  - Store FCM token in `fcm_tokens/{uid}` upon login.
+- [ ] **Notification Triggers**:
+  - **New Request**: Notify Coach: *"You have received a new training request from [Trainee Name]"*.
+  - **Request Accepted**: Notify Trainee: *"Your training request with Coach [Coach Name] has been accepted!"*.
+  - **Request Rejected**: Notify Trainee: *"Your training request with Coach [Coach Name] was declined"*.
+- [ ] **In-App Foreground Handling**:
+  - Display non-intrusive in-app banner / snackbar when a notification arrives while the app is foregrounded.
+  - Deep-link user to the relevant booking screen when notification is tapped.
+
+### Milestone 13: Localization, Accessibility & MVP Hardening
+- [ ] Define all strings in both `lib/l10n/intl_en.arb` and `lib/l10n/intl_ar.arb`.
+- [ ] Run `flutter pub run intl_utils:generate` and remove every hardcoded string in the UI.
+- [ ] Verify RTL layouts for Arabic: ensure back buttons, lists, cards, and icons mirror properly.
+- [ ] Ensure offline resilience with `internet_connection_checker_plus` and clear network error banners.
+- [ ] Write unit tests for `CoachDiscoveryCubit`, `BookingRequestCubit`, and `CoachBookingsCubit`.
+- [ ] Configure Android and iOS release configurations (ProGuard, permissions, icons, launch screens).
 
 ---
 
-# 7. Product Principle
+## 5. File Structure Reference
 
-Every implementation decision should protect the simplicity of the MVP.
+```
+lib/
+├── core/
+│   ├── constant/
+│   │   └── app_constants.dart
+│   ├── errors/
+│   │   ├── exceptions.dart
+│   │   └── failures.dart
+│   ├── helpers/
+│   │   └── message.dart
+│   ├── locator_service/
+│   │   └── service_locator.dart
+│   ├── navigator/
+│   │   ├── app_router.dart
+│   │   ├── app_routes.dart
+│   │   └── auth_route_resolver.dart
+│   ├── services/
+│   │   ├── firestore_service.dart
+│   │   ├── notification_service.dart
+│   │   └── storage_service.dart
+│   ├── theme/
+│   │   ├── app_colors.dart
+│   │   ├── app_spacing.dart
+│   │   └── app_theme.dart
+│   └── widgets/
+│       ├── app_button.dart
+│       ├── app_text_field.dart
+│       ├── custom_app_bar.dart
+│       └── status_badge.dart
+├── features/
+│   ├── splash/
+│   │   └── presentation/views/splash_view.dart
+│   ├── onboarding/
+│   │   └── presentation/views/onboarding_view.dart
+│   ├── auth/
+│   │   ├── choose_role/
+│   │   ├── sign_in/
+│   │   ├── sign_up/
+│   │   └── forget_password/
+│   ├── trainee_setup/
+│   │   ├── data/
+│   │   │   ├── data_source/trainee_setup_remote_data_source.dart
+│   │   │   ├── models/trainee_profile_model.dart
+│   │   │   └── repos/trainee_setup_repo.dart
+│   │   └── presentation/
+│   │       ├── view_model/trainee_setup_cubit/
+│   │       ├── views/trainee_setup_view.dart
+│   │       └── widgets/
+│   ├── coach_setup/
+│   │   ├── data/
+│   │   │   ├── data_source/coach_setup_remote_data_source.dart
+│   │   │   ├── models/coach_profile_model.dart
+│   │   │   └── repos/coach_setup_repo.dart
+│   │   └── presentation/
+│   │       ├── view_model/coach_setup_cubit/
+│   │       ├── views/
+│   │       │   ├── coach_registration_view.dart
+│   │       │   └── coach_verification_pending_view.dart
+│   │       └── widgets/
+│   ├── trainee_discovery/
+│   │   ├── data/
+│   │   │   ├── data_source/discovery_remote_data_source.dart
+│   │   │   └── repos/discovery_repo.dart
+│   │   └── presentation/
+│   │       ├── view_model/coach_discovery_cubit/
+│   │       ├── views/trainee_home_view.dart
+│   │       └── widgets/
+│   │           ├── sports_horizontal_selector.dart
+│   │           ├── coach_search_bar.dart
+│   │           ├── coach_card.dart
+│   │           └── coach_filter_bottom_sheet.dart
+│   ├── coach_profile_details/
+│   │   ├── presentation/
+│   │   │   ├── view_model/coach_profile_details_cubit/
+│   │   │   ├── views/coach_details_view.dart
+│   │   │   └── widgets/
+│   │   │       ├── coach_profile_header.dart
+│   │   │       ├── coach_credentials_section.dart
+│   │   │       ├── coach_pricing_card.dart
+│   │   │       └── coach_schedule_preview.dart
+│   ├── coach_availability/
+│   │   ├── data/
+│   │   │   └── repos/coach_availability_repo.dart
+│   │   └── presentation/
+│   │       ├── view_model/coach_availability_cubit/
+│   │       ├── views/coach_availability_view.dart
+│   │       └── widgets/
+│   │           ├── day_selector_row.dart
+│   │           └── time_slot_configurator.dart
+│   ├── bookings/
+│   │   ├── data/
+│   │   │   ├── models/booking_model.dart
+│   │   │   └── repos/bookings_repo.dart
+│   │   └── presentation/
+│   │       ├── view_model/
+│   │       │   ├── booking_request_cubit/
+│   │       │   ├── trainee_bookings_cubit/
+│   │       │   └── coach_bookings_cubit/
+│   │       ├── views/
+│   │       │   ├── booking_request_view.dart
+│   │       │   ├── trainee_bookings_view.dart
+│   │       │   └── coach_dashboard_view.dart
+│   │       └── widgets/
+│   │           ├── booking_date_picker.dart
+│   │           ├── time_slots_grid_view.dart
+│   │           ├── incoming_request_card.dart
+│   │           ├── confirmed_session_card.dart
+│   │           └── trainee_booking_card.dart
+│   └── notifications/
+│       └── presentation/widgets/in_app_notification_banner.dart
+├── firebase_options.dart
+├── generated/
+├── l10n/
+│   ├── intl_ar.arb
+│   └── intl_en.arb
+└── main.dart
+```
 
-The product's core value proposition is:
+---
 
-> **Find a coach → View profile → Request training → Coach accepts or rejects.**
+## 6. Features Excluded from MVP (Strictly Deferred)
 
-Any feature that does not directly support this core workflow should be evaluated carefully and, unless required for the MVP, deferred to a future phase.
+To preserve speed and simplicity, the following features are intentionally **excluded** from the initial MVP release and must not be implemented until after validation:
 
-The goal is to build a focused, usable marketplace first — then expand based on real product needs and validated user behavior.
+- ❌ Online in-app payment gateways (Stripe, Paymob, Apple Pay)
+- ❌ Coach digital wallets and fund withdrawals
+- ❌ Recurring packages, memberships, and multi-session subscriptions
+- ❌ In-app chat messaging between trainee and coach
+- ❌ Voice and video calls
+- ❌ Workout plans, exercise logging, and nutrition tracking
+- ❌ Automated AI coach matching algorithms
+- ❌ Complex public ratings and review creation system
+- ❌ Advanced multi-location club or gym facility management
+
+---
+
+## 7. Future Expansion Roadmap
+
+Following MVP validation of the core loop (`Find coach → View profile → Request session → Accept/Reject`), future phases will introduce:
+
+1. **Phase A — Direct Communication**:
+   - 1-on-1 text chat with media attachments.
+   - Session reminder notifications.
+2. **Phase B — Integrated Payments & Monetization**:
+   - Digital payments for confirmed sessions.
+   - Platform commission deduction.
+   - Coach wallet balance and bank payout requests.
+3. **Phase C — Training & Workout Management**:
+   - Coach-assigned personalized workout plans.
+   - Exercise video library.
+   - Nutrition guidance and trainee body measurements / progress photos.
+4. **Phase D — Trust & Community**:
+   - Trainee verified reviews and 5-star rating breakdowns.
+   - Verified Coach badge tiers.
+   - Trainee reports and dispute resolution.
