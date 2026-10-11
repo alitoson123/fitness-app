@@ -54,11 +54,14 @@ abstract class AppColors {
   static const Color background = neutral0;
   static const Color surface = neutral50;
   static const Color surfaceVariant = neutral100;
+  static const Color backgroundSecondary = surfaceVariant;
   static const Color textPrimary = neutral900;
   static const Color textSecondary = neutral500;
   static const Color textTertiary = neutral400;
   static const Color border = neutral200;
+  static const Color cardBorder = border;
   static const Color divider = neutral100;
+  static const Color darkCardBackground = darkSurface;
 
   // ── Semantic alerts ─────────────────────────────────────────
   static const Color success = Color(0xFF10B981);

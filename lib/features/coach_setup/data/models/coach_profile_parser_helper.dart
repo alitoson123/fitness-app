@@ -23,4 +23,11 @@ abstract class CoachProfileParserHelper {
     }
     return const [];
   }
+
+  static Map<String, dynamic>? parseMap(dynamic val) {
+    if (val is Map) {
+      return Map<String, dynamic>.from(val);
+    }
+    return null;
+  }
 }

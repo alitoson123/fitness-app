@@ -14,99 +14,44 @@ class CoachPricingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primary = isDark ? AppColors.flameRed : AppColors.primary;
-    final cardBg = isDark ? AppColors.darkSurface : Colors.white;
-    final textPrimary =
-        isDark ? AppColors.darkTextPrimary : AppColors.textPrimary;
+    final cardBg = isDark
+        ? AppColors.darkSurface
+        : const Color(0xFFF0F5FF);
     final textSecondary =
         isDark ? AppColors.darkTextSecondary : AppColors.textSecondary;
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(16.r),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
       decoration: BoxDecoration(
         color: cardBg,
         borderRadius: AppRadius.lgAll,
-        border: Border.all(color: primary.withValues(alpha: 0.35), width: 1.5),
-        boxShadow: [
-          BoxShadow(
-            color: primary.withValues(alpha: isDark ? 0.12 : 0.06),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        border: Border.all(
+          color: primary.withValues(alpha: isDark ? 0.35 : 0.22),
+          width: 1.2,
+        ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Text(
-                S.of(context).sessionPricing,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
-                  color: textSecondary,
-                ),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  Text(
-                    '${coach.sessionPrice.toStringAsFixed(0)} ${coach.currency}',
-                    style: TextStyle(
-                      fontSize: 22.sp,
-                      fontWeight: FontWeight.w800,
-                      color: primary,
-                    ),
-                  ),
-                  SizedBox(width: 4.w),
-                  Text(
-                    S.of(context).perSessionUnit,
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: textSecondary,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Divider(height: 20.h, color: primary.withValues(alpha: 0.15)),
           Text(
-            S.of(context).whatsIncluded,
+            S.of(context).pricePerSession,
             style: TextStyle(
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w700,
-              color: textPrimary,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w500,
+              color: textSecondary,
             ),
           ),
-          SizedBox(height: 8.h),
-          _buildCheckItem(S.of(context).oneOnOneTraining, primary, textSecondary),
-          SizedBox(height: 6.h),
-          _buildCheckItem(S.of(context).customWorkoutPlan, primary, textSecondary),
-          SizedBox(height: 6.h),
-          _buildCheckItem(S.of(context).directSupport, primary, textSecondary),
+          Text(
+            '${coach.currency} ${coach.sessionPrice.toStringAsFixed(0)}',
+            style: TextStyle(
+              fontSize: 20.sp,
+              fontWeight: FontWeight.w800,
+              color: primary,
+            ),
+          ),
         ],
       ),
-    );
-  }
-
-  Widget _buildCheckItem(String label, Color primary, Color textSecondary) {
-    return Row(
-      children: [
-        Icon(Icons.check_circle_rounded, size: 16.r, color: primary),
-        SizedBox(width: 8.w),
-        Expanded(
-          child: Text(
-            label,
-            style: TextStyle(fontSize: 12.sp, color: textSecondary),
-          ),
-        ),
-      ],
     );
   }
 }

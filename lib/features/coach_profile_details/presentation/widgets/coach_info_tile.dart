@@ -23,31 +23,22 @@ class CoachInfoTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10.r),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
       decoration: BoxDecoration(
         color: isDark
             ? Colors.white.withValues(alpha: 0.04)
             : Colors.black.withValues(alpha: 0.03),
         borderRadius: AppRadius.mdAll,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(
-            children: [
-              Icon(icon, size: 14.r, color: textSecondary),
-              SizedBox(width: 4.w),
-              Expanded(
-                child: Text(
-                  title,
-                  style: TextStyle(fontSize: 11.sp, color: textSecondary),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
+          Icon(icon, size: 16.r, color: textSecondary),
+          SizedBox(width: 8.w),
+          Text(
+            title,
+            style: TextStyle(fontSize: 12.sp, color: textSecondary),
           ),
-          SizedBox(height: 4.h),
+          const Spacer(),
           Text(
             value,
             style: TextStyle(
@@ -55,8 +46,6 @@ class CoachInfoTile extends StatelessWidget {
               fontWeight: FontWeight.w700,
               color: textPrimary,
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

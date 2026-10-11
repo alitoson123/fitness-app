@@ -31,6 +31,7 @@ class ContactSupportDialog extends StatelessWidget {
     return Dialog(
       backgroundColor: cardBg,
       shape: RoundedRectangleBorder(borderRadius: AppRadius.lgAll),
+      insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
       child: Padding(
         padding: EdgeInsets.all(20.r),
         child: Column(
@@ -70,32 +71,49 @@ class ContactSupportDialog extends StatelessWidget {
               ),
             ),
             SizedBox(height: AppSpacing.s4),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
-              decoration: BoxDecoration(
-                color: isDark
-                    ? AppColors.darkSurfaceVariant
-                    : AppColors.surfaceVariant,
-                borderRadius: AppRadius.mdAll,
-                border: Border.all(
-                  color: isDark ? AppColors.darkBorder : AppColors.border,
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.mail_outline_rounded,
-                      size: 18.r, color: AppColors.primary),
-                  SizedBox(width: 8.w),
-                  SelectableText(
-                    s.supportEmail,
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
-                      color: textPrimary,
-                    ),
+            InkWell(
+              onTap: () {
+                Clipboard.setData(ClipboardData(text: s.supportEmail));
+                Message.showSuccess(context, s.emailCopied);
+              },
+              borderRadius: AppRadius.mdAll,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? AppColors.darkSurfaceVariant
+                      : AppColors.surfaceVariant,
+                  borderRadius: AppRadius.mdAll,
+                  border: Border.all(
+                    color: isDark ? AppColors.darkBorder : AppColors.border,
                   ),
-                ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.mail_outline_rounded,
+                      size: 18.r,
+                      color: AppColors.primary,
+                    ),
+                    SizedBox(width: 8.w),
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          s.supportEmail,
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w600,
+                            color: textPrimary,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             SizedBox(height: AppSpacing.s4),

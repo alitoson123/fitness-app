@@ -18,6 +18,9 @@ class CoachProfileModel {
   final double sessionPrice;
   final String currency;
   final String availabilitySummary;
+  final int sessionDurationMinutes;
+  final List<String> workingDays;
+  final Map<String, dynamic>? workingHours;
   final List<DayAvailability> weeklyAvailability;
   final List<String> certificateUrls;
   final double rating;
@@ -42,6 +45,9 @@ class CoachProfileModel {
     this.sessionPrice = 0.0,
     this.currency = 'SAR',
     this.availabilitySummary = '',
+    this.sessionDurationMinutes = 60,
+    this.workingDays = const [],
+    this.workingHours,
     this.weeklyAvailability = const [],
     this.certificateUrls = const [],
     this.rating = 0.0,
@@ -68,6 +74,9 @@ class CoachProfileModel {
       sessionPrice: (json['hourlyRate'] as num?)?.toDouble() ?? 0.0,
       currency: json['currency'] as String? ?? 'SAR',
       availabilitySummary: json['availabilitySummary'] as String? ?? '',
+      sessionDurationMinutes: json['sessionDurationMinutes'] as int? ?? 60,
+      workingDays: CoachProfileParserHelper.parseList(json['workingDays']),
+      workingHours: CoachProfileParserHelper.parseMap(json['workingHours']),
       weeklyAvailability: CoachProfileParserHelper.parseAvailability(
         json['weeklyAvailability'],
       ),
@@ -99,6 +108,14 @@ class CoachProfileModel {
       'hourlyRate': sessionPrice,
       'currency': currency,
       'availabilitySummary': availabilitySummary,
+      'sessionDurationMinutes': sessionDurationMinutes,
+      'workingDays': workingDays.isNotEmpty
+          ? workingDays
+          : weeklyAvailability
+              .where((e) => e.isAvailable)
+              .map((e) => e.day.name)
+              .toList(),
+      if (workingHours != null) 'workingHours': workingHours,
       if (weeklyAvailability.isNotEmpty)
         'weeklyAvailability': weeklyAvailability.map((e) => e.toMap()).toList(),
       if (certificateUrls.isNotEmpty) 'certificateUrls': certificateUrls,
@@ -126,6 +143,9 @@ class CoachProfileModel {
     double? hourlyRate,
     String? currency,
     String? availabilitySummary,
+    int? sessionDurationMinutes,
+    List<String>? workingDays,
+    Map<String, dynamic>? workingHours,
     List<DayAvailability>? weeklyAvailability,
     List<String>? certificateUrls,
     double? rating,
@@ -150,6 +170,10 @@ class CoachProfileModel {
       sessionPrice: hourlyRate ?? sessionPrice,
       currency: currency ?? this.currency,
       availabilitySummary: availabilitySummary ?? this.availabilitySummary,
+      sessionDurationMinutes:
+          sessionDurationMinutes ?? this.sessionDurationMinutes,
+      workingDays: workingDays ?? this.workingDays,
+      workingHours: workingHours ?? this.workingHours,
       weeklyAvailability: weeklyAvailability ?? this.weeklyAvailability,
       certificateUrls: certificateUrls ?? this.certificateUrls,
       rating: rating ?? this.rating,

@@ -3476,10 +3476,10 @@ class S {
     );
   }
 
-  /// `support@coachhub.app`
+  /// `alitoson1234567@gmail.com`
   String get supportEmail {
     return Intl.message(
-      'support@coachhub.app',
+      'alitoson1234567@gmail.com',
       name: 'supportEmail',
       desc: '',
       args: [],
@@ -3586,10 +3586,10 @@ class S {
     );
   }
 
-  /// `Minimum Experience`
+  /// `Experience`
   String get minExperienceYears {
     return Intl.message(
-      'Minimum Experience',
+      'Experience',
       name: 'minExperienceYears',
       desc: '',
       args: [],
@@ -4043,6 +4043,1152 @@ class S {
       name: 'coachAgeYears',
       desc: '',
       args: [age],
+    );
+  }
+
+  /// `Availability & Working Hours`
+  String get manageAvailability {
+    return Intl.message(
+      'Availability & Working Hours',
+      name: 'manageAvailability',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Set your weekly working days, training hours, and default session duration.`
+  String get availabilitySubtitle {
+    return Intl.message(
+      'Set your weekly working days, training hours, and default session duration.',
+      name: 'availabilitySubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Working Days`
+  String get workingDays {
+    return Intl.message(
+      'Working Days',
+      name: 'workingDays',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Session Duration`
+  String get sessionDuration {
+    return Intl.message(
+      'Session Duration',
+      name: 'sessionDuration',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{minutes} min`
+  String minutesDuration(Object minutes) {
+    return Intl.message(
+      '$minutes min',
+      name: 'minutesDuration',
+      desc: '',
+      args: [minutes],
+    );
+  }
+
+  /// `Working Hours`
+  String get timeSlots {
+    return Intl.message(
+      'Working Hours',
+      name: 'timeSlots',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start Time`
+  String get startTime {
+    return Intl.message(
+      'Start Time',
+      name: 'startTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `End Time`
+  String get endTime {
+    return Intl.message(
+      'End Time',
+      name: 'endTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Available for bookings`
+  String get dayStatusAvailable {
+    return Intl.message(
+      'Available for bookings',
+      name: 'dayStatusAvailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Day off`
+  String get dayStatusOff {
+    return Intl.message(
+      'Day off',
+      name: 'dayStatusOff',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Apply hours to all working days`
+  String get applyToAllActiveDays {
+    return Intl.message(
+      'Apply hours to all working days',
+      name: 'applyToAllActiveDays',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hours applied to all working days`
+  String get hoursAppliedToAllDays {
+    return Intl.message(
+      'Hours applied to all working days',
+      name: 'hoursAppliedToAllDays',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save Schedule`
+  String get saveAvailability {
+    return Intl.message(
+      'Save Schedule',
+      name: 'saveAvailability',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Saving...`
+  String get savingAvailability {
+    return Intl.message(
+      'Saving...',
+      name: 'savingAvailability',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your schedule has been updated successfully.`
+  String get availabilitySavedSuccess {
+    return Intl.message(
+      'Your schedule has been updated successfully.',
+      name: 'availabilitySavedSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please select at least one working day.`
+  String get errorNoWorkingDays {
+    return Intl.message(
+      'Please select at least one working day.',
+      name: 'errorNoWorkingDays',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `End time must be after start time for {day}.`
+  String errorInvalidTimeRange(Object day) {
+    return Intl.message(
+      'End time must be after start time for $day.',
+      name: 'errorInvalidTimeRange',
+      desc: '',
+      args: [day],
+    );
+  }
+
+  /// `Working hours for {day} must be at least {duration} minutes.`
+  String errorTimeWindowTooShort(Object day, Object duration) {
+    return Intl.message(
+      'Working hours for $day must be at least $duration minutes.',
+      name: 'errorTimeWindowTooShort',
+      desc: '',
+      args: [day, duration],
+    );
+  }
+
+  /// `{count} Active Days`
+  String activeDaysCount(Object count) {
+    return Intl.message(
+      '$count Active Days',
+      name: 'activeDaysCount',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Manage Availability`
+  String get manageWorkingHours {
+    return Intl.message(
+      'Manage Availability',
+      name: 'manageWorkingHours',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Configure weekly working days and hours`
+  String get workingHoursDescription {
+    return Intl.message(
+      'Configure weekly working days and hours',
+      name: 'workingHoursDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{hours} hrs available`
+  String totalDurationLabel(Object hours) {
+    return Intl.message(
+      '$hours hrs available',
+      name: 'totalDurationLabel',
+      desc: '',
+      args: [hours],
+    );
+  }
+
+  /// `~{count} sessions`
+  String approximateSessionsCount(Object count) {
+    return Intl.message(
+      '~$count sessions',
+      name: 'approximateSessionsCount',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Request Training Session`
+  String get bookingRequestTitle {
+    return Intl.message(
+      'Request Training Session',
+      name: 'bookingRequestTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select Sport`
+  String get selectTrainingSport {
+    return Intl.message(
+      'Select Sport',
+      name: 'selectTrainingSport',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select Date`
+  String get selectTrainingDate {
+    return Intl.message(
+      'Select Date',
+      name: 'selectTrainingDate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select Time Slot`
+  String get selectTrainingTime {
+    return Intl.message(
+      'Select Time Slot',
+      name: 'selectTrainingTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No available slots on this day`
+  String get noAvailableSlotsForDate {
+    return Intl.message(
+      'No available slots on this day',
+      name: 'noAvailableSlotsForDate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notes or Goals (Optional)`
+  String get additionalNotesOptional {
+    return Intl.message(
+      'Notes or Goals (Optional)',
+      name: 'additionalNotesOptional',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Describe your fitness goals, past injuries, or requests...`
+  String get bookingNotesPlaceholder {
+    return Intl.message(
+      'Describe your fitness goals, past injuries, or requests...',
+      name: 'bookingNotesPlaceholder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Booking Summary`
+  String get bookingSummaryTitle {
+    return Intl.message(
+      'Booking Summary',
+      name: 'bookingSummaryTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sport`
+  String get selectedSportLabel {
+    return Intl.message(
+      'Sport',
+      name: 'selectedSportLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Date`
+  String get selectedDateLabel {
+    return Intl.message(
+      'Date',
+      name: 'selectedDateLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Time`
+  String get selectedTimeLabel {
+    return Intl.message(
+      'Time',
+      name: 'selectedTimeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Session Price`
+  String get totalSessionPrice {
+    return Intl.message(
+      'Session Price',
+      name: 'totalSessionPrice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm & Send Request`
+  String get confirmAndSendRequest {
+    return Intl.message(
+      'Confirm & Send Request',
+      name: 'confirmAndSendRequest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sending request...`
+  String get submittingBookingRequest {
+    return Intl.message(
+      'Sending request...',
+      name: 'submittingBookingRequest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Request Sent Successfully!`
+  String get bookingSuccessTitle {
+    return Intl.message(
+      'Request Sent Successfully!',
+      name: 'bookingSuccessTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your training request has been sent to Coach {coachName}. You will be notified once they respond.`
+  String bookingSuccessDescription(Object coachName) {
+    return Intl.message(
+      'Your training request has been sent to Coach $coachName. You will be notified once they respond.',
+      name: 'bookingSuccessDescription',
+      desc: '',
+      args: [coachName],
+    );
+  }
+
+  /// `Explore More Coaches`
+  String get backToExplore {
+    return Intl.message(
+      'Explore More Coaches',
+      name: 'backToExplore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please select an available time slot`
+  String get pleaseSelectTimeSlot {
+    return Intl.message(
+      'Please select an available time slot',
+      name: 'pleaseSelectTimeSlot',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Coach has no scheduled availability at this time.`
+  String get coachHasNoAvailability {
+    return Intl.message(
+      'Coach has no scheduled availability at this time.',
+      name: 'coachHasNoAvailability',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Requests`
+  String get incomingRequestsTab {
+    return Intl.message(
+      'Requests',
+      name: 'incomingRequestsTab',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirmed`
+  String get confirmedSessionsTab {
+    return Intl.message(
+      'Confirmed',
+      name: 'confirmedSessionsTab',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `History`
+  String get pastSessionsTab {
+    return Intl.message(
+      'History',
+      name: 'pastSessionsTab',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accept`
+  String get acceptRequest {
+    return Intl.message(
+      'Accept',
+      name: 'acceptRequest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Decline`
+  String get rejectRequest {
+    return Intl.message(
+      'Decline',
+      name: 'rejectRequest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Training request confirmed successfully!`
+  String get requestAcceptedSuccess {
+    return Intl.message(
+      'Training request confirmed successfully!',
+      name: 'requestAcceptedSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Training request declined.`
+  String get requestRejectedSuccess {
+    return Intl.message(
+      'Training request declined.',
+      name: 'requestRejectedSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Decline Request`
+  String get rejectRequestDialogTitle {
+    return Intl.message(
+      'Decline Request',
+      name: 'rejectRequestDialogTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to decline this request from {name}?`
+  String rejectRequestDialogDesc(Object name) {
+    return Intl.message(
+      'Are you sure you want to decline this request from $name?',
+      name: 'rejectRequestDialogDesc',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Reason for declining (optional)`
+  String get rejectionReasonOptional {
+    return Intl.message(
+      'Reason for declining (optional)',
+      name: 'rejectionReasonOptional',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `e.g., Schedule conflict, out of gym, etc.`
+  String get rejectionReasonHint {
+    return Intl.message(
+      'e.g., Schedule conflict, out of gym, etc.',
+      name: 'rejectionReasonHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm Decline`
+  String get confirmDecline {
+    return Intl.message(
+      'Confirm Decline',
+      name: 'confirmDecline',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No Pending Requests`
+  String get noPendingRequestsTitle {
+    return Intl.message(
+      'No Pending Requests',
+      name: 'noPendingRequestsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New trainee booking requests will appear here in real time.`
+  String get noPendingRequestsDesc {
+    return Intl.message(
+      'New trainee booking requests will appear here in real time.',
+      name: 'noPendingRequestsDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No Confirmed Sessions`
+  String get noConfirmedSessionsTitle {
+    return Intl.message(
+      'No Confirmed Sessions',
+      name: 'noConfirmedSessionsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sessions you have accepted will show up here.`
+  String get noConfirmedSessionsDesc {
+    return Intl.message(
+      'Sessions you have accepted will show up here.',
+      name: 'noConfirmedSessionsDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No Past Sessions`
+  String get noPastSessionsTitle {
+    return Intl.message(
+      'No Past Sessions',
+      name: 'noPastSessionsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Completed and declined requests will be archived here.`
+  String get noPastSessionsDesc {
+    return Intl.message(
+      'Completed and declined requests will be archived here.',
+      name: 'noPastSessionsDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Session with {name}`
+  String sessionWith(Object name) {
+    return Intl.message(
+      'Session with $name',
+      name: 'sessionWith',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Trainee Notes`
+  String get traineeNotes {
+    return Intl.message(
+      'Trainee Notes',
+      name: 'traineeNotes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Today`
+  String get sessionCountdownToday {
+    return Intl.message(
+      'Today',
+      name: 'sessionCountdownToday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `In {days} days`
+  String sessionCountdownDays(Object days) {
+    return Intl.message(
+      'In $days days',
+      name: 'sessionCountdownDays',
+      desc: '',
+      args: [days],
+    );
+  }
+
+  /// `In {hours} hrs`
+  String sessionCountdownHours(Object hours) {
+    return Intl.message(
+      'In $hours hrs',
+      name: 'sessionCountdownHours',
+      desc: '',
+      args: [hours],
+    );
+  }
+
+  /// `Passed`
+  String get sessionPassed {
+    return Intl.message(
+      'Passed',
+      name: 'sessionPassed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Decline reason: {reason}`
+  String sessionDeclineReason(Object reason) {
+    return Intl.message(
+      'Decline reason: $reason',
+      name: 'sessionDeclineReason',
+      desc: '',
+      args: [reason],
+    );
+  }
+
+  /// `Training Bookings`
+  String get myBookings {
+    return Intl.message(
+      'Training Bookings',
+      name: 'myBookings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Manage your schedule, availability, and training sessions.`
+  String get coachDashboardSubtitle {
+    return Intl.message(
+      'Manage your schedule, availability, and training sessions.',
+      name: 'coachDashboardSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pending Requests`
+  String get pendingRequests {
+    return Intl.message(
+      'Pending Requests',
+      name: 'pendingRequests',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upcoming Sessions`
+  String get upcomingSessions {
+    return Intl.message(
+      'Upcoming Sessions',
+      name: 'upcomingSessions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Session History`
+  String get sessionHistory {
+    return Intl.message(
+      'Session History',
+      name: 'sessionHistory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weekly Schedule & Availability`
+  String get scheduleAndAvailability {
+    return Intl.message(
+      'Weekly Schedule & Availability',
+      name: 'scheduleAndAvailability',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dashboard`
+  String get coachNavDashboard {
+    return Intl.message(
+      'Dashboard',
+      name: 'coachNavDashboard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bookings`
+  String get coachNavBookings {
+    return Intl.message(
+      'Bookings',
+      name: 'coachNavBookings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Availability`
+  String get coachNavAvailability {
+    return Intl.message(
+      'Availability',
+      name: 'coachNavAvailability',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bookings`
+  String get coachBookingsTitle {
+    return Intl.message(
+      'Bookings',
+      name: 'coachBookingsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Good morning, {name}`
+  String greetingMorning(Object name) {
+    return Intl.message(
+      'Good morning, $name',
+      name: 'greetingMorning',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Good afternoon, {name}`
+  String greetingAfternoon(Object name) {
+    return Intl.message(
+      'Good afternoon, $name',
+      name: 'greetingAfternoon',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Good evening, {name}`
+  String greetingEvening(Object name) {
+    return Intl.message(
+      'Good evening, $name',
+      name: 'greetingEvening',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Ready for your upcoming training sessions?`
+  String get coachReadySubtitle {
+    return Intl.message(
+      'Ready for your upcoming training sessions?',
+      name: 'coachReadySubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pending`
+  String get statPending {
+    return Intl.message(
+      'Pending',
+      name: 'statPending',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upcoming`
+  String get statUpcoming {
+    return Intl.message(
+      'Upcoming',
+      name: 'statUpcoming',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `History`
+  String get statHistory {
+    return Intl.message(
+      'History',
+      name: 'statHistory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Next Upcoming Session`
+  String get nextSessionTitle {
+    return Intl.message(
+      'Next Upcoming Session',
+      name: 'nextSessionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No upcoming sessions`
+  String get noUpcomingSessionsTitle {
+    return Intl.message(
+      'No upcoming sessions',
+      name: 'noUpcomingSessionsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Set your availability so trainees can book sessions with you.`
+  String get noUpcomingSessionsDesc {
+    return Intl.message(
+      'Set your availability so trainees can book sessions with you.',
+      name: 'noUpcomingSessionsDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Set Availability`
+  String get setAvailabilityButton {
+    return Intl.message(
+      'Set Availability',
+      name: 'setAvailabilityButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Starts in {hours}h {mins}m`
+  String countdownHoursMins(Object hours, Object mins) {
+    return Intl.message(
+      'Starts in ${hours}h ${mins}m',
+      name: 'countdownHoursMins',
+      desc: '',
+      args: [hours, mins],
+    );
+  }
+
+  /// `Starts in {mins}m`
+  String countdownMins(Object mins) {
+    return Intl.message(
+      'Starts in ${mins}m',
+      name: 'countdownMins',
+      desc: '',
+      args: [mins],
+    );
+  }
+
+  /// `Tomorrow, {time}`
+  String countdownTomorrow(Object time) {
+    return Intl.message(
+      'Tomorrow, $time',
+      name: 'countdownTomorrow',
+      desc: '',
+      args: [time],
+    );
+  }
+
+  /// `Today, {time}`
+  String countdownToday(Object time) {
+    return Intl.message(
+      'Today, $time',
+      name: 'countdownToday',
+      desc: '',
+      args: [time],
+    );
+  }
+
+  /// `Pending Requests`
+  String get pendingRequestsPreview {
+    return Intl.message(
+      'Pending Requests',
+      name: 'pendingRequestsPreview',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View all`
+  String get viewAll {
+    return Intl.message(
+      'View all',
+      name: 'viewAll',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No pending requests at the moment`
+  String get noPendingRequestsPreview {
+    return Intl.message(
+      'No pending requests at the moment',
+      name: 'noPendingRequestsPreview',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This Week's Schedule`
+  String get thisWeekSchedule {
+    return Intl.message(
+      'This Week\'s Schedule',
+      name: 'thisWeekSchedule',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quick Actions`
+  String get quickActions {
+    return Intl.message(
+      'Quick Actions',
+      name: 'quickActions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Manage Availability`
+  String get quickActionAvailability {
+    return Intl.message(
+      'Manage Availability',
+      name: 'quickActionAvailability',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Set working days & hours`
+  String get quickActionAvailabilityDesc {
+    return Intl.message(
+      'Set working days & hours',
+      name: 'quickActionAvailabilityDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View All Bookings`
+  String get quickActionBookings {
+    return Intl.message(
+      'View All Bookings',
+      name: 'quickActionBookings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Requests, confirmed & history`
+  String get quickActionBookingsDesc {
+    return Intl.message(
+      'Requests, confirmed & history',
+      name: 'quickActionBookingsDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This Month's Earnings`
+  String get thisMonthEarnings {
+    return Intl.message(
+      'This Month\'s Earnings',
+      name: 'thisMonthEarnings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Today`
+  String get groupToday {
+    return Intl.message(
+      'Today',
+      name: 'groupToday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tomorrow`
+  String get groupTomorrow {
+    return Intl.message(
+      'Tomorrow',
+      name: 'groupTomorrow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This Week`
+  String get groupThisWeek {
+    return Intl.message(
+      'This Week',
+      name: 'groupThisWeek',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upcoming Later`
+  String get groupLater {
+    return Intl.message(
+      'Upcoming Later',
+      name: 'groupLater',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Past Sessions`
+  String get groupPast {
+    return Intl.message(
+      'Past Sessions',
+      name: 'groupPast',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count, plural, =1{1 pending request} other{{count} pending requests}}`
+  String summaryPendingRequests(num count) {
+    return Intl.plural(
+      count,
+      one: '1 pending request',
+      other: '$count pending requests',
+      name: 'summaryPendingRequests',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count, plural, =1{1 upcoming session} other{{count} upcoming sessions}}`
+  String summaryConfirmedSessions(num count) {
+    return Intl.plural(
+      count,
+      one: '1 upcoming session',
+      other: '$count upcoming sessions',
+      name: 'summaryConfirmedSessions',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count, plural, =1{1 past session} other{{count} past sessions}}`
+  String summaryPastSessions(num count) {
+    return Intl.plural(
+      count,
+      one: '1 past session',
+      other: '$count past sessions',
+      name: 'summaryPastSessions',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Confirmed`
+  String get statusConfirmed {
+    return Intl.message(
+      'Confirmed',
+      name: 'statusConfirmed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Completed`
+  String get statusCompleted {
+    return Intl.message(
+      'Completed',
+      name: 'statusCompleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Declined`
+  String get statusDeclined {
+    return Intl.message(
+      'Declined',
+      name: 'statusDeclined',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancelled`
+  String get statusCancelled {
+    return Intl.message(
+      'Cancelled',
+      name: 'statusCancelled',
+      desc: '',
+      args: [],
     );
   }
 }

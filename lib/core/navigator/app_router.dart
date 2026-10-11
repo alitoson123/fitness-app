@@ -3,7 +3,7 @@ import '../../features/auth/forget_password/presentation/views/forget_password_v
 import '../../features/auth/choose_role/presentation/views/choose_role_view.dart';
 import '../../features/auth/sign_in/presentation/views/sign_in_view.dart';
 import '../../features/auth/sign_up/presentation/views/sign_up_view.dart';
-import '../../features/coach_dashboard/presentation/views/coach_dashboard_view.dart';
+import '../../features/coach_dashboard/presentation/views/coach_main_shell.dart';
 import '../../features/coach_setup/data/models/coach_application_model.dart';
 import '../../features/coach_setup/data/models/coach_profile_model.dart';
 import '../../features/coach_setup/presentation/views/coach_registration_view.dart';
@@ -12,8 +12,10 @@ import '../../features/onboarding/presentation/views/onboarding_view.dart';
 import '../../features/splash/presentation/views/splash_view.dart';
 import '../../features/trainee_discovery/presentation/views/trainee_home_view.dart';
 import '../../features/coach_profile_details/presentation/views/coach_details_view.dart';
+import '../../features/coach_availability/presentation/views/coach_availability_view.dart';
 import '../../features/trainee_setup/presentation/views/trainee_setup_view.dart';
 import '../../features/trainee_setup/presentation/views/trainee_success_view.dart';
+import '../../features/booking_request/presentation/views/booking_request_view.dart';
 import 'app_routes.dart';
 
 abstract class AppRouter {
@@ -70,7 +72,14 @@ abstract class AppRouter {
       ),
       GoRoute(
         path: AppRoutes.coachDashboard,
-        builder: (context, state) => const CoachDashboardView(),
+        builder: (context, state) => const CoachMainShell(),
+      ),
+      GoRoute(
+        path: AppRoutes.coachAvailability,
+        builder: (context, state) {
+          final coachUid = state.extra as String?;
+          return CoachAvailabilityView(coachUid: coachUid);
+        },
       ),
       GoRoute(
         path: AppRoutes.coachDetails,
@@ -82,6 +91,16 @@ abstract class AppRouter {
             return CoachDetailsView(coachUid: extra);
           }
           return const CoachDetailsView();
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.bookingRequest,
+        builder: (context, state) {
+          final coach = state.extra as CoachProfileModel?;
+          if (coach != null) {
+            return BookingRequestView(coach: coach);
+          }
+          return const TraineeHomeView();
         },
       ),
     ],

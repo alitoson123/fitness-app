@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../generated/l10n.dart';
@@ -56,3 +56,4 @@ class PricingTipCard extends StatelessWidget {
     );
   }
 }
+*/

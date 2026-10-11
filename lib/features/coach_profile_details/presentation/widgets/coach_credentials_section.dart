@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'certificate_preview_dialog.dart';
 import 'coach_info_tile.dart';
+import 'coach_languages_tags.dart';
 
 class CoachCredentialsSection extends StatelessWidget {
   final CoachProfileModel coach;
@@ -54,49 +55,25 @@ class CoachCredentialsSection extends StatelessWidget {
             ],
           ),
           SizedBox(height: 12.h),
-          _buildInfoRow(context, isDark, textPrimary, textSecondary),
+          CoachInfoTile(
+            icon: Icons.timeline_rounded,
+            title: S.of(context).minExperienceYears,
+            value: S.of(context).experienceYearsCount(coach.yearsOfExperience),
+            isDark: isDark,
+            textPrimary: textPrimary,
+            textSecondary: textSecondary,
+          ),
+          SizedBox(height: 12.h),
+          CoachLanguagesTags(
+            languages: coach.languages,
+            isDark: isDark,
+            textPrimary: textPrimary,
+            textSecondary: textSecondary,
+          ),
           SizedBox(height: 14.h),
           _buildCertificates(context, isDark, primary, textSecondary),
         ],
       ),
-    );
-  }
-
-  Widget _buildInfoRow(
-    BuildContext context,
-    bool isDark,
-    Color textPrimary,
-    Color textSecondary,
-  ) {
-    final s = S.of(context);
-    final languagesText = coach.languages.isNotEmpty
-        ? coach.languages.join(', ')
-        : 'Arabic, English';
-
-    return Row(
-      children: [
-        Expanded(
-          child: CoachInfoTile(
-            icon: Icons.timeline_rounded,
-            title: s.minExperienceYears,
-            value: s.experienceYearsCount(coach.yearsOfExperience),
-            isDark: isDark,
-            textPrimary: textPrimary,
-            textSecondary: textSecondary,
-          ),
-        ),
-        SizedBox(width: 10.w),
-        Expanded(
-          child: CoachInfoTile(
-            icon: Icons.translate_rounded,
-            title: s.spokenLanguages,
-            value: languagesText,
-            isDark: isDark,
-            textPrimary: textPrimary,
-            textSecondary: textSecondary,
-          ),
-        ),
-      ],
     );
   }
 

@@ -31,6 +31,14 @@ import '../../features/trainee_discovery/presentation/view_model/coach_discovery
 import '../../features/coach_profile_details/data/data_source/coach_profile_details_remote_data_source.dart';
 import '../../features/coach_profile_details/data/repos/coach_profile_details_repo.dart';
 import '../../features/coach_profile_details/presentation/view_model/coach_profile_details_cubit/coach_profile_details_cubit.dart';
+import '../../features/coach_availability/data/data_source/coach_availability_remote_data_source.dart';
+import '../../features/coach_availability/data/repos/coach_availability_repo.dart';
+import '../../features/coach_availability/presentation/view_model/coach_availability_cubit/coach_availability_cubit.dart';
+import '../../features/booking_request/data/data_source/booking_request_remote_data_source.dart';
+import '../../features/booking_request/data/repos/booking_request_repo.dart';
+import '../../features/booking_request/presentation/view_model/booking_request_cubit/booking_request_cubit.dart';
+import '../../features/coach_dashboard/data/repos/coach_bookings_repo.dart';
+import '../../features/coach_dashboard/presentation/view_model/coach_bookings_cubit/coach_bookings_cubit.dart';
 import '../services/Local_service/general_local_service.dart';
 import '../services/auth_service/auth_service.dart';
 import '../services/database_service/firestore_service.dart';
@@ -220,6 +228,55 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory<CoachProfileDetailsCubit>(
     () => CoachProfileDetailsCubit(
       repository: getIt<CoachProfileDetailsRepo>(),
+    ),
+  );
+
+  // 13. Coach Availability Dependencies
+  getIt.registerLazySingleton<CoachAvailabilityRemoteDataSource>(
+    () => CoachAvailabilityRemoteDataSource(
+      firestoreService: getIt<FirestoreService>(),
+    ),
+  );
+  getIt.registerLazySingleton<CoachAvailabilityRepo>(
+    () => CoachAvailabilityRepo(
+      remoteDataSource: getIt<CoachAvailabilityRemoteDataSource>(),
+      localDataSource: getIt<CoachSetupLocalDataSource>(),
+    ),
+  );
+  getIt.registerFactory<CoachAvailabilityCubit>(
+    () => CoachAvailabilityCubit(
+      repository: getIt<CoachAvailabilityRepo>(),
+    ),
+  );
+
+  // 14. Booking Request Dependencies
+  getIt.registerLazySingleton<BookingRequestRemoteDataSource>(
+    () => BookingRequestRemoteDataSource(
+      firestoreService: getIt<FirestoreService>(),
+    ),
+  );
+  getIt.registerLazySingleton<BookingRequestRepo>(
+    () => BookingRequestRepo(
+      remoteDataSource: getIt<BookingRequestRemoteDataSource>(),
+      authService: getIt<AuthService>(),
+      traineeSetupRepo: getIt<TraineeSetupRepo>(),
+    ),
+  );
+  getIt.registerFactory<BookingRequestCubit>(
+    () => BookingRequestCubit(
+      repository: getIt<BookingRequestRepo>(),
+    ),
+  );
+
+  // 15. Coach Dashboard Bookings Dependencies
+  getIt.registerLazySingleton<CoachBookingsRepo>(
+    () => CoachBookingsRepo(
+      firestoreService: getIt<FirestoreService>(),
+    ),
+  );
+  getIt.registerFactory<CoachBookingsCubit>(
+    () => CoachBookingsCubit(
+      repository: getIt<CoachBookingsRepo>(),
     ),
   );
 }

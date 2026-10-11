@@ -197,20 +197,20 @@ dev_dependencies:
   - `RequestTrainingButton`: Prominent sticky bottom action to start booking flow.
 
 ### Milestone 8: Coach Feature 1 — Coach Availability & Working Hours
-- [ ] **State**: `CoachAvailabilityCubit`:
+- [x] **State**: `CoachAvailabilityCubit`:
   - Load and update coach schedule in `coach_profiles/{uid}`: `workingDays`, `workingHours`, `sessionDurationMinutes`.
-- [ ] **Widgets**:
+- [x] **Widgets**:
   - `DaySelectorRow`: Toggle available days of the week (Monday — Sunday).
   - `TimeSlotConfigurator`: Select start time and end time for each active day.
   - `SlotDurationPicker`: Default session duration (e.g., 45 min, 60 min, 90 min).
   - `SaveAvailabilityButton`: Persist availability to Firestore with validation against invalid time ranges.
 
 ### Milestone 9: Marketplace Transaction — Training Request & Booking
-- [ ] **State**: `BookingRequestCubit`:
+- [x] **State**: `BookingRequestCubit`:
   - Validate selected date against coach working days.
   - Compute available time slots for chosen date, filtering out already booked/pending sessions.
   - Submit booking request with status `'pending'` to `bookings` collection.
-- [ ] **Widgets**:
+- [x] **Widgets**:
   - `BookingDatePicker`: Interactive calendar / horizontal date strip showing coach's working days.
   - `TimeSlotsGridView`: Selectable time chips showing available slots for the selected day.
   - `BookingNotesInput`: Optional field for trainee to specify goals, injuries, or notes.
@@ -218,10 +218,10 @@ dev_dependencies:
   - `ConfirmRequestButton`: Submit request and transition to `BookingSuccessView`.
 
 ### Milestone 10: Coach Feature 2 — Coach Dashboard & Request Management
-- [ ] **State**: `CoachBookingsCubit`:
+- [x] **State**: `CoachBookingsCubit`:
   - Real-time listener for incoming booking requests (`bookings` where `coachUid == currentUid`).
   - Filter tabs: `Pending Requests`, `Confirmed Sessions`, `Completed / Past`.
-- [ ] **Widgets**:
+- [x] **Widgets**:
   - `IncomingRequestCard`: Trainee avatar, name, requested sport, date & time, trainee notes, and Action Buttons:
     - **Accept**: Changes booking status to `'confirmed'`.
     - **Reject**: Opens dialog with optional rejection reason, updates status to `'rejected'`.

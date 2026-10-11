@@ -5,7 +5,6 @@ import '../../../../generated/l10n.dart';
 import '../view_model/coach_setup_cubit/coach_setup_cubit.dart';
 import 'currency_dropdown_field.dart';
 import 'price_per_session_field.dart';
-import 'pricing_tip_card.dart';
 
 class StepPricingWidget extends StatelessWidget {
   final CoachSetupCubit cubit;
@@ -39,8 +38,8 @@ class StepPricingWidget extends StatelessWidget {
                   : AppColors.textSecondary,
             ),
           ),
-          SizedBox(height: 14.h),
-          const PricingTipCard(),
+         // SizedBox(height: 14.h),
+        //  const PricingTipCard(),
           SizedBox(height: 18.h),
           CurrencyDropdownField(
             selectedCurrency: cubit.currency,

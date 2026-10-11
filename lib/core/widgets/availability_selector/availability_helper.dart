@@ -70,4 +70,21 @@ class AvailabilityHelper {
 
     return '$dayNames ($fromStr - $toStr)';
   }
+
+  static String buildRawSummaryString(List<DayAvailability> schedule) {
+    final availableDays = schedule.where((d) => d.isAvailable).toList();
+    if (availableDays.isEmpty) return '';
+
+    final dayNames = availableDays
+        .map((d) => d.day.name[0].toUpperCase() + d.day.name.substring(1, 3))
+        .join(', ');
+
+    final first = availableDays.first;
+    final fH = first.fromTime.hour.toString().padLeft(2, '0');
+    final fM = first.fromTime.minute.toString().padLeft(2, '0');
+    final tH = first.toTime.hour.toString().padLeft(2, '0');
+    final tM = first.toTime.minute.toString().padLeft(2, '0');
+
+    return '$dayNames ($fH:$fM - $tH:$tM)';
+  }
 }

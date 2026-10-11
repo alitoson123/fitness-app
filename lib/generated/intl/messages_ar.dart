@@ -20,45 +20,100 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ar';
 
-  static String m0(index) => "شهادة إضافية ${index}";
+  static String m0(count) => "${count} أيام عمل";
 
-  static String m1(age) => "${age} سنة";
+  static String m1(index) => "شهادة إضافية ${index}";
 
-  static String m2(email) => "تم تسجيل الدخول بواسطة: ${email}";
+  static String m2(count) => "~${count} جلسات";
 
-  static String m3(count) => "${count} سنوات خبرة";
+  static String m3(coachName) =>
+      "تم إرسال طلب التدريب إلى الكابتن ${coachName}. سيتم إشعارك فور الرد على طلبك.";
 
-  static String m4(count) =>
+  static String m4(age) => "${age} سنة";
+
+  static String m5(hours, mins) => "تبدأ خلال ${hours}س ${mins}د";
+
+  static String m6(mins) => "تبدأ خلال ${mins}د";
+
+  static String m7(time) => "اليوم، ${time}";
+
+  static String m8(time) => "غداً، ${time}";
+
+  static String m9(email) => "تم تسجيل الدخول بواسطة: ${email}";
+
+  static String m10(day) =>
+      "يجب أن يكون وقت الانتهاء بعد وقت البدء ليوم ${day}.";
+
+  static String m11(day, duration) =>
+      "يجب أن تكون ساعات العمل ليوم ${day} كافية لـ ${duration} دقيقة على الأقل.";
+
+  static String m12(count) => "${count} سنوات خبرة";
+
+  static String m13(name) => "مساء الخير، ${name}";
+
+  static String m14(name) => "مساء الخير، ${name}";
+
+  static String m15(name) => "صباح الخير، ${name}";
+
+  static String m16(minutes) => "${minutes} دقيقة";
+
+  static String m17(name) =>
+      "هل أنت متأكد من رغبتك في رفض هذا الطلب من ${name}؟";
+
+  static String m18(count) =>
       "${Intl.plural(count, one: 'مستند واحد مرفق', two: 'مستندان مرفقان', few: '${count} مستندات مرفقة', many: '${count} مستنداً مرفقاً', other: '${count} مستند مرفق')}";
 
-  static String m5(count) =>
+  static String m19(count) =>
       "${Intl.plural(count, one: 'سنة واحدة', two: 'سنتان', few: '${count} سنوات', many: '${count} سنة', other: '${count} سنة')}";
 
-  static String m6(count) => "${count} تقييم";
+  static String m20(count) => "${count} تقييم";
 
-  static String m7(count) =>
+  static String m21(days) => "خلال ${days} أيام";
+
+  static String m22(hours) => "خلال ${hours} ساعات";
+
+  static String m23(reason) => "سبب الرفض: ${reason}";
+
+  static String m24(name) => "جلسة مع ${name}";
+
+  static String m25(count) =>
       "${Intl.plural(count, one: 'تم اختيار رياضة واحدة', two: 'تم اختيار رياضتين', few: 'تم اختيار ${count} رياضات', many: 'تم اختيار ${count} رياضة', other: 'تم اختيار ${count} رياضة')}";
 
-  static String m8(current, total) => "الخطوة ${current} من ${total}";
+  static String m26(current, total) => "الخطوة ${current} من ${total}";
 
-  static String m9(name) => "مرحباً بعودتك، ${name}!";
+  static String m27(count) =>
+      "${Intl.plural(count, one: 'جلسة قادمة واحدة', two: 'جلستان قادمتان', few: '${count} جلسات قادمة', many: '${count} جلسة قادمة', other: '${count} جلسة قادمة')}";
+
+  static String m28(count) =>
+      "${Intl.plural(count, one: 'جلسة سابقة واحدة', two: 'جلستان سابقتان', few: '${count} جلسات سابقة', many: '${count} جلسة سابقة', other: '${count} جلسة سابقة')}";
+
+  static String m29(count) =>
+      "${Intl.plural(count, one: 'طلب معلق واحد', two: 'طلبان معلقان', few: '${count} طلبات معلقة', many: '${count} طلباً معلقاً', other: '${count} طلب معلق')}";
+
+  static String m30(hours) => "${hours} ساعة عمل";
+
+  static String m31(name) => "مرحباً بعودتك، ${name}!";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "aboutCoach": MessageLookupByLibrary.simpleMessage("نبذة عن المدرب"),
+        "acceptRequest": MessageLookupByLibrary.simpleMessage("قبول"),
         "accountCreated":
             MessageLookupByLibrary.simpleMessage("تم إنشاء الحساب"),
         "accountCreatedMessage": MessageLookupByLibrary.simpleMessage(
             "تم إرسال رابط التأكيد إلى بريدك الإلكتروني. يرجى التأكيد قبل تسجيل الدخول."),
         "accountDeletedSuccess":
             MessageLookupByLibrary.simpleMessage("تم حذف حسابك بنجاح."),
+        "activeDaysCount": m0,
         "addPhotoPrompt": MessageLookupByLibrary.simpleMessage(
             "أضف صورة ليتمكن المدربون من التعرف عليك"),
         "addSupportingDocument":
             MessageLookupByLibrary.simpleMessage("إضافة مستند داعم"),
-        "additionalCertificate": m0,
+        "additionalCertificate": m1,
         "additionalCertificateHint": MessageLookupByLibrary.simpleMessage(
             "ارفع شهادة تدريبية أو اعتماد إضافي"),
+        "additionalNotesOptional":
+            MessageLookupByLibrary.simpleMessage("ملاحظات أو أهداف (اختياري)"),
         "advanced": MessageLookupByLibrary.simpleMessage("متقدم"),
         "advancedDesc": MessageLookupByLibrary.simpleMessage(
             "صاحب خبرة وأسعى لتطوير مستواي"),
@@ -86,6 +141,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "applicationSubmittedSuccess":
             MessageLookupByLibrary.simpleMessage("تم إرسال طلبك بنجاح للتحقق!"),
         "applyFilters": MessageLookupByLibrary.simpleMessage("تطبيق الفلاتر"),
+        "applyToAllActiveDays": MessageLookupByLibrary.simpleMessage(
+            "تطبيق هذه الساعات على كافة أيام العمل"),
+        "approximateSessionsCount": m2,
         "availTemplateFullTime":
             MessageLookupByLibrary.simpleMessage("دوام كامل مرن (يومياً)"),
         "availTemplateMornings": MessageLookupByLibrary.simpleMessage(
@@ -98,12 +156,18 @@ class MessageLookup extends MessageLookupByLibrary {
             "مثال: الأحد إلى الخميس 5:00 م - 10:00 م، السبت 9:00 ص - 2:00 م"),
         "availabilityRequired": MessageLookupByLibrary.simpleMessage(
             "يرجى توضيح المواعيد العامة المتاحة لديك"),
+        "availabilitySavedSuccess":
+            MessageLookupByLibrary.simpleMessage("تم حفظ جدول التوفر بنجاح."),
         "availabilityStepSubtitle": MessageLookupByLibrary.simpleMessage(
             "حدد جدول مواعيد التدريب وساعات العمل الأسبوعية"),
+        "availabilitySubtitle": MessageLookupByLibrary.simpleMessage(
+            "حدد أيام العمل الأسبوعية، ساعات التدريب، ومدة الجلسة الافتراضية."),
         "availabilityTitle": MessageLookupByLibrary.simpleMessage(
             "نظرة عامة على المواعيد المتاحة أسبوعياً"),
         "available": MessageLookupByLibrary.simpleMessage("متاح"),
         "back": MessageLookupByLibrary.simpleMessage("السابق"),
+        "backToExplore":
+            MessageLookupByLibrary.simpleMessage("استكشاف المزيد من المدربين"),
         "backToRoleSelection":
             MessageLookupByLibrary.simpleMessage("العودة لاختيار الدور"),
         "backToSignIn":
@@ -119,6 +183,15 @@ class MessageLookup extends MessageLookupByLibrary {
             "يجب أن تكون النبذة 30 حرفاً على الأقل"),
         "bookingFeatureComingSoon": MessageLookupByLibrary.simpleMessage(
             "سيتم فتح طلب الحجز في الخطوة التالية!"),
+        "bookingNotesPlaceholder": MessageLookupByLibrary.simpleMessage(
+            "اذكر أهدافك التدريبية أو أي إصابات سابقة أو متطلبات..."),
+        "bookingRequestTitle":
+            MessageLookupByLibrary.simpleMessage("طلب جلسة تدريبية"),
+        "bookingSuccessDescription": m3,
+        "bookingSuccessTitle":
+            MessageLookupByLibrary.simpleMessage("تم إرسال طلبك بنجاح!"),
+        "bookingSummaryTitle":
+            MessageLookupByLibrary.simpleMessage("ملخص الطلب"),
         "camera": MessageLookupByLibrary.simpleMessage("الكاميرا"),
         "cancel": MessageLookupByLibrary.simpleMessage("إلغاء"),
         "certRequired": MessageLookupByLibrary.simpleMessage(
@@ -180,18 +253,29 @@ class MessageLookup extends MessageLookupByLibrary {
         "clearDraft": MessageLookupByLibrary.simpleMessage("مسح المسودة"),
         "clearFilters": MessageLookupByLibrary.simpleMessage("مسح الفلاتر"),
         "close": MessageLookupByLibrary.simpleMessage("إغلاق"),
-        "coachAgeYears": m1,
+        "coachAgeYears": m4,
+        "coachBookingsTitle": MessageLookupByLibrary.simpleMessage("الحجوزات"),
         "coachDashboard":
             MessageLookupByLibrary.simpleMessage("لوحة تحكم المدرب"),
         "coachDashboardPlaceholder": MessageLookupByLibrary.simpleMessage(
             "لوحة تحكم المدرب (المرحلة 3)"),
+        "coachDashboardSubtitle": MessageLookupByLibrary.simpleMessage(
+            "إدارة جدولك ومواعيدك وجلسات التدريب الخاصة بك."),
         "coachDesc": MessageLookupByLibrary.simpleMessage(
             "قدم خدماتك التدريبية، وأدر طلبات التدريب وطور قاعدة عملائك."),
         "coachGender": MessageLookupByLibrary.simpleMessage("جنس المدرب"),
+        "coachHasNoAvailability": MessageLookupByLibrary.simpleMessage(
+            "المدرب لم يحدد جدول مواعيد حالياً."),
+        "coachNavAvailability":
+            MessageLookupByLibrary.simpleMessage("المواعيد"),
+        "coachNavBookings": MessageLookupByLibrary.simpleMessage("الحجوزات"),
+        "coachNavDashboard": MessageLookupByLibrary.simpleMessage("الرئيسية"),
         "coachPhotoRequired":
             MessageLookupByLibrary.simpleMessage("الصورة الشخصية مطلوبة"),
         "coachProfileDetails":
             MessageLookupByLibrary.simpleMessage("الملف الشخصي للمدرب"),
+        "coachReadySubtitle": MessageLookupByLibrary.simpleMessage(
+            "جاهز لجلسات التدريب القادمة؟"),
         "coachSetupSubtitle": MessageLookupByLibrary.simpleMessage(
             "أنشئ ملفك التدريبي الاحترافي وقدم طلب التحقق"),
         "coachSetupTitle":
@@ -212,11 +296,19 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("إكمال الملف الشخصي"),
         "completeYourProfile":
             MessageLookupByLibrary.simpleMessage("أكمل ملفك الشخصي"),
+        "confirmAndSendRequest":
+            MessageLookupByLibrary.simpleMessage("تأكيد وإرسال الطلب"),
+        "confirmDecline": MessageLookupByLibrary.simpleMessage("تأكيد الرفض"),
+        "confirmedSessionsTab": MessageLookupByLibrary.simpleMessage("المؤكدة"),
         "contactSupport":
             MessageLookupByLibrary.simpleMessage("تواصل مع الدعم"),
         "continueButton": MessageLookupByLibrary.simpleMessage("متابعة"),
         "copyEmail":
             MessageLookupByLibrary.simpleMessage("نسخ البريد الإلكتروني"),
+        "countdownHoursMins": m5,
+        "countdownMins": m6,
+        "countdownToday": m7,
+        "countdownTomorrow": m8,
         "country": MessageLookupByLibrary.simpleMessage("الدولة"),
         "countryBahrain": MessageLookupByLibrary.simpleMessage("البحرين"),
         "countryEgypt": MessageLookupByLibrary.simpleMessage("مصر"),
@@ -236,7 +328,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("المؤهلات والخبرات"),
         "currency": MessageLookupByLibrary.simpleMessage("العملة"),
         "currencySAR": MessageLookupByLibrary.simpleMessage("ر.س / ساعة"),
-        "currentUserInfo": m2,
+        "currentUserInfo": m9,
         "customWorkoutPlan":
             MessageLookupByLibrary.simpleMessage("توجيه وبرنامج تدريبي مخصص"),
         "dayAvailable": MessageLookupByLibrary.simpleMessage("متاح"),
@@ -246,6 +338,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "dayMonday": MessageLookupByLibrary.simpleMessage("الإثنين"),
         "daySat": MessageLookupByLibrary.simpleMessage("سبت"),
         "daySaturday": MessageLookupByLibrary.simpleMessage("السبت"),
+        "dayStatusAvailable":
+            MessageLookupByLibrary.simpleMessage("متاح لاستقبال الحجوزات"),
+        "dayStatusOff": MessageLookupByLibrary.simpleMessage("يوم عطلة"),
         "daySun": MessageLookupByLibrary.simpleMessage("أحد"),
         "daySunday": MessageLookupByLibrary.simpleMessage("الأحد"),
         "dayThu": MessageLookupByLibrary.simpleMessage("خميس"),
@@ -287,14 +382,19 @@ class MessageLookup extends MessageLookupByLibrary {
             "يرجى تأكيد بريدك الإلكتروني للمتابعة."),
         "emailVerificationRequired": MessageLookupByLibrary.simpleMessage(
             "تأكيد البريد الإلكتروني مطلوب"),
+        "endTime": MessageLookupByLibrary.simpleMessage("وقت الانتهاء"),
         "error": MessageLookupByLibrary.simpleMessage("خطأ"),
+        "errorInvalidTimeRange": m10,
         "errorLoadingCoachProfile": MessageLookupByLibrary.simpleMessage(
             "فشل تحميل الملف الشخصي للمدرب. انقر لإعادة المحاولة."),
         "errorLoadingCoaches": MessageLookupByLibrary.simpleMessage(
             "فشل تحميل المدربين. اضغط لإعادة المحاولة."),
+        "errorNoWorkingDays": MessageLookupByLibrary.simpleMessage(
+            "يرجى تحديد يوم عمل واحد على الأقل."),
+        "errorTimeWindowTooShort": m11,
         "expectedReviewTime": MessageLookupByLibrary.simpleMessage(
             "الوقت المتوقع للمراجعة: 24 - 48 ساعة"),
-        "experienceYearsCount": m3,
+        "experienceYearsCount": m12,
         "fakeCoachDashboardSubtitle": MessageLookupByLibrary.simpleMessage(
             "مرحباً بك أيها المدرب! هذه شاشة تجريبية لاختبار التنقل وتسجيل الدخول والخروج."),
         "fakeCoachDashboardTitle":
@@ -328,15 +428,26 @@ class MessageLookup extends MessageLookupByLibrary {
         "goalSubtitle": MessageLookupByLibrary.simpleMessage(
             "ما هو الهدف الأساسي الذي تسعى لتحقيقه؟"),
         "google": MessageLookupByLibrary.simpleMessage("جوجل"),
+        "greetingAfternoon": m13,
+        "greetingEvening": m14,
+        "greetingMorning": m15,
+        "groupLater": MessageLookupByLibrary.simpleMessage("المواعيد القادمة"),
+        "groupPast": MessageLookupByLibrary.simpleMessage("جلسات سابقة"),
+        "groupThisWeek": MessageLookupByLibrary.simpleMessage("هذا الأسبوع"),
+        "groupToday": MessageLookupByLibrary.simpleMessage("اليوم"),
+        "groupTomorrow": MessageLookupByLibrary.simpleMessage("غداً"),
         "hourlyRateHint": MessageLookupByLibrary.simpleMessage("مثال: 150"),
         "hourlyRateRequired": MessageLookupByLibrary.simpleMessage(
             "يرجى إدخال سعر صحيح أكبر من 0"),
+        "hoursAppliedToAllDays": MessageLookupByLibrary.simpleMessage(
+            "تم تطبيق الساعات على كافة أيام العمل"),
         "howWillYouUse":
             MessageLookupByLibrary.simpleMessage("كيف تريد استخدام كوتش هاب؟"),
         "iAmCoach": MessageLookupByLibrary.simpleMessage("أنا مدرب"),
         "iAmTrainee": MessageLookupByLibrary.simpleMessage("أنا متدرب"),
         "idRequired": MessageLookupByLibrary.simpleMessage(
             "يرجى رفع الهوية الوطنية أو جواز السفر"),
+        "incomingRequestsTab": MessageLookupByLibrary.simpleMessage("الطلبات"),
         "intermediate": MessageLookupByLibrary.simpleMessage("متوسط"),
         "intermediateDesc":
             MessageLookupByLibrary.simpleMessage("لدي بعض الخبرة السابقة"),
@@ -351,24 +462,52 @@ class MessageLookup extends MessageLookupByLibrary {
             "يساعدنا هذا في مطابقتك مع المدربين المناسبين"),
         "male": MessageLookupByLibrary.simpleMessage("ذكر"),
         "maleOnly": MessageLookupByLibrary.simpleMessage("رجال"),
-        "minExperienceYears":
-            MessageLookupByLibrary.simpleMessage("الحد الأدنى للخبرة"),
+        "manageAvailability":
+            MessageLookupByLibrary.simpleMessage("أوقات العمل والتوفر"),
+        "manageWorkingHours":
+            MessageLookupByLibrary.simpleMessage("إدارة أوقات العمل"),
+        "minExperienceYears": MessageLookupByLibrary.simpleMessage("الخبرة"),
         "minimumRating":
             MessageLookupByLibrary.simpleMessage("الحد الأدنى للتقييم"),
+        "minutesDuration": m16,
+        "myBookings":
+            MessageLookupByLibrary.simpleMessage("جلسات وطلبات التدريب"),
         "nationalIdHint": MessageLookupByLibrary.simpleMessage(
             "ارفع صورة واضحة أو ملف PDF للهوية أو الجواز"),
         "nationalIdOrPassport": MessageLookupByLibrary.simpleMessage(
             "الهوية الوطنية أو جواز السفر"),
         "next": MessageLookupByLibrary.simpleMessage("التالي"),
+        "nextSessionTitle":
+            MessageLookupByLibrary.simpleMessage("الجلسة القادمة"),
         "noAvailabilityListed": MessageLookupByLibrary.simpleMessage(
             "لم يتم تحديد أوقات ثابتة. يمكنك التنسيق عند الطلب."),
+        "noAvailableSlotsForDate": MessageLookupByLibrary.simpleMessage(
+            "لا توجد مواعيد متاحة في هذا اليوم"),
         "noCoachesFound":
             MessageLookupByLibrary.simpleMessage("لم يتم العثور على مدربين"),
         "noCoachesFoundDesc": MessageLookupByLibrary.simpleMessage(
             "حاول تعديل البحث أو الفلاتر للعثور على مدربين متاحين."),
+        "noConfirmedSessionsDesc": MessageLookupByLibrary.simpleMessage(
+            "الجلسات التي قمت بقبولها ستظهر هنا."),
+        "noConfirmedSessionsTitle":
+            MessageLookupByLibrary.simpleMessage("لا توجد جلسات مؤكدة"),
         "noDaysSelected":
             MessageLookupByLibrary.simpleMessage("لم يتم تحديد أي أيام"),
+        "noPastSessionsDesc": MessageLookupByLibrary.simpleMessage(
+            "سيتم أرشفة الجلسات المكتملة والمرفوضة هنا."),
+        "noPastSessionsTitle":
+            MessageLookupByLibrary.simpleMessage("لا توجد جلسات سابقة"),
+        "noPendingRequestsDesc": MessageLookupByLibrary.simpleMessage(
+            "ستظهر طلبات المتدربين الجديدة هنا فور وصولها."),
+        "noPendingRequestsPreview":
+            MessageLookupByLibrary.simpleMessage("لا توجد طلبات معلقة حالياً"),
+        "noPendingRequestsTitle":
+            MessageLookupByLibrary.simpleMessage("لا توجد طلبات معلقة"),
         "noReviewsYet": MessageLookupByLibrary.simpleMessage("جديد"),
+        "noUpcomingSessionsDesc": MessageLookupByLibrary.simpleMessage(
+            "حدد مواعيد توفرك ليتمكن المتدربون من حجز جلسات معك."),
+        "noUpcomingSessionsTitle":
+            MessageLookupByLibrary.simpleMessage("لا توجد جلسات قادمة"),
         "ok": MessageLookupByLibrary.simpleMessage("موافق"),
         "onboardingBadge1":
             MessageLookupByLibrary.simpleMessage("مدربون معتمدون"),
@@ -398,9 +537,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("6 أحرف على الأقل"),
         "passwordMinLength": MessageLookupByLibrary.simpleMessage(
             "يجب ألا تقل كلمة المرور عن 6 أحرف"),
+        "pastSessionsTab": MessageLookupByLibrary.simpleMessage("السجل"),
         "pdfDocument": MessageLookupByLibrary.simpleMessage("مستند PDF"),
         "pdfUploaded":
             MessageLookupByLibrary.simpleMessage("تم اختيار مستند PDF"),
+        "pendingRequests": MessageLookupByLibrary.simpleMessage("طلبات معلقة"),
+        "pendingRequestsPreview":
+            MessageLookupByLibrary.simpleMessage("طلبات معلقة"),
         "perSessionUnit": MessageLookupByLibrary.simpleMessage("/ جلسة"),
         "phoneHint": MessageLookupByLibrary.simpleMessage("+966 50 123 4567"),
         "phoneNumber": MessageLookupByLibrary.simpleMessage("رقم الهاتف"),
@@ -420,6 +563,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "يرجى اختيار لغة واحدة على الأقل"),
         "pleaseSelectSport": MessageLookupByLibrary.simpleMessage(
             "يرجى اختيار رياضة واحدة على الأقل"),
+        "pleaseSelectTimeSlot": MessageLookupByLibrary.simpleMessage(
+            "يرجى تحديد وقت الجلسة للمتابعة"),
         "preferNotToSay":
             MessageLookupByLibrary.simpleMessage("أفضل عدم التحديد"),
         "pricePerSession":
@@ -433,13 +578,34 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("حدد سعراً للجلسة الواحدة."),
         "pricingTitle":
             MessageLookupByLibrary.simpleMessage("سعر ساعة التدريب"),
+        "quickActionAvailability":
+            MessageLookupByLibrary.simpleMessage("إدارة المواعيد"),
+        "quickActionAvailabilityDesc":
+            MessageLookupByLibrary.simpleMessage("تحديد ساعات وأيام العمل"),
+        "quickActionBookings":
+            MessageLookupByLibrary.simpleMessage("عرض الحجوزات"),
+        "quickActionBookingsDesc":
+            MessageLookupByLibrary.simpleMessage("الطلبات والمؤكدة والسجل"),
+        "quickActions": MessageLookupByLibrary.simpleMessage("إجراءات سريعة"),
         "quickAvailabilityTemplates": MessageLookupByLibrary.simpleMessage(
             "نماذج سريعة للمواعيد المتاحة"),
+        "rejectRequest": MessageLookupByLibrary.simpleMessage("رفض"),
+        "rejectRequestDialogDesc": m17,
+        "rejectRequestDialogTitle":
+            MessageLookupByLibrary.simpleMessage("رفض طلب التدريب"),
+        "rejectionReasonHint": MessageLookupByLibrary.simpleMessage(
+            "مثال: تعارض في المواعيد، خارج النادي، إلخ."),
         "rejectionReasonLabel":
             MessageLookupByLibrary.simpleMessage("ملاحظات فريق الإدارة:"),
+        "rejectionReasonOptional":
+            MessageLookupByLibrary.simpleMessage("سبب الرفض (اختياري)"),
         "removeDocument": MessageLookupByLibrary.simpleMessage("حذف المستند"),
         "removePhoto": MessageLookupByLibrary.simpleMessage("إزالة الصورة"),
         "replaceFile": MessageLookupByLibrary.simpleMessage("استبدال المستند"),
+        "requestAcceptedSuccess":
+            MessageLookupByLibrary.simpleMessage("تم تأكيد طلب التدريب بنجاح!"),
+        "requestRejectedSuccess":
+            MessageLookupByLibrary.simpleMessage("تم رفض طلب التدريب."),
         "requestTraining":
             MessageLookupByLibrary.simpleMessage("طلب جلسة تدريب"),
         "requiredBadge": MessageLookupByLibrary.simpleMessage("مطلوب"),
@@ -464,7 +630,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("المواعيد المتاحة"),
         "reviewCertificates":
             MessageLookupByLibrary.simpleMessage("الشهادات التدريبية"),
-        "reviewFilesAttached": m4,
+        "reviewFilesAttached": m18,
         "reviewGender": MessageLookupByLibrary.simpleMessage("الجنس"),
         "reviewGovernmentId":
             MessageLookupByLibrary.simpleMessage("الهوية الوطنية أو الجواز"),
@@ -476,8 +642,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "reviewSubtitle": MessageLookupByLibrary.simpleMessage(
             "يرجى التأكد من صحة كافة البيانات قبل الإرسال للمراجعة."),
         "reviewTitle": MessageLookupByLibrary.simpleMessage("مراجعة الطلب"),
-        "reviewYearsCount": m5,
-        "reviewsCount": m6,
+        "reviewYearsCount": m19,
+        "reviewsCount": m20,
+        "saveAvailability":
+            MessageLookupByLibrary.simpleMessage("حفظ جدول التوفر"),
+        "savingAvailability":
+            MessageLookupByLibrary.simpleMessage("جارٍ الحفظ..."),
+        "scheduleAndAvailability":
+            MessageLookupByLibrary.simpleMessage("الجدول والمواعيد الأسبوعية"),
         "searchCoaches": MessageLookupByLibrary.simpleMessage(
             "ابحث عن المدربين أو الرياضات..."),
         "selectCity": MessageLookupByLibrary.simpleMessage("اختر المدينة"),
@@ -492,9 +664,28 @@ class MessageLookup extends MessageLookupByLibrary {
             "اختر رياضة واحدة أو أكثر ترغب في التدرب عليها"),
         "selectSportsYouCoach":
             MessageLookupByLibrary.simpleMessage("اختر الرياضات التي تدربها"),
+        "selectTrainingDate":
+            MessageLookupByLibrary.simpleMessage("اختر التاريخ"),
+        "selectTrainingSport":
+            MessageLookupByLibrary.simpleMessage("اختر الرياضة"),
+        "selectTrainingTime":
+            MessageLookupByLibrary.simpleMessage("اختر وقت الجلسة"),
+        "selectedDateLabel": MessageLookupByLibrary.simpleMessage("التاريخ"),
+        "selectedSportLabel": MessageLookupByLibrary.simpleMessage("الرياضة"),
+        "selectedTimeLabel": MessageLookupByLibrary.simpleMessage("الوقت"),
         "sendResetLink":
             MessageLookupByLibrary.simpleMessage("إرسال رابط التعيين"),
+        "sessionCountdownDays": m21,
+        "sessionCountdownHours": m22,
+        "sessionCountdownToday": MessageLookupByLibrary.simpleMessage("اليوم"),
+        "sessionDeclineReason": m23,
+        "sessionDuration": MessageLookupByLibrary.simpleMessage("مدة الجلسة"),
+        "sessionHistory": MessageLookupByLibrary.simpleMessage("سجل الجلسات"),
+        "sessionPassed": MessageLookupByLibrary.simpleMessage("انتهت"),
         "sessionPricing": MessageLookupByLibrary.simpleMessage("سعر الجلسة"),
+        "sessionWith": m24,
+        "setAvailabilityButton":
+            MessageLookupByLibrary.simpleMessage("تحديد المواعيد"),
         "signIn": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
         "signInSubtitle": MessageLookupByLibrary.simpleMessage(
             "سجل دخولك للوصول إلى منصتك الرياضية"),
@@ -538,12 +729,20 @@ class MessageLookup extends MessageLookupByLibrary {
         "sportYoga": MessageLookupByLibrary.simpleMessage("اليوغا"),
         "sportsAndSpecialties":
             MessageLookupByLibrary.simpleMessage("الرياضات والتخصصات"),
-        "sportsSelected": m7,
+        "sportsSelected": m25,
         "startExploringCoaches":
             MessageLookupByLibrary.simpleMessage("ابدأ استكشاف المدربين"),
+        "startTime": MessageLookupByLibrary.simpleMessage("وقت البدء"),
+        "statHistory": MessageLookupByLibrary.simpleMessage("السجل"),
+        "statPending": MessageLookupByLibrary.simpleMessage("معلقة"),
+        "statUpcoming": MessageLookupByLibrary.simpleMessage("قادمة"),
+        "statusCancelled": MessageLookupByLibrary.simpleMessage("ملغاة"),
+        "statusCompleted": MessageLookupByLibrary.simpleMessage("مكتملة"),
+        "statusConfirmed": MessageLookupByLibrary.simpleMessage("مؤكدة"),
+        "statusDeclined": MessageLookupByLibrary.simpleMessage("مرفوضة"),
         "stepAvailability":
             MessageLookupByLibrary.simpleMessage("المواعيد الأسبوعية"),
-        "stepOf": m8,
+        "stepOf": m26,
         "stepPersonalInfo":
             MessageLookupByLibrary.simpleMessage("المعلومات الشخصية"),
         "stepPricing": MessageLookupByLibrary.simpleMessage("التسعير"),
@@ -559,9 +758,14 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("إرسال طلب الانضمام"),
         "submittingApplication":
             MessageLookupByLibrary.simpleMessage("جاري إرسال الطلب..."),
+        "submittingBookingRequest":
+            MessageLookupByLibrary.simpleMessage("جارٍ إرسال الطلب..."),
         "success": MessageLookupByLibrary.simpleMessage("نجاح"),
+        "summaryConfirmedSessions": m27,
+        "summaryPastSessions": m28,
+        "summaryPendingRequests": m29,
         "supportEmail":
-            MessageLookupByLibrary.simpleMessage("support@coachhub.app"),
+            MessageLookupByLibrary.simpleMessage("alitoson1234567@gmail.com"),
         "supportModalDesc": MessageLookupByLibrary.simpleMessage(
             "فريق الدعم لدينا متواجد لمساعدتك في استفسارات حسابك وطلب الانضمام الخاص بك."),
         "supportModalTitle":
@@ -572,19 +776,28 @@ class MessageLookup extends MessageLookupByLibrary {
         "tapToUploadPhoto":
             MessageLookupByLibrary.simpleMessage("اضغط لرفع صورة"),
         "testModeBadge": MessageLookupByLibrary.simpleMessage("وضع التجربة"),
+        "thisMonthEarnings":
+            MessageLookupByLibrary.simpleMessage("أرباح هذا الشهر"),
+        "thisWeekSchedule":
+            MessageLookupByLibrary.simpleMessage("جدول هذا الأسبوع"),
+        "timeSlots": MessageLookupByLibrary.simpleMessage("ساعات العمل"),
         "toTime": MessageLookupByLibrary.simpleMessage("إلى"),
+        "totalDurationLabel": m30,
+        "totalSessionPrice": MessageLookupByLibrary.simpleMessage("سعر الجلسة"),
         "traineeDesc": MessageLookupByLibrary.simpleMessage(
             "ابحث عن مدربين محترفين، احجز جلسات تدريبية، وحقق أهدافك الرياضية."),
         "traineeDiscovery":
             MessageLookupByLibrary.simpleMessage("استكشاف المدربين"),
         "traineeMarketplacePlaceholder":
             MessageLookupByLibrary.simpleMessage("شاشة المتدرب (المرحلة 3)"),
+        "traineeNotes": MessageLookupByLibrary.simpleMessage("ملاحظات المتدرب"),
         "traineeSetup": MessageLookupByLibrary.simpleMessage("إعداد المتدرب"),
         "traineeSetupSubtitle": MessageLookupByLibrary.simpleMessage(
             "أنشئ ملفك الشخصي للمتدرب وابدأ رحلتك الرياضية"),
         "unavailable": MessageLookupByLibrary.simpleMessage("غير متاح"),
         "underReviewNotice": MessageLookupByLibrary.simpleMessage(
             "طلبك حالياً في وضع القراءة فقط أثناء المراجعة. سيتم إشعارك فور اتخاذ القرار."),
+        "upcomingSessions": MessageLookupByLibrary.simpleMessage("جلسات قادمة"),
         "uploadDocument": MessageLookupByLibrary.simpleMessage("رفع المستند"),
         "uploadFailed": MessageLookupByLibrary.simpleMessage(
             "فشل الرفع، يرجى المحاولة مرة أخرى لاحقاً"),
@@ -632,6 +845,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "verifiedCertifications":
             MessageLookupByLibrary.simpleMessage("شهادات معتمدة وموثقة"),
         "verifiedCoach": MessageLookupByLibrary.simpleMessage("مدرب موثق"),
+        "viewAll": MessageLookupByLibrary.simpleMessage("عرض الكل"),
         "viewCertificate": MessageLookupByLibrary.simpleMessage("عرض الشهادة"),
         "viewProfile": MessageLookupByLibrary.simpleMessage("عرض الملف الشخصي"),
         "warning": MessageLookupByLibrary.simpleMessage("تنبيه"),
@@ -639,9 +853,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("أوقات التوفر الأسبوعية"),
         "weightLoss": MessageLookupByLibrary.simpleMessage("خسارة الوزن"),
         "welcomeBack": MessageLookupByLibrary.simpleMessage("مرحباً بعودتك"),
-        "welcomeBackUser": m9,
+        "welcomeBackUser": m31,
         "whatsIncluded":
             MessageLookupByLibrary.simpleMessage("ما تشمله الجلسة"),
+        "workingDays": MessageLookupByLibrary.simpleMessage("أيام العمل"),
+        "workingHoursDescription": MessageLookupByLibrary.simpleMessage(
+            "تحديد أوقات وأيام التدريب الأسبوعية"),
         "yearsOfExperience":
             MessageLookupByLibrary.simpleMessage("سنوات الخبرة في التدريب"),
         "yourGoal": MessageLookupByLibrary.simpleMessage("هدفك التدريبي"),
