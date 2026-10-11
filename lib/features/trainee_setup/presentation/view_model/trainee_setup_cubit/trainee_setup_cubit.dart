@@ -41,15 +41,15 @@ class TraineeSetupCubit extends Cubit<TraineeSetupState> {
     );
   }
 
-  Future<void> loadInitialData() async {
+ /* Future<void> loadInitialData() async {
     final profile = await repository.getTraineeProfile();
     if (profile != null) {
       _applyProfile(profile);
       return;
     }
   }
-
-  void _applyProfile(TraineeProfileModel p) {
+*/
+ /* void _applyProfile(TraineeProfileModel p) {
     name = p.name;
     photoUrl = p.photoUrl;
     country = p.country;
@@ -61,7 +61,7 @@ class TraineeSetupCubit extends Cubit<TraineeSetupState> {
     selectedGoal = p.goal;
     _emitCurrentForm();
   }
-
+*/
   void setName(String val) {
     name = val;
     _emitCurrentForm();

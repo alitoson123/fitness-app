@@ -23,7 +23,8 @@ class TraineeSetupView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<TraineeSetupCubit>()..loadInitialData(),
+      create: (_) => getIt<TraineeSetupCubit>(),
+      //..loadInitialData(),
       child: const _TraineeSetupContent(),
     );
   }
