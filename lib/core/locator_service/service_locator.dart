@@ -16,6 +16,7 @@ import '../../features/trainee_setup/data/data_source/trainee_setup_local_data_s
 import '../../features/trainee_setup/data/data_source/trainee_setup_remote_data_source.dart';
 import '../../features/trainee_setup/data/repos/trainee_setup_repo.dart';
 import '../../features/trainee_setup/presentation/view_model/trainee_setup_cubit/trainee_setup_cubit.dart';
+import '../../features/trainee_profile/presentation/view_model/trainee_profile_cubit/trainee_profile_cubit.dart';
 import '../../features/coach_setup/data/data_source/coach_setup_local_data_source.dart';
 import '../../features/coach_setup/data/data_source/coach_setup_remote_data_source.dart';
 import '../../features/coach_setup/data/repo_impl/coach_setup_repo_impl.dart';
@@ -161,6 +162,11 @@ Future<void> setupServiceLocator() async {
   );
   getIt.registerFactory<TraineeSetupCubit>(
     () => TraineeSetupCubit(
+      repository: getIt<TraineeSetupRepo>(),
+    ),
+  );
+  getIt.registerFactory<TraineeProfileCubit>(
+    () => TraineeProfileCubit(
       repository: getIt<TraineeSetupRepo>(),
     ),
   );

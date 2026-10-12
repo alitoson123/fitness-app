@@ -14,7 +14,10 @@ class DeleteAccountDialog extends StatelessWidget {
     required this.onConfirm,
   });
 
-  static Future<void> show(BuildContext context, {required VoidCallback onConfirm}) {
+  static Future<void> show(
+    BuildContext context, {
+    required VoidCallback onConfirm,
+  }) {
     return showDialog(
       context: context,
       barrierDismissible: true,
@@ -25,8 +28,10 @@ class DeleteAccountDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.textPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.textSecondary;
+    final textPrimary =
+        isDark ? AppColors.darkTextPrimary : AppColors.textPrimary;
+    final textSecondary =
+        isDark ? AppColors.darkTextSecondary : AppColors.textSecondary;
     final cardBg = isDark ? AppColors.darkSurface : Colors.white;
 
     return Dialog(
@@ -72,29 +77,23 @@ class DeleteAccountDialog extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             SizedBox(height: AppSpacing.s6),
-            Row(
-              children: [
-                Expanded(
-                  child: AppButton(
-                    label: S.of(context).cancel,
-                    variant: AppButtonVariant.outlined,
-                    size: AppButtonSize.sm,
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                ),
-                SizedBox(width: AppSpacing.s3),
-                Expanded(
-                  child: AppButton(
-                    label: S.of(context).deleteAccountConfirm,
-                    variant: AppButtonVariant.destructive,
-                    size: AppButtonSize.sm,
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      onConfirm();
-                    },
-                  ),
-                ),
-              ],
+            AppButton(
+              label: S.of(context).deleteAccountConfirm,
+              variant: AppButtonVariant.destructive,
+              size: AppButtonSize.md,
+              fullWidth: true,
+              onPressed: () {
+                Navigator.of(context).pop();
+                onConfirm();
+              },
+            ),
+            SizedBox(height: AppSpacing.s3),
+            AppButton(
+              label: S.of(context).cancel,
+              variant: AppButtonVariant.outlined,
+              size: AppButtonSize.md,
+              fullWidth: true,
+              onPressed: () => Navigator.of(context).pop(),
             ),
           ],
         ),

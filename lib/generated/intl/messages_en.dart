@@ -103,6 +103,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "A verification link has been sent to your email. Please verify before signing in."),
         "accountDeletedSuccess": MessageLookupByLibrary.simpleMessage(
             "Your account has been deleted successfully."),
+        "accountSettings":
+            MessageLookupByLibrary.simpleMessage("Account Settings"),
         "activeDaysCount": m0,
         "addPhotoPrompt": MessageLookupByLibrary.simpleMessage(
             "Add a photo so coaches know who you are"),
@@ -369,6 +371,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "edit": MessageLookupByLibrary.simpleMessage("Edit"),
         "editAndResubmit":
             MessageLookupByLibrary.simpleMessage("Edit & Resubmit"),
+        "editProfile": MessageLookupByLibrary.simpleMessage("Edit Profile"),
         "email": MessageLookupByLibrary.simpleMessage("Email"),
         "emailAddress": MessageLookupByLibrary.simpleMessage("Email Address"),
         "emailCopied":
@@ -399,6 +402,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Welcome Trainee! This is a test screen to verify navigation, authentication, and role flows."),
         "fakeTraineeHomeTitle":
             MessageLookupByLibrary.simpleMessage("Trainee Home"),
+        "favoriteSports":
+            MessageLookupByLibrary.simpleMessage("Sports & Activities"),
         "female": MessageLookupByLibrary.simpleMessage("Female"),
         "femaleOnly": MessageLookupByLibrary.simpleMessage("Female"),
         "fileTooLarge": MessageLookupByLibrary.simpleMessage(
@@ -407,6 +412,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Document Selected"),
         "filter": MessageLookupByLibrary.simpleMessage("Filter"),
         "filters": MessageLookupByLibrary.simpleMessage("Filters"),
+        "fitnessGoal": MessageLookupByLibrary.simpleMessage("Fitness Goal"),
+        "fitnessLevel": MessageLookupByLibrary.simpleMessage("Fitness Level"),
+        "fitnessProfile":
+            MessageLookupByLibrary.simpleMessage("Fitness & Goals"),
         "forgotPassword":
             MessageLookupByLibrary.simpleMessage("Forgot Password?"),
         "fromTime": MessageLookupByLibrary.simpleMessage("From"),
@@ -455,6 +464,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "languages": MessageLookupByLibrary.simpleMessage("Languages Spoken"),
         "levelSubtitle": MessageLookupByLibrary.simpleMessage(
             "This helps us match you with the right coaches"),
+        "loadProfileError": MessageLookupByLibrary.simpleMessage(
+            "Failed to load profile. Tap to retry."),
         "male": MessageLookupByLibrary.simpleMessage("Male"),
         "maleOnly": MessageLookupByLibrary.simpleMessage("Male"),
         "manageAvailability": MessageLookupByLibrary.simpleMessage(
@@ -497,11 +508,16 @@ class MessageLookup extends MessageLookupByLibrary {
             "No pending requests at the moment"),
         "noPendingRequestsTitle":
             MessageLookupByLibrary.simpleMessage("No Pending Requests"),
+        "noProfileData": MessageLookupByLibrary.simpleMessage(
+            "No profile information found"),
         "noReviewsYet": MessageLookupByLibrary.simpleMessage("New"),
+        "noSportsSelected":
+            MessageLookupByLibrary.simpleMessage("No sports selected"),
         "noUpcomingSessionsDesc": MessageLookupByLibrary.simpleMessage(
             "Set your availability so trainees can book sessions with you."),
         "noUpcomingSessionsTitle":
             MessageLookupByLibrary.simpleMessage("No upcoming sessions"),
+        "notSpecified": MessageLookupByLibrary.simpleMessage("Not specified"),
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
         "onboardingBadge1":
             MessageLookupByLibrary.simpleMessage("Certified Coaches"),
@@ -541,6 +557,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "pendingRequestsPreview":
             MessageLookupByLibrary.simpleMessage("Pending Requests"),
         "perSessionUnit": MessageLookupByLibrary.simpleMessage("/ session"),
+        "personalInfo":
+            MessageLookupByLibrary.simpleMessage("Personal Information"),
         "phoneHint": MessageLookupByLibrary.simpleMessage("+966 50 123 4567"),
         "phoneNumber": MessageLookupByLibrary.simpleMessage("Phone Number"),
         "photoUploadFailed": MessageLookupByLibrary.simpleMessage(
@@ -640,6 +658,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Review Your Application"),
         "reviewYearsCount": m19,
         "reviewsCount": m20,
+        "role": MessageLookupByLibrary.simpleMessage("Role"),
         "saveAvailability":
             MessageLookupByLibrary.simpleMessage("Save Schedule"),
         "savingAvailability": MessageLookupByLibrary.simpleMessage("Saving..."),
@@ -788,16 +807,23 @@ class MessageLookup extends MessageLookupByLibrary {
         "totalDurationLabel": m30,
         "totalSessionPrice":
             MessageLookupByLibrary.simpleMessage("Session Price"),
+        "trainee": MessageLookupByLibrary.simpleMessage("Trainee"),
         "traineeDesc": MessageLookupByLibrary.simpleMessage(
             "Find qualified coaches, book training sessions, and reach your goals."),
         "traineeDiscovery":
             MessageLookupByLibrary.simpleMessage("Trainee Discovery"),
         "traineeMarketplacePlaceholder": MessageLookupByLibrary.simpleMessage(
             "Trainee Marketplace Screen (Phase 3)"),
+        "traineeNavDiscovery":
+            MessageLookupByLibrary.simpleMessage("Discovery"),
+        "traineeNavProfile": MessageLookupByLibrary.simpleMessage("Profile"),
         "traineeNotes": MessageLookupByLibrary.simpleMessage("Trainee Notes"),
+        "traineeProfileTitle":
+            MessageLookupByLibrary.simpleMessage("My Profile"),
         "traineeSetup": MessageLookupByLibrary.simpleMessage("Trainee Setup"),
         "traineeSetupSubtitle": MessageLookupByLibrary.simpleMessage(
             "Create your trainee profile and start your fitness journey"),
+        "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
         "unavailable": MessageLookupByLibrary.simpleMessage("Unavailable"),
         "underReviewNotice": MessageLookupByLibrary.simpleMessage(
             "Your application is currently locked in read-only mode while under review. You will receive an update once the review is completed."),

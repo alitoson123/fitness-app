@@ -511,5 +511,22 @@
   "statusConfirmed": "مؤكدة",
   "statusCompleted": "مكتملة",
   "statusDeclined": "مرفوضة",
-  "statusCancelled": "ملغاة"
+  "statusCancelled": "ملغاة",
+  "traineeNavDiscovery": "الاستكشاف",
+  "traineeNavProfile": "الملف الشخصي",
+  "traineeProfileTitle": "ملفي الشخصي",
+  "editProfile": "تعديل الملف الشخصي",
+  "personalInfo": "المعلومات الشخصية",
+  "fitnessProfile": "اللياقة والأهداف",
+  "fitnessLevel": "مستوى اللياقة",
+  "fitnessGoal": "هدف التدريب",
+  "favoriteSports": "الرياضات والأنشطة",
+  "accountSettings": "إعدادات الحساب",
+  "noProfileData": "لم يتم العثور على معلومات الملف الشخصي",
+  "loadProfileError": "فشل تحميل الملف الشخصي. انقر للمحاولة مجدداً.",
+  "role": "الدور",
+  "trainee": "متدرب",
+  "notSpecified": "غير محدد",
+  "noSportsSelected": "لم يتم تحديد أي رياضة",
+  "tryAgain": "إعادة المحاولة"
 }

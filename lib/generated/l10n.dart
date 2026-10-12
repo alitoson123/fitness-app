@@ -5191,6 +5191,176 @@ class S {
       args: [],
     );
   }
+
+  /// `Discovery`
+  String get traineeNavDiscovery {
+    return Intl.message(
+      'Discovery',
+      name: 'traineeNavDiscovery',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile`
+  String get traineeNavProfile {
+    return Intl.message(
+      'Profile',
+      name: 'traineeNavProfile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `My Profile`
+  String get traineeProfileTitle {
+    return Intl.message(
+      'My Profile',
+      name: 'traineeProfileTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit Profile`
+  String get editProfile {
+    return Intl.message(
+      'Edit Profile',
+      name: 'editProfile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Personal Information`
+  String get personalInfo {
+    return Intl.message(
+      'Personal Information',
+      name: 'personalInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fitness & Goals`
+  String get fitnessProfile {
+    return Intl.message(
+      'Fitness & Goals',
+      name: 'fitnessProfile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fitness Level`
+  String get fitnessLevel {
+    return Intl.message(
+      'Fitness Level',
+      name: 'fitnessLevel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fitness Goal`
+  String get fitnessGoal {
+    return Intl.message(
+      'Fitness Goal',
+      name: 'fitnessGoal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sports & Activities`
+  String get favoriteSports {
+    return Intl.message(
+      'Sports & Activities',
+      name: 'favoriteSports',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Account Settings`
+  String get accountSettings {
+    return Intl.message(
+      'Account Settings',
+      name: 'accountSettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No profile information found`
+  String get noProfileData {
+    return Intl.message(
+      'No profile information found',
+      name: 'noProfileData',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to load profile. Tap to retry.`
+  String get loadProfileError {
+    return Intl.message(
+      'Failed to load profile. Tap to retry.',
+      name: 'loadProfileError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Role`
+  String get role {
+    return Intl.message(
+      'Role',
+      name: 'role',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Trainee`
+  String get trainee {
+    return Intl.message(
+      'Trainee',
+      name: 'trainee',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Not specified`
+  String get notSpecified {
+    return Intl.message(
+      'Not specified',
+      name: 'notSpecified',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No sports selected`
+  String get noSportsSelected {
+    return Intl.message(
+      'No sports selected',
+      name: 'noSportsSelected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Try Again`
+  String get tryAgain {
+    return Intl.message(
+      'Try Again',
+      name: 'tryAgain',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

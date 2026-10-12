@@ -511,5 +511,22 @@
   "statusConfirmed": "Confirmed",
   "statusCompleted": "Completed",
   "statusDeclined": "Declined",
-  "statusCancelled": "Cancelled"
+  "statusCancelled": "Cancelled",
+  "traineeNavDiscovery": "Discovery",
+  "traineeNavProfile": "Profile",
+  "traineeProfileTitle": "My Profile",
+  "editProfile": "Edit Profile",
+  "personalInfo": "Personal Information",
+  "fitnessProfile": "Fitness & Goals",
+  "fitnessLevel": "Fitness Level",
+  "fitnessGoal": "Fitness Goal",
+  "favoriteSports": "Sports & Activities",
+  "accountSettings": "Account Settings",
+  "noProfileData": "No profile information found",
+  "loadProfileError": "Failed to load profile. Tap to retry.",
+  "role": "Role",
+  "trainee": "Trainee",
+  "notSpecified": "Not specified",
+  "noSportsSelected": "No sports selected",
+  "tryAgain": "Try Again"
 }

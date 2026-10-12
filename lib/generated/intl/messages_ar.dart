@@ -104,6 +104,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "تم إرسال رابط التأكيد إلى بريدك الإلكتروني. يرجى التأكيد قبل تسجيل الدخول."),
         "accountDeletedSuccess":
             MessageLookupByLibrary.simpleMessage("تم حذف حسابك بنجاح."),
+        "accountSettings":
+            MessageLookupByLibrary.simpleMessage("إعدادات الحساب"),
         "activeDaysCount": m0,
         "addPhotoPrompt": MessageLookupByLibrary.simpleMessage(
             "أضف صورة ليتمكن المدربون من التعرف عليك"),
@@ -372,6 +374,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "edit": MessageLookupByLibrary.simpleMessage("تعديل"),
         "editAndResubmit":
             MessageLookupByLibrary.simpleMessage("تعديل وإعادة الإرسال"),
+        "editProfile":
+            MessageLookupByLibrary.simpleMessage("تعديل الملف الشخصي"),
         "email": MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
         "emailAddress":
             MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
@@ -403,6 +407,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "مرحباً بك أيها المتدرب! هذه شاشة تجريبية لاختبار التنقل وتسجيل الدخول والخروج."),
         "fakeTraineeHomeTitle":
             MessageLookupByLibrary.simpleMessage("الرئيسية للمتدرب"),
+        "favoriteSports":
+            MessageLookupByLibrary.simpleMessage("الرياضات والأنشطة"),
         "female": MessageLookupByLibrary.simpleMessage("أنثى"),
         "femaleOnly": MessageLookupByLibrary.simpleMessage("سيدات"),
         "fileTooLarge": MessageLookupByLibrary.simpleMessage(
@@ -411,6 +417,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("تم اختيار المستند"),
         "filter": MessageLookupByLibrary.simpleMessage("تصفية"),
         "filters": MessageLookupByLibrary.simpleMessage("الفلاتر"),
+        "fitnessGoal": MessageLookupByLibrary.simpleMessage("هدف التدريب"),
+        "fitnessLevel": MessageLookupByLibrary.simpleMessage("مستوى اللياقة"),
+        "fitnessProfile":
+            MessageLookupByLibrary.simpleMessage("اللياقة والأهداف"),
         "forgotPassword":
             MessageLookupByLibrary.simpleMessage("هل نسيت كلمة المرور؟"),
         "fromTime": MessageLookupByLibrary.simpleMessage("من"),
@@ -460,6 +470,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("اللغات التي تتحدث بها"),
         "levelSubtitle": MessageLookupByLibrary.simpleMessage(
             "يساعدنا هذا في مطابقتك مع المدربين المناسبين"),
+        "loadProfileError": MessageLookupByLibrary.simpleMessage(
+            "فشل تحميل الملف الشخصي. انقر للمحاولة مجدداً."),
         "male": MessageLookupByLibrary.simpleMessage("ذكر"),
         "maleOnly": MessageLookupByLibrary.simpleMessage("رجال"),
         "manageAvailability":
@@ -503,11 +515,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("لا توجد طلبات معلقة حالياً"),
         "noPendingRequestsTitle":
             MessageLookupByLibrary.simpleMessage("لا توجد طلبات معلقة"),
+        "noProfileData": MessageLookupByLibrary.simpleMessage(
+            "لم يتم العثور على معلومات الملف الشخصي"),
         "noReviewsYet": MessageLookupByLibrary.simpleMessage("جديد"),
+        "noSportsSelected":
+            MessageLookupByLibrary.simpleMessage("لم يتم تحديد أي رياضة"),
         "noUpcomingSessionsDesc": MessageLookupByLibrary.simpleMessage(
             "حدد مواعيد توفرك ليتمكن المتدربون من حجز جلسات معك."),
         "noUpcomingSessionsTitle":
             MessageLookupByLibrary.simpleMessage("لا توجد جلسات قادمة"),
+        "notSpecified": MessageLookupByLibrary.simpleMessage("غير محدد"),
         "ok": MessageLookupByLibrary.simpleMessage("موافق"),
         "onboardingBadge1":
             MessageLookupByLibrary.simpleMessage("مدربون معتمدون"),
@@ -545,6 +562,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "pendingRequestsPreview":
             MessageLookupByLibrary.simpleMessage("طلبات معلقة"),
         "perSessionUnit": MessageLookupByLibrary.simpleMessage("/ جلسة"),
+        "personalInfo":
+            MessageLookupByLibrary.simpleMessage("المعلومات الشخصية"),
         "phoneHint": MessageLookupByLibrary.simpleMessage("+966 50 123 4567"),
         "phoneNumber": MessageLookupByLibrary.simpleMessage("رقم الهاتف"),
         "photoUploadFailed": MessageLookupByLibrary.simpleMessage(
@@ -644,6 +663,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "reviewTitle": MessageLookupByLibrary.simpleMessage("مراجعة الطلب"),
         "reviewYearsCount": m19,
         "reviewsCount": m20,
+        "role": MessageLookupByLibrary.simpleMessage("الدور"),
         "saveAvailability":
             MessageLookupByLibrary.simpleMessage("حفظ جدول التوفر"),
         "savingAvailability":
@@ -784,16 +804,24 @@ class MessageLookup extends MessageLookupByLibrary {
         "toTime": MessageLookupByLibrary.simpleMessage("إلى"),
         "totalDurationLabel": m30,
         "totalSessionPrice": MessageLookupByLibrary.simpleMessage("سعر الجلسة"),
+        "trainee": MessageLookupByLibrary.simpleMessage("متدرب"),
         "traineeDesc": MessageLookupByLibrary.simpleMessage(
             "ابحث عن مدربين محترفين، احجز جلسات تدريبية، وحقق أهدافك الرياضية."),
         "traineeDiscovery":
             MessageLookupByLibrary.simpleMessage("استكشاف المدربين"),
         "traineeMarketplacePlaceholder":
             MessageLookupByLibrary.simpleMessage("شاشة المتدرب (المرحلة 3)"),
+        "traineeNavDiscovery":
+            MessageLookupByLibrary.simpleMessage("الاستكشاف"),
+        "traineeNavProfile":
+            MessageLookupByLibrary.simpleMessage("الملف الشخصي"),
         "traineeNotes": MessageLookupByLibrary.simpleMessage("ملاحظات المتدرب"),
+        "traineeProfileTitle":
+            MessageLookupByLibrary.simpleMessage("ملفي الشخصي"),
         "traineeSetup": MessageLookupByLibrary.simpleMessage("إعداد المتدرب"),
         "traineeSetupSubtitle": MessageLookupByLibrary.simpleMessage(
             "أنشئ ملفك الشخصي للمتدرب وابدأ رحلتك الرياضية"),
+        "tryAgain": MessageLookupByLibrary.simpleMessage("إعادة المحاولة"),
         "unavailable": MessageLookupByLibrary.simpleMessage("غير متاح"),
         "underReviewNotice": MessageLookupByLibrary.simpleMessage(
             "طلبك حالياً في وضع القراءة فقط أثناء المراجعة. سيتم إشعارك فور اتخاذ القرار."),

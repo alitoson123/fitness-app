@@ -71,6 +71,10 @@ abstract class AppRouter {
         builder: (context, state) => const TraineeHomeView(),
       ),
       GoRoute(
+        path: AppRoutes.traineeProfile,
+        builder: (context, state) => const TraineeHomeView(initialIndex: 1),
+      ),
+      GoRoute(
         path: AppRoutes.coachDashboard,
         builder: (context, state) => const CoachMainShell(),
       ),
