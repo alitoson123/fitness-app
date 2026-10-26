@@ -61,6 +61,7 @@ abstract class AppColors {
   static const Color border = neutral200;
   static const Color cardBorder = border;
   static const Color divider = neutral100;
+  static const Color cardBackground = neutral0;
   static const Color darkCardBackground = darkSurface;
 
   // ── Semantic alerts ─────────────────────────────────────────

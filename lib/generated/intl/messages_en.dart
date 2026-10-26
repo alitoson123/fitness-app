@@ -96,6 +96,8 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "aboutCoach": MessageLookupByLibrary.simpleMessage("About Coach"),
+        "acceptNewTime":
+            MessageLookupByLibrary.simpleMessage("Accept New Time"),
         "acceptRequest": MessageLookupByLibrary.simpleMessage("Accept"),
         "accountCreated":
             MessageLookupByLibrary.simpleMessage("Account Created"),
@@ -180,6 +182,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Tell trainees about your coaching philosophy, background, and experience (min 30 characters)..."),
         "bioMinLength": MessageLookupByLibrary.simpleMessage(
             "Bio must be at least 30 characters"),
+        "bookNewSession":
+            MessageLookupByLibrary.simpleMessage("Book New Session"),
         "bookingFeatureComingSoon": MessageLookupByLibrary.simpleMessage(
             "Booking request flow opens next!"),
         "bookingNotesPlaceholder": MessageLookupByLibrary.simpleMessage(
@@ -273,8 +277,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Profile photo is required"),
         "coachProfileDetails":
             MessageLookupByLibrary.simpleMessage("Coach Profile"),
+        "coachProposedNewTime": MessageLookupByLibrary.simpleMessage(
+            "Coach requested a new session time"),
         "coachReadySubtitle": MessageLookupByLibrary.simpleMessage(
             "Ready for your upcoming training sessions?"),
+        "coachReasonLabel":
+            MessageLookupByLibrary.simpleMessage("Coach\'s Note"),
         "coachSetupSubtitle": MessageLookupByLibrary.simpleMessage(
             "Create your professional coach profile and submit verification"),
         "coachSetupTitle":
@@ -349,6 +357,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "dayUnavailable": MessageLookupByLibrary.simpleMessage("Off"),
         "dayWed": MessageLookupByLibrary.simpleMessage("Wed"),
         "dayWednesday": MessageLookupByLibrary.simpleMessage("Wednesday"),
+        "declineConfirmMessage": MessageLookupByLibrary.simpleMessage(
+            "If you decline, this booking will be cancelled and you will need to book a new session. Proceed?"),
+        "declineConfirmTitle":
+            MessageLookupByLibrary.simpleMessage("Decline Reschedule?"),
+        "declineReschedule":
+            MessageLookupByLibrary.simpleMessage("Decline & Cancel"),
         "defaultCoachBio": MessageLookupByLibrary.simpleMessage(
             "Certified professional coach dedicated to helping you achieve your personal fitness and performance goals."),
         "defaultRejectionReason": MessageLookupByLibrary.simpleMessage(
@@ -541,6 +555,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("1-on-1 private coaching"),
         "orContinueWith":
             MessageLookupByLibrary.simpleMessage("or continue with"),
+        "originalTimeLabel":
+            MessageLookupByLibrary.simpleMessage("Original Time"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "passwordHint":
             MessageLookupByLibrary.simpleMessage("Enter your password"),
@@ -591,6 +607,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Set a price per session."),
         "pricingTitle":
             MessageLookupByLibrary.simpleMessage("Hourly Training Rate"),
+        "proposedTimeLabel":
+            MessageLookupByLibrary.simpleMessage("Proposed Time"),
         "quickActionAvailability":
             MessageLookupByLibrary.simpleMessage("Manage Availability"),
         "quickActionAvailabilityDesc":
@@ -623,6 +641,22 @@ class MessageLookup extends MessageLookupByLibrary {
         "requestTraining":
             MessageLookupByLibrary.simpleMessage("Request Training Session"),
         "requiredBadge": MessageLookupByLibrary.simpleMessage("Required"),
+        "rescheduleAcceptedSuccess": MessageLookupByLibrary.simpleMessage(
+            "Session successfully rescheduled!"),
+        "rescheduleDeclinedMessage": MessageLookupByLibrary.simpleMessage(
+            "Booking cancelled. You can schedule a new session anytime."),
+        "reschedulePendingBadge":
+            MessageLookupByLibrary.simpleMessage("Reschedule Awaiting Client"),
+        "rescheduleReasonHint": MessageLookupByLibrary.simpleMessage(
+            "Explain why you need to reschedule (emergency, illness...)"),
+        "rescheduleReasonLabel":
+            MessageLookupByLibrary.simpleMessage("Reason for Rescheduling"),
+        "rescheduleReasonRequired": MessageLookupByLibrary.simpleMessage(
+            "Please provide a reason for the reschedule"),
+        "rescheduleRequestedSuccess": MessageLookupByLibrary.simpleMessage(
+            "Reschedule request sent to client"),
+        "rescheduleSession":
+            MessageLookupByLibrary.simpleMessage("Reschedule Session"),
         "resend": MessageLookupByLibrary.simpleMessage("Resend"),
         "resendEmail": MessageLookupByLibrary.simpleMessage("Resend Email"),
         "reset": MessageLookupByLibrary.simpleMessage("Reset"),
@@ -689,6 +723,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectedDateLabel": MessageLookupByLibrary.simpleMessage("Date"),
         "selectedSportLabel": MessageLookupByLibrary.simpleMessage("Sport"),
         "selectedTimeLabel": MessageLookupByLibrary.simpleMessage("Time"),
+        "sendRescheduleRequest":
+            MessageLookupByLibrary.simpleMessage("Send Reschedule Request"),
         "sendResetLink":
             MessageLookupByLibrary.simpleMessage("Send Reset Link"),
         "sessionCountdownDays": m21,

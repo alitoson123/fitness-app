@@ -72,7 +72,7 @@ abstract class AppRouter {
       ),
       GoRoute(
         path: AppRoutes.traineeProfile,
-        builder: (context, state) => const TraineeHomeView(initialIndex: 1),
+        builder: (context, state) => const TraineeHomeView(initialIndex: 2),
       ),
       GoRoute(
         path: AppRoutes.coachDashboard,
@@ -106,6 +106,10 @@ abstract class AppRouter {
           }
           return const TraineeHomeView();
         },
+      ),
+      GoRoute(
+        path: AppRoutes.traineeBookings,
+        builder: (context, state) => const TraineeHomeView(initialIndex: 1),
       ),
     ],
   );

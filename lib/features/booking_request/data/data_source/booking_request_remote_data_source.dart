@@ -27,19 +27,33 @@ class BookingRequestRemoteDataSource {
 
     final bookedSlots = <String>[];
     for (final doc in snapshot.docs) {
-
       final data = doc.data();
-
       final status = data['status'] as String? ?? '';
 
-      if (status != 'rejected') {
+      if (status != 'rejected' && status != 'cancelled') {
+        if (status != 'reschedule_pending') {
+          final slot = data['startTime'] as String?;
+          if (slot != null && slot.isNotEmpty) {
+            bookedSlots.add(slot);
+          }
+        }
+      }
+    }
 
-        final slot = data['startTime'] as String?;
+    final proposedSnapshot = await firestoreService.getCollection(
+      collection: AppConstants.bookingsCollection,
+      queryBuilder: (query) => query
+          .where('coachUid', isEqualTo: coachUid)
+          .where('proposedDate', isEqualTo: date),
+    );
 
-        if (slot != null && slot.isNotEmpty) {
-
+    for (final doc in proposedSnapshot.docs) {
+      final data = doc.data();
+      final status = data['status'] as String? ?? '';
+      if (status == 'reschedule_pending') {
+        final slot = data['proposedStartTime'] as String?;
+        if (slot != null && slot.isNotEmpty && !bookedSlots.contains(slot)) {
           bookedSlots.add(slot);
-          
         }
       }
     }

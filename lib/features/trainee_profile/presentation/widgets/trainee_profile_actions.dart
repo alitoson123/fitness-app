@@ -16,14 +16,6 @@ class TraineeProfileActions extends StatelessWidget {
 
     return Column(
       children: [
-        /*AppButton(
-          label: s.editProfile,
-          variant: AppButtonVariant.primary,
-          fullWidth: true,
-          icon: const Icon(Icons.edit_outlined),
-          onPressed: () => context.push(AppRoutes.traineeSetup),
-        ),*/
-        SizedBox(height: AppSpacing.s3),
         AppButton(
           label: s.signOut,
           variant: AppButtonVariant.outlined,

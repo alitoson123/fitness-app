@@ -22,11 +22,15 @@ class CoachBookingsState {
   List<BookingModel> get pendingBookings =>
       allBookings.where((b) => b.status == 'pending').toList();
 
-  List<BookingModel> get confirmedBookings =>
-      allBookings.where((b) => b.status == 'confirmed').toList();
+  List<BookingModel> get confirmedBookings => allBookings
+      .where((b) => b.status == 'confirmed' || b.status == 'reschedule_pending')
+      .toList();
 
   List<BookingModel> get pastBookings => allBookings
-      .where((b) => b.status == 'rejected' || b.status == 'completed')
+      .where((b) =>
+          b.status == 'rejected' ||
+          b.status == 'completed' ||
+          b.status == 'cancelled')
       .toList();
 
   List<BookingModel> get currentTabBookings {

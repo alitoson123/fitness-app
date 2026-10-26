@@ -55,6 +55,11 @@ class TraineeBottomNavBar extends StatelessWidget {
               label: s.traineeNavDiscovery,
             ),
             BottomNavigationBarItem(
+              icon: const Icon(Icons.calendar_today_outlined),
+              activeIcon: const Icon(Icons.calendar_today_rounded),
+              label: s.coachNavBookings,
+            ),
+            BottomNavigationBarItem(
               icon: const Icon(Icons.person_outline_rounded),
               activeIcon: const Icon(Icons.person_rounded),
               label: s.traineeNavProfile,

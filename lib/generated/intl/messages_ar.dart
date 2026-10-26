@@ -97,6 +97,8 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "aboutCoach": MessageLookupByLibrary.simpleMessage("نبذة عن المدرب"),
+        "acceptNewTime":
+            MessageLookupByLibrary.simpleMessage("قبول الموعد الجديد"),
         "acceptRequest": MessageLookupByLibrary.simpleMessage("قبول"),
         "accountCreated":
             MessageLookupByLibrary.simpleMessage("تم إنشاء الحساب"),
@@ -183,6 +185,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "أخبر المتدربين عن فلسفتك التدريبية وخبراتك السابقة (30 حرفاً كحد أدنى)..."),
         "bioMinLength": MessageLookupByLibrary.simpleMessage(
             "يجب أن تكون النبذة 30 حرفاً على الأقل"),
+        "bookNewSession":
+            MessageLookupByLibrary.simpleMessage("حجز جلسة جديدة"),
         "bookingFeatureComingSoon": MessageLookupByLibrary.simpleMessage(
             "سيتم فتح طلب الحجز في الخطوة التالية!"),
         "bookingNotesPlaceholder": MessageLookupByLibrary.simpleMessage(
@@ -276,8 +280,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("الصورة الشخصية مطلوبة"),
         "coachProfileDetails":
             MessageLookupByLibrary.simpleMessage("الملف الشخصي للمدرب"),
+        "coachProposedNewTime": MessageLookupByLibrary.simpleMessage(
+            "طلب الكابتن موعداً جديداً للجلسة"),
         "coachReadySubtitle": MessageLookupByLibrary.simpleMessage(
             "جاهز لجلسات التدريب القادمة؟"),
+        "coachReasonLabel":
+            MessageLookupByLibrary.simpleMessage("ملاحظة الكابتن"),
         "coachSetupSubtitle": MessageLookupByLibrary.simpleMessage(
             "أنشئ ملفك التدريبي الاحترافي وقدم طلب التحقق"),
         "coachSetupTitle":
@@ -352,6 +360,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "dayUnavailable": MessageLookupByLibrary.simpleMessage("غير متاح"),
         "dayWed": MessageLookupByLibrary.simpleMessage("أربعاء"),
         "dayWednesday": MessageLookupByLibrary.simpleMessage("الأربعاء"),
+        "declineConfirmMessage": MessageLookupByLibrary.simpleMessage(
+            "في حال الرفض، سيتم إلغاء هذا الحجز وستحتاج إلى حجز جلسة جديدة. هل تود المتابعة؟"),
+        "declineConfirmTitle":
+            MessageLookupByLibrary.simpleMessage("رفض الموعد المقترح؟"),
+        "declineReschedule":
+            MessageLookupByLibrary.simpleMessage("رفض وإلغاء الحجز"),
         "defaultCoachBio": MessageLookupByLibrary.simpleMessage(
             "مدرب محترف ومعتمد جاهز لمساعدتك في تحقيق أهدافك البدنية والرياضية."),
         "defaultRejectionReason": MessageLookupByLibrary.simpleMessage(
@@ -547,6 +561,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("تدريب فردي خاص 1 على 1"),
         "orContinueWith":
             MessageLookupByLibrary.simpleMessage("أو المتابعة عبر"),
+        "originalTimeLabel":
+            MessageLookupByLibrary.simpleMessage("الموعد الأصلي"),
         "password": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
         "passwordHint":
             MessageLookupByLibrary.simpleMessage("أدخل كلمة المرور"),
@@ -597,6 +613,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("حدد سعراً للجلسة الواحدة."),
         "pricingTitle":
             MessageLookupByLibrary.simpleMessage("سعر ساعة التدريب"),
+        "proposedTimeLabel":
+            MessageLookupByLibrary.simpleMessage("الموعد المقترح"),
         "quickActionAvailability":
             MessageLookupByLibrary.simpleMessage("إدارة المواعيد"),
         "quickActionAvailabilityDesc":
@@ -628,6 +646,22 @@ class MessageLookup extends MessageLookupByLibrary {
         "requestTraining":
             MessageLookupByLibrary.simpleMessage("طلب جلسة تدريب"),
         "requiredBadge": MessageLookupByLibrary.simpleMessage("مطلوب"),
+        "rescheduleAcceptedSuccess":
+            MessageLookupByLibrary.simpleMessage("تم تحديث موعد الجلسة بنجاح!"),
+        "rescheduleDeclinedMessage": MessageLookupByLibrary.simpleMessage(
+            "تم إلغاء الحجز. يمكنك حجز جلسة جديدة في أي وقت."),
+        "reschedulePendingBadge":
+            MessageLookupByLibrary.simpleMessage("بانتظار موافقة المتدرب"),
+        "rescheduleReasonHint": MessageLookupByLibrary.simpleMessage(
+            "وضح سبب إعادة الجدولة (ظرف طارئ، مرض...)"),
+        "rescheduleReasonLabel":
+            MessageLookupByLibrary.simpleMessage("سبب إعادة الجدولة"),
+        "rescheduleReasonRequired": MessageLookupByLibrary.simpleMessage(
+            "يرجى كتابة سبب إعادة الجدولة"),
+        "rescheduleRequestedSuccess": MessageLookupByLibrary.simpleMessage(
+            "تم إرسال طلب إعادة الجدولة إلى المتدرب"),
+        "rescheduleSession":
+            MessageLookupByLibrary.simpleMessage("إعادة جدولة الجلسة"),
         "resend": MessageLookupByLibrary.simpleMessage("إعادة الإرسال"),
         "resendEmail":
             MessageLookupByLibrary.simpleMessage("إعادة إرسال البريد"),
@@ -693,6 +727,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectedDateLabel": MessageLookupByLibrary.simpleMessage("التاريخ"),
         "selectedSportLabel": MessageLookupByLibrary.simpleMessage("الرياضة"),
         "selectedTimeLabel": MessageLookupByLibrary.simpleMessage("الوقت"),
+        "sendRescheduleRequest":
+            MessageLookupByLibrary.simpleMessage("إرسال طلب إعادة الجدولة"),
         "sendResetLink":
             MessageLookupByLibrary.simpleMessage("إرسال رابط التعيين"),
         "sessionCountdownDays": m21,

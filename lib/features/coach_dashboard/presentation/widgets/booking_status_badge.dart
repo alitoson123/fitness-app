@@ -34,6 +34,11 @@ class BookingStatusBadge extends StatelessWidget {
           s.statusCancelled,
           Icons.block_rounded,
         ),
+      'reschedule_pending' => (
+          const Color(0xFFF59E0B),
+          s.reschedulePendingBadge,
+          Icons.update_rounded,
+        ),
       _ => (
           AppColors.flameRed,
           s.statPending,

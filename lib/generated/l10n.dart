@@ -5361,6 +5361,186 @@ class S {
       args: [],
     );
   }
+
+  /// `Reschedule Session`
+  String get rescheduleSession {
+    return Intl.message(
+      'Reschedule Session',
+      name: 'rescheduleSession',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reason for Rescheduling`
+  String get rescheduleReasonLabel {
+    return Intl.message(
+      'Reason for Rescheduling',
+      name: 'rescheduleReasonLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Explain why you need to reschedule (emergency, illness...)`
+  String get rescheduleReasonHint {
+    return Intl.message(
+      'Explain why you need to reschedule (emergency, illness...)',
+      name: 'rescheduleReasonHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please provide a reason for the reschedule`
+  String get rescheduleReasonRequired {
+    return Intl.message(
+      'Please provide a reason for the reschedule',
+      name: 'rescheduleReasonRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send Reschedule Request`
+  String get sendRescheduleRequest {
+    return Intl.message(
+      'Send Reschedule Request',
+      name: 'sendRescheduleRequest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reschedule Awaiting Client`
+  String get reschedulePendingBadge {
+    return Intl.message(
+      'Reschedule Awaiting Client',
+      name: 'reschedulePendingBadge',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Coach requested a new session time`
+  String get coachProposedNewTime {
+    return Intl.message(
+      'Coach requested a new session time',
+      name: 'coachProposedNewTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Proposed Time`
+  String get proposedTimeLabel {
+    return Intl.message(
+      'Proposed Time',
+      name: 'proposedTimeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accept New Time`
+  String get acceptNewTime {
+    return Intl.message(
+      'Accept New Time',
+      name: 'acceptNewTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Decline & Cancel`
+  String get declineReschedule {
+    return Intl.message(
+      'Decline & Cancel',
+      name: 'declineReschedule',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Decline Reschedule?`
+  String get declineConfirmTitle {
+    return Intl.message(
+      'Decline Reschedule?',
+      name: 'declineConfirmTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `If you decline, this booking will be cancelled and you will need to book a new session. Proceed?`
+  String get declineConfirmMessage {
+    return Intl.message(
+      'If you decline, this booking will be cancelled and you will need to book a new session. Proceed?',
+      name: 'declineConfirmMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Session successfully rescheduled!`
+  String get rescheduleAcceptedSuccess {
+    return Intl.message(
+      'Session successfully rescheduled!',
+      name: 'rescheduleAcceptedSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Booking cancelled. You can schedule a new session anytime.`
+  String get rescheduleDeclinedMessage {
+    return Intl.message(
+      'Booking cancelled. You can schedule a new session anytime.',
+      name: 'rescheduleDeclinedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reschedule request sent to client`
+  String get rescheduleRequestedSuccess {
+    return Intl.message(
+      'Reschedule request sent to client',
+      name: 'rescheduleRequestedSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Book New Session`
+  String get bookNewSession {
+    return Intl.message(
+      'Book New Session',
+      name: 'bookNewSession',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Original Time`
+  String get originalTimeLabel {
+    return Intl.message(
+      'Original Time',
+      name: 'originalTimeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Coach's Note`
+  String get coachReasonLabel {
+    return Intl.message(
+      'Coach\'s Note',
+      name: 'coachReasonLabel',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

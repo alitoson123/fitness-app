@@ -72,4 +72,52 @@ class CoachBookingsRepo {
       return Left(ServerFailure(errorMessage: e.toString()));
     }
   }
+
+  Future<Either<Failure, void>> requestReschedule({
+    required String bookingId,
+    required String proposedDate,
+    required String proposedStartTime,
+    required String proposedEndTime,
+    required String reason,
+    required String originalDate,
+    required String originalStartTime,
+    required String originalEndTime,
+  }) async {
+    try {
+      LoggerService.info(
+        'Requesting reschedule for booking $bookingId to $proposedDate $proposedStartTime',
+        tag: 'CoachBookingsRepo',
+      );
+
+      final data = <String, dynamic>{
+        'status': 'reschedule_pending',
+        'proposedDate': proposedDate,
+        'proposedStartTime': proposedStartTime,
+        'proposedEndTime': proposedEndTime,
+        'rescheduleReason': reason.trim(),
+        'rescheduledBy': 'coach',
+        'rescheduledAt': FieldValue.serverTimestamp(),
+        'previousDate': originalDate,
+        'previousStartTime': originalStartTime,
+        'previousEndTime': originalEndTime,
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+
+      await firestoreService.updateData(
+        collection: AppConstants.bookingsCollection,
+        docId: bookingId,
+        data: data,
+      );
+
+      return const Right(null);
+    } catch (e, stackTrace) {
+      LoggerService.error(
+        'Failed to request reschedule: $e',
+        tag: 'CoachBookingsRepo',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return Left(ServerFailure(errorMessage: e.toString()));
+    }
+  }
 }

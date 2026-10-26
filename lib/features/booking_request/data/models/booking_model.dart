@@ -17,6 +17,16 @@ class BookingModel {
   final String notes;
   final String status;
   final String? rejectionReason;
+  final String? proposedDate;
+  final String? proposedStartTime;
+  final String? proposedEndTime;
+  final String? rescheduleReason;
+  final String? rescheduledBy;
+  final DateTime? rescheduledAt;
+  final String? previousDate;
+  final String? previousStartTime;
+  final String? previousEndTime;
+  final String? cancellationReason;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -37,9 +47,21 @@ class BookingModel {
     this.notes = '',
     this.status = 'pending',
     this.rejectionReason,
+    this.proposedDate,
+    this.proposedStartTime,
+    this.proposedEndTime,
+    this.rescheduleReason,
+    this.rescheduledBy,
+    this.rescheduledAt,
+    this.previousDate,
+    this.previousStartTime,
+    this.previousEndTime,
+    this.cancellationReason,
     this.createdAt,
     this.updatedAt,
   });
+
+  bool get isReschedulePending => status == 'reschedule_pending';
 
   factory BookingModel.fromJson(Map<String, dynamic> json, {String? id}) {
     return BookingModel(
@@ -59,6 +81,16 @@ class BookingModel {
       notes: json['notes'] as String? ?? '',
       status: json['status'] as String? ?? 'pending',
       rejectionReason: json['rejectionReason'] as String?,
+      proposedDate: json['proposedDate'] as String?,
+      proposedStartTime: json['proposedStartTime'] as String?,
+      proposedEndTime: json['proposedEndTime'] as String?,
+      rescheduleReason: json['rescheduleReason'] as String?,
+      rescheduledBy: json['rescheduledBy'] as String?,
+      rescheduledAt: _parseDate(json['rescheduledAt']),
+      previousDate: json['previousDate'] as String?,
+      previousStartTime: json['previousStartTime'] as String?,
+      previousEndTime: json['previousEndTime'] as String?,
+      cancellationReason: json['cancellationReason'] as String?,
       createdAt: _parseDate(json['createdAt']),
       updatedAt: _parseDate(json['updatedAt']),
     );
@@ -82,6 +114,17 @@ class BookingModel {
       'notes': notes,
       'status': status,
       if (rejectionReason != null) 'rejectionReason': rejectionReason,
+      if (proposedDate != null) 'proposedDate': proposedDate,
+      if (proposedStartTime != null) 'proposedStartTime': proposedStartTime,
+      if (proposedEndTime != null) 'proposedEndTime': proposedEndTime,
+      if (rescheduleReason != null) 'rescheduleReason': rescheduleReason,
+      if (rescheduledBy != null) 'rescheduledBy': rescheduledBy,
+      if (rescheduledAt != null)
+        'rescheduledAt': Timestamp.fromDate(rescheduledAt!),
+      if (previousDate != null) 'previousDate': previousDate,
+      if (previousStartTime != null) 'previousStartTime': previousStartTime,
+      if (previousEndTime != null) 'previousEndTime': previousEndTime,
+      if (cancellationReason != null) 'cancellationReason': cancellationReason,
       'createdAt': createdAt != null
           ? Timestamp.fromDate(createdAt!)
           : FieldValue.serverTimestamp(),

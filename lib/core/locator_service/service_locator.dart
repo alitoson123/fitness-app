@@ -40,6 +40,8 @@ import '../../features/booking_request/data/repos/booking_request_repo.dart';
 import '../../features/booking_request/presentation/view_model/booking_request_cubit/booking_request_cubit.dart';
 import '../../features/coach_dashboard/data/repos/coach_bookings_repo.dart';
 import '../../features/coach_dashboard/presentation/view_model/coach_bookings_cubit/coach_bookings_cubit.dart';
+import '../../features/trainee_bookings/data/repos/trainee_bookings_repo.dart';
+import '../../features/trainee_bookings/presentation/view_model/trainee_bookings_cubit/trainee_bookings_cubit.dart';
 import '../services/Local_service/general_local_service.dart';
 import '../services/auth_service/auth_service.dart';
 import '../services/database_service/firestore_service.dart';
@@ -283,6 +285,18 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory<CoachBookingsCubit>(
     () => CoachBookingsCubit(
       repository: getIt<CoachBookingsRepo>(),
+    ),
+  );
+
+  // 16. Trainee Bookings Dependencies
+  getIt.registerLazySingleton<TraineeBookingsRepo>(
+    () => TraineeBookingsRepo(
+      firestoreService: getIt<FirestoreService>(),
+    ),
+  );
+  getIt.registerFactory<TraineeBookingsCubit>(
+    () => TraineeBookingsCubit(
+      repository: getIt<TraineeBookingsRepo>(),
     ),
   );
 }

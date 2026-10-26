@@ -16,6 +16,7 @@ import 'bookings_group_header.dart';
 import 'bookings_skeleton.dart';
 import 'bookings_tab_bar.dart';
 import 'reject_booking_dialog.dart';
+import 'reschedule_booking_sheet.dart';
 
 class CoachBookingsBody extends StatelessWidget {
   const CoachBookingsBody({super.key});
@@ -32,12 +33,29 @@ class CoachBookingsBody extends StatelessWidget {
     );
   }
 
+  void _handleReschedule(
+    BuildContext context,
+    BookingModel booking,
+    CoachBookingsCubit cubit,
+  ) {
+    RescheduleBookingSheet.show(
+      context: context,
+      booking: booking,
+      onConfirm: (date, start, end, reason) => cubit.requestReschedule(
+        booking: booking,
+        proposedDate: date,
+        proposedStartTime: start,
+        proposedEndTime: end,
+        reason: reason,
+      ),
+    );
+  }
+
   String _getSummaryText(BuildContext context, CoachBookingsState state) {
     final s = S.of(context);
     return switch (state.selectedTab) {
       CoachBookingTab.pending => s.summaryPendingRequests(state.pendingCount),
-      CoachBookingTab.confirmed =>
-        s.summaryConfirmedSessions(state.confirmedCount),
+      CoachBookingTab.confirmed => s.summaryConfirmedSessions(state.confirmedCount),
       CoachBookingTab.past => s.summaryPastSessions(state.pastCount),
     };
   }
@@ -60,14 +78,10 @@ class CoachBookingsBody extends StatelessWidget {
 
         return RefreshIndicator(
           onRefresh: () async {
-            if (user != null) {
-              cubit.listenToBookings(user.uid);
-            }
+            if (user != null) cubit.listenToBookings(user.uid);
           },
           child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(
-              parent: BouncingScrollPhysics(),
-            ),
+            physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
             padding: AppSpacing.screenPadding,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,9 +102,7 @@ class CoachBookingsBody extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w600,
-                        color: isDark
-                            ? AppColors.darkTextSecondary
-                            : AppColors.textSecondary,
+                        color: isDark ? AppColors.darkTextSecondary : AppColors.textSecondary,
                       ),
                     ),
                   ),
@@ -102,20 +114,17 @@ class CoachBookingsBody extends StatelessWidget {
                 else
                   ...grouped.entries.expand((entry) {
                     return [
-                      BookingsGroupHeader(
-                        title: entry.key,
-                        count: entry.value.length,
-                      ),
+                      BookingsGroupHeader(title: entry.key, count: entry.value.length),
                       ...entry.value.map(
                         (b) => AnimatedSwitcher(
                           duration: const Duration(milliseconds: 300),
                           child: BookingCard(
                             key: ValueKey(b.id),
                             booking: b,
-                            isActionInProgress:
-                                state.actionInProgressBookingId == b.id,
+                            isActionInProgress: state.actionInProgressBookingId == b.id,
                             onAccept: () => cubit.acceptBooking(b.id),
                             onReject: () => _handleReject(context, b, cubit),
+                            onReschedule: () => _handleReschedule(context, b, cubit),
                           ),
                         ),
                       ),

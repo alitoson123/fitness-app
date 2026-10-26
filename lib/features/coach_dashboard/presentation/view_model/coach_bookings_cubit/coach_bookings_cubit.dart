@@ -81,6 +81,38 @@ class CoachBookingsCubit extends Cubit<CoachBookingsState> {
     );
   }
 
+  Future<void> requestReschedule({
+    required BookingModel booking,
+    required String proposedDate,
+    required String proposedStartTime,
+    required String proposedEndTime,
+    required String reason,
+  }) async {
+    emit(state.copyWith(actionInProgressBookingId: booking.id));
+
+    final result = await repository.requestReschedule(
+      bookingId: booking.id,
+      proposedDate: proposedDate,
+      proposedStartTime: proposedStartTime,
+      proposedEndTime: proposedEndTime,
+      reason: reason,
+      originalDate: booking.date,
+      originalStartTime: booking.startTime,
+      originalEndTime: booking.endTime,
+    );
+
+    result.fold(
+      (failure) => emit(state.copyWith(
+        clearActionId: true,
+        errorMessage: failure.errorMessage,
+      )),
+      (_) => emit(state.copyWith(
+        clearActionId: true,
+        successMessage: 'rescheduled',
+      )),
+    );
+  }
+
   void clearMessages() {
     emit(state.copyWith(clearMessages: true));
   }
