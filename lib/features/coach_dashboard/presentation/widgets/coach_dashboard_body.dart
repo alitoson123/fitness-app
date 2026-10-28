@@ -95,7 +95,8 @@ class _CoachDashboardBodyState extends State<CoachDashboardBody> {
                   SizedBox(height: AppSpacing.s2),
                   CoachWelcomeHeader(
                     coachName: name,
-                    email: authCubit.currentUserEmail ?? user?.email,
+                    phoneNumber:
+                        authCubit.currentUserPhoneNumber ?? user?.phoneNumber,
                   ),
                   SizedBox(height: AppSpacing.s3),
                   CoachDashboardStats(

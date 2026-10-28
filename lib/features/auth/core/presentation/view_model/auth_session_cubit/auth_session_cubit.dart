@@ -8,7 +8,8 @@ class AuthSessionCubit extends Cubit<AuthSessionStates> {
   AuthSessionCubit({required this.authSessionRepo})
       : super(const AuthSessionInitialState());
 
-  String? get currentUserEmail => authSessionRepo.getCurrentUserEmail();
+  String? get currentUserPhoneNumber =>
+      authSessionRepo.getCurrentUserPhoneNumber();
 
   Future<void> signOut() async {
     emit(const AuthSessionLoadingState(isDeleting: false));

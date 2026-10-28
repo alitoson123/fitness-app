@@ -1,8 +1,10 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../features/auth/forget_password/presentation/views/forget_password_view.dart';
+import '../../core/locator_service/service_locator.dart';
 import '../../features/auth/choose_role/presentation/views/choose_role_view.dart';
-import '../../features/auth/sign_in/presentation/views/sign_in_view.dart';
-import '../../features/auth/sign_up/presentation/views/sign_up_view.dart';
+import '../../features/auth/phone_sign_in/presentation/view_model/phone_auth_cubit/phone_auth_cubit.dart';
+import '../../features/auth/phone_sign_in/presentation/views/otp_verification_view.dart';
+import '../../features/auth/phone_sign_in/presentation/views/phone_sign_in_view.dart';
 import '../../features/coach_dashboard/presentation/views/coach_main_shell.dart';
 import '../../features/coach_setup/data/models/coach_application_model.dart';
 import '../../features/coach_setup/data/models/coach_profile_model.dart';
@@ -32,21 +34,21 @@ abstract class AppRouter {
       ),
       GoRoute(
         path: AppRoutes.signIn,
-        builder: (context, state) => SignInView(
-          initialParams: state.extra as (String email, String password)?,
+        builder: (context, state) => BlocProvider<PhoneAuthCubit>(
+          create: (_) => getIt<PhoneAuthCubit>(),
+          child: const PhoneSignInView(),
         ),
       ),
       GoRoute(
-        path: AppRoutes.signUp,
-        builder: (context, state) => const SignUpView(),
+        path: AppRoutes.otpVerification,
+        builder: (context, state) {
+          final cubit = state.extra as PhoneAuthCubit? ?? getIt<PhoneAuthCubit>();
+          return OtpVerificationView(cubit: cubit);
+        },
       ),
       GoRoute(
         path: AppRoutes.chooseRole,
         builder: (context, state) => const ChooseRoleView(),
-      ),
-      GoRoute(
-        path: AppRoutes.forgotPassword,
-        builder: (context, state) => const ForgetPasswordView(),
       ),
       GoRoute(
         path: AppRoutes.traineeSetup,

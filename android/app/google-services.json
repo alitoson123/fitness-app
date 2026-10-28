@@ -48,6 +48,42 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:572406151179:android:c8d17986799e411e69ef0e",
+        "android_client_info": {
+          "package_name": "com.example.fitness_app_dashboard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "572406151179-l6d7qbcbheglespjp5auq94iqsvvdsvm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9p0tIFxzDOCg8W2l2NuohNAddt5gGVQU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "572406151179-l6d7qbcbheglespjp5auq94iqsvvdsvm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "572406151179-3rhod5iq4a3ttsonhj0kj8a96otl2thb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fitnessApp"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

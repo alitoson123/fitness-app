@@ -1,8 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fitness_app/core/services/logger_service/logger_service.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import '../../services/logger_service/logger_service.dart';
 
+/// Service wrapping Firebase Authentication with focus on Phone Number Auth.
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
@@ -10,88 +9,62 @@ class AuthService {
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
   bool get isLoggedIn => _firebaseAuth.currentUser != null;
 
-  Future<UserCredential> signUpWithEmail({
-    required String email,
-    required String password,
+  /// Initiates SMS phone number verification for Egypt & Lebanon.
+  Future<void> verifyPhoneNumber({
+    required String phoneNumber,
+    required PhoneVerificationCompleted verificationCompleted,
+    required PhoneVerificationFailed verificationFailed,
+    required PhoneCodeSent codeSent,
+    required PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
+    int? resendToken,
+    Duration timeout = const Duration(seconds: 60),
   }) async {
-    LoggerService.info('Signing up user with email: $email', tag: 'AuthService');
-    return await _firebaseAuth.createUserWithEmailAndPassword(
-      email: email.trim(),
-      password: password,
+    LoggerService.info(
+      'Verifying phone number: $phoneNumber',
+      tag: 'AuthService',
+    );
+    await _firebaseAuth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      verificationCompleted: verificationCompleted,
+      verificationFailed: verificationFailed,
+      codeSent: codeSent,
+      codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
+      forceResendingToken: resendToken,
+      timeout: timeout,
     );
   }
 
-  Future<UserCredential> signInWithEmail({
-    required String email,
-    required String password,
+  /// Signs in using a 6-digit SMS code and the verification ID received.
+  Future<UserCredential> signInWithOtpCredential({
+    required String verificationId,
+    required String smsCode,
   }) async {
-    LoggerService.info('Signing in user with email: $email', tag: 'AuthService');
-    return await _firebaseAuth.signInWithEmailAndPassword(
-      email: email.trim(),
-      password: password,
+    LoggerService.info('Signing in with OTP code', tag: 'AuthService');
+    final credential = PhoneAuthProvider.credential(
+      verificationId: verificationId,
+      smsCode: smsCode,
     );
-  }
-
-  Future<void> sendPasswordResetEmail({required String email}) async {
-    LoggerService.info('Sending password reset email to: $email', tag: 'AuthService');
-    await _firebaseAuth.sendPasswordResetEmail(email: email.trim());
-  }
-
-  Future<UserCredential?> signInWithGoogle() async {
-    LoggerService.info('Initiating Google Sign In', tag: 'AuthService');
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-    // If the user cancels sign-in
-    if (googleUser == null) return null;
-
-    // Obtain authentication details
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
-
-    // Create a new credential,
-    final OAuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
     return await _firebaseAuth.signInWithCredential(credential);
   }
 
-  Future<UserCredential?> signInWithApple() async {
-    LoggerService.info('Initiating Apple Sign In', tag: 'AuthService');
-    final appleCredential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
+  /// Signs in using an already verified PhoneAuthCredential (auto-retrieval).
+  Future<UserCredential> signInWithCredential(
+    AuthCredential credential,
+  ) async {
+    LoggerService.info(
+      'Signing in with pre-verified credential',
+      tag: 'AuthService',
     );
-
-    final OAuthProvider oAuthProvider = OAuthProvider('apple.com');
-    final AuthCredential credential = oAuthProvider.credential(
-      idToken: appleCredential.identityToken,
-      accessToken: appleCredential.authorizationCode,
-    );
-
     return await _firebaseAuth.signInWithCredential(credential);
   }
 
-  Future<void> sendEmailVerification() async {
-    await _firebaseAuth.currentUser?.sendEmailVerification();
-  }
-
-  Future<bool> reloadAndCheckEmailVerified() async {
-    await _firebaseAuth.currentUser?.reload();
-    return _firebaseAuth.currentUser?.emailVerified ?? false;
-  }
-
+  /// Signs out the currently authenticated user.
   Future<void> signOut() async {
     LoggerService.info('Signing out current user', tag: 'AuthService');
-    try {
-      await GoogleSignIn().signOut();
-    } catch (_) {}
     await _firebaseAuth.signOut();
   }
 
+  /// Permanently deletes the current user account from Firebase Auth.
   Future<void> deleteAccount() async {
     LoggerService.warning('Deleting current user account', tag: 'AuthService');
     await _firebaseAuth.currentUser?.delete();

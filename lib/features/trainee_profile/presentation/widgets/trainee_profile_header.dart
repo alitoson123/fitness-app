@@ -55,10 +55,10 @@ class TraineeProfileHeader extends StatelessWidget {
           ),
           textAlign: TextAlign.center,
         ),
-        if (profile.email.isNotEmpty) ...[
+        if (profile.phoneNumber.isNotEmpty) ...[
           SizedBox(height: 4.h),
           Text(
-            profile.email,
+            profile.phoneNumber,
             style: TextStyle(
               fontSize: 13.sp,
               color: textSecondary,

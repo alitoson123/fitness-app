@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class TraineeProfileModel {
   final String uid;
   final String name;
-  final String email;
+  final String phoneNumber;
   final String? photoUrl;
   final String role;
   final String country;
@@ -19,7 +19,7 @@ class TraineeProfileModel {
   const TraineeProfileModel({
     required this.uid,
     this.name = '',
-    this.email = '',
+    this.phoneNumber = '',
     this.photoUrl,
     this.role = 'trainee',
     this.country = '',
@@ -40,7 +40,7 @@ class TraineeProfileModel {
     return TraineeProfileModel(
       uid: uid ?? json['uid'] as String? ?? '',
       name: json['name'] as String? ?? '',
-      email: json['email'] as String? ?? '',
+      phoneNumber: json['phoneNumber'] as String? ?? json['number'] as String? ?? '',
       photoUrl: json['photoUrl'] as String?,
       role: json['role'] as String? ?? 'trainee',
       country: json['country'] as String? ?? '',
@@ -70,7 +70,7 @@ class TraineeProfileModel {
     return {
       'uid': uid,
       'name': name,
-      if (email.isNotEmpty) 'email': email,
+      if (phoneNumber.isNotEmpty) 'phoneNumber': phoneNumber,
       'role': role,
       'country': country,
       'city': city,
@@ -88,7 +88,7 @@ class TraineeProfileModel {
   TraineeProfileModel copyWith({
     String? uid,
     String? name,
-    String? email,
+    String? phoneNumber,
     String? photoUrl,
     String? role,
     String? country,
@@ -104,7 +104,7 @@ class TraineeProfileModel {
     return TraineeProfileModel(
       uid: uid ?? this.uid,
       name: name ?? this.name,
-      email: email ?? this.email,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
       photoUrl: photoUrl ?? this.photoUrl,
       role: role ?? this.role,
       country: country ?? this.country,

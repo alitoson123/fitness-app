@@ -34,14 +34,16 @@ class TraineeSetupRepo {
           ? profile.name.trim()
           : (cachedUser?.name ?? authService.currentUser?.displayName ?? '');
 
-      final resolvedEmail = profile.email.trim().isNotEmpty
-          ? profile.email.trim()
-          : (cachedUser?.email ?? authService.currentUser?.email ?? '');
+      final resolvedPhoneNumber = profile.phoneNumber.trim().isNotEmpty
+          ? profile.phoneNumber.trim()
+          : (cachedUser?.phoneNumber ??
+              authService.currentUser?.phoneNumber ??
+              '');
 
       final updatedProfile = profile.copyWith(
         uid: uid,
         name: resolvedName,
-        email: resolvedEmail,
+        phoneNumber: resolvedPhoneNumber,
       );
 
       // 1. Save profile to Firestore trainee_profiles collection

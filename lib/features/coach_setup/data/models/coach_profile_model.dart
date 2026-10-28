@@ -4,7 +4,7 @@ import 'coach_profile_parser_helper.dart';
 class CoachProfileModel {
   final String uid;
   final String name;
-  final String email;
+  final String phoneNumber;
   final String photoUrl;
   final String bio;
   final String country;
@@ -31,7 +31,7 @@ class CoachProfileModel {
   const CoachProfileModel({
     required this.uid,
     this.name = '',
-    this.email = '',
+    this.phoneNumber = '',
     this.photoUrl = '',
     this.bio = '',
     this.country = '',
@@ -60,7 +60,7 @@ class CoachProfileModel {
     return CoachProfileModel(
       uid: uid ?? json['uid'] as String? ?? '',
       name: json['name'] as String? ?? '',
-      email: json['email'] as String? ?? '',
+      phoneNumber: json['phoneNumber'] as String? ?? json['number'] as String? ?? '',
       photoUrl: json['photoUrl'] as String? ?? '',
       bio: json['bio'] as String? ?? '',
       country: json['country'] as String? ?? '',
@@ -94,7 +94,7 @@ class CoachProfileModel {
     return {
       'uid': uid,
       'name': name,
-      if (email.isNotEmpty) 'email': email,
+      if (phoneNumber.isNotEmpty) 'phoneNumber': phoneNumber,
       'photoUrl': photoUrl,
       'bio': bio,
       'country': country,
@@ -129,7 +129,7 @@ class CoachProfileModel {
   CoachProfileModel copyWith({
     String? uid,
     String? name,
-    String? email,
+    String? phoneNumber,
     String? photoUrl,
     String? bio,
     String? country,
@@ -156,7 +156,7 @@ class CoachProfileModel {
     return CoachProfileModel(
       uid: uid ?? this.uid,
       name: name ?? this.name,
-      email: email ?? this.email,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
       photoUrl: photoUrl ?? this.photoUrl,
       bio: bio ?? this.bio,
       country: country ?? this.country,

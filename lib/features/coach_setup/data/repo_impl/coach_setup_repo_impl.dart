@@ -34,13 +34,13 @@ class CoachSetupRepoImpl implements CoachSetupRepo {
         return Left(ServerFailure(errorMessage: 'Authentication required.'));
       }
 
-      final email = profile.email.trim().isNotEmpty
-          ? profile.email.trim()
-          : (user?.email ?? cachedUser?.email ?? '');
+      final phoneNumber = profile.phoneNumber.trim().isNotEmpty
+          ? profile.phoneNumber.trim()
+          : (cachedUser?.phoneNumber ?? user?.phoneNumber ?? '');
 
       final resolvedProfile = profile.copyWith(
         uid: uid,
-        email: email,
+        phoneNumber: phoneNumber,
       );
       final resolvedApplication = application.copyWith(
         coachUid: uid,

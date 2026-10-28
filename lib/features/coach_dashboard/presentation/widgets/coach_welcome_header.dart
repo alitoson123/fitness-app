@@ -6,12 +6,12 @@ import '../../../../generated/l10n.dart';
 
 class CoachWelcomeHeader extends StatelessWidget {
   final String? coachName;
-  final String? email;
+  final String? phoneNumber;
 
   const CoachWelcomeHeader({
     super.key,
     this.coachName,
-    this.email,
+    this.phoneNumber,
   });
 
   String _getGreeting(BuildContext context, String name) {
@@ -28,7 +28,9 @@ class CoachWelcomeHeader extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final displayName = (coachName != null && coachName!.trim().isNotEmpty)
         ? coachName!.trim()
-        : (email?.split('@').first ?? s.iAmCoach);
+        : (phoneNumber != null && phoneNumber!.trim().isNotEmpty
+            ? phoneNumber!.trim()
+            : s.iAmCoach);
     final greeting = _getGreeting(context, displayName);
 
     return Container(

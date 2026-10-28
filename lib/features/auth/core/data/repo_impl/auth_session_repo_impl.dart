@@ -20,8 +20,8 @@ class AuthSessionRepoImpl implements AuthSessionRepo {
   });
 
   @override
-  String? getCurrentUserEmail() {
-    return authService.currentUser?.email;
+  String? getCurrentUserPhoneNumber() {
+    return authService.currentUser?.phoneNumber;
   }
 
   @override

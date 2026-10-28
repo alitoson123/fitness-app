@@ -200,6 +200,186 @@ class S {
     );
   }
 
+  /// `Sign In with Phone`
+  String get signInWithPhone {
+    return Intl.message(
+      'Sign In with Phone',
+      name: 'signInWithPhone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter your mobile number to receive a verification code`
+  String get phoneSignInSubtitle {
+    return Intl.message(
+      'Enter your mobile number to receive a verification code',
+      name: 'phoneSignInSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Phone Number`
+  String get phoneNumber {
+    return Intl.message(
+      'Phone Number',
+      name: 'phoneNumber',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select Country`
+  String get selectCountry {
+    return Intl.message(
+      'Select Country',
+      name: 'selectCountry',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Egypt`
+  String get egypt {
+    return Intl.message(
+      'Egypt',
+      name: 'egypt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lebanon`
+  String get lebanon {
+    return Intl.message(
+      'Lebanon',
+      name: 'lebanon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send Verification Code`
+  String get sendOtp {
+    return Intl.message(
+      'Send Verification Code',
+      name: 'sendOtp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification Code`
+  String get otpVerification {
+    return Intl.message(
+      'Verification Code',
+      name: 'otpVerification',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter the 6-digit code sent to {phone}`
+  String otpVerificationSubtitle(Object phone) {
+    return Intl.message(
+      'Enter the 6-digit code sent to $phone',
+      name: 'otpVerificationSubtitle',
+      desc: '',
+      args: [phone],
+    );
+  }
+
+  /// `Edit`
+  String get editNumber {
+    return Intl.message(
+      'Edit',
+      name: 'editNumber',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Didn't receive the code?`
+  String get didNotReceiveCode {
+    return Intl.message(
+      'Didn\'t receive the code?',
+      name: 'didNotReceiveCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Resend Code`
+  String get resendCode {
+    return Intl.message(
+      'Resend Code',
+      name: 'resendCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Resend code in {seconds}s`
+  String resendCodeIn(Object seconds) {
+    return Intl.message(
+      'Resend code in ${seconds}s',
+      name: 'resendCodeIn',
+      desc: '',
+      args: [seconds],
+    );
+  }
+
+  /// `Verify & Continue`
+  String get verifyAndContinue {
+    return Intl.message(
+      'Verify & Continue',
+      name: 'verifyAndContinue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a valid phone number for the selected country`
+  String get invalidPhoneFormat {
+    return Intl.message(
+      'Please enter a valid phone number for the selected country',
+      name: 'invalidPhoneFormat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a valid 6-digit code`
+  String get invalidOtpCode {
+    return Intl.message(
+      'Please enter a valid 6-digit code',
+      name: 'invalidOtpCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification failed. Please try again.`
+  String get phoneAuthFailed {
+    return Intl.message(
+      'Verification failed. Please try again.',
+      name: 'phoneAuthFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification code sent successfully!`
+  String get codeSentSuccess {
+    return Intl.message(
+      'Verification code sent successfully!',
+      name: 'codeSentSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Email`
   String get email {
     return Intl.message(
@@ -1302,16 +1482,6 @@ class S {
     );
   }
 
-  /// `Phone Number`
-  String get phoneNumber {
-    return Intl.message(
-      'Phone Number',
-      name: 'phoneNumber',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `+966 50 123 4567`
   String get phoneHint {
     return Intl.message(
@@ -1377,16 +1547,6 @@ class S {
     return Intl.message(
       'e.g. Saudi Arabia, Egypt',
       name: 'countryHint',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Select Country`
-  String get selectCountry {
-    return Intl.message(
-      'Select Country',
-      name: 'selectCountry',
       desc: '',
       args: [],
     );
@@ -5539,6 +5699,176 @@ class S {
       name: 'coachReasonLabel',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `Single Session Price ($ USD)`
+  String get singleSessionPriceUSD {
+    return Intl.message(
+      'Single Session Price (\$ USD)',
+      name: 'singleSessionPriceUSD',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `e.g. 50`
+  String get singleSessionPriceUSDHint {
+    return Intl.message(
+      'e.g. 50',
+      name: 'singleSessionPriceUSDHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Single Session Rate in USD`
+  String get singleSessionPriceUSDDesc {
+    return Intl.message(
+      'Single Session Rate in USD',
+      name: 'singleSessionPriceUSDDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Monthly Package Price ($ USD)`
+  String get monthlyPriceUSD {
+    return Intl.message(
+      'Monthly Package Price (\$ USD)',
+      name: 'monthlyPriceUSD',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `e.g. 200`
+  String get monthlyPriceUSDHint {
+    return Intl.message(
+      'e.g. 200',
+      name: 'monthlyPriceUSDHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Full Month Training Package in USD`
+  String get monthlyPriceUSDDesc {
+    return Intl.message(
+      'Full Month Training Package in USD',
+      name: 'monthlyPriceUSDDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a valid session rate greater than 0.`
+  String get validationSessionPriceRequired {
+    return Intl.message(
+      'Please enter a valid session rate greater than 0.',
+      name: 'validationSessionPriceRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a valid monthly rate greater than 0.`
+  String get validationMonthlyPriceRequired {
+    return Intl.message(
+      'Please enter a valid monthly rate greater than 0.',
+      name: 'validationMonthlyPriceRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `/ month`
+  String get perMonthUnit {
+    return Intl.message(
+      '/ month',
+      name: 'perMonthUnit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Single Session`
+  String get sessionPricingOptionTitle {
+    return Intl.message(
+      'Single Session',
+      name: 'sessionPricingOptionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1-on-1 scheduled live workout with tailored coaching`
+  String get sessionPricingOptionDesc {
+    return Intl.message(
+      '1-on-1 scheduled live workout with tailored coaching',
+      name: 'sessionPricingOptionDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Monthly Package`
+  String get monthlyPricingOptionTitle {
+    return Intl.message(
+      'Monthly Package',
+      name: 'monthlyPricingOptionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ongoing full-month training plan, tracking & guidance`
+  String get monthlyPricingOptionDesc {
+    return Intl.message(
+      'Ongoing full-month training plan, tracking & guidance',
+      name: 'monthlyPricingOptionDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `USD`
+  String get usdBadge {
+    return Intl.message(
+      'USD',
+      name: 'usdBadge',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `${price} USD`
+  String priceUsdFormat(Object price) {
+    return Intl.message(
+      '\$$price USD',
+      name: 'priceUsdFormat',
+      desc: '',
+      args: [price],
+    );
+  }
+
+  /// `${price} / session`
+  String sessionPriceChip(Object price) {
+    return Intl.message(
+      '\$$price / session',
+      name: 'sessionPriceChip',
+      desc: '',
+      args: [price],
+    );
+  }
+
+  /// `${price} / month`
+  String monthlyPriceChip(Object price) {
+    return Intl.message(
+      '\$$price / month',
+      name: 'monthlyPriceChip',
+      desc: '',
+      args: [price],
     );
   }
 }

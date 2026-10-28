@@ -1,15 +1,9 @@
 import 'package:get_it/get_it.dart';
 import '../../features/auth/core/data/data_source/auth_local_data_source.dart';
-import '../../features/auth/forget_password/data/data_source/forget_password_remote_data_source.dart';
-import '../../features/auth/forget_password/data/repo_impl/forget_password_repo_impl.dart';
-import '../../features/auth/forget_password/presentation/view_model/forget_password_cubit/forget_password_cubit.dart';
 import '../../features/auth/choose_role/presentation/view_model/choose_role_cubit/choose_role_cubit.dart';
-import '../../features/auth/sign_in/data/data_source/sign_in_remote_data_source.dart';
-import '../../features/auth/sign_in/data/repo_impl/sign_in_repo_impl.dart';
-import '../../features/auth/sign_in/presentation/view_model/sign_in_cubit/sign_in_cubit.dart';
-import '../../features/auth/sign_up/data/data_source/sign_up_remote_data_source.dart';
-import '../../features/auth/sign_up/data/repo_impl/sign_up_repo_impl.dart';
-import '../../features/auth/sign_up/presentation/view_model/sign_up_cubit/sign_up_cubit.dart';
+import '../../features/auth/phone_sign_in/data/data_source/phone_auth_remote_data_source.dart';
+import '../../features/auth/phone_sign_in/data/repos/phone_auth_repo.dart';
+import '../../features/auth/phone_sign_in/presentation/view_model/phone_auth_cubit/phone_auth_cubit.dart';
 import '../../features/onboarding/data/data_source/onboarding_local_data_source.dart';
 import '../../features/onboarding/presentation/view_model/onboarding_cubit/onboarding_cubit.dart';
 import '../../features/trainee_setup/data/data_source/trainee_setup_local_data_source.dart';
@@ -69,57 +63,22 @@ Future<void> setupServiceLocator() async {
   );
   await getIt<AuthLocalDataSource>().initHive();
 
-  // 3. Sign In Dependencies
-  getIt.registerLazySingleton<SignInRemoteDataSource>(
-    () => SignInRemoteDataSource(
+  // 3. Phone Auth Dependencies
+  getIt.registerLazySingleton<PhoneAuthRemoteDataSource>(
+    () => PhoneAuthRemoteDataSource(
       authService: getIt<AuthService>(),
       firestoreService: getIt<FirestoreService>(),
     ),
   );
-  getIt.registerLazySingleton<SignInRepoImpl>(
-    () => SignInRepoImpl(
-      signInRemoteDataSource: getIt<SignInRemoteDataSource>(),
+  getIt.registerLazySingleton<PhoneAuthRepo>(
+    () => PhoneAuthRepo(
+      remoteDataSource: getIt<PhoneAuthRemoteDataSource>(),
       authLocalDataSource: getIt<AuthLocalDataSource>(),
-    ),
-  );
-  getIt.registerFactory<SignInCubit>(
-    () => SignInCubit(
-      signInRepoImpl: getIt<SignInRepoImpl>(),
-      authService: getIt<AuthService>(),
       authRouteResolver: getIt<AuthRouteResolver>(),
     ),
   );
-
-  // 4. Sign Up Dependencies
-  getIt.registerLazySingleton<SignUpRemoteDataSource>(
-    () => SignUpRemoteDataSource(
-      authService: getIt<AuthService>(),
-      firestoreService: getIt<FirestoreService>(),
-    ),
-  );
-  getIt.registerLazySingleton<SignUpRepoImpl>(
-    () => SignUpRepoImpl(
-      signUpRemoteDataSource: getIt<SignUpRemoteDataSource>(),
-      authLocalDataSource: getIt<AuthLocalDataSource>(),
-    ),
-  );
-  getIt.registerFactory<SignUpCubit>(
-    () => SignUpCubit(signUpRepoImpl: getIt<SignUpRepoImpl>()),
-  );
-
-  // 5. Forget Password Dependencies
-  getIt.registerLazySingleton<ForgetPasswordRemoteDataSource>(
-    () => ForgetPasswordRemoteDataSource(authService: getIt<AuthService>()),
-  );
-  getIt.registerLazySingleton<ForgetPasswordRepoImpl>(
-    () => ForgetPasswordRepoImpl(
-      forgetPasswordRemoteDataSource: getIt<ForgetPasswordRemoteDataSource>(),
-    ),
-  );
-  getIt.registerFactory<ForgetPasswordCubit>(
-    () => ForgetPasswordCubit(
-      forgetPasswordRepo: getIt<ForgetPasswordRepoImpl>(),
-    ),
+  getIt.registerFactory<PhoneAuthCubit>(
+    () => PhoneAuthCubit(phoneAuthRepo: getIt<PhoneAuthRepo>()),
   );
 
   // 6. Choose Role Dependencies
