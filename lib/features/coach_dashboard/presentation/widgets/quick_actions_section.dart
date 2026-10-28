@@ -16,7 +16,7 @@ class QuickActionsSection extends StatelessWidget {
     required this.onManageAvailability,
     required this.onViewBookings,
     this.monthlyEarnings = 0.0,
-    this.currency = 'SAR',
+    this.currency = 'USD',
   });
 
   @override

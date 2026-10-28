@@ -140,7 +140,7 @@ graph TD
 
 **Goal**: Standardize all financial representations to USD currency (`$`) and establish dual pricing (Price per Single Session & Price per Month).
 
-- [ ] **Step 2.1: Model & Schema Update for Dual Pricing**
+- [x] **Step 2.1: Model & Schema Update for Dual Pricing**
   - Update `CoachProfileModel`:
     - Remove legacy currency field defaults (replace any `'SAR'` with strict `'USD'`).
     - Add `sessionPriceUSD` (`double`): Single session rate in USD.
@@ -148,14 +148,14 @@ graph TD
     - Update `fromJson` and `toMap` methods with backward-compatible defaults.
   - Update `CoachProfileParserHelper` to parse and validate both pricing values.
 
-- [ ] **Step 2.2: Coach Registration Step 3 — Pricing Wizard Update**
+- [x] **Step 2.2: Coach Registration Step 3 — Pricing Wizard Update**
   - Refactor Step 3 in `CoachRegistrationView` (`pricing_availability_step.dart`):
     - Input field 1: **Session Price ($ USD)** with clear label (e.g., "Single Session Rate in USD").
     - Input field 2: **Monthly Price ($ USD)** with helper caption (e.g., "Full Month Training Package in USD").
     - Hardcoded `$` / `USD` prefix badge on inputs (no currency selection dropdown).
     - Numeric validator ensuring positive values (`> 0`).
 
-- [ ] **Step 2.3: Trainee Coach Discovery & Profile Details UI Update**
+- [x] **Step 2.3: Trainee Coach Discovery & Profile Details UI Update**
   - In `CoachCard` (`features/trainee_discovery/presentation/widgets/coach_card.dart`):
     - Display dual pricing chips: `"$XX / session"` and `"$YY / month"`.
   - In `CoachDetailsView` (`features/coach_profile_details/`):

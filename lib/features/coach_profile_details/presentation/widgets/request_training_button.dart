@@ -47,7 +47,7 @@ class RequestTrainingButton extends StatelessWidget {
                   style: TextStyle(fontSize: 11.sp, color: textSecondary),
                 ),
                 Text(
-                  '${coach.sessionPrice.toStringAsFixed(0)} ${coach.currency}',
+                  '\$${coach.sessionPriceUSD.toStringAsFixed(0)}',
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w800,

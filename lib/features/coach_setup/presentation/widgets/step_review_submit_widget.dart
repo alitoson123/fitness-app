@@ -30,8 +30,10 @@ class StepReviewSubmitWidget extends StatelessWidget {
         .map((s) => CoachSetupLocalizationHelper.getLocalizedSport(context, s))
         .join(', ');
 
-    final priceText =
-        '${cubit.sessionPrice.toStringAsFixed(0)} ${cubit.currency} ${S.of(context).perSessionUnit}';
+    final sessionText =
+        '\$${cubit.sessionPriceUSD.toStringAsFixed(0)} ${S.of(context).perSessionUnit}';
+    final monthlyText =
+        '\$${cubit.monthlyPriceUSD.toStringAsFixed(0)} ${S.of(context).perMonthUnit}';
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
@@ -105,8 +107,8 @@ class StepReviewSubmitWidget extends StatelessWidget {
             stepIndex: 2,
             onEditTapped: cubit.goToStep,
             items: [
-              (S.of(context).currency, cubit.currency),
-              (S.of(context).pricePerSession, priceText),
+              (S.of(context).singleSessionPriceUSD, sessionText),
+              (S.of(context).monthlyPriceUSD, monthlyText),
             ],
           ),
           SizedBox(height: 12.h),

@@ -1,9 +1,10 @@
-import 'package:fitness_app/core/theme/app_colors.dart';
-import 'package:fitness_app/core/theme/app_radius.dart';
-import 'package:fitness_app/features/coach_setup/data/models/coach_profile_model.dart';
-import 'package:fitness_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_radius.dart';
+import '../../../../generated/l10n.dart';
+import '../../../coach_setup/data/models/coach_profile_model.dart';
+import 'coach_pricing_option_tile.dart';
 
 class CoachPricingCard extends StatelessWidget {
   final CoachProfileModel coach;
@@ -13,43 +14,48 @@ class CoachPricingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primary = isDark ? AppColors.flameRed : AppColors.primary;
-    final cardBg = isDark
-        ? AppColors.darkSurface
-        : const Color(0xFFF0F5FF);
-    final textSecondary =
-        isDark ? AppColors.darkTextSecondary : AppColors.textSecondary;
+    final cardBg = isDark ? AppColors.darkSurface : Colors.white;
+    final border = isDark ? AppColors.darkBorder : AppColors.border;
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+      padding: EdgeInsets.all(14.r),
       decoration: BoxDecoration(
         color: cardBg,
         borderRadius: AppRadius.lgAll,
-        border: Border.all(
-          color: primary.withValues(alpha: isDark ? 0.35 : 0.22),
-          width: 1.2,
-        ),
+        border: Border.all(color: border),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            S.of(context).pricePerSession,
+            S.of(context).sessionPricing,
             style: TextStyle(
               fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-              color: textSecondary,
+              fontWeight: FontWeight.w700,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
             ),
           ),
-          Text(
-            '${coach.currency} ${coach.sessionPrice.toStringAsFixed(0)}',
-            style: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w800,
-              color: primary,
-            ),
+          SizedBox(height: 10.h),
+          CoachPricingOptionTile(
+            icon: Icons.timer_outlined,
+            title: S.of(context).sessionPricingOptionTitle,
+            priceText: '\$${coach.sessionPriceUSD.toStringAsFixed(0)}',
+            unitText: S.of(context).perSessionUnit,
+            description: S.of(context).sessionPricingOptionDesc,
+            isHighlighted: false,
           ),
+          if (coach.monthlyPriceUSD > 0) ...[
+            SizedBox(height: 10.h),
+            CoachPricingOptionTile(
+              icon: Icons.calendar_month_rounded,
+              title: S.of(context).monthlyPricingOptionTitle,
+              priceText: '\$${coach.monthlyPriceUSD.toStringAsFixed(0)}',
+              unitText: S.of(context).perMonthUnit,
+              description: S.of(context).monthlyPricingOptionDesc,
+              isHighlighted: true,
+            ),
+          ],
         ],
       ),
     );

@@ -5,6 +5,7 @@ import '../../../../core/theme/app_radius.dart';
 import '../../../../generated/l10n.dart';
 import '../../../coach_setup/data/models/coach_profile_model.dart';
 import 'coach_card_avatar.dart';
+import 'coach_card_pricing_row.dart';
 import 'coach_card_rating_row.dart';
 import 'coach_card_sports_row.dart';
 
@@ -98,7 +99,12 @@ class CoachCard extends StatelessWidget {
                         isDark: isDark,
                       ),
                       SizedBox(height: 8.h),
-                      _buildPriceRow(context, primary, textPrimary),
+                      CoachCardPricingRow(
+                        coach: coach,
+                        primaryColor: primary,
+                        textPrimaryColor: textPrimary,
+                        isDark: isDark,
+                      ),
                     ],
                   ),
                 ),
@@ -107,31 +113,6 @@ class CoachCard extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildPriceRow(
-    BuildContext context,
-    Color primary,
-    Color textPrimary,
-  ) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          '${coach.sessionPrice.toStringAsFixed(0)} ${coach.currency} ${S.of(context).perSessionUnit}',
-          style: TextStyle(
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w700,
-            color: primary,
-          ),
-        ),
-        Icon(
-          Icons.arrow_forward_ios_rounded,
-          size: 13.r,
-          color: textPrimary.withValues(alpha: 0.4),
-        ),
-      ],
     );
   }
 }

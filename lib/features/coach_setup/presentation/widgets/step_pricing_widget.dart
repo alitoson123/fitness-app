@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../generated/l10n.dart';
 import '../view_model/coach_setup_cubit/coach_setup_cubit.dart';
-import 'currency_dropdown_field.dart';
+import 'price_per_month_field.dart';
 import 'price_per_session_field.dart';
 
 class StepPricingWidget extends StatelessWidget {
@@ -38,18 +38,15 @@ class StepPricingWidget extends StatelessWidget {
                   : AppColors.textSecondary,
             ),
           ),
-         // SizedBox(height: 14.h),
-        //  const PricingTipCard(),
-          SizedBox(height: 18.h),
-          CurrencyDropdownField(
-            selectedCurrency: cubit.currency,
-            onCurrencyChanged: cubit.setCurrency,
-          ),
           SizedBox(height: 18.h),
           PricePerSessionField(
-            sessionPrice: cubit.sessionPrice,
-            currency: cubit.currency,
+            sessionPrice: cubit.sessionPriceUSD,
             onPriceChanged: cubit.setSessionPrice,
+          ),
+          SizedBox(height: 18.h),
+          PricePerMonthField(
+            monthlyPrice: cubit.monthlyPriceUSD,
+            onPriceChanged: cubit.setMonthlyPrice,
           ),
           SizedBox(height: 24.h),
         ],

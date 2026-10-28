@@ -2,6 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../core/models/day_availability.dart';
 
 abstract class CoachProfileParserHelper {
+  static double parsePrice(dynamic val) {
+    if (val == null) return 0.0;
+    if (val is num) return val.toDouble();
+    if (val is String) {
+      final parsed = double.tryParse(val);
+      if (parsed != null) return parsed;
+    }
+    return 0.0;
+  }
+
+  static bool isValidPrice(double? price) {
+    return price != null && price > 0;
+  }
+
   static List<String> parseList(dynamic val) {
     if (val is List) return val.map((e) => e.toString()).toList();
     return const [];

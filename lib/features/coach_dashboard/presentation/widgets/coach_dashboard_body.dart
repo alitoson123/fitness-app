@@ -75,7 +75,7 @@ class _CoachDashboardBodyState extends State<CoachDashboardBody> {
         );
         final currency = state.allBookings.isNotEmpty
             ? state.allBookings.first.currency
-            : 'SAR';
+            : 'USD';
 
         return SafeArea(
           child: RefreshIndicator(

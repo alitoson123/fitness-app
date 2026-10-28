@@ -1,32 +1,18 @@
 import '../../../../core/models/day_availability.dart';
-import 'coach_profile_parser_helper.dart';
+import 'coach_profile_serializer.dart';
 
 class CoachProfileModel {
-  final String uid;
-  final String name;
-  final String phoneNumber;
-  final String photoUrl;
-  final String bio;
-  final String country;
-  final String city;
-  final int age;
-  final String gender;
-  final List<String> languages;
-  final List<String> sports;
-  final List<String> specialties;
-  final int yearsOfExperience;
-  final double sessionPrice;
-  final String currency;
-  final String availabilitySummary;
-  final int sessionDurationMinutes;
-  final List<String> workingDays;
+  final String uid, name, phoneNumber, photoUrl, bio, country, city, gender;
+  final int age, yearsOfExperience, sessionDurationMinutes, reviewsCount;
+  final double sessionPriceUSD, monthlyPriceUSD, rating;
+  final String currency, availabilitySummary, verificationStatus;
+  final List<String> languages, sports, specialties, workingDays, certificateUrls;
   final Map<String, dynamic>? workingHours;
   final List<DayAvailability> weeklyAvailability;
-  final List<String> certificateUrls;
-  final double rating;
-  final int reviewsCount;
-  final String verificationStatus;
   final DateTime? updatedAt;
+
+  double get sessionPrice => sessionPriceUSD;
+  double get hourlyRate => sessionPriceUSD;
 
   const CoachProfileModel({
     required this.uid,
@@ -42,8 +28,10 @@ class CoachProfileModel {
     this.sports = const [],
     this.specialties = const [],
     this.yearsOfExperience = 0,
-    this.sessionPrice = 0.0,
-    this.currency = 'SAR',
+    double? sessionPrice,
+    double? sessionPriceUSD,
+    this.monthlyPriceUSD = 0.0,
+    this.currency = 'USD',
     this.availabilitySummary = '',
     this.sessionDurationMinutes = 60,
     this.workingDays = const [],
@@ -54,77 +42,15 @@ class CoachProfileModel {
     this.reviewsCount = 0,
     this.verificationStatus = 'pending',
     this.updatedAt,
-  });
+  }) : sessionPriceUSD = sessionPriceUSD ?? sessionPrice ?? 0.0;
 
-  factory CoachProfileModel.fromJson(Map<String, dynamic> json, {String? uid}) {
-    return CoachProfileModel(
-      uid: uid ?? json['uid'] as String? ?? '',
-      name: json['name'] as String? ?? '',
-      phoneNumber: json['phoneNumber'] as String? ?? json['number'] as String? ?? '',
-      photoUrl: json['photoUrl'] as String? ?? '',
-      bio: json['bio'] as String? ?? '',
-      country: json['country'] as String? ?? '',
-      city: json['city'] as String? ?? '',
-      age: json['age'] as int? ?? 0,
-      gender: json['gender'] as String? ?? 'male',
-      languages: CoachProfileParserHelper.parseList(json['languages']),
-      sports: CoachProfileParserHelper.parseList(json['sports']),
-      specialties: CoachProfileParserHelper.parseList(json['specialties']),
-      yearsOfExperience: json['yearsOfExperience'] as int? ?? 0,
-      sessionPrice: (json['hourlyRate'] as num?)?.toDouble() ?? 0.0,
-      currency: json['currency'] as String? ?? 'SAR',
-      availabilitySummary: json['availabilitySummary'] as String? ?? '',
-      sessionDurationMinutes: json['sessionDurationMinutes'] as int? ?? 60,
-      workingDays: CoachProfileParserHelper.parseList(json['workingDays']),
-      workingHours: CoachProfileParserHelper.parseMap(json['workingHours']),
-      weeklyAvailability: CoachProfileParserHelper.parseAvailability(
-        json['weeklyAvailability'],
-      ),
-      certificateUrls: CoachProfileParserHelper.parseList(
-        json['certificateUrls'],
-      ),
-      rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
-      reviewsCount: json['reviewsCount'] as int? ?? 0,
-      verificationStatus: json['verificationStatus'] as String? ?? 'pending',
-      updatedAt: CoachProfileParserHelper.parseDateTime(json['updatedAt']),
-    );
-  }
+  factory CoachProfileModel.fromJson(
+    Map<String, dynamic> json, {
+    String? uid,
+  }) =>
+      CoachProfileSerializer.fromJson(json, uid: uid);
 
-  Map<String, dynamic> toMap() {
-    return {
-      'uid': uid,
-      'name': name,
-      if (phoneNumber.isNotEmpty) 'phoneNumber': phoneNumber,
-      'photoUrl': photoUrl,
-      'bio': bio,
-      'country': country,
-      'city': city,
-      'age': age,
-      'gender': gender,
-      'languages': languages,
-      'sports': sports,
-      'specialties': specialties,
-      'yearsOfExperience': yearsOfExperience,
-      'hourlyRate': sessionPrice,
-      'currency': currency,
-      'availabilitySummary': availabilitySummary,
-      'sessionDurationMinutes': sessionDurationMinutes,
-      'workingDays': workingDays.isNotEmpty
-          ? workingDays
-          : weeklyAvailability
-              .where((e) => e.isAvailable)
-              .map((e) => e.day.name)
-              .toList(),
-      if (workingHours != null) 'workingHours': workingHours,
-      if (weeklyAvailability.isNotEmpty)
-        'weeklyAvailability': weeklyAvailability.map((e) => e.toMap()).toList(),
-      if (certificateUrls.isNotEmpty) 'certificateUrls': certificateUrls,
-      'rating': rating,
-      'reviewsCount': reviewsCount,
-      'verificationStatus': verificationStatus,
-      if (updatedAt != null) 'updatedAt': updatedAt!.toIso8601String(),
-    };
-  }
+  Map<String, dynamic> toMap() => CoachProfileSerializer.toMap(this);
 
   CoachProfileModel copyWith({
     String? uid,
@@ -140,7 +66,9 @@ class CoachProfileModel {
     List<String>? sports,
     List<String>? specialties,
     int? yearsOfExperience,
-    double? hourlyRate,
+    double? sessionPrice,
+    double? sessionPriceUSD,
+    double? monthlyPriceUSD,
     String? currency,
     String? availabilitySummary,
     int? sessionDurationMinutes,
@@ -167,7 +95,8 @@ class CoachProfileModel {
       sports: sports ?? this.sports,
       specialties: specialties ?? this.specialties,
       yearsOfExperience: yearsOfExperience ?? this.yearsOfExperience,
-      sessionPrice: hourlyRate ?? sessionPrice,
+      sessionPriceUSD: sessionPriceUSD ?? sessionPrice ?? this.sessionPriceUSD,
+      monthlyPriceUSD: monthlyPriceUSD ?? this.monthlyPriceUSD,
       currency: currency ?? this.currency,
       availabilitySummary: availabilitySummary ?? this.availabilitySummary,
       sessionDurationMinutes:
