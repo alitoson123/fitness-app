@@ -10,6 +10,7 @@ class BookingBottomBar extends StatelessWidget {
   final bool isSubmitEnabled;
   final bool isSubmitting;
   final VoidCallback onSubmit;
+  final String? customButtonText;
 
   const BookingBottomBar({
     super.key,
@@ -18,6 +19,7 @@ class BookingBottomBar extends StatelessWidget {
     required this.isSubmitEnabled,
     required this.isSubmitting,
     required this.onSubmit,
+    this.customButtonText,
   });
 
   @override
@@ -85,12 +87,13 @@ class BookingBottomBar extends StatelessWidget {
                         ),
                       )
                     : Text(
-                        s.confirmAndSendRequest,
+                        customButtonText ?? s.confirmAndSendRequest,
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 13.sp,
                           fontWeight: FontWeight.w700,
                           color: Colors.white,
                         ),
+                        textAlign: TextAlign.center,
                       ),
               ),
             ),

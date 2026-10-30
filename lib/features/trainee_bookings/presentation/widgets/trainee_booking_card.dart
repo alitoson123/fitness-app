@@ -7,6 +7,7 @@ import 'package:fitness_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'trainee_cancelled_booking_section.dart';
+import 'trainee_rejected_booking_section.dart';
 import 'trainee_reschedule_alert_box.dart';
 
 class TraineeBookingCard extends StatelessWidget {
@@ -31,6 +32,7 @@ class TraineeBookingCard extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isReschedulePending = booking.status == 'reschedule_pending';
     final isCancelled = booking.status == 'cancelled';
+    final isRejected = booking.status == 'rejected';
 
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
@@ -97,7 +99,9 @@ class TraineeBookingCard extends StatelessWidget {
               SizedBox(width: 6.w),
               Text(
                 booking.isMonthly
-                    ? '${booking.date} (${s.monthlyPackageType})'
+                    ? (booking.sessions.length > 1
+                        ? '${booking.date} (${s.monthlyPackageType} • ${booking.sessions.length})'
+                        : '${booking.date} (${s.monthlyPackageType})')
                     : '${booking.date} (${booking.startTime} - ${booking.endTime})',
                 style: TextStyle(
                   fontSize: 12.sp,
@@ -121,6 +125,11 @@ class TraineeBookingCard extends StatelessWidget {
           if (isCancelled)
             TraineeCancelledBookingSection(
               cancellationReason: booking.cancellationReason,
+              onRebook: onRebook,
+            ),
+          if (isRejected)
+            TraineeRejectedBookingSection(
+              rejectionReason: booking.rejectionReason,
               onRebook: onRebook,
             ),
         ],

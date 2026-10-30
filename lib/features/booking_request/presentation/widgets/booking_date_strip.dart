@@ -13,6 +13,7 @@ class BookingDateStrip extends StatelessWidget {
   final CoachProfileModel coach;
   final ValueChanged<DateTime> onSelectDate;
   final String? title;
+  final bool Function(DateTime date)? hasSessionIndicator;
 
   const BookingDateStrip({
     super.key,
@@ -21,6 +22,7 @@ class BookingDateStrip extends StatelessWidget {
     required this.coach,
     required this.onSelectDate,
     this.title,
+    this.hasSessionIndicator,
   });
 
   @override
@@ -64,6 +66,7 @@ class BookingDateStrip extends StatelessWidget {
                 Localizations.localeOf(context).languageCode,
               ).format(date);
               final dayNum = date.day.toString();
+              final isBooked = hasSessionIndicator?.call(date) ?? false;
 
               return Opacity(
                 opacity: isWorking ? 1.0 : 0.45,
@@ -79,8 +82,10 @@ class BookingDateStrip extends StatelessWidget {
                       color: isSelected ? primary : unselectedBg,
                       borderRadius: AppRadius.mdAll,
                       border: Border.all(
-                        color: isSelected ? primary : border,
-                        width: isSelected ? 1.5 : 1.0,
+                        color: isSelected
+                            ? primary
+                            : (isBooked ? primary : border),
+                        width: (isSelected || isBooked) ? 1.5 : 1.0,
                       ),
                     ),
                     child: Center(
@@ -90,6 +95,16 @@ class BookingDateStrip extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           mainAxisSize: MainAxisSize.min,
                           children: [
+                            if (isBooked && !isSelected)
+                              Container(
+                                width: 5.r,
+                                height: 5.r,
+                                margin: EdgeInsets.only(bottom: 2.h),
+                                decoration: BoxDecoration(
+                                  color: primary,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
                             Text(
                               dayName,
                               maxLines: 1,

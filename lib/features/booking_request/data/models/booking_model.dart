@@ -1,36 +1,19 @@
 import 'booking_serializer.dart';
+import 'booking_session_model.dart';
 
 class BookingModel {
-  final String id;
-  final String coachUid;
-  final String coachName;
-  final String coachPhotoUrl;
-  final String traineeUid;
-  final String traineeName;
-  final String traineePhotoUrl;
-  final String sport;
-  final String bookingType;
-  final String date;
-  final String startTime;
-  final String endTime;
+  final String id, coachUid, coachName, coachPhotoUrl;
+  final String traineeUid, traineeName, traineePhotoUrl;
+  final String sport, bookingType, date, startTime, endTime;
   final double price;
   final String currency;
   final int durationMonths;
-  final String notes;
-  final String status;
-  final String? rejectionReason;
-  final String? proposedDate;
-  final String? proposedStartTime;
-  final String? proposedEndTime;
-  final String? rescheduleReason;
-  final String? rescheduledBy;
-  final DateTime? rescheduledAt;
-  final String? previousDate;
-  final String? previousStartTime;
-  final String? previousEndTime;
-  final String? cancellationReason;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  final List<BookingSessionModel> sessions;
+  final String notes, status;
+  final String? rejectionReason, proposedDate, proposedStartTime, proposedEndTime;
+  final String? rescheduleReason, rescheduledBy, previousDate, previousStartTime;
+  final String? previousEndTime, cancellationReason;
+  final DateTime? rescheduledAt, createdAt, updatedAt;
 
   const BookingModel({
     required this.id,
@@ -48,6 +31,7 @@ class BookingModel {
     this.price = 0.0,
     this.currency = 'USD',
     this.durationMonths = 1,
+    this.sessions = const [],
     this.notes = '',
     this.status = 'pending',
     this.rejectionReason,
@@ -68,6 +52,7 @@ class BookingModel {
   bool get isReschedulePending => status == 'reschedule_pending';
   bool get isMonthly => bookingType == 'monthly';
   bool get isSession => bookingType != 'monthly';
+  int get sessionsCount => sessions.isNotEmpty ? sessions.length : 1;
 
   factory BookingModel.fromJson(Map<String, dynamic> json, {String? id}) =>
       BookingSerializer.fromJson(json, id: id);
@@ -90,6 +75,7 @@ class BookingModel {
     double? price,
     String? currency,
     int? durationMonths,
+    List<BookingSessionModel>? sessions,
     String? notes,
     String? status,
     String? rejectionReason,
@@ -122,6 +108,7 @@ class BookingModel {
       price: price ?? this.price,
       currency: currency ?? this.currency,
       durationMonths: durationMonths ?? this.durationMonths,
+      sessions: sessions ?? this.sessions,
       notes: notes ?? this.notes,
       status: status ?? this.status,
       rejectionReason: rejectionReason ?? this.rejectionReason,

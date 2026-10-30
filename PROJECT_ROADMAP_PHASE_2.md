@@ -199,7 +199,7 @@ graph TD
 
 **Goal**: Provide coaches with three immediate actions on every booking card: Approve, Reject with Reason, and Reschedule.
 
-- [ ] **Step 4.1: Booking Card Action Architecture**
+- [x] **Step 4.1: Booking Card Action Architecture**
   - Redesign `BookingCardActions` (`lib/features/coach_dashboard/presentation/widgets/booking_card_actions.dart`):
     - Replace the 2-button layout with 3 clear, distinct action buttons:
       1. **Approve / Accept** (Filled button, Theme Primary/Success): Immediate confirmation.
@@ -207,7 +207,7 @@ graph TD
       3. **Reschedule** (Outlined/Tonal button, Warning amber): Opens reschedule time selection sheet.
     - Ensure responsive layout using `Row` with flexible sizing or two-tier buttons so labels do not truncate in Arabic and English.
 
-- [ ] **Step 4.2: Reject with Reason Workflow**
+- [x] **Step 4.2: Reject with Reason Workflow**
   - Enhance `RejectBookingDialog`:
     - Mandatory or pre-selected rejection reason options (e.g., "Schedule conflict", "Fully booked", "Outside working hours", "Other reason").
     - Free-form text field for detailed notes.
@@ -215,7 +215,7 @@ graph TD
     - Updates Firestore `bookings/{id}`: `status: 'rejected'`, `rejectionReason: reason`, `updatedAt: serverTimestamp`.
     - Triggers automated notification to the trainee.
 
-- [ ] **Step 4.3: Reschedule Workflow**
+- [x] **Step 4.3: Reschedule Workflow**
   - Connect `RescheduleBookingSheet`:
     - Coach selects a new proposed date from active working days.
     - Coach selects a new proposed time slot.

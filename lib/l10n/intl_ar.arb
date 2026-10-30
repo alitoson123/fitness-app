@@ -594,5 +594,21 @@
   "oneMonthDuration": "شهر واحد",
   "totalMonthlyPrice": "سعر الباقة الشهرية",
   "flexibleSchedule": "مرن / بالتنسيق مع الكابتن",
-  "pleaseSelectStartDate": "يرجى تحديد تاريخ البدء"
+  "pleaseSelectStartDate": "يرجى تحديد تاريخ البدء",
+  "rejectReasonScheduleConflict": "تعارض في المواعيد",
+  "rejectReasonFullyBooked": "جدول المواعيد ممتلئ",
+  "rejectReasonOutsideHours": "خارج أوقات العمل",
+  "rejectReasonOther": "سبب آخر",
+  "rejectionNotesHint": "أضف تفاصيل أو توضيح (اختياري)...",
+  "rejectionNotesRequiredHint": "يرجى كتابة تفاصيل سبب الرفض...",
+  "selectRejectionReasonLabel": "اختر سبب الرفض:",
+  "rescheduleAction": "إعادة جدولة",
+  "noAvailableSlotsForDay": "لا توجد أوقات متاحة في هذا اليوم",
+  "monthlySessionsProgress": "تم اختيار {current} من {total} حصص",
+  "selectRequiredSessionsPrompt": "اختر {count} حصص لإكمال اشتراكك الشهري",
+  "sessionNumberLabel": "حصة {number}",
+  "sessionsSelectedCount": "{current}/{total} حصص",
+  "selectedSessionsListTitle": "الحصص المختارة ({count}/{total})",
+  "confirmSessionsCountPrompt": "يرجى تحديد {count} حصص للمتابعة",
+  "clearAllSessions": "مسح الكل"
 }

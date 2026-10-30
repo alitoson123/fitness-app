@@ -113,6 +113,22 @@ class CoachBookingsCubit extends Cubit<CoachBookingsState> {
     );
   }
 
+  Future<void> rescheduleBooking({
+    required BookingModel booking,
+    required String proposedDate,
+    required String proposedStartTime,
+    required String proposedEndTime,
+    required String reason,
+  }) {
+    return requestReschedule(
+      booking: booking,
+      proposedDate: proposedDate,
+      proposedStartTime: proposedStartTime,
+      proposedEndTime: proposedEndTime,
+      reason: reason,
+    );
+  }
+
   void clearMessages() {
     emit(state.copyWith(clearMessages: true));
   }

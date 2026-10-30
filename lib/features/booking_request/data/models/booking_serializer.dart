@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'booking_model.dart';
+import 'booking_session_model.dart';
 
 class BookingSerializer {
   static BookingModel fromJson(Map<String, dynamic> json, {String? id}) {
@@ -19,6 +20,7 @@ class BookingSerializer {
       price: (json['price'] as num?)?.toDouble() ?? 0.0,
       currency: 'USD',
       durationMonths: (json['durationMonths'] as num?)?.toInt() ?? 1,
+      sessions: _parseSessions(json['sessions']),
       notes: json['notes'] as String? ?? '',
       status: json['status'] as String? ?? 'pending',
       rejectionReason: json['rejectionReason'] as String?,
@@ -54,6 +56,8 @@ class BookingSerializer {
       'price': booking.price,
       'currency': 'USD',
       'durationMonths': booking.durationMonths,
+      if (booking.sessions.isNotEmpty)
+        'sessions': booking.sessions.map((s) => s.toMap()).toList(),
       'notes': booking.notes,
       'status': booking.status,
       if (booking.rejectionReason != null)
@@ -85,10 +89,19 @@ class BookingSerializer {
     };
   }
 
+  static List<BookingSessionModel> _parseSessions(dynamic val) {
+    if (val is List) {
+      return val
+          .whereType<Map>()
+          .map((item) => BookingSessionModel.fromJson(Map<String, dynamic>.from(item)))
+          .toList();
+    }
+    return const [];
+  }
+
   static DateTime? _parseDate(dynamic val) {
     if (val is Timestamp) return val.toDate();
     if (val is String) return DateTime.tryParse(val);
     return null;
   }
 }
-

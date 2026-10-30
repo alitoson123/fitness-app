@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../generated/l10n.dart';
 import '../../../booking_request/data/models/booking_model.dart';
+import 'reject_reason_selector.dart';
 
 class RejectBookingDialog extends StatefulWidget {
   final BookingModel booking;
@@ -34,6 +35,7 @@ class RejectBookingDialog extends StatefulWidget {
 
 class _RejectBookingDialogState extends State<RejectBookingDialog> {
   final _reasonController = TextEditingController();
+  String _selectedReasonKey = 'schedule_conflict';
 
   @override
   void dispose() {
@@ -41,10 +43,25 @@ class _RejectBookingDialogState extends State<RejectBookingDialog> {
     super.dispose();
   }
 
+  String _formatFinalReason(List<(String, String)> reasons) {
+    final notes = _reasonController.text.trim();
+    final option = reasons.firstWhere((r) => r.$1 == _selectedReasonKey).$2;
+    if (_selectedReasonKey == 'other') return notes;
+    return notes.isNotEmpty ? '$option - $notes' : option;
+  }
+
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final reasons = [
+      ('schedule_conflict', s.rejectReasonScheduleConflict),
+      ('fully_booked', s.rejectReasonFullyBooked),
+      ('outside_hours', s.rejectReasonOutsideHours),
+      ('other', s.rejectReasonOther),
+    ];
+    final isOther = _selectedReasonKey == 'other';
+    final canSubmit = !isOther || _reasonController.text.trim().isNotEmpty;
 
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
@@ -66,18 +83,32 @@ class _RejectBookingDialogState extends State<RejectBookingDialog> {
                     : AppColors.textSecondary,
               ),
             ),
-            SizedBox(height: 14.h),
+            SizedBox(height: 12.h),
+            Text(
+              s.selectRejectionReasonLabel,
+              style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600),
+            ),
+            SizedBox(height: 8.h),
+            RejectReasonSelector(
+              reasons: reasons,
+              selectedKey: _selectedReasonKey,
+              onSelect: (key) => setState(() => _selectedReasonKey = key),
+            ),
+            SizedBox(height: 6.h),
             TextField(
               controller: _reasonController,
-              maxLines: 3,
-              style: TextStyle(fontSize: 13.sp),
+              maxLines: 2,
+              style: TextStyle(fontSize: 12.sp),
+              onChanged: (_) => setState(() {}),
               decoration: InputDecoration(
-                labelText: s.rejectionReasonOptional,
-                hintText: s.rejectionReasonHint,
+                hintText: isOther
+                    ? s.rejectionNotesRequiredHint
+                    : s.rejectionNotesHint,
                 hintStyle: TextStyle(fontSize: 12.sp),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.r),
                 ),
+                contentPadding: EdgeInsets.all(10.r),
               ),
             ),
           ],
@@ -89,14 +120,14 @@ class _RejectBookingDialogState extends State<RejectBookingDialog> {
           child: Text(s.cancel),
         ),
         FilledButton(
-          style: FilledButton.styleFrom(
-            backgroundColor: AppColors.error,
-          ),
-          onPressed: () {
-            final reason = _reasonController.text.trim();
-            Navigator.of(context).pop();
-            widget.onConfirm(reason.isEmpty ? null : reason);
-          },
+          style: FilledButton.styleFrom(backgroundColor: AppColors.error),
+          onPressed: canSubmit
+              ? () {
+                  final reason = _formatFinalReason(reasons);
+                  Navigator.of(context).pop();
+                  widget.onConfirm(reason.isEmpty ? null : reason);
+                }
+              : null,
           child: Text(s.confirmDecline),
         ),
       ],

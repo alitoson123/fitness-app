@@ -69,7 +69,15 @@ void main() {
         sports: ['Fitness', 'Boxing'],
         sessionPriceUSD: 50.0,
         monthlyPriceUSD: 250.0,
-        workingDays: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'],
+        workingDays: [
+          'Sunday',
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday'
+        ],
         workingHours: {'from': '09:00', 'to': '17:00'},
       );
     });
@@ -109,7 +117,7 @@ void main() {
       expect(cubit.state.totalPrice, 250.0);
     });
 
-    test('isSubmitReady checks slot for session, but not for monthly', () {
+    test('isSubmitReady checks slot for session, and 8 sessions for monthly', () {
       cubit.init(testCoach);
       // Session without slot selected
       expect(cubit.state.isSubmitReady, isFalse);
@@ -117,9 +125,14 @@ void main() {
       cubit.selectSlot('11:00');
       expect(cubit.state.isSubmitReady, isTrue);
 
-      // Monthly type does not require slot
+      // Monthly type requires 8 sessions
       cubit.selectBookingType('monthly');
-      cubit.selectSlot('');
+      expect(cubit.state.isSubmitReady, isFalse);
+
+      final now = DateTime.now();
+      for (int i = 0; i < 8; i++) {
+        cubit.toggleMonthlySession(now.add(Duration(days: i)), '11:00');
+      }
       expect(cubit.state.isSubmitReady, isTrue);
     });
 
@@ -138,15 +151,16 @@ void main() {
       expect(booking.currency, 'USD');
       expect(booking.startTime, '14:00');
       expect(booking.durationMonths, 1);
-      expect(booking.monthlyScheduleNotes, isNull);
       expect(booking.notes, 'Need form correction');
     });
 
-    test('submitBooking creates monthly booking with recurring preferences', () async {
+    test('submitBooking creates monthly booking with 8 sessions', () async {
       cubit.init(testCoach);
       cubit.selectBookingType('monthly');
-      cubit.selectWeeklyFrequency(4);
-      cubit.updateMonthlyScheduleNotes('Prefer evenings 6pm');
+      final now = DateTime.now();
+      for (int i = 0; i < 8; i++) {
+        cubit.toggleMonthlySession(now.add(Duration(days: i)), '15:00');
+      }
       cubit.updateNotes('Hypertrophy goal');
 
       await cubit.submitBooking();
@@ -157,11 +171,7 @@ void main() {
       expect(booking.bookingType, 'monthly');
       expect(booking.price, 250.0);
       expect(booking.currency, 'USD');
-      expect(booking.startTime, 'Flexible');
-      expect(booking.endTime, 'Flexible');
-      expect(booking.durationMonths, 1);
-      expect(booking.monthlyScheduleNotes, contains('4 days/week'));
-      expect(booking.monthlyScheduleNotes, contains('Prefer evenings 6pm'));
+      expect(booking.sessions.length, 8);
       expect(booking.notes, 'Hypertrophy goal');
     });
 
@@ -177,4 +187,3 @@ void main() {
     });
   });
 }
-

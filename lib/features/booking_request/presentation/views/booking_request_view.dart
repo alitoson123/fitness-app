@@ -19,6 +19,7 @@ class BookingRequestView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     return BlocProvider(
       create: (_) => getIt<BookingRequestCubit>()..init(coach),
       child: BlocConsumer<BookingRequestCubit, BookingRequestState>(
@@ -42,9 +43,17 @@ class BookingRequestView extends StatelessWidget {
           final cubit = context.read<BookingRequestCubit>();
           final isSubmitting = state.status == BookingRequestStatus.submitting;
 
+          String? buttonText;
+          if (state.isMonthly) {
+            if (!state.isMonthlyComplete) {
+              buttonText =
+                  '${s.confirmSessionsCountPrompt(state.requiredMonthlySessions)} (${state.selectedMonthlySessions.length}/${state.requiredMonthlySessions})';
+            }
+          }
+
           return Scaffold(
             appBar: AppBar(
-              title: Text(S.of(context).bookingRequestTitle),
+              title: Text(s.bookingRequestTitle),
               centerTitle: true,
             ),
             body: SafeArea(
@@ -59,12 +68,16 @@ class BookingRequestView extends StatelessWidget {
               isMonthly: state.isMonthly,
               isSubmitEnabled: state.isSubmitReady,
               isSubmitting: isSubmitting,
+              customButtonText: buttonText,
               onSubmit: () {
                 if (!state.isSubmitReady) {
-                  if (state.selectedDate == null) {
-                    Message.showWarning(context, S.of(context).pleaseSelectStartDate);
+                  if (state.isMonthly && !state.isMonthlyComplete) {
+                    Message.showWarning(
+                      context,
+                      s.confirmSessionsCountPrompt(state.requiredMonthlySessions),
+                    );
                   } else if (state.isSession && state.selectedSlot == null) {
-                    Message.showWarning(context, S.of(context).pleaseSelectTimeSlot);
+                    Message.showWarning(context, s.pleaseSelectTimeSlot);
                   }
                   return;
                 }

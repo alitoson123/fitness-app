@@ -6021,6 +6021,166 @@ class S {
       args: [],
     );
   }
+
+  /// `Schedule conflict`
+  String get rejectReasonScheduleConflict {
+    return Intl.message(
+      'Schedule conflict',
+      name: 'rejectReasonScheduleConflict',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fully booked`
+  String get rejectReasonFullyBooked {
+    return Intl.message(
+      'Fully booked',
+      name: 'rejectReasonFullyBooked',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Outside working hours`
+  String get rejectReasonOutsideHours {
+    return Intl.message(
+      'Outside working hours',
+      name: 'rejectReasonOutsideHours',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Other reason`
+  String get rejectReasonOther {
+    return Intl.message(
+      'Other reason',
+      name: 'rejectReasonOther',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add details or explanation (optional)...`
+  String get rejectionNotesHint {
+    return Intl.message(
+      'Add details or explanation (optional)...',
+      name: 'rejectionNotesHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please specify the reason...`
+  String get rejectionNotesRequiredHint {
+    return Intl.message(
+      'Please specify the reason...',
+      name: 'rejectionNotesRequiredHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select a reason:`
+  String get selectRejectionReasonLabel {
+    return Intl.message(
+      'Select a reason:',
+      name: 'selectRejectionReasonLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reschedule`
+  String get rescheduleAction {
+    return Intl.message(
+      'Reschedule',
+      name: 'rescheduleAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No available slots for this day`
+  String get noAvailableSlotsForDay {
+    return Intl.message(
+      'No available slots for this day',
+      name: 'noAvailableSlotsForDay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{current} of {total} Sessions Selected`
+  String monthlySessionsProgress(Object current, Object total) {
+    return Intl.message(
+      '$current of $total Sessions Selected',
+      name: 'monthlySessionsProgress',
+      desc: '',
+      args: [current, total],
+    );
+  }
+
+  /// `Select {count} sessions to complete your monthly plan`
+  String selectRequiredSessionsPrompt(Object count) {
+    return Intl.message(
+      'Select $count sessions to complete your monthly plan',
+      name: 'selectRequiredSessionsPrompt',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Session {number}`
+  String sessionNumberLabel(Object number) {
+    return Intl.message(
+      'Session $number',
+      name: 'sessionNumberLabel',
+      desc: '',
+      args: [number],
+    );
+  }
+
+  /// `{current}/{total} Sessions`
+  String sessionsSelectedCount(Object current, Object total) {
+    return Intl.message(
+      '$current/$total Sessions',
+      name: 'sessionsSelectedCount',
+      desc: '',
+      args: [current, total],
+    );
+  }
+
+  /// `Selected Sessions ({count}/{total})`
+  String selectedSessionsListTitle(Object count, Object total) {
+    return Intl.message(
+      'Selected Sessions ($count/$total)',
+      name: 'selectedSessionsListTitle',
+      desc: '',
+      args: [count, total],
+    );
+  }
+
+  /// `Select all {count} sessions to continue`
+  String confirmSessionsCountPrompt(Object count) {
+    return Intl.message(
+      'Select all $count sessions to continue',
+      name: 'confirmSessionsCountPrompt',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Clear All`
+  String get clearAllSessions {
+    return Intl.message(
+      'Clear All',
+      name: 'clearAllSessions',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

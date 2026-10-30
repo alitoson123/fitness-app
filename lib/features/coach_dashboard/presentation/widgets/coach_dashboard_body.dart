@@ -12,10 +12,10 @@ import '../view_model/coach_bookings_cubit/coach_bookings_states.dart';
 import 'coach_dashboard_skeleton.dart';
 import 'coach_dashboard_stats.dart';
 import 'coach_welcome_header.dart';
-import 'next_session_card.dart';
 import 'pending_requests_preview.dart';
 import 'quick_actions_section.dart';
 import 'reject_booking_dialog.dart';
+import 'reschedule_booking_sheet.dart';
 import 'week_strip.dart';
 
 class CoachDashboardBody extends StatefulWidget {
@@ -54,6 +54,20 @@ class _CoachDashboardBodyState extends State<CoachDashboardBody> {
     );
   }
 
+  void _handleReschedule(BookingModel booking, CoachBookingsCubit cubit) {
+    RescheduleBookingSheet.show(
+      context: context,
+      booking: booking,
+      onConfirm: (date, start, end, reason) => cubit.requestReschedule(
+        booking: booking,
+        proposedDate: date,
+        proposedStartTime: start,
+        proposedEndTime: end,
+        reason: reason,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final authCubit = context.read<AuthSessionCubit>();
@@ -66,16 +80,10 @@ class _CoachDashboardBodyState extends State<CoachDashboardBody> {
         if (state.isLoading && state.allBookings.isEmpty) {
           return const SafeArea(child: CoachDashboardSkeleton());
         }
-
-        final nextSession = CoachBookingDateHelper.getNearestUpcomingSession(
-          state.confirmedBookings,
-        );
-        final earnings = CoachBookingDateHelper.calculateMonthEarnings(
-          state.allBookings,
-        );
-        final currency = state.allBookings.isNotEmpty
-            ? state.allBookings.first.currency
-            : 'USD';
+        final earnings =
+            CoachBookingDateHelper.calculateMonthEarnings(state.allBookings);
+        final currency =
+            state.allBookings.isNotEmpty ? state.allBookings.first.currency : 'USD';
 
         return SafeArea(
           child: RefreshIndicator(
@@ -107,20 +115,12 @@ class _CoachDashboardBodyState extends State<CoachDashboardBody> {
                     },
                   ),
                   SizedBox(height: AppSpacing.s3),
-                  NextSessionCard(
-                    session: nextSession,
-                    onSetAvailability: () => widget.onNavigateToTab(2),
-                    onTap: () {
-                      bookingsCubit.changeTab(CoachBookingTab.confirmed);
-                      widget.onNavigateToTab(1);
-                    },
-                  ),
-                  SizedBox(height: AppSpacing.s3),
                   PendingRequestsPreview(
                     pendingBookings: state.pendingBookings,
                     actionInProgressId: state.actionInProgressBookingId,
                     onAccept: bookingsCubit.acceptBooking,
                     onReject: (b) => _handleReject(b, bookingsCubit),
+                    onReschedule: (b) => _handleReschedule(b, bookingsCubit),
                     onViewAll: () {
                       bookingsCubit.changeTab(CoachBookingTab.pending);
                       widget.onNavigateToTab(1);

@@ -18,24 +18,22 @@ class BookingRequestRemoteDataSource {
       tag: 'BookingRequestRemoteDataSource',
     );
 
-    final snapshot = await firestoreService.getCollection(
+    final bookedSlots = <String>{};
+
+    final singleSnapshot = await firestoreService.getCollection(
       collection: AppConstants.bookingsCollection,
       queryBuilder: (query) => query
           .where('coachUid', isEqualTo: coachUid)
           .where('date', isEqualTo: date),
     );
 
-    final bookedSlots = <String>[];
-    for (final doc in snapshot.docs) {
+    for (final doc in singleSnapshot.docs) {
       final data = doc.data();
       final status = data['status'] as String? ?? '';
-
       if (status != 'rejected' && status != 'cancelled') {
         if (status != 'reschedule_pending') {
           final slot = data['startTime'] as String?;
-          if (slot != null && slot.isNotEmpty) {
-            bookedSlots.add(slot);
-          }
+          if (slot != null && slot.isNotEmpty) bookedSlots.add(slot);
         }
       }
     }
@@ -52,18 +50,39 @@ class BookingRequestRemoteDataSource {
       final status = data['status'] as String? ?? '';
       if (status == 'reschedule_pending') {
         final slot = data['proposedStartTime'] as String?;
-        if (slot != null && slot.isNotEmpty && !bookedSlots.contains(slot)) {
-          bookedSlots.add(slot);
+        if (slot != null && slot.isNotEmpty) bookedSlots.add(slot);
+      }
+    }
+
+    final monthlySnapshot = await firestoreService.getCollection(
+      collection: AppConstants.bookingsCollection,
+      queryBuilder: (query) => query
+          .where('coachUid', isEqualTo: coachUid)
+          .where('bookingType', isEqualTo: 'monthly'),
+    );
+
+    for (final doc in monthlySnapshot.docs) {
+      final data = doc.data();
+      final status = data['status'] as String? ?? '';
+      if (status != 'rejected' && status != 'cancelled') {
+        final sessions = data['sessions'];
+        if (sessions is List) {
+          for (final s in sessions) {
+            if (s is Map && s['date'] == date) {
+              final slot = s['startTime'] as String?;
+              if (slot != null && slot.isNotEmpty) bookedSlots.add(slot);
+            }
+          }
         }
       }
     }
 
-    return bookedSlots;
+    return bookedSlots.toList();
   }
 
   Future<String> createBooking(BookingModel booking) async {
     LoggerService.info(
-      'Creating remote booking request for coach: ${booking.coachUid}',
+      'Creating remote booking request for coach: ${booking.coachUid} (type: ${booking.bookingType}, sessions: ${booking.sessions.length})',
       tag: 'BookingRequestRemoteDataSource',
     );
 
@@ -72,23 +91,7 @@ class BookingRequestRemoteDataSource {
         .doc();
     final bookingId = docRef.id;
 
-    final fullBooking = BookingModel(
-      id: bookingId,
-      coachUid: booking.coachUid,
-      coachName: booking.coachName,
-      coachPhotoUrl: booking.coachPhotoUrl,
-      traineeUid: booking.traineeUid,
-      traineeName: booking.traineeName,
-      traineePhotoUrl: booking.traineePhotoUrl,
-      sport: booking.sport,
-      date: booking.date,
-      startTime: booking.startTime,
-      endTime: booking.endTime,
-      price: booking.price,
-      currency: booking.currency,
-      notes: booking.notes,
-      status: 'pending',
-    );
+    final fullBooking = booking.copyWith(id: bookingId);
 
     await firestoreService.setData(
       collection: AppConstants.bookingsCollection,

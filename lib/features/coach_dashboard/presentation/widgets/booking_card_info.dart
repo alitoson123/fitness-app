@@ -9,6 +9,7 @@ class BookingCardInfo extends StatelessWidget {
   final String endTime;
   final bool isDark;
   final bool isMonthly;
+  final int sessionsCount;
 
   const BookingCardInfo({
     super.key,
@@ -17,6 +18,7 @@ class BookingCardInfo extends StatelessWidget {
     required this.endTime,
     required this.isDark,
     this.isMonthly = false,
+    this.sessionsCount = 0,
   });
 
   @override
@@ -27,6 +29,10 @@ class BookingCardInfo extends StatelessWidget {
       fontWeight: FontWeight.w600,
       color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
     );
+
+    final monthlyLabel = sessionsCount > 1
+        ? '${s.monthlyPackageType} ($sessionsCount)'
+        : s.monthlyPackageType;
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 7.h),
@@ -55,7 +61,7 @@ class BookingCardInfo extends StatelessWidget {
           ),
           SizedBox(width: 5.w),
           Text(
-            isMonthly ? s.monthlyPackageType : '$startTime - $endTime',
+            isMonthly ? monthlyLabel : '$startTime - $endTime',
             style: textStyle,
           ),
         ],

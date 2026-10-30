@@ -11,6 +11,7 @@ class PendingRequestsPreview extends StatelessWidget {
   final String? actionInProgressId;
   final ValueChanged<String> onAccept;
   final void Function(BookingModel booking) onReject;
+  final void Function(BookingModel booking)? onReschedule;
   final VoidCallback onViewAll;
 
   const PendingRequestsPreview({
@@ -19,6 +20,7 @@ class PendingRequestsPreview extends StatelessWidget {
     required this.actionInProgressId,
     required this.onAccept,
     required this.onReject,
+    this.onReschedule,
     required this.onViewAll,
   });
 
@@ -105,6 +107,7 @@ class PendingRequestsPreview extends StatelessWidget {
               isActionInProgress: actionInProgressId == b.id,
               onAccept: () => onAccept(b.id),
               onReject: () => onReject(b),
+              onReschedule: onReschedule != null ? () => onReschedule!(b) : null,
             ),
           ),
       ],

@@ -95,6 +95,12 @@ class _CoachMainShellState extends State<CoachMainShell> {
                     S.of(context).requestRejectedSuccess,
                   );
                   context.read<CoachBookingsCubit>().clearMessages();
+                } else if (state.successMessage == 'rescheduled') {
+                  Message.showSuccess(
+                    context,
+                    S.of(context).rescheduleRequestedSuccess,
+                  );
+                  context.read<CoachBookingsCubit>().clearMessages();
                 } else if (state.errorMessage != null) {
                   Message.showError(context, state.errorMessage!);
                   context.read<CoachBookingsCubit>().clearMessages();

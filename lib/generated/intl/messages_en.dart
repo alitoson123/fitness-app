@@ -31,79 +31,93 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m4(age) => "${age} yrs";
 
-  static String m5(hours, mins) => "Starts in ${hours}h ${mins}m";
+  static String m5(count) => "Select all ${count} sessions to continue";
 
-  static String m6(mins) => "Starts in ${mins}m";
+  static String m6(hours, mins) => "Starts in ${hours}h ${mins}m";
 
-  static String m7(time) => "Today, ${time}";
+  static String m7(mins) => "Starts in ${mins}m";
 
-  static String m8(time) => "Tomorrow, ${time}";
+  static String m8(time) => "Today, ${time}";
 
-  static String m9(email) => "Signed in as: ${email}";
+  static String m9(time) => "Tomorrow, ${time}";
 
-  static String m10(count) => "${count} days / week";
+  static String m10(email) => "Signed in as: ${email}";
 
-  static String m11(day) => "End time must be after start time for ${day}.";
+  static String m11(count) => "${count} days / week";
 
-  static String m12(day, duration) =>
+  static String m12(day) => "End time must be after start time for ${day}.";
+
+  static String m13(day, duration) =>
       "Working hours for ${day} must be at least ${duration} minutes.";
 
-  static String m13(count) => "${count} yrs exp";
+  static String m14(count) => "${count} yrs exp";
 
-  static String m14(name) => "Good afternoon, ${name}";
+  static String m15(name) => "Good afternoon, ${name}";
 
-  static String m15(name) => "Good evening, ${name}";
+  static String m16(name) => "Good evening, ${name}";
 
-  static String m16(name) => "Good morning, ${name}";
+  static String m17(name) => "Good morning, ${name}";
 
-  static String m17(minutes) => "${minutes} min";
+  static String m18(minutes) => "${minutes} min";
 
-  static String m18(price) => "\$${price} / month";
+  static String m19(price) => "\$${price} / month";
 
-  static String m19(phone) => "Enter the 6-digit code sent to ${phone}";
+  static String m20(current, total) =>
+      "${current} of ${total} Sessions Selected";
 
-  static String m20(price) => "\$${price} USD";
+  static String m21(phone) => "Enter the 6-digit code sent to ${phone}";
 
-  static String m21(name) =>
+  static String m22(price) => "\$${price} USD";
+
+  static String m23(name) =>
       "Are you sure you want to decline this request from ${name}?";
 
-  static String m22(seconds) => "Resend code in ${seconds}s";
+  static String m24(seconds) => "Resend code in ${seconds}s";
 
-  static String m23(count) =>
+  static String m25(count) =>
       "${Intl.plural(count, one: '1 file attached', other: '${count} files attached')}";
 
-  static String m24(count) =>
+  static String m26(count) =>
       "${Intl.plural(count, one: '1 year', other: '${count} years')}";
 
-  static String m25(count) => "${count} reviews";
+  static String m27(count) => "${count} reviews";
 
-  static String m26(days) => "In ${days} days";
+  static String m28(count) =>
+      "Select ${count} sessions to complete your monthly plan";
 
-  static String m27(hours) => "In ${hours} hrs";
+  static String m29(count, total) => "Selected Sessions (${count}/${total})";
 
-  static String m28(reason) => "Decline reason: ${reason}";
+  static String m30(days) => "In ${days} days";
 
-  static String m29(price) => "\$${price} / session";
+  static String m31(hours) => "In ${hours} hrs";
 
-  static String m30(name) => "Session with ${name}";
+  static String m32(reason) => "Decline reason: ${reason}";
 
-  static String m31(count) =>
+  static String m33(number) => "Session ${number}";
+
+  static String m34(price) => "\$${price} / session";
+
+  static String m35(name) => "Session with ${name}";
+
+  static String m36(current, total) => "${current}/${total} Sessions";
+
+  static String m37(count) =>
       "${Intl.plural(count, one: '1 sport selected', other: '${count} sports selected')}";
 
-  static String m32(current, total) => "STEP ${current} OF ${total}";
+  static String m38(current, total) => "STEP ${current} OF ${total}";
 
-  static String m33(count) =>
+  static String m39(count) =>
       "${Intl.plural(count, one: '1 upcoming session', other: '${count} upcoming sessions')}";
 
-  static String m34(count) =>
+  static String m40(count) =>
       "${Intl.plural(count, one: '1 past session', other: '${count} past sessions')}";
 
-  static String m35(count) =>
+  static String m41(count) =>
       "${Intl.plural(count, one: '1 pending request', other: '${count} pending requests')}";
 
-  static String m36(hours) => "${hours} hrs available";
+  static String m42(hours) => "${hours} hrs available";
 
-  static String m37(name) => "Welcome back, ${name}!";
+  static String m43(name) => "Welcome back, ${name}!";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -267,6 +281,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "citySohar": MessageLookupByLibrary.simpleMessage("Sohar"),
         "cityTanta": MessageLookupByLibrary.simpleMessage("Tanta"),
         "cityZarqa": MessageLookupByLibrary.simpleMessage("Zarqa"),
+        "clearAllSessions": MessageLookupByLibrary.simpleMessage("Clear All"),
         "clearDraft": MessageLookupByLibrary.simpleMessage("Clear Draft"),
         "clearFilters": MessageLookupByLibrary.simpleMessage("Clear Filters"),
         "close": MessageLookupByLibrary.simpleMessage("Close"),
@@ -323,16 +338,17 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Confirm & Send Request"),
         "confirmDecline":
             MessageLookupByLibrary.simpleMessage("Confirm Decline"),
+        "confirmSessionsCountPrompt": m5,
         "confirmedSessionsTab":
             MessageLookupByLibrary.simpleMessage("Confirmed"),
         "contactSupport":
             MessageLookupByLibrary.simpleMessage("Contact Support"),
         "continueButton": MessageLookupByLibrary.simpleMessage("Continue"),
         "copyEmail": MessageLookupByLibrary.simpleMessage("Copy Email"),
-        "countdownHoursMins": m5,
-        "countdownMins": m6,
-        "countdownToday": m7,
-        "countdownTomorrow": m8,
+        "countdownHoursMins": m6,
+        "countdownMins": m7,
+        "countdownToday": m8,
+        "countdownTomorrow": m9,
         "country": MessageLookupByLibrary.simpleMessage("Country"),
         "countryBahrain": MessageLookupByLibrary.simpleMessage("Bahrain"),
         "countryEgypt": MessageLookupByLibrary.simpleMessage("Egypt"),
@@ -351,7 +367,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Credentials & Experience"),
         "currency": MessageLookupByLibrary.simpleMessage("Currency"),
         "currencySAR": MessageLookupByLibrary.simpleMessage("SAR / hr"),
-        "currentUserInfo": m9,
+        "currentUserInfo": m10,
         "customWorkoutPlan":
             MessageLookupByLibrary.simpleMessage("Customized fitness guidance"),
         "dayAvailable": MessageLookupByLibrary.simpleMessage("Available"),
@@ -373,7 +389,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "dayUnavailable": MessageLookupByLibrary.simpleMessage("Off"),
         "dayWed": MessageLookupByLibrary.simpleMessage("Wed"),
         "dayWednesday": MessageLookupByLibrary.simpleMessage("Wednesday"),
-        "daysPerWeekCount": m10,
+        "daysPerWeekCount": m11,
         "declineConfirmMessage": MessageLookupByLibrary.simpleMessage(
             "If you decline, this booking will be cancelled and you will need to book a new session. Proceed?"),
         "declineConfirmTitle":
@@ -419,17 +435,17 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Email Verification Required"),
         "endTime": MessageLookupByLibrary.simpleMessage("End Time"),
         "error": MessageLookupByLibrary.simpleMessage("Error"),
-        "errorInvalidTimeRange": m11,
+        "errorInvalidTimeRange": m12,
         "errorLoadingCoachProfile": MessageLookupByLibrary.simpleMessage(
             "Failed to load coach profile. Tap to retry."),
         "errorLoadingCoaches": MessageLookupByLibrary.simpleMessage(
             "Failed to load coaches. Tap to retry."),
         "errorNoWorkingDays": MessageLookupByLibrary.simpleMessage(
             "Please select at least one working day."),
-        "errorTimeWindowTooShort": m12,
+        "errorTimeWindowTooShort": m13,
         "expectedReviewTime": MessageLookupByLibrary.simpleMessage(
             "Expected review: 24 - 48 hours"),
-        "experienceYearsCount": m13,
+        "experienceYearsCount": m14,
         "fakeCoachDashboardSubtitle": MessageLookupByLibrary.simpleMessage(
             "Welcome Coach! This is a test screen to verify navigation, authentication, and role flows."),
         "fakeCoachDashboardTitle":
@@ -471,9 +487,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "goalSubtitle": MessageLookupByLibrary.simpleMessage(
             "What do you want to achieve?"),
         "google": MessageLookupByLibrary.simpleMessage("Google"),
-        "greetingAfternoon": m14,
-        "greetingEvening": m15,
-        "greetingMorning": m16,
+        "greetingAfternoon": m15,
+        "greetingEvening": m16,
+        "greetingMorning": m17,
         "groupLater": MessageLookupByLibrary.simpleMessage("Upcoming Later"),
         "groupPast": MessageLookupByLibrary.simpleMessage("Past Sessions"),
         "groupThisWeek": MessageLookupByLibrary.simpleMessage("This Week"),
@@ -518,12 +534,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "minExperienceYears":
             MessageLookupByLibrary.simpleMessage("Experience"),
         "minimumRating": MessageLookupByLibrary.simpleMessage("Minimum Rating"),
-        "minutesDuration": m17,
+        "minutesDuration": m18,
         "monthlyPackageType":
             MessageLookupByLibrary.simpleMessage("Monthly Plan"),
         "monthlyPlanSummaryTitle":
             MessageLookupByLibrary.simpleMessage("Monthly Package Summary"),
-        "monthlyPriceChip": m18,
+        "monthlyPriceChip": m19,
         "monthlyPriceUSD": MessageLookupByLibrary.simpleMessage(
             "Monthly Package Price (\$ USD)"),
         "monthlyPriceUSDDesc": MessageLookupByLibrary.simpleMessage(
@@ -537,6 +553,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "e.g., Evenings around 6 PM, focus on strength building"),
         "monthlyScheduleNotesLabel":
             MessageLookupByLibrary.simpleMessage("Preferred Schedule & Goals"),
+        "monthlySessionsProgress": m20,
         "myBookings": MessageLookupByLibrary.simpleMessage("Training Bookings"),
         "nationalIdHint": MessageLookupByLibrary.simpleMessage(
             "Upload photo or PDF of your National ID or Passport"),
@@ -549,6 +566,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "No fixed schedule listed. Discuss upon request."),
         "noAvailableSlotsForDate": MessageLookupByLibrary.simpleMessage(
             "No available slots on this day"),
+        "noAvailableSlotsForDay": MessageLookupByLibrary.simpleMessage(
+            "No available slots for this day"),
         "noCoachesFound":
             MessageLookupByLibrary.simpleMessage("No coaches found"),
         "noCoachesFoundDesc": MessageLookupByLibrary.simpleMessage(
@@ -607,7 +626,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Original Time"),
         "otpVerification":
             MessageLookupByLibrary.simpleMessage("Verification Code"),
-        "otpVerificationSubtitle": m19,
+        "otpVerificationSubtitle": m21,
         "packageStartDateLabel":
             MessageLookupByLibrary.simpleMessage("Start Date"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
@@ -661,7 +680,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Price per Session"),
         "pricePerSessionHint": MessageLookupByLibrary.simpleMessage("e.g. 150"),
         "priceRange": MessageLookupByLibrary.simpleMessage("Price Range"),
-        "priceUsdFormat": m20,
+        "priceUsdFormat": m22,
         "pricingStepSubtitle": MessageLookupByLibrary.simpleMessage(
             "Set your session price and preferred currency"),
         "pricingTipText":
@@ -681,10 +700,22 @@ class MessageLookup extends MessageLookupByLibrary {
         "quickActions": MessageLookupByLibrary.simpleMessage("Quick Actions"),
         "quickAvailabilityTemplates": MessageLookupByLibrary.simpleMessage(
             "Quick Availability Templates"),
+        "rejectReasonFullyBooked":
+            MessageLookupByLibrary.simpleMessage("Fully booked"),
+        "rejectReasonOther":
+            MessageLookupByLibrary.simpleMessage("Other reason"),
+        "rejectReasonOutsideHours":
+            MessageLookupByLibrary.simpleMessage("Outside working hours"),
+        "rejectReasonScheduleConflict":
+            MessageLookupByLibrary.simpleMessage("Schedule conflict"),
         "rejectRequest": MessageLookupByLibrary.simpleMessage("Decline"),
-        "rejectRequestDialogDesc": m21,
+        "rejectRequestDialogDesc": m23,
         "rejectRequestDialogTitle":
             MessageLookupByLibrary.simpleMessage("Decline Request"),
+        "rejectionNotesHint": MessageLookupByLibrary.simpleMessage(
+            "Add details or explanation (optional)..."),
+        "rejectionNotesRequiredHint": MessageLookupByLibrary.simpleMessage(
+            "Please specify the reason..."),
         "rejectionReasonHint": MessageLookupByLibrary.simpleMessage(
             "e.g., Schedule conflict, out of gym, etc."),
         "rejectionReasonLabel":
@@ -704,6 +735,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "requiredBadge": MessageLookupByLibrary.simpleMessage("Required"),
         "rescheduleAcceptedSuccess": MessageLookupByLibrary.simpleMessage(
             "Session successfully rescheduled!"),
+        "rescheduleAction": MessageLookupByLibrary.simpleMessage("Reschedule"),
         "rescheduleDeclinedMessage": MessageLookupByLibrary.simpleMessage(
             "Booking cancelled. You can schedule a new session anytime."),
         "reschedulePendingBadge":
@@ -720,7 +752,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Reschedule Session"),
         "resend": MessageLookupByLibrary.simpleMessage("Resend"),
         "resendCode": MessageLookupByLibrary.simpleMessage("Resend Code"),
-        "resendCodeIn": m22,
+        "resendCodeIn": m24,
         "resendEmail": MessageLookupByLibrary.simpleMessage("Resend Email"),
         "reset": MessageLookupByLibrary.simpleMessage("Reset"),
         "resetLinkSent":
@@ -739,7 +771,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Availability"),
         "reviewCertificates":
             MessageLookupByLibrary.simpleMessage("Certificates"),
-        "reviewFilesAttached": m23,
+        "reviewFilesAttached": m25,
         "reviewGender": MessageLookupByLibrary.simpleMessage("Gender"),
         "reviewGovernmentId":
             MessageLookupByLibrary.simpleMessage("Government ID"),
@@ -753,8 +785,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Please verify all details before submitting for moderation."),
         "reviewTitle":
             MessageLookupByLibrary.simpleMessage("Review Your Application"),
-        "reviewYearsCount": m24,
-        "reviewsCount": m25,
+        "reviewYearsCount": m26,
+        "reviewsCount": m27,
         "role": MessageLookupByLibrary.simpleMessage("Role"),
         "saveAvailability":
             MessageLookupByLibrary.simpleMessage("Save Schedule"),
@@ -775,6 +807,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Select Languages"),
         "selectPackageStartDate":
             MessageLookupByLibrary.simpleMessage("Select Start Date"),
+        "selectRejectionReasonLabel":
+            MessageLookupByLibrary.simpleMessage("Select a reason:"),
+        "selectRequiredSessionsPrompt": m28,
         "selectSportsSubtitle": MessageLookupByLibrary.simpleMessage(
             "Select one or more sports you want to train in"),
         "selectSportsYouCoach":
@@ -786,6 +821,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectTrainingTime":
             MessageLookupByLibrary.simpleMessage("Select Time Slot"),
         "selectedDateLabel": MessageLookupByLibrary.simpleMessage("Date"),
+        "selectedSessionsListTitle": m29,
         "selectedSportLabel": MessageLookupByLibrary.simpleMessage("Sport"),
         "selectedTimeLabel": MessageLookupByLibrary.simpleMessage("Time"),
         "sendOtp":
@@ -794,23 +830,25 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Send Reschedule Request"),
         "sendResetLink":
             MessageLookupByLibrary.simpleMessage("Send Reset Link"),
-        "sessionCountdownDays": m26,
-        "sessionCountdownHours": m27,
+        "sessionCountdownDays": m30,
+        "sessionCountdownHours": m31,
         "sessionCountdownToday": MessageLookupByLibrary.simpleMessage("Today"),
-        "sessionDeclineReason": m28,
+        "sessionDeclineReason": m32,
         "sessionDuration":
             MessageLookupByLibrary.simpleMessage("Session Duration"),
         "sessionHistory":
             MessageLookupByLibrary.simpleMessage("Session History"),
+        "sessionNumberLabel": m33,
         "sessionPassed": MessageLookupByLibrary.simpleMessage("Passed"),
-        "sessionPriceChip": m29,
+        "sessionPriceChip": m34,
         "sessionPricing":
             MessageLookupByLibrary.simpleMessage("Session Pricing"),
         "sessionPricingOptionDesc": MessageLookupByLibrary.simpleMessage(
             "1-on-1 scheduled live workout with tailored coaching"),
         "sessionPricingOptionTitle":
             MessageLookupByLibrary.simpleMessage("Single Session"),
-        "sessionWith": m30,
+        "sessionWith": m35,
+        "sessionsSelectedCount": m36,
         "setAvailabilityButton":
             MessageLookupByLibrary.simpleMessage("Set Availability"),
         "signIn": MessageLookupByLibrary.simpleMessage("Sign In"),
@@ -868,7 +906,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "sportYoga": MessageLookupByLibrary.simpleMessage("Yoga"),
         "sportsAndSpecialties":
             MessageLookupByLibrary.simpleMessage("Sports & Specialties"),
-        "sportsSelected": m31,
+        "sportsSelected": m37,
         "startExploringCoaches":
             MessageLookupByLibrary.simpleMessage("Start Exploring Coaches"),
         "startTime": MessageLookupByLibrary.simpleMessage("Start Time"),
@@ -881,7 +919,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "statusDeclined": MessageLookupByLibrary.simpleMessage("Declined"),
         "stepAvailability":
             MessageLookupByLibrary.simpleMessage("Weekly Availability"),
-        "stepOf": m32,
+        "stepOf": m38,
         "stepPersonalInfo":
             MessageLookupByLibrary.simpleMessage("Personal Info"),
         "stepPricing": MessageLookupByLibrary.simpleMessage("Pricing"),
@@ -900,9 +938,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "submittingBookingRequest":
             MessageLookupByLibrary.simpleMessage("Sending request..."),
         "success": MessageLookupByLibrary.simpleMessage("Success"),
-        "summaryConfirmedSessions": m33,
-        "summaryPastSessions": m34,
-        "summaryPendingRequests": m35,
+        "summaryConfirmedSessions": m39,
+        "summaryPastSessions": m40,
+        "summaryPendingRequests": m41,
         "supportEmail":
             MessageLookupByLibrary.simpleMessage("alitoson1234567@gmail.com"),
         "supportModalDesc": MessageLookupByLibrary.simpleMessage(
@@ -922,7 +960,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("This Week\'s Schedule"),
         "timeSlots": MessageLookupByLibrary.simpleMessage("Working Hours"),
         "toTime": MessageLookupByLibrary.simpleMessage("To"),
-        "totalDurationLabel": m36,
+        "totalDurationLabel": m42,
         "totalMonthlyPrice":
             MessageLookupByLibrary.simpleMessage("Monthly Price"),
         "totalSessionPrice":
@@ -1015,7 +1053,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Weekly Training Frequency"),
         "weightLoss": MessageLookupByLibrary.simpleMessage("Weight Loss"),
         "welcomeBack": MessageLookupByLibrary.simpleMessage("Welcome Back"),
-        "welcomeBackUser": m37,
+        "welcomeBackUser": m43,
         "whatsIncluded":
             MessageLookupByLibrary.simpleMessage("What\'s Included"),
         "workingDays": MessageLookupByLibrary.simpleMessage("Working Days"),

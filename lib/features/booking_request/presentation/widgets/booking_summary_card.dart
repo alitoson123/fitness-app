@@ -13,7 +13,10 @@ class BookingSummaryCard extends StatelessWidget {
   final String? sport;
   final DateTime? date;
   final String? slot;
-  final int weeklyFrequency;
+  final int sessionsCount;
+  final int totalRequiredSessions;
+  final String? startDate;
+  final String? endDate;
   final int durationMonths;
 
   const BookingSummaryCard({
@@ -23,7 +26,10 @@ class BookingSummaryCard extends StatelessWidget {
     required this.sport,
     required this.date,
     required this.slot,
-    this.weeklyFrequency = 3,
+    this.sessionsCount = 0,
+    this.totalRequiredSessions = 8,
+    this.startDate,
+    this.endDate,
     this.durationMonths = 1,
   });
 
@@ -80,7 +86,7 @@ class BookingSummaryCard extends StatelessWidget {
           SizedBox(height: 8.h),
           _buildRow(s.selectedSportLabel, sport ?? '', textSecondary, textPrimary),
           SizedBox(height: 8.h),
-          _buildRow(isMonthly ? s.packageStartDateLabel : s.selectedDateLabel, dateFormatted, textSecondary, textPrimary),
+          _buildRow(isMonthly ? s.packageStartDateLabel : s.selectedDateLabel, startDate ?? dateFormatted, textSecondary, textPrimary),
           SizedBox(height: 8.h),
           if (!isMonthly && slot != null) ...[
             _buildRow(
@@ -94,7 +100,13 @@ class BookingSummaryCard extends StatelessWidget {
           if (isMonthly) ...[
             _buildRow(s.durationMonthsLabel, s.oneMonthDuration, textSecondary, textPrimary),
             SizedBox(height: 8.h),
-            _buildRow(s.weeklyFrequencyLabel, s.daysPerWeekCount(weeklyFrequency), textSecondary, textPrimary),
+            _buildRow(
+              s.selectedSessionsListTitle(sessionsCount, totalRequiredSessions),
+              '$sessionsCount / $totalRequiredSessions',
+              textSecondary,
+              sessionsCount == totalRequiredSessions ? Colors.green : primary,
+              isBold: true,
+            ),
             SizedBox(height: 8.h),
           ],
           _buildRow(

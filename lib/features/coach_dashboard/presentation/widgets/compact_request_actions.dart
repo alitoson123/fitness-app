@@ -7,17 +7,20 @@ class CompactRequestActions extends StatelessWidget {
   final bool isActionInProgress;
   final VoidCallback onAccept;
   final VoidCallback onReject;
+  final VoidCallback? onReschedule;
 
   const CompactRequestActions({
     super.key,
     required this.isActionInProgress,
     required this.onAccept,
     required this.onReject,
+    this.onReschedule,
   });
 
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+    const amberColor = Color(0xFFD97706);
 
     if (isActionInProgress) {
       return const Center(
@@ -40,18 +43,44 @@ class CompactRequestActions extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.r),
               ),
-              padding: EdgeInsets.symmetric(vertical: 6.h),
+              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 6.h),
             ),
-            child: Text(
-              s.rejectRequest,
-              style: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w700,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                s.rejectRequest,
+                style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w700),
               ),
             ),
           ),
         ),
-        SizedBox(width: 8.w),
+        if (onReschedule != null) ...[
+          SizedBox(width: 6.w),
+          Expanded(
+            child: OutlinedButton(
+              onPressed: onReschedule,
+              style: OutlinedButton.styleFrom(
+                foregroundColor: amberColor,
+                side: const BorderSide(color: amberColor, width: 1),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 6.h),
+              ),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  s.rescheduleAction,
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+        SizedBox(width: 6.w),
         Expanded(
           child: FilledButton(
             onPressed: onAccept,
@@ -60,13 +89,13 @@ class CompactRequestActions extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.r),
               ),
-              padding: EdgeInsets.symmetric(vertical: 6.h),
+              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 6.h),
             ),
-            child: Text(
-              s.acceptRequest,
-              style: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w700,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                s.acceptRequest,
+                style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w700),
               ),
             ),
           ),

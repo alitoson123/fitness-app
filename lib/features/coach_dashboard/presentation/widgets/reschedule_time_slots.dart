@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
+import '../../../../generated/l10n.dart';
 
 class RescheduleTimeSlots extends StatelessWidget {
   final List<String> availableSlots;
@@ -34,7 +35,7 @@ class RescheduleTimeSlots extends StatelessWidget {
       return Padding(
         padding: EdgeInsets.symmetric(vertical: 12.h),
         child: Text(
-          'No available slots for this day',
+          S.of(context).noAvailableSlotsForDay,
           style: TextStyle(
             fontSize: 12.sp,
             color: isDark ? AppColors.darkTextSecondary : AppColors.textSecondary,

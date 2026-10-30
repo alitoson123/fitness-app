@@ -1,4 +1,5 @@
 import 'package:fitness_app/features/booking_request/data/models/booking_model.dart';
+import 'package:fitness_app/features/booking_request/data/models/booking_session_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -19,10 +20,10 @@ void main() {
       expect(booking.isMonthly, isFalse);
       expect(booking.durationMonths, 1);
       expect(booking.currency, 'USD');
-      expect(booking.monthlyScheduleNotes, isNull);
+      expect(booking.sessions, isEmpty);
     });
 
-    test('monthly booking type parsed properly from json', () {
+    test('monthly booking type parsed properly from json with sessions', () {
       final json = {
         'id': 'b_monthly_1',
         'coachUid': 'c1',
@@ -32,12 +33,20 @@ void main() {
         'sport': 'Boxing',
         'bookingType': 'monthly',
         'date': '2026-11-05',
-        'startTime': 'Flexible',
-        'endTime': 'Flexible',
+        'startTime': '18:00',
+        'endTime': '19:00',
         'price': 250.0,
         'currency': 'USD',
-        'durationMonths': 2,
-        'monthlyScheduleNotes': '3 days/week, prefer evenings',
+        'durationMonths': 1,
+        'sessions': [
+          {
+            'id': 's1',
+            'date': '2026-11-05',
+            'startTime': '18:00',
+            'endTime': '19:00',
+            'status': 'scheduled',
+          }
+        ],
         'notes': 'Goal: lose 5kg',
         'status': 'pending',
       };
@@ -47,10 +56,11 @@ void main() {
       expect(booking.bookingType, 'monthly');
       expect(booking.isMonthly, isTrue);
       expect(booking.isSession, isFalse);
-      expect(booking.durationMonths, 2);
+      expect(booking.durationMonths, 1);
       expect(booking.price, 250.0);
       expect(booking.currency, 'USD');
-      expect(booking.monthlyScheduleNotes, '3 days/week, prefer evenings');
+      expect(booking.sessions.length, 1);
+      expect(booking.sessions.first.date, '2026-11-05');
       expect(booking.notes, 'Goal: lose 5kg');
     });
 
@@ -72,9 +82,10 @@ void main() {
       expect(booking.isSession, isTrue);
       expect(booking.durationMonths, 1);
       expect(booking.currency, 'USD');
+      expect(booking.sessions, isEmpty);
     });
 
-    test('toMap writes bookingType, USD currency, and durationMonths', () {
+    test('toMap writes bookingType, USD currency, and sessions', () {
       const booking = BookingModel(
         id: 'b_map_1',
         coachUid: 'c1',
@@ -82,11 +93,18 @@ void main() {
         sport: 'Swimming',
         bookingType: 'monthly',
         date: '2026-11-10',
-        startTime: 'Flexible',
-        endTime: 'Flexible',
+        startTime: '10:00',
+        endTime: '11:00',
         price: 300.0,
         durationMonths: 1,
-        monthlyScheduleNotes: 'Mon/Wed/Fri 6pm',
+        sessions: [
+          BookingSessionModel(
+            id: 's1',
+            date: '2026-11-10',
+            startTime: '10:00',
+            endTime: '11:00',
+          )
+        ],
       );
 
       final map = booking.toMap();
@@ -95,10 +113,11 @@ void main() {
       expect(map['currency'], 'USD');
       expect(map['durationMonths'], 1);
       expect(map['price'], 300.0);
-      expect(map['monthlyScheduleNotes'], 'Mon/Wed/Fri 6pm');
+      expect(map['sessions'], isA<List>());
+      expect((map['sessions'] as List).length, 1);
     });
 
-    test('copyWith properly updates bookingType and monthly fields', () {
+    test('copyWith properly updates bookingType and sessions fields', () {
       const original = BookingModel(
         id: 'b1',
         coachUid: 'c1',
@@ -113,17 +132,62 @@ void main() {
       final updated = original.copyWith(
         bookingType: 'monthly',
         price: 200.0,
-        monthlyScheduleNotes: '4 days/week',
-        durationMonths: 2,
+        sessions: const [
+          BookingSessionModel(
+            id: 's_new',
+            date: '2026-11-02',
+            startTime: '12:00',
+            endTime: '13:00',
+          ),
+        ],
+        durationMonths: 1,
       );
 
       expect(updated.bookingType, 'monthly');
       expect(updated.isMonthly, isTrue);
       expect(updated.price, 200.0);
-      expect(updated.monthlyScheduleNotes, '4 days/week');
-      expect(updated.durationMonths, 2);
+      expect(updated.sessions.length, 1);
+      expect(updated.sessions.first.id, 's_new');
       expect(updated.sport, 'Fitness');
+    });
+
+    test('copyWith(id: newId) preserves all monthly fields and toMap outputs them', () {
+      final sessions = List.generate(
+        8,
+        (i) => BookingSessionModel(
+          id: 's_$i',
+          date: '2026-11-${(i + 1).toString().padLeft(2, '0')}',
+          startTime: '17:00',
+          endTime: '18:00',
+        ),
+      );
+
+      final initial = BookingModel(
+        id: '',
+        coachUid: 'c1',
+        coachName: 'ali coach 2',
+        traineeUid: 't1',
+        traineeName: 'Ali trainee',
+        sport: 'Gym',
+        bookingType: 'monthly',
+        date: '2026-11-01',
+        startTime: '17:00',
+        endTime: '18:00',
+        price: 300.0,
+        sessions: sessions,
+        notes: 'test monthly',
+      );
+
+      final fullBooking = initial.copyWith(id: 'generated_doc_id');
+      final map = fullBooking.toMap();
+
+      expect(map['id'], 'generated_doc_id');
+      expect(map['bookingType'], 'monthly');
+      expect(map['price'], 300.0);
+      expect(map['notes'], 'test monthly');
+      expect(map['sport'], 'Gym');
+      expect(map['sessions'], isA<List>());
+      expect((map['sessions'] as List).length, 8);
     });
   });
 }
-

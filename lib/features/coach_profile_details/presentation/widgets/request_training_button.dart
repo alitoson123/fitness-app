@@ -38,25 +38,6 @@ class RequestTrainingButton extends StatelessWidget {
         top: false,
         child: Row(
           children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  S.of(context).pricePerSession,
-                  style: TextStyle(fontSize: 11.sp, color: textSecondary),
-                ),
-                Text(
-                  '\$${coach.sessionPriceUSD.toStringAsFixed(0)}',
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w800,
-                    color: primary,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(width: 16.w),
             Expanded(
               child: ElevatedButton.icon(
                 onPressed: () => _handleRequest(context),

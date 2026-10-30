@@ -1,9 +1,10 @@
-import 'package:fitness_app/features/booking_request/data/models/booking_model.dart';
 import 'package:fitness_app/features/booking_request/data/repos/booking_request_repo.dart';
 import 'package:fitness_app/features/coach_setup/data/models/coach_profile_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'booking_builder_helper.dart';
 import 'booking_request_state.dart';
 import 'booking_slot_calculator.dart';
+import 'monthly_sessions_manager.dart';
 
 class BookingRequestCubit extends Cubit<BookingRequestState> {
   final BookingRequestRepo repository;
@@ -45,12 +46,6 @@ class BookingRequestCubit extends Cubit<BookingRequestState> {
     }
   }
 
-  void selectWeeklyFrequency(int freq) {
-    emit(state.copyWith(weeklyFrequency: freq));
-  }
-
-
-
   Future<void> loadSlotsForDate(DateTime date) async {
     final coach = state.coach;
     if (coach == null) return;
@@ -63,7 +58,7 @@ class BookingRequestCubit extends Cubit<BookingRequestState> {
       ),
     );
 
-    final dateStr = _formatDate(date);
+    final dateStr = BookingBuilderHelper.formatDate(date);
     final result = await repository.getBookedSlots(
       coachUid: coach.uid,
       date: dateStr,
@@ -93,7 +88,37 @@ class BookingRequestCubit extends Cubit<BookingRequestState> {
     );
   }
 
-  void selectSlot(String slot) => emit(state.copyWith(selectedSlot: slot));
+  void selectSlot(String slot) {
+    emit(state.copyWith(selectedSlot: slot));
+    if (state.isMonthly && state.selectedDate != null) {
+      toggleMonthlySession(state.selectedDate!, slot);
+    }
+  }
+
+  void toggleMonthlySession(DateTime date, String timeSlot) {
+    final coach = state.coach;
+    if (coach == null) return;
+    final updated = MonthlySessionsManager.toggleSession(
+      currentSessions: state.selectedMonthlySessions,
+      date: date,
+      timeSlot: timeSlot,
+      sessionDurationMinutes: coach.sessionDurationMinutes,
+      maxSessions: state.requiredMonthlySessions,
+    );
+    emit(state.copyWith(selectedMonthlySessions: updated));
+  }
+
+  void removeMonthlySession(String sessionId) {
+    final updated = MonthlySessionsManager.removeSession(
+      state.selectedMonthlySessions,
+      sessionId,
+    );
+    emit(state.copyWith(selectedMonthlySessions: updated));
+  }
+
+  void clearMonthlySessions() {
+    emit(state.copyWith(selectedMonthlySessions: const []));
+  }
 
   void selectSport(String sport) => emit(state.copyWith(selectedSport: sport));
 
@@ -105,7 +130,12 @@ class BookingRequestCubit extends Cubit<BookingRequestState> {
 
     final trainee = await repository.getCurrentTrainee();
     final traineeUid = repository.authService.currentUser?.uid ?? '';
-    final booking = _buildBookingModel(traineeUid, trainee?.name, trainee?.photoUrl);
+    final booking = BookingBuilderHelper.buildFromState(
+      state: state,
+      traineeUid: traineeUid,
+      traineeName: trainee?.name,
+      traineePhotoUrl: trainee?.photoUrl,
+    );
 
     final result = await repository.createBooking(booking);
     result.fold(
@@ -118,43 +148,4 @@ class BookingRequestCubit extends Cubit<BookingRequestState> {
       (_) => emit(state.copyWith(status: BookingRequestStatus.success)),
     );
   }
-
-  BookingModel _buildBookingModel(
-    String traineeUid,
-    String? traineeName,
-    String? traineePhotoUrl,
-  ) {
-    final coach = state.coach!;
-    final dateStr = _formatDate(state.selectedDate!);
-    final isSession = state.isSession;
-    final slot = state.selectedSlot ?? 'Flexible';
-    final endTime = isSession
-        ? BookingSlotCalculator.computeEndTime(slot, coach.sessionDurationMinutes)
-        : 'Flexible';
-
-    return BookingModel(
-      id: '',
-      coachUid: coach.uid,
-      coachName: coach.name,
-      coachPhotoUrl: coach.photoUrl,
-      traineeUid: traineeUid,
-      traineeName: traineeName?.isNotEmpty == true
-          ? traineeName!
-          : (repository.authService.currentUser?.displayName ?? 'Trainee'),
-      traineePhotoUrl: traineePhotoUrl ?? '',
-      sport: state.selectedSport!,
-      bookingType: state.bookingType,
-      date: dateStr,
-      startTime: slot,
-      endTime: endTime,
-      price: state.totalPrice,
-      currency: 'USD',
-      durationMonths: isSession ? 1 : state.durationMonths,
-      notes: state.notes,
-      status: 'pending',
-    );
-  }
-
-  String _formatDate(DateTime d) =>
-      '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
 }

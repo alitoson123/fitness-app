@@ -594,5 +594,21 @@
   "oneMonthDuration": "1 Month",
   "totalMonthlyPrice": "Monthly Price",
   "flexibleSchedule": "Flexible / Coordinated with Coach",
-  "pleaseSelectStartDate": "Please select a start date"
+  "pleaseSelectStartDate": "Please select a start date",
+  "rejectReasonScheduleConflict": "Schedule conflict",
+  "rejectReasonFullyBooked": "Fully booked",
+  "rejectReasonOutsideHours": "Outside working hours",
+  "rejectReasonOther": "Other reason",
+  "rejectionNotesHint": "Add details or explanation (optional)...",
+  "rejectionNotesRequiredHint": "Please specify the reason...",
+  "selectRejectionReasonLabel": "Select a reason:",
+  "rescheduleAction": "Reschedule",
+  "noAvailableSlotsForDay": "No available slots for this day",
+  "monthlySessionsProgress": "{current} of {total} Sessions Selected",
+  "selectRequiredSessionsPrompt": "Select {count} sessions to complete your monthly plan",
+  "sessionNumberLabel": "Session {number}",
+  "sessionsSelectedCount": "{current}/{total} Sessions",
+  "selectedSessionsListTitle": "Selected Sessions ({count}/{total})",
+  "confirmSessionsCountPrompt": "Select all {count} sessions to continue",
+  "clearAllSessions": "Clear All"
 }

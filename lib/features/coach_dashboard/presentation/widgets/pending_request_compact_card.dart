@@ -13,6 +13,7 @@ class PendingRequestCompactCard extends StatelessWidget {
   final bool isActionInProgress;
   final VoidCallback onAccept;
   final VoidCallback onReject;
+  final VoidCallback? onReschedule;
 
   const PendingRequestCompactCard({
     super.key,
@@ -20,6 +21,7 @@ class PendingRequestCompactCard extends StatelessWidget {
     required this.isActionInProgress,
     required this.onAccept,
     required this.onReject,
+    this.onReschedule,
   });
 
   @override
@@ -115,6 +117,7 @@ class PendingRequestCompactCard extends StatelessWidget {
             isActionInProgress: isActionInProgress,
             onAccept: onAccept,
             onReject: onReject,
+            onReschedule: onReschedule,
           ),
         ],
       ),

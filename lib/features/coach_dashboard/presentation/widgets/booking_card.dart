@@ -66,6 +66,7 @@ class BookingCard extends StatelessWidget {
               endTime: booking.endTime,
               isDark: isDark,
               isMonthly: booking.isMonthly,
+              sessionsCount: booking.sessions.length,
             ),
             if (booking.notes.isNotEmpty ||
                 (booking.status == 'rejected' &&
@@ -87,6 +88,7 @@ class BookingCard extends StatelessWidget {
                 isActionInProgress: isActionInProgress,
                 onAccept: onAccept,
                 onReject: onReject,
+                onReschedule: onReschedule,
               ),
             ],
             if (isConfirmed && onReschedule != null) ...[
