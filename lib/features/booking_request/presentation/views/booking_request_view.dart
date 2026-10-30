@@ -40,7 +40,6 @@ class BookingRequestView extends StatelessWidget {
         },
         builder: (context, state) {
           final cubit = context.read<BookingRequestCubit>();
-          final isSlotSelected = state.selectedSlot != null;
           final isSubmitting = state.status == BookingRequestStatus.submitting;
 
           return Scaffold(
@@ -56,12 +55,17 @@ class BookingRequestView extends StatelessWidget {
               ),
             ),
             bottomNavigationBar: BookingBottomBar(
-              coach: coach,
-              isSlotSelected: isSlotSelected,
+              price: state.totalPrice,
+              isMonthly: state.isMonthly,
+              isSubmitEnabled: state.isSubmitReady,
               isSubmitting: isSubmitting,
               onSubmit: () {
-                if (!isSlotSelected) {
-                  Message.showWarning(context, S.of(context).pleaseSelectTimeSlot);
+                if (!state.isSubmitReady) {
+                  if (state.selectedDate == null) {
+                    Message.showWarning(context, S.of(context).pleaseSelectStartDate);
+                  } else if (state.isSession && state.selectedSlot == null) {
+                    Message.showWarning(context, S.of(context).pleaseSelectTimeSlot);
+                  }
                   return;
                 }
                 cubit.submitBooking();

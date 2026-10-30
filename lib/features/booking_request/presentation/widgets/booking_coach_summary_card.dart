@@ -83,7 +83,7 @@ class BookingCoachSummaryCard extends StatelessWidget {
                     ),
                     const Spacer(),
                     Text(
-                      '${coach.sessionPrice.toStringAsFixed(0)} ${coach.currency}',
+                      '\$${coach.sessionPriceUSD.toStringAsFixed(0)} USD',
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w800,

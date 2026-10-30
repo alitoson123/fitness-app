@@ -6,6 +6,7 @@ import 'package:fitness_app/features/coach_dashboard/presentation/widgets/bookin
 import 'package:fitness_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'trainee_cancelled_booking_section.dart';
 import 'trainee_reschedule_alert_box.dart';
 
 class TraineeBookingCard extends StatelessWidget {
@@ -95,7 +96,9 @@ class TraineeBookingCard extends StatelessWidget {
               ),
               SizedBox(width: 6.w),
               Text(
-                '${booking.date} (${booking.startTime} - ${booking.endTime})',
+                booking.isMonthly
+                    ? '${booking.date} (${s.monthlyPackageType})'
+                    : '${booking.date} (${booking.startTime} - ${booking.endTime})',
                 style: TextStyle(
                   fontSize: 12.sp,
                   color: isDark
@@ -115,40 +118,11 @@ class TraineeBookingCard extends StatelessWidget {
               onReject: onRejectReschedule,
             ),
           ],
-          if (isCancelled) ...[
-            SizedBox(height: 10.h),
-            if (booking.cancellationReason?.isNotEmpty == true)
-              Padding(
-                padding: EdgeInsets.only(bottom: 8.h),
-                child: Text(
-                  booking.cancellationReason!,
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    fontStyle: FontStyle.italic,
-                    color: AppColors.error,
-                  ),
-                ),
-              ),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                onPressed: onRebook,
-                icon: Icon(Icons.refresh_rounded, size: 14.r),
-                label: Text(
-                  s.bookNewSession,
-                  style: TextStyle(fontSize: 12.sp),
-                ),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.primary,
-                  side: BorderSide(
-                    color: AppColors.primary.withValues(alpha: 0.5),
-                  ),
-                  shape: RoundedRectangleBorder(borderRadius: AppRadius.smAll),
-                  padding: EdgeInsets.symmetric(vertical: 8.h),
-                ),
-              ),
+          if (isCancelled)
+            TraineeCancelledBookingSection(
+              cancellationReason: booking.cancellationReason,
+              onRebook: onRebook,
             ),
-          ],
         ],
       ),
     );

@@ -12,6 +12,7 @@ class BookingDateStrip extends StatelessWidget {
   final DateTime? selectedDate;
   final CoachProfileModel coach;
   final ValueChanged<DateTime> onSelectDate;
+  final String? title;
 
   const BookingDateStrip({
     super.key,
@@ -19,6 +20,7 @@ class BookingDateStrip extends StatelessWidget {
     required this.selectedDate,
     required this.coach,
     required this.onSelectDate,
+    this.title,
   });
 
   @override
@@ -34,7 +36,7 @@ class BookingDateStrip extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          S.of(context).selectTrainingDate,
+          title ?? S.of(context).selectTrainingDate,
           style: TextStyle(
             fontSize: 14.sp,
             fontWeight: FontWeight.w700,
@@ -47,7 +49,7 @@ class BookingDateStrip extends StatelessWidget {
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: dates.length,
-            separatorBuilder: (_, __) => SizedBox(width: 8.w),
+            separatorBuilder: (_, index) => SizedBox(width: 8.w),
             itemBuilder: (context, index) {
               final date = dates[index];
               final isSelected = selectedDate != null &&

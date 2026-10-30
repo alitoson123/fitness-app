@@ -5871,6 +5871,156 @@ class S {
       args: [price],
     );
   }
+
+  /// `Booking Type`
+  String get bookingTypeLabel {
+    return Intl.message(
+      'Booking Type',
+      name: 'bookingTypeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Single Session`
+  String get singleSessionType {
+    return Intl.message(
+      'Single Session',
+      name: 'singleSessionType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Monthly Plan`
+  String get monthlyPackageType {
+    return Intl.message(
+      'Monthly Plan',
+      name: 'monthlyPackageType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select Start Date`
+  String get selectPackageStartDate {
+    return Intl.message(
+      'Select Start Date',
+      name: 'selectPackageStartDate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weekly Training Frequency`
+  String get weeklyFrequencyLabel {
+    return Intl.message(
+      'Weekly Training Frequency',
+      name: 'weeklyFrequencyLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} days / week`
+  String daysPerWeekCount(Object count) {
+    return Intl.message(
+      '$count days / week',
+      name: 'daysPerWeekCount',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Preferred Schedule & Goals`
+  String get monthlyScheduleNotesLabel {
+    return Intl.message(
+      'Preferred Schedule & Goals',
+      name: 'monthlyScheduleNotesLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `e.g., Evenings around 6 PM, focus on strength building`
+  String get monthlyScheduleNotesHint {
+    return Intl.message(
+      'e.g., Evenings around 6 PM, focus on strength building',
+      name: 'monthlyScheduleNotesHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Monthly Package Summary`
+  String get monthlyPlanSummaryTitle {
+    return Intl.message(
+      'Monthly Package Summary',
+      name: 'monthlyPlanSummaryTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start Date`
+  String get packageStartDateLabel {
+    return Intl.message(
+      'Start Date',
+      name: 'packageStartDateLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Duration`
+  String get durationMonthsLabel {
+    return Intl.message(
+      'Duration',
+      name: 'durationMonthsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1 Month`
+  String get oneMonthDuration {
+    return Intl.message(
+      '1 Month',
+      name: 'oneMonthDuration',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Monthly Price`
+  String get totalMonthlyPrice {
+    return Intl.message(
+      'Monthly Price',
+      name: 'totalMonthlyPrice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Flexible / Coordinated with Coach`
+  String get flexibleSchedule {
+    return Intl.message(
+      'Flexible / Coordinated with Coach',
+      name: 'flexibleSchedule',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please select a start date`
+  String get pleaseSelectStartDate {
+    return Intl.message(
+      'Please select a start date',
+      name: 'pleaseSelectStartDate',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -9,7 +9,7 @@ class BookingRequestCubit extends Cubit<BookingRequestState> {
   final BookingRequestRepo repository;
 
   BookingRequestCubit({required this.repository})
-    : super(const BookingRequestState());
+      : super(const BookingRequestState());
 
   void init(CoachProfileModel coach) {
     final now = DateTime.now();
@@ -17,16 +17,12 @@ class BookingRequestCubit extends Cubit<BookingRequestState> {
       30,
       (i) => DateTime(now.year, now.month, now.day + i),
     );
-
-    // Pick first working date
     final firstWorkingDate = dates.firstWhere(
       (d) => BookingSlotCalculator.isCoachWorkingOnDay(coach, d),
       orElse: () => dates.first,
     );
-
-    final defaultSport = coach.sports.isNotEmpty
-        ? coach.sports.first
-        : 'Fitness';
+    final defaultSport =
+        coach.sports.isNotEmpty ? coach.sports.first : 'Fitness';
 
     emit(
       state.copyWith(
@@ -37,9 +33,23 @@ class BookingRequestCubit extends Cubit<BookingRequestState> {
         status: BookingRequestStatus.loadingSlots,
       ),
     );
-
     loadSlotsForDate(firstWorkingDate);
   }
+
+  void selectBookingType(String type) {
+    emit(state.copyWith(bookingType: type));
+    if (type == 'session' &&
+        state.availableSlots.isEmpty &&
+        state.selectedDate != null) {
+      loadSlotsForDate(state.selectedDate!);
+    }
+  }
+
+  void selectWeeklyFrequency(int freq) {
+    emit(state.copyWith(weeklyFrequency: freq));
+  }
+
+
 
   Future<void> loadSlotsForDate(DateTime date) async {
     final coach = state.coach;
@@ -53,23 +63,20 @@ class BookingRequestCubit extends Cubit<BookingRequestState> {
       ),
     );
 
-    final dateStr =
-        '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+    final dateStr = _formatDate(date);
     final result = await repository.getBookedSlots(
       coachUid: coach.uid,
       date: dateStr,
     );
 
     result.fold(
-      (failure) {
-        emit(
-          state.copyWith(
-            status: BookingRequestStatus.ready,
-            availableSlots: [],
-            errorMessage: failure.errorMessage,
-          ),
-        );
-      },
+      (failure) => emit(
+        state.copyWith(
+          status: BookingRequestStatus.ready,
+          availableSlots: [],
+          errorMessage: failure.errorMessage,
+        ),
+      ),
       (booked) {
         final slots = BookingSlotCalculator.generateDaySlots(
           coach: coach,
@@ -86,61 +93,21 @@ class BookingRequestCubit extends Cubit<BookingRequestState> {
     );
   }
 
-  void selectSlot(String slot) {
-    emit(state.copyWith(selectedSlot: slot));
-  }
+  void selectSlot(String slot) => emit(state.copyWith(selectedSlot: slot));
 
-  void selectSport(String sport) {
-    emit(state.copyWith(selectedSport: sport));
-  }
+  void selectSport(String sport) => emit(state.copyWith(selectedSport: sport));
 
-  void updateNotes(String notes) {
-    emit(state.copyWith(notes: notes));
-  }
+  void updateNotes(String notes) => emit(state.copyWith(notes: notes));
 
   Future<void> submitBooking() async {
-    final coach = state.coach;
-    final date = state.selectedDate;
-    final slot = state.selectedSlot;
-    final sport = state.selectedSport;
-
-    if (coach == null || date == null || slot == null || sport == null) {
-      return;
-    }
-
+    if (!state.isSubmitReady) return;
     emit(state.copyWith(status: BookingRequestStatus.submitting));
 
     final trainee = await repository.getCurrentTrainee();
     final traineeUid = repository.authService.currentUser?.uid ?? '';
-    final dateStr =
-        '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
-    final endTime = BookingSlotCalculator.computeEndTime(
-      slot,
-      coach.sessionDurationMinutes,
-    );
-
-    final booking = BookingModel(
-      id: '',
-      coachUid: coach.uid,
-      coachName: coach.name,
-      coachPhotoUrl: coach.photoUrl,
-      traineeUid: traineeUid,
-      traineeName: trainee?.name.isNotEmpty == true
-          ? trainee!.name
-          : (repository.authService.currentUser?.displayName ?? 'Trainee'),
-      traineePhotoUrl: trainee?.photoUrl ?? '',
-      sport: sport,
-      date: dateStr,
-      startTime: slot,
-      endTime: endTime,
-      price: coach.sessionPrice,
-      currency: coach.currency,
-      notes: state.notes,
-      status: 'pending',
-    );
+    final booking = _buildBookingModel(traineeUid, trainee?.name, trainee?.photoUrl);
 
     final result = await repository.createBooking(booking);
-
     result.fold(
       (failure) => emit(
         state.copyWith(
@@ -148,7 +115,46 @@ class BookingRequestCubit extends Cubit<BookingRequestState> {
           errorMessage: failure.errorMessage,
         ),
       ),
-      (success) => emit(state.copyWith(status: BookingRequestStatus.success)),
+      (_) => emit(state.copyWith(status: BookingRequestStatus.success)),
     );
   }
+
+  BookingModel _buildBookingModel(
+    String traineeUid,
+    String? traineeName,
+    String? traineePhotoUrl,
+  ) {
+    final coach = state.coach!;
+    final dateStr = _formatDate(state.selectedDate!);
+    final isSession = state.isSession;
+    final slot = state.selectedSlot ?? 'Flexible';
+    final endTime = isSession
+        ? BookingSlotCalculator.computeEndTime(slot, coach.sessionDurationMinutes)
+        : 'Flexible';
+
+    return BookingModel(
+      id: '',
+      coachUid: coach.uid,
+      coachName: coach.name,
+      coachPhotoUrl: coach.photoUrl,
+      traineeUid: traineeUid,
+      traineeName: traineeName?.isNotEmpty == true
+          ? traineeName!
+          : (repository.authService.currentUser?.displayName ?? 'Trainee'),
+      traineePhotoUrl: traineePhotoUrl ?? '',
+      sport: state.selectedSport!,
+      bookingType: state.bookingType,
+      date: dateStr,
+      startTime: slot,
+      endTime: endTime,
+      price: state.totalPrice,
+      currency: 'USD',
+      durationMonths: isSession ? 1 : state.durationMonths,
+      notes: state.notes,
+      status: 'pending',
+    );
+  }
+
+  String _formatDate(DateTime d) =>
+      '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
 }

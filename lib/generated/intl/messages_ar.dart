@@ -41,69 +41,71 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m9(email) => "تم تسجيل الدخول بواسطة: ${email}";
 
-  static String m10(day) =>
+  static String m10(count) => "${count} أيام / أسبوع";
+
+  static String m11(day) =>
       "يجب أن يكون وقت الانتهاء بعد وقت البدء ليوم ${day}.";
 
-  static String m11(day, duration) =>
+  static String m12(day, duration) =>
       "يجب أن تكون ساعات العمل ليوم ${day} كافية لـ ${duration} دقيقة على الأقل.";
 
-  static String m12(count) => "${count} سنوات خبرة";
-
-  static String m13(name) => "مساء الخير، ${name}";
+  static String m13(count) => "${count} سنوات خبرة";
 
   static String m14(name) => "مساء الخير، ${name}";
 
-  static String m15(name) => "صباح الخير، ${name}";
+  static String m15(name) => "مساء الخير، ${name}";
 
-  static String m16(minutes) => "${minutes} دقيقة";
+  static String m16(name) => "صباح الخير، ${name}";
 
-  static String m17(price) => "${price} \$ / شهرياً";
+  static String m17(minutes) => "${minutes} دقيقة";
 
-  static String m18(phone) =>
+  static String m18(price) => "${price} \$ / شهرياً";
+
+  static String m19(phone) =>
       "أدخل الرمز المكون من 6 أرقام المرسل إلى ${phone}";
 
-  static String m19(price) => "${price} \$";
+  static String m20(price) => "${price} \$";
 
-  static String m20(name) =>
+  static String m21(name) =>
       "هل أنت متأكد من رغبتك في رفض هذا الطلب من ${name}؟";
 
-  static String m21(seconds) => "إعادة الإرسال خلال ${seconds} ثانية";
-
-  static String m22(count) =>
-      "${Intl.plural(count, one: 'مستند واحد مرفق', two: 'مستندان مرفقان', few: '${count} مستندات مرفقة', many: '${count} مستنداً مرفقاً', other: '${count} مستند مرفق')}";
+  static String m22(seconds) => "إعادة الإرسال خلال ${seconds} ثانية";
 
   static String m23(count) =>
+      "${Intl.plural(count, one: 'مستند واحد مرفق', two: 'مستندان مرفقان', few: '${count} مستندات مرفقة', many: '${count} مستنداً مرفقاً', other: '${count} مستند مرفق')}";
+
+  static String m24(count) =>
       "${Intl.plural(count, one: 'سنة واحدة', two: 'سنتان', few: '${count} سنوات', many: '${count} سنة', other: '${count} سنة')}";
 
-  static String m24(count) => "${count} تقييم";
+  static String m25(count) => "${count} تقييم";
 
-  static String m25(days) => "خلال ${days} أيام";
+  static String m26(days) => "خلال ${days} أيام";
 
-  static String m26(hours) => "خلال ${hours} ساعات";
+  static String m27(hours) => "خلال ${hours} ساعات";
 
-  static String m27(reason) => "سبب الرفض: ${reason}";
+  static String m28(reason) => "سبب الرفض: ${reason}";
 
-  static String m28(price) => "${price} \$ / حصة";
+  static String m29(price) => "${price} \$ / حصة";
 
-  static String m29(name) => "جلسة مع ${name}";
+  static String m30(name) => "جلسة مع ${name}";
 
-  static String m30(count) =>
+  static String m31(count) =>
       "${Intl.plural(count, one: 'تم اختيار رياضة واحدة', two: 'تم اختيار رياضتين', few: 'تم اختيار ${count} رياضات', many: 'تم اختيار ${count} رياضة', other: 'تم اختيار ${count} رياضة')}";
 
-  static String m31(current, total) => "الخطوة ${current} من ${total}";
-
-  static String m32(count) =>
-      "${Intl.plural(count, one: 'جلسة قادمة واحدة', two: 'جلستان قادمتان', few: '${count} جلسات قادمة', many: '${count} جلسة قادمة', other: '${count} جلسة قادمة')}";
+  static String m32(current, total) => "الخطوة ${current} من ${total}";
 
   static String m33(count) =>
-      "${Intl.plural(count, one: 'جلسة سابقة واحدة', two: 'جلستان سابقتان', few: '${count} جلسات سابقة', many: '${count} جلسة سابقة', other: '${count} جلسة سابقة')}";
+      "${Intl.plural(count, one: 'جلسة قادمة واحدة', two: 'جلستان قادمتان', few: '${count} جلسات قادمة', many: '${count} جلسة قادمة', other: '${count} جلسة قادمة')}";
 
   static String m34(count) =>
+      "${Intl.plural(count, one: 'جلسة سابقة واحدة', two: 'جلستان سابقتان', few: '${count} جلسات سابقة', many: '${count} جلسة سابقة', other: '${count} جلسة سابقة')}";
+
+  static String m35(count) =>
       "${Intl.plural(count, one: 'طلب معلق واحد', two: 'طلبان معلقان', few: '${count} طلبات معلقة', many: '${count} طلباً معلقاً', other: '${count} طلب معلق')}";
 
-  static String m35(hours) => "${hours} ساعة عمل";
+  static String m36(hours) => "${hours} ساعة عمل";
 
-  static String m36(name) => "مرحباً بعودتك، ${name}!";
+  static String m37(name) => "مرحباً بعودتك، ${name}!";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -209,6 +211,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("تم إرسال طلبك بنجاح!"),
         "bookingSummaryTitle":
             MessageLookupByLibrary.simpleMessage("ملخص الطلب"),
+        "bookingTypeLabel": MessageLookupByLibrary.simpleMessage("نوع الحجز"),
         "camera": MessageLookupByLibrary.simpleMessage("الكاميرا"),
         "cancel": MessageLookupByLibrary.simpleMessage("إلغاء"),
         "certRequired": MessageLookupByLibrary.simpleMessage(
@@ -373,6 +376,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "dayUnavailable": MessageLookupByLibrary.simpleMessage("غير متاح"),
         "dayWed": MessageLookupByLibrary.simpleMessage("أربعاء"),
         "dayWednesday": MessageLookupByLibrary.simpleMessage("الأربعاء"),
+        "daysPerWeekCount": m10,
         "declineConfirmMessage": MessageLookupByLibrary.simpleMessage(
             "في حال الرفض، سيتم إلغاء هذا الحجز وستحتاج إلى حجز جلسة جديدة. هل تود المتابعة؟"),
         "declineConfirmTitle":
@@ -400,6 +404,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("تم رفع المستند بنجاح"),
         "draftRestored": MessageLookupByLibrary.simpleMessage(
             "تمت استعادة المسودة المحفوظة بنجاح."),
+        "durationMonthsLabel":
+            MessageLookupByLibrary.simpleMessage("مدة الاشتراك"),
         "edit": MessageLookupByLibrary.simpleMessage("تعديل"),
         "editAndResubmit":
             MessageLookupByLibrary.simpleMessage("تعديل وإعادة الإرسال"),
@@ -419,17 +425,17 @@ class MessageLookup extends MessageLookupByLibrary {
             "تأكيد البريد الإلكتروني مطلوب"),
         "endTime": MessageLookupByLibrary.simpleMessage("وقت الانتهاء"),
         "error": MessageLookupByLibrary.simpleMessage("خطأ"),
-        "errorInvalidTimeRange": m10,
+        "errorInvalidTimeRange": m11,
         "errorLoadingCoachProfile": MessageLookupByLibrary.simpleMessage(
             "فشل تحميل الملف الشخصي للمدرب. انقر لإعادة المحاولة."),
         "errorLoadingCoaches": MessageLookupByLibrary.simpleMessage(
             "فشل تحميل المدربين. اضغط لإعادة المحاولة."),
         "errorNoWorkingDays": MessageLookupByLibrary.simpleMessage(
             "يرجى تحديد يوم عمل واحد على الأقل."),
-        "errorTimeWindowTooShort": m11,
+        "errorTimeWindowTooShort": m12,
         "expectedReviewTime": MessageLookupByLibrary.simpleMessage(
             "الوقت المتوقع للمراجعة: 24 - 48 ساعة"),
-        "experienceYearsCount": m12,
+        "experienceYearsCount": m13,
         "fakeCoachDashboardSubtitle": MessageLookupByLibrary.simpleMessage(
             "مرحباً بك أيها المدرب! هذه شاشة تجريبية لاختبار التنقل وتسجيل الدخول والخروج."),
         "fakeCoachDashboardTitle":
@@ -452,6 +458,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "fitnessLevel": MessageLookupByLibrary.simpleMessage("مستوى اللياقة"),
         "fitnessProfile":
             MessageLookupByLibrary.simpleMessage("اللياقة والأهداف"),
+        "flexibleSchedule":
+            MessageLookupByLibrary.simpleMessage("مرن / بالتنسيق مع الكابتن"),
         "forgotPassword":
             MessageLookupByLibrary.simpleMessage("هل نسيت كلمة المرور؟"),
         "fromTime": MessageLookupByLibrary.simpleMessage("من"),
@@ -469,9 +477,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "goalSubtitle": MessageLookupByLibrary.simpleMessage(
             "ما هو الهدف الأساسي الذي تسعى لتحقيقه؟"),
         "google": MessageLookupByLibrary.simpleMessage("جوجل"),
-        "greetingAfternoon": m13,
-        "greetingEvening": m14,
-        "greetingMorning": m15,
+        "greetingAfternoon": m14,
+        "greetingEvening": m15,
+        "greetingMorning": m16,
         "groupLater": MessageLookupByLibrary.simpleMessage("المواعيد القادمة"),
         "groupPast": MessageLookupByLibrary.simpleMessage("جلسات سابقة"),
         "groupThisWeek": MessageLookupByLibrary.simpleMessage("هذا الأسبوع"),
@@ -517,8 +525,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "minExperienceYears": MessageLookupByLibrary.simpleMessage("الخبرة"),
         "minimumRating":
             MessageLookupByLibrary.simpleMessage("الحد الأدنى للتقييم"),
-        "minutesDuration": m16,
-        "monthlyPriceChip": m17,
+        "minutesDuration": m17,
+        "monthlyPackageType":
+            MessageLookupByLibrary.simpleMessage("باقة شهرية"),
+        "monthlyPlanSummaryTitle":
+            MessageLookupByLibrary.simpleMessage("ملخص الباقة الشهرية"),
+        "monthlyPriceChip": m18,
         "monthlyPriceUSD":
             MessageLookupByLibrary.simpleMessage("سعر الباقة الشهرية (\$ USD)"),
         "monthlyPriceUSDDesc": MessageLookupByLibrary.simpleMessage(
@@ -529,6 +541,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "خطة تدريب ومتابعة وتوجيه متواصل على مدار الشهر"),
         "monthlyPricingOptionTitle":
             MessageLookupByLibrary.simpleMessage("باقة شهرية"),
+        "monthlyScheduleNotesHint": MessageLookupByLibrary.simpleMessage(
+            "مثال: المواعيد المسائية حوالي 6، التركيز على بناء القوة"),
+        "monthlyScheduleNotesLabel":
+            MessageLookupByLibrary.simpleMessage("المواعيد المفضلة والأهداف"),
         "myBookings":
             MessageLookupByLibrary.simpleMessage("جلسات وطلبات التدريب"),
         "nationalIdHint": MessageLookupByLibrary.simpleMessage(
@@ -590,6 +606,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("خطط مخصصة وحجز فوري"),
         "onboardingTitle3":
             MessageLookupByLibrary.simpleMessage("تتبع تقدمك وحقق بطولاتك"),
+        "oneMonthDuration": MessageLookupByLibrary.simpleMessage("شهر واحد"),
         "oneOnOneTraining":
             MessageLookupByLibrary.simpleMessage("تدريب فردي خاص 1 على 1"),
         "orContinueWith":
@@ -597,7 +614,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "originalTimeLabel":
             MessageLookupByLibrary.simpleMessage("الموعد الأصلي"),
         "otpVerification": MessageLookupByLibrary.simpleMessage("رمز التحقق"),
-        "otpVerificationSubtitle": m18,
+        "otpVerificationSubtitle": m19,
+        "packageStartDateLabel":
+            MessageLookupByLibrary.simpleMessage("تاريخ البدء"),
         "password": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
         "passwordHint":
             MessageLookupByLibrary.simpleMessage("أدخل كلمة المرور"),
@@ -638,6 +657,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "يرجى اختيار لغة واحدة على الأقل"),
         "pleaseSelectSport": MessageLookupByLibrary.simpleMessage(
             "يرجى اختيار رياضة واحدة على الأقل"),
+        "pleaseSelectStartDate":
+            MessageLookupByLibrary.simpleMessage("يرجى تحديد تاريخ البدء"),
         "pleaseSelectTimeSlot": MessageLookupByLibrary.simpleMessage(
             "يرجى تحديد وقت الجلسة للمتابعة"),
         "preferNotToSay":
@@ -647,7 +668,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "pricePerSessionHint":
             MessageLookupByLibrary.simpleMessage("مثال: 150"),
         "priceRange": MessageLookupByLibrary.simpleMessage("نطاق السعر"),
-        "priceUsdFormat": m19,
+        "priceUsdFormat": m20,
         "pricingStepSubtitle": MessageLookupByLibrary.simpleMessage(
             "حدد سعر جلسة التدريب والعملة المفضلة لديك"),
         "pricingTipText":
@@ -668,7 +689,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "quickAvailabilityTemplates": MessageLookupByLibrary.simpleMessage(
             "نماذج سريعة للمواعيد المتاحة"),
         "rejectRequest": MessageLookupByLibrary.simpleMessage("رفض"),
-        "rejectRequestDialogDesc": m20,
+        "rejectRequestDialogDesc": m21,
         "rejectRequestDialogTitle":
             MessageLookupByLibrary.simpleMessage("رفض طلب التدريب"),
         "rejectionReasonHint": MessageLookupByLibrary.simpleMessage(
@@ -705,7 +726,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("إعادة جدولة الجلسة"),
         "resend": MessageLookupByLibrary.simpleMessage("إعادة الإرسال"),
         "resendCode": MessageLookupByLibrary.simpleMessage("إعادة إرسال الرمز"),
-        "resendCodeIn": m21,
+        "resendCodeIn": m22,
         "resendEmail":
             MessageLookupByLibrary.simpleMessage("إعادة إرسال البريد"),
         "reset": MessageLookupByLibrary.simpleMessage("إعادة ضبط"),
@@ -726,7 +747,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("المواعيد المتاحة"),
         "reviewCertificates":
             MessageLookupByLibrary.simpleMessage("الشهادات التدريبية"),
-        "reviewFilesAttached": m22,
+        "reviewFilesAttached": m23,
         "reviewGender": MessageLookupByLibrary.simpleMessage("الجنس"),
         "reviewGovernmentId":
             MessageLookupByLibrary.simpleMessage("الهوية الوطنية أو الجواز"),
@@ -738,8 +759,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "reviewSubtitle": MessageLookupByLibrary.simpleMessage(
             "يرجى التأكد من صحة كافة البيانات قبل الإرسال للمراجعة."),
         "reviewTitle": MessageLookupByLibrary.simpleMessage("مراجعة الطلب"),
-        "reviewYearsCount": m23,
-        "reviewsCount": m24,
+        "reviewYearsCount": m24,
+        "reviewsCount": m25,
         "role": MessageLookupByLibrary.simpleMessage("الدور"),
         "saveAvailability":
             MessageLookupByLibrary.simpleMessage("حفظ جدول التوفر"),
@@ -757,6 +778,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectDaysAndHours": MessageLookupByLibrary.simpleMessage(
             "حدد الأيام والساعات المتاحة لديك للتدريب."),
         "selectLanguages": MessageLookupByLibrary.simpleMessage("اختر اللغات"),
+        "selectPackageStartDate":
+            MessageLookupByLibrary.simpleMessage("اختر تاريخ بدء الاشتراك"),
         "selectSportsSubtitle": MessageLookupByLibrary.simpleMessage(
             "اختر رياضة واحدة أو أكثر ترغب في التدرب عليها"),
         "selectSportsYouCoach":
@@ -775,20 +798,20 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("إرسال طلب إعادة الجدولة"),
         "sendResetLink":
             MessageLookupByLibrary.simpleMessage("إرسال رابط التعيين"),
-        "sessionCountdownDays": m25,
-        "sessionCountdownHours": m26,
+        "sessionCountdownDays": m26,
+        "sessionCountdownHours": m27,
         "sessionCountdownToday": MessageLookupByLibrary.simpleMessage("اليوم"),
-        "sessionDeclineReason": m27,
+        "sessionDeclineReason": m28,
         "sessionDuration": MessageLookupByLibrary.simpleMessage("مدة الجلسة"),
         "sessionHistory": MessageLookupByLibrary.simpleMessage("سجل الجلسات"),
         "sessionPassed": MessageLookupByLibrary.simpleMessage("انتهت"),
-        "sessionPriceChip": m28,
+        "sessionPriceChip": m29,
         "sessionPricing": MessageLookupByLibrary.simpleMessage("سعر الجلسة"),
         "sessionPricingOptionDesc": MessageLookupByLibrary.simpleMessage(
             "تمرين مباشر مخصص 1 على 1 مع الكابتن"),
         "sessionPricingOptionTitle":
             MessageLookupByLibrary.simpleMessage("جلسة فردية"),
-        "sessionWith": m29,
+        "sessionWith": m30,
         "setAvailabilityButton":
             MessageLookupByLibrary.simpleMessage("تحديد المواعيد"),
         "signIn": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
@@ -806,6 +829,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "سعر الحصة الواحدة بالدولار الأمريكي"),
         "singleSessionPriceUSDHint":
             MessageLookupByLibrary.simpleMessage("مثال: 50"),
+        "singleSessionType": MessageLookupByLibrary.simpleMessage("جلسة فردية"),
         "skillDevelopment":
             MessageLookupByLibrary.simpleMessage("تطوير المهارات"),
         "skip": MessageLookupByLibrary.simpleMessage("تخطي"),
@@ -842,7 +866,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "sportYoga": MessageLookupByLibrary.simpleMessage("اليوغا"),
         "sportsAndSpecialties":
             MessageLookupByLibrary.simpleMessage("الرياضات والتخصصات"),
-        "sportsSelected": m30,
+        "sportsSelected": m31,
         "startExploringCoaches":
             MessageLookupByLibrary.simpleMessage("ابدأ استكشاف المدربين"),
         "startTime": MessageLookupByLibrary.simpleMessage("وقت البدء"),
@@ -855,7 +879,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "statusDeclined": MessageLookupByLibrary.simpleMessage("مرفوضة"),
         "stepAvailability":
             MessageLookupByLibrary.simpleMessage("المواعيد الأسبوعية"),
-        "stepOf": m31,
+        "stepOf": m32,
         "stepPersonalInfo":
             MessageLookupByLibrary.simpleMessage("المعلومات الشخصية"),
         "stepPricing": MessageLookupByLibrary.simpleMessage("التسعير"),
@@ -874,9 +898,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "submittingBookingRequest":
             MessageLookupByLibrary.simpleMessage("جارٍ إرسال الطلب..."),
         "success": MessageLookupByLibrary.simpleMessage("نجاح"),
-        "summaryConfirmedSessions": m32,
-        "summaryPastSessions": m33,
-        "summaryPendingRequests": m34,
+        "summaryConfirmedSessions": m33,
+        "summaryPastSessions": m34,
+        "summaryPendingRequests": m35,
         "supportEmail":
             MessageLookupByLibrary.simpleMessage("alitoson1234567@gmail.com"),
         "supportModalDesc": MessageLookupByLibrary.simpleMessage(
@@ -895,7 +919,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("جدول هذا الأسبوع"),
         "timeSlots": MessageLookupByLibrary.simpleMessage("ساعات العمل"),
         "toTime": MessageLookupByLibrary.simpleMessage("إلى"),
-        "totalDurationLabel": m35,
+        "totalDurationLabel": m36,
+        "totalMonthlyPrice":
+            MessageLookupByLibrary.simpleMessage("سعر الباقة الشهرية"),
         "totalSessionPrice": MessageLookupByLibrary.simpleMessage("سعر الجلسة"),
         "trainee": MessageLookupByLibrary.simpleMessage("متدرب"),
         "traineeDesc": MessageLookupByLibrary.simpleMessage(
@@ -979,9 +1005,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "warning": MessageLookupByLibrary.simpleMessage("تنبيه"),
         "weeklyAvailabilityTitle":
             MessageLookupByLibrary.simpleMessage("أوقات التوفر الأسبوعية"),
+        "weeklyFrequencyLabel":
+            MessageLookupByLibrary.simpleMessage("عدد التدريبات الأسبوعية"),
         "weightLoss": MessageLookupByLibrary.simpleMessage("خسارة الوزن"),
         "welcomeBack": MessageLookupByLibrary.simpleMessage("مرحباً بعودتك"),
-        "welcomeBackUser": m36,
+        "welcomeBackUser": m37,
         "whatsIncluded":
             MessageLookupByLibrary.simpleMessage("ما تشمله الجلسة"),
         "workingDays": MessageLookupByLibrary.simpleMessage("أيام العمل"),

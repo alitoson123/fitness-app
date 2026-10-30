@@ -168,7 +168,7 @@ graph TD
 
 **Goal**: Enable trainees to book either a single training session or a monthly training package with distinct scheduling options.
 
-- [ ] **Step 3.1: BookingModel Schema Evolution**
+- [x] **Step 3.1: BookingModel Schema Evolution**
   - Update `BookingModel`:
     - Add `bookingType` field: `'session'` | `'monthly'` (required).
     - Update `price` to represent selected plan in USD; enforce `currency = 'USD'`.
@@ -176,14 +176,14 @@ graph TD
     - Add `monthlyScheduleNotes` (`String?`) for monthly package goals and preferred weekly training frequency.
     - Update serialization, deserialization, and mock fixtures.
 
-- [ ] **Step 3.2: Booking Request Cubit & State Refactor**
+- [x] **Step 3.2: Booking Request Cubit & State Refactor**
   - Update `BookingRequestCubit`:
     - Manage `selectedBookingType` (`session` vs. `monthly`).
     - If `session`: calculate available time slots for the chosen single date.
     - If `monthly`: calculate subscription start date, display monthly price in USD, and capture recurring days preference.
     - Submit booking request with all appropriate fields to Firestore `bookings` collection.
 
-- [ ] **Step 3.3: Booking Request View UI Redesign**
+- [x] **Step 3.3: Booking Request View UI Redesign**
   - In `BookingRequestView`:
     - Add `BookingTypeSelector`: Prominent toggle / segmented cards at the top:
       - **Single Session**: Displays `"$XX USD"`, prompts date picker and hourly slot selection.

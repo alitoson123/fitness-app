@@ -65,6 +65,7 @@ class BookingCard extends StatelessWidget {
               startTime: booking.startTime,
               endTime: booking.endTime,
               isDark: isDark,
+              isMonthly: booking.isMonthly,
             ),
             if (booking.notes.isNotEmpty ||
                 (booking.status == 'rejected' &&

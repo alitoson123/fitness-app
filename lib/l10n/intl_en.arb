@@ -579,5 +579,20 @@
   "usdBadge": "USD",
   "priceUsdFormat": "${price} USD",
   "sessionPriceChip": "${price} / session",
-  "monthlyPriceChip": "${price} / month"
+  "monthlyPriceChip": "${price} / month",
+  "bookingTypeLabel": "Booking Type",
+  "singleSessionType": "Single Session",
+  "monthlyPackageType": "Monthly Plan",
+  "selectPackageStartDate": "Select Start Date",
+  "weeklyFrequencyLabel": "Weekly Training Frequency",
+  "daysPerWeekCount": "{count} days / week",
+  "monthlyScheduleNotesLabel": "Preferred Schedule & Goals",
+  "monthlyScheduleNotesHint": "e.g., Evenings around 6 PM, focus on strength building",
+  "monthlyPlanSummaryTitle": "Monthly Package Summary",
+  "packageStartDateLabel": "Start Date",
+  "durationMonthsLabel": "Duration",
+  "oneMonthDuration": "1 Month",
+  "totalMonthlyPrice": "Monthly Price",
+  "flexibleSchedule": "Flexible / Coordinated with Coach",
+  "pleaseSelectStartDate": "Please select a start date"
 }

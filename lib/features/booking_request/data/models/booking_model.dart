@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'booking_serializer.dart';
 
 class BookingModel {
   final String id;
@@ -9,11 +9,13 @@ class BookingModel {
   final String traineeName;
   final String traineePhotoUrl;
   final String sport;
+  final String bookingType;
   final String date;
   final String startTime;
   final String endTime;
   final double price;
   final String currency;
+  final int durationMonths;
   final String notes;
   final String status;
   final String? rejectionReason;
@@ -39,11 +41,13 @@ class BookingModel {
     this.traineeName = '',
     this.traineePhotoUrl = '',
     required this.sport,
+    this.bookingType = 'session',
     required this.date,
     required this.startTime,
     required this.endTime,
     this.price = 0.0,
     this.currency = 'USD',
+    this.durationMonths = 1,
     this.notes = '',
     this.status = 'pending',
     this.rejectionReason,
@@ -62,79 +66,77 @@ class BookingModel {
   });
 
   bool get isReschedulePending => status == 'reschedule_pending';
+  bool get isMonthly => bookingType == 'monthly';
+  bool get isSession => bookingType != 'monthly';
 
-  factory BookingModel.fromJson(Map<String, dynamic> json, {String? id}) {
+  factory BookingModel.fromJson(Map<String, dynamic> json, {String? id}) =>
+      BookingSerializer.fromJson(json, id: id);
+
+  Map<String, dynamic> toMap() => BookingSerializer.toMap(this);
+
+  BookingModel copyWith({
+    String? id,
+    String? coachUid,
+    String? coachName,
+    String? coachPhotoUrl,
+    String? traineeUid,
+    String? traineeName,
+    String? traineePhotoUrl,
+    String? sport,
+    String? bookingType,
+    String? date,
+    String? startTime,
+    String? endTime,
+    double? price,
+    String? currency,
+    int? durationMonths,
+    String? notes,
+    String? status,
+    String? rejectionReason,
+    String? proposedDate,
+    String? proposedStartTime,
+    String? proposedEndTime,
+    String? rescheduleReason,
+    String? rescheduledBy,
+    DateTime? rescheduledAt,
+    String? previousDate,
+    String? previousStartTime,
+    String? previousEndTime,
+    String? cancellationReason,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
     return BookingModel(
-      id: id ?? json['id'] as String? ?? '',
-      coachUid: json['coachUid'] as String? ?? '',
-      coachName: json['coachName'] as String? ?? '',
-      coachPhotoUrl: json['coachPhotoUrl'] as String? ?? '',
-      traineeUid: json['traineeUid'] as String? ?? '',
-      traineeName: json['traineeName'] as String? ?? '',
-      traineePhotoUrl: json['traineePhotoUrl'] as String? ?? '',
-      sport: json['sport'] as String? ?? '',
-      date: json['date'] as String? ?? '',
-      startTime: json['startTime'] as String? ?? '',
-      endTime: json['endTime'] as String? ?? '',
-      price: (json['price'] as num?)?.toDouble() ?? 0.0,
-      currency: json['currency'] as String? ?? 'USD',
-      notes: json['notes'] as String? ?? '',
-      status: json['status'] as String? ?? 'pending',
-      rejectionReason: json['rejectionReason'] as String?,
-      proposedDate: json['proposedDate'] as String?,
-      proposedStartTime: json['proposedStartTime'] as String?,
-      proposedEndTime: json['proposedEndTime'] as String?,
-      rescheduleReason: json['rescheduleReason'] as String?,
-      rescheduledBy: json['rescheduledBy'] as String?,
-      rescheduledAt: _parseDate(json['rescheduledAt']),
-      previousDate: json['previousDate'] as String?,
-      previousStartTime: json['previousStartTime'] as String?,
-      previousEndTime: json['previousEndTime'] as String?,
-      cancellationReason: json['cancellationReason'] as String?,
-      createdAt: _parseDate(json['createdAt']),
-      updatedAt: _parseDate(json['updatedAt']),
+      id: id ?? this.id,
+      coachUid: coachUid ?? this.coachUid,
+      coachName: coachName ?? this.coachName,
+      coachPhotoUrl: coachPhotoUrl ?? this.coachPhotoUrl,
+      traineeUid: traineeUid ?? this.traineeUid,
+      traineeName: traineeName ?? this.traineeName,
+      traineePhotoUrl: traineePhotoUrl ?? this.traineePhotoUrl,
+      sport: sport ?? this.sport,
+      bookingType: bookingType ?? this.bookingType,
+      date: date ?? this.date,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      price: price ?? this.price,
+      currency: currency ?? this.currency,
+      durationMonths: durationMonths ?? this.durationMonths,
+      notes: notes ?? this.notes,
+      status: status ?? this.status,
+      rejectionReason: rejectionReason ?? this.rejectionReason,
+      proposedDate: proposedDate ?? this.proposedDate,
+      proposedStartTime: proposedStartTime ?? this.proposedStartTime,
+      proposedEndTime: proposedEndTime ?? this.proposedEndTime,
+      rescheduleReason: rescheduleReason ?? this.rescheduleReason,
+      rescheduledBy: rescheduledBy ?? this.rescheduledBy,
+      rescheduledAt: rescheduledAt ?? this.rescheduledAt,
+      previousDate: previousDate ?? this.previousDate,
+      previousStartTime: previousStartTime ?? this.previousStartTime,
+      previousEndTime: previousEndTime ?? this.previousEndTime,
+      cancellationReason: cancellationReason ?? this.cancellationReason,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'coachUid': coachUid,
-      'coachName': coachName,
-      'coachPhotoUrl': coachPhotoUrl,
-      'traineeUid': traineeUid,
-      'traineeName': traineeName,
-      'traineePhotoUrl': traineePhotoUrl,
-      'sport': sport,
-      'date': date,
-      'startTime': startTime,
-      'endTime': endTime,
-      'price': price,
-      'currency': currency,
-      'notes': notes,
-      'status': status,
-      if (rejectionReason != null) 'rejectionReason': rejectionReason,
-      if (proposedDate != null) 'proposedDate': proposedDate,
-      if (proposedStartTime != null) 'proposedStartTime': proposedStartTime,
-      if (proposedEndTime != null) 'proposedEndTime': proposedEndTime,
-      if (rescheduleReason != null) 'rescheduleReason': rescheduleReason,
-      if (rescheduledBy != null) 'rescheduledBy': rescheduledBy,
-      if (rescheduledAt != null)
-        'rescheduledAt': Timestamp.fromDate(rescheduledAt!),
-      if (previousDate != null) 'previousDate': previousDate,
-      if (previousStartTime != null) 'previousStartTime': previousStartTime,
-      if (previousEndTime != null) 'previousEndTime': previousEndTime,
-      if (cancellationReason != null) 'cancellationReason': cancellationReason,
-      'createdAt': createdAt != null
-          ? Timestamp.fromDate(createdAt!)
-          : FieldValue.serverTimestamp(),
-      'updatedAt': FieldValue.serverTimestamp(),
-    };
-  }
-
-  static DateTime? _parseDate(dynamic val) {
-    if (val is Timestamp) return val.toDate();
-    if (val is String) return DateTime.tryParse(val);
-    return null;
   }
 }

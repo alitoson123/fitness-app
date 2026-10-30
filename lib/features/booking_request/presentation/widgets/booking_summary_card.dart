@@ -9,31 +9,47 @@ import '../view_model/booking_request_cubit/booking_slot_calculator.dart';
 
 class BookingSummaryCard extends StatelessWidget {
   final CoachProfileModel coach;
+  final String bookingType;
   final String? sport;
   final DateTime? date;
   final String? slot;
+  final int weeklyFrequency;
+  final int durationMonths;
 
   const BookingSummaryCard({
     super.key,
     required this.coach,
+    this.bookingType = 'session',
     required this.sport,
     required this.date,
     required this.slot,
+    this.weeklyFrequency = 3,
+    this.durationMonths = 1,
   });
+
+  bool get isMonthly => bookingType == 'monthly';
 
   @override
   Widget build(BuildContext context) {
-    if (slot == null || date == null) return const SizedBox.shrink();
-
+    if (date == null || (!isMonthly && slot == null)) {
+      return const SizedBox.shrink();
+    }
+    final s = S.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final cardBg = isDark ? AppColors.darkSurface : AppColors.primary50.withValues(alpha: 0.5);
+    final cardBg = isDark
+        ? AppColors.darkSurface
+        : AppColors.primary50.withValues(alpha: 0.5);
     final border = isDark ? AppColors.darkBorder : AppColors.primary100;
     final primary = isDark ? AppColors.flameRed : AppColors.primary;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.textPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.textSecondary;
+    final textPrimary =
+        isDark ? AppColors.darkTextPrimary : AppColors.textPrimary;
+    final textSecondary =
+        isDark ? AppColors.darkTextSecondary : AppColors.textSecondary;
 
-    final dateFormatted = DateFormat('EEEE, d MMMM', Localizations.localeOf(context).languageCode).format(date!);
-    final endTime = BookingSlotCalculator.computeEndTime(slot!, coach.sessionDurationMinutes);
+    final dateFormatted = DateFormat(
+      'EEEE, d MMMM',
+      Localizations.localeOf(context).languageCode,
+    ).format(date!);
 
     return Container(
       padding: EdgeInsets.all(14.r),
@@ -50,7 +66,7 @@ class BookingSummaryCard extends StatelessWidget {
               Icon(Icons.receipt_long_rounded, size: 18.r, color: primary),
               SizedBox(width: 6.w),
               Text(
-                S.of(context).bookingSummaryTitle,
+                isMonthly ? s.monthlyPlanSummaryTitle : s.bookingSummaryTitle,
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w700,
@@ -60,15 +76,32 @@ class BookingSummaryCard extends StatelessWidget {
             ],
           ),
           Divider(height: 20.h, color: border),
-          _buildRow(S.of(context).selectedSportLabel, sport ?? '', textSecondary, textPrimary),
+          _buildRow(s.bookingTypeLabel, isMonthly ? s.monthlyPackageType : s.singleSessionType, textSecondary, textPrimary),
           SizedBox(height: 8.h),
-          _buildRow(S.of(context).selectedDateLabel, dateFormatted, textSecondary, textPrimary),
+          _buildRow(s.selectedSportLabel, sport ?? '', textSecondary, textPrimary),
           SizedBox(height: 8.h),
-          _buildRow(S.of(context).selectedTimeLabel, '$slot - $endTime', textSecondary, textPrimary),
+          _buildRow(isMonthly ? s.packageStartDateLabel : s.selectedDateLabel, dateFormatted, textSecondary, textPrimary),
           SizedBox(height: 8.h),
+          if (!isMonthly && slot != null) ...[
+            _buildRow(
+              s.selectedTimeLabel,
+              '$slot - ${BookingSlotCalculator.computeEndTime(slot!, coach.sessionDurationMinutes)}',
+              textSecondary,
+              textPrimary,
+            ),
+            SizedBox(height: 8.h),
+          ],
+          if (isMonthly) ...[
+            _buildRow(s.durationMonthsLabel, s.oneMonthDuration, textSecondary, textPrimary),
+            SizedBox(height: 8.h),
+            _buildRow(s.weeklyFrequencyLabel, s.daysPerWeekCount(weeklyFrequency), textSecondary, textPrimary),
+            SizedBox(height: 8.h),
+          ],
           _buildRow(
-            S.of(context).totalSessionPrice,
-            '${coach.sessionPrice.toStringAsFixed(0)} ${coach.currency}',
+            isMonthly ? s.totalMonthlyPrice : s.totalSessionPrice,
+            isMonthly
+                ? '\$${(coach.monthlyPriceUSD * durationMonths).toStringAsFixed(0)} USD'
+                : '\$${coach.sessionPriceUSD.toStringAsFixed(0)} USD',
             textSecondary,
             primary,
             isBold: true,

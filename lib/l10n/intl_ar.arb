@@ -579,5 +579,20 @@
   "usdBadge": "USD",
   "priceUsdFormat": "{price} $",
   "sessionPriceChip": "{price} $ / حصة",
-  "monthlyPriceChip": "{price} $ / شهرياً"
+  "monthlyPriceChip": "{price} $ / شهرياً",
+  "bookingTypeLabel": "نوع الحجز",
+  "singleSessionType": "جلسة فردية",
+  "monthlyPackageType": "باقة شهرية",
+  "selectPackageStartDate": "اختر تاريخ بدء الاشتراك",
+  "weeklyFrequencyLabel": "عدد التدريبات الأسبوعية",
+  "daysPerWeekCount": "{count} أيام / أسبوع",
+  "monthlyScheduleNotesLabel": "المواعيد المفضلة والأهداف",
+  "monthlyScheduleNotesHint": "مثال: المواعيد المسائية حوالي 6، التركيز على بناء القوة",
+  "monthlyPlanSummaryTitle": "ملخص الباقة الشهرية",
+  "packageStartDateLabel": "تاريخ البدء",
+  "durationMonthsLabel": "مدة الاشتراك",
+  "oneMonthDuration": "شهر واحد",
+  "totalMonthlyPrice": "سعر الباقة الشهرية",
+  "flexibleSchedule": "مرن / بالتنسيق مع الكابتن",
+  "pleaseSelectStartDate": "يرجى تحديد تاريخ البدء"
 }
