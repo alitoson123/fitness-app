@@ -394,8 +394,14 @@ class MessageLookup extends MessageLookupByLibrary {
             "If you decline, this booking will be cancelled and you will need to book a new session. Proceed?"),
         "declineConfirmTitle":
             MessageLookupByLibrary.simpleMessage("Decline Reschedule?"),
+        "declineReasonHint": MessageLookupByLibrary.simpleMessage(
+            "e.g. Schedule conflict, time not suitable..."),
+        "declineReasonLabel": MessageLookupByLibrary.simpleMessage(
+            "Reason for declining (optional)"),
         "declineReschedule":
             MessageLookupByLibrary.simpleMessage("Decline & Cancel"),
+        "declinedReasonTitle":
+            MessageLookupByLibrary.simpleMessage("Decline Reason"),
         "defaultCoachBio": MessageLookupByLibrary.simpleMessage(
             "Certified professional coach dedicated to helping you achieve your personal fitness and performance goals."),
         "defaultRejectionReason": MessageLookupByLibrary.simpleMessage(
@@ -568,6 +574,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "No available slots on this day"),
         "noAvailableSlotsForDay": MessageLookupByLibrary.simpleMessage(
             "No available slots for this day"),
+        "noBookingsFound":
+            MessageLookupByLibrary.simpleMessage("No bookings found"),
         "noCoachesFound":
             MessageLookupByLibrary.simpleMessage("No coaches found"),
         "noCoachesFoundDesc": MessageLookupByLibrary.simpleMessage(
@@ -746,6 +754,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Reason for Rescheduling"),
         "rescheduleReasonRequired": MessageLookupByLibrary.simpleMessage(
             "Please provide a reason for the reschedule"),
+        "rescheduleRequestedBadge":
+            MessageLookupByLibrary.simpleMessage("Reschedule Requested"),
         "rescheduleRequestedSuccess": MessageLookupByLibrary.simpleMessage(
             "Reschedule request sent to client"),
         "rescheduleSession":
@@ -951,8 +961,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Supporting Document"),
         "suspendedStatusBadge":
             MessageLookupByLibrary.simpleMessage("Suspended"),
+        "tapToHideDetails":
+            MessageLookupByLibrary.simpleMessage("Tap to hide details"),
         "tapToUploadPhoto":
             MessageLookupByLibrary.simpleMessage("Tap to upload photo"),
+        "tapToViewDetails":
+            MessageLookupByLibrary.simpleMessage("Tap to view coach\'s note"),
         "testModeBadge": MessageLookupByLibrary.simpleMessage("Test Mode"),
         "thisMonthEarnings":
             MessageLookupByLibrary.simpleMessage("This Month\'s Earnings"),

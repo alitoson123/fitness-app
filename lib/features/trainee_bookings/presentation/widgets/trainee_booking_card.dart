@@ -30,9 +30,11 @@ class TraineeBookingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = S.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final isReschedulePending = booking.status == 'reschedule_pending';
-    final isCancelled = booking.status == 'cancelled';
-    final isRejected = booking.status == 'rejected';
+    final isReschedule = booking.status == 'reschedule_pending';
+    const amber = Color(0xFFF59E0B);
+    final dateLabel = booking.isMonthly
+        ? '${booking.date} (${s.monthlyPackageType}${booking.sessions.length > 1 ? ' • ${booking.sessions.length}' : ''})'
+        : '${booking.date} (${booking.startTime} - ${booking.endTime})';
 
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
@@ -41,7 +43,10 @@ class TraineeBookingCard extends StatelessWidget {
         color: isDark ? AppColors.darkSurface : Colors.white,
         borderRadius: AppRadius.mdAll,
         border: Border.all(
-          color: isDark ? AppColors.darkBorder : AppColors.border,
+          color: isReschedule
+              ? amber
+              : (isDark ? AppColors.darkBorder : AppColors.border),
+          width: isReschedule ? 1.5 : 1.0,
         ),
       ),
       child: Column(
@@ -83,7 +88,10 @@ class TraineeBookingCard extends StatelessWidget {
                   ],
                 ),
               ),
-              BookingStatusBadge(status: booking.status),
+              BookingStatusBadge(
+                status: booking.status,
+                customLabel: isReschedule ? s.rescheduleRequestedBadge : null,
+              ),
             ],
           ),
           SizedBox(height: 10.h),
@@ -98,11 +106,7 @@ class TraineeBookingCard extends StatelessWidget {
               ),
               SizedBox(width: 6.w),
               Text(
-                booking.isMonthly
-                    ? (booking.sessions.length > 1
-                        ? '${booking.date} (${s.monthlyPackageType} • ${booking.sessions.length})'
-                        : '${booking.date} (${s.monthlyPackageType})')
-                    : '${booking.date} (${booking.startTime} - ${booking.endTime})',
+                dateLabel,
                 style: TextStyle(
                   fontSize: 12.sp,
                   color: isDark
@@ -112,7 +116,7 @@ class TraineeBookingCard extends StatelessWidget {
               ),
             ],
           ),
-          if (isReschedulePending) ...[
+          if (isReschedule) ...[
             SizedBox(height: 12.h),
             TraineeRescheduleAlertBox(
               booking: booking,
@@ -122,12 +126,12 @@ class TraineeBookingCard extends StatelessWidget {
               onReject: onRejectReschedule,
             ),
           ],
-          if (isCancelled)
+          if (booking.status == 'cancelled')
             TraineeCancelledBookingSection(
               cancellationReason: booking.cancellationReason,
               onRebook: onRebook,
             ),
-          if (isRejected)
+          if (booking.status == 'rejected')
             TraineeRejectedBookingSection(
               rejectionReason: booking.rejectionReason,
               onRebook: onRebook,

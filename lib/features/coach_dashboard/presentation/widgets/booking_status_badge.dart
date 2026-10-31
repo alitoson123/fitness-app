@@ -6,8 +6,13 @@ import '../../../../generated/l10n.dart';
 
 class BookingStatusBadge extends StatelessWidget {
   final String status;
+  final String? customLabel;
 
-  const BookingStatusBadge({super.key, required this.status});
+  const BookingStatusBadge({
+    super.key,
+    required this.status,
+    this.customLabel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +64,7 @@ class BookingStatusBadge extends StatelessWidget {
           Icon(icon, size: 11.r, color: color),
           SizedBox(width: 4.w),
           Text(
-            label,
+            customLabel ?? label,
             style: TextStyle(
               fontSize: 10.sp,
               fontWeight: FontWeight.w700,

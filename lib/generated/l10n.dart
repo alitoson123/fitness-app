@@ -6181,6 +6181,76 @@ class S {
       args: [],
     );
   }
+
+  /// `Reschedule Requested`
+  String get rescheduleRequestedBadge {
+    return Intl.message(
+      'Reschedule Requested',
+      name: 'rescheduleRequestedBadge',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No bookings found`
+  String get noBookingsFound {
+    return Intl.message(
+      'No bookings found',
+      name: 'noBookingsFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reason for declining (optional)`
+  String get declineReasonLabel {
+    return Intl.message(
+      'Reason for declining (optional)',
+      name: 'declineReasonLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `e.g. Schedule conflict, time not suitable...`
+  String get declineReasonHint {
+    return Intl.message(
+      'e.g. Schedule conflict, time not suitable...',
+      name: 'declineReasonHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Decline Reason`
+  String get declinedReasonTitle {
+    return Intl.message(
+      'Decline Reason',
+      name: 'declinedReasonTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tap to view coach's note`
+  String get tapToViewDetails {
+    return Intl.message(
+      'Tap to view coach\'s note',
+      name: 'tapToViewDetails',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tap to hide details`
+  String get tapToHideDetails {
+    return Intl.message(
+      'Tap to hide details',
+      name: 'tapToHideDetails',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

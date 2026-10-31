@@ -237,7 +237,7 @@ graph TD
 
 **Goal**: Allow trainees to review coach-proposed reschedules and either accept the new date/time or decline, updating booking status in real time.
 
-- [ ] **Step 5.1: Trainee Bookings Cubit Reschedule Handlers**
+- [x] **Step 5.1: Trainee Bookings Cubit Reschedule Handlers**
   - Add methods to `TraineeBookingsCubit`:
     - `acceptReschedule(String bookingId)`:
       - Replaces `date`, `startTime`, and `endTime` with `proposedDate`, `proposedStartTime`, and `proposedEndTime`.
@@ -249,7 +249,7 @@ graph TD
       - Records `cancellationReason: declineReason`.
       - Triggers notification to Coach.
 
-- [ ] **Step 5.2: Trainee Booking Card Reschedule Banner**
+- [x] **Step 5.2: Trainee Booking Card Reschedule Banner**
   - In `TraineeBookingCard` (`lib/features/trainee_bookings/presentation/widgets/`):
     - When `status == 'reschedule_pending'`:
       - Highlight card with amber border and "Reschedule Requested" status badge.

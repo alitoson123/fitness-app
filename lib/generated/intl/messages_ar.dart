@@ -395,8 +395,14 @@ class MessageLookup extends MessageLookupByLibrary {
             "في حال الرفض، سيتم إلغاء هذا الحجز وستحتاج إلى حجز جلسة جديدة. هل تود المتابعة؟"),
         "declineConfirmTitle":
             MessageLookupByLibrary.simpleMessage("رفض الموعد المقترح؟"),
+        "declineReasonHint": MessageLookupByLibrary.simpleMessage(
+            "مثال: تعارض بالمواعيد، الوقت غير مناسب..."),
+        "declineReasonLabel":
+            MessageLookupByLibrary.simpleMessage("سبب الرفض (اختياري)"),
         "declineReschedule":
             MessageLookupByLibrary.simpleMessage("رفض وإلغاء الحجز"),
+        "declinedReasonTitle":
+            MessageLookupByLibrary.simpleMessage("سبب الرفض"),
         "defaultCoachBio": MessageLookupByLibrary.simpleMessage(
             "مدرب محترف ومعتمد جاهز لمساعدتك في تحقيق أهدافك البدنية والرياضية."),
         "defaultRejectionReason": MessageLookupByLibrary.simpleMessage(
@@ -575,6 +581,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "لا توجد مواعيد متاحة في هذا اليوم"),
         "noAvailableSlotsForDay": MessageLookupByLibrary.simpleMessage(
             "لا توجد أوقات متاحة في هذا اليوم"),
+        "noBookingsFound":
+            MessageLookupByLibrary.simpleMessage("لا توجد حجوزات حالياً"),
         "noCoachesFound":
             MessageLookupByLibrary.simpleMessage("لم يتم العثور على مدربين"),
         "noCoachesFoundDesc": MessageLookupByLibrary.simpleMessage(
@@ -749,6 +757,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("سبب إعادة الجدولة"),
         "rescheduleReasonRequired": MessageLookupByLibrary.simpleMessage(
             "يرجى كتابة سبب إعادة الجدولة"),
+        "rescheduleRequestedBadge":
+            MessageLookupByLibrary.simpleMessage("طلب إعادة جدولة"),
         "rescheduleRequestedSuccess": MessageLookupByLibrary.simpleMessage(
             "تم إرسال طلب إعادة الجدولة إلى المتدرب"),
         "rescheduleSession":
@@ -945,8 +955,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "supportingDocument":
             MessageLookupByLibrary.simpleMessage("مستند داعم"),
         "suspendedStatusBadge": MessageLookupByLibrary.simpleMessage("معلق"),
+        "tapToHideDetails":
+            MessageLookupByLibrary.simpleMessage("اضغط لإخفاء التفاصيل"),
         "tapToUploadPhoto":
             MessageLookupByLibrary.simpleMessage("اضغط لرفع صورة"),
+        "tapToViewDetails":
+            MessageLookupByLibrary.simpleMessage("اضغط لعرض ملاحظة المدرب"),
         "testModeBadge": MessageLookupByLibrary.simpleMessage("وضع التجربة"),
         "thisMonthEarnings":
             MessageLookupByLibrary.simpleMessage("أرباح هذا الشهر"),

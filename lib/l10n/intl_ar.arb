@@ -610,5 +610,12 @@
   "sessionsSelectedCount": "{current}/{total} حصص",
   "selectedSessionsListTitle": "الحصص المختارة ({count}/{total})",
   "confirmSessionsCountPrompt": "يرجى تحديد {count} حصص للمتابعة",
-  "clearAllSessions": "مسح الكل"
+  "clearAllSessions": "مسح الكل",
+  "rescheduleRequestedBadge": "طلب إعادة جدولة",
+  "noBookingsFound": "لا توجد حجوزات حالياً",
+  "declineReasonLabel": "سبب الرفض (اختياري)",
+  "declineReasonHint": "مثال: تعارض بالمواعيد، الوقت غير مناسب...",
+  "declinedReasonTitle": "سبب الرفض",
+  "tapToViewDetails": "اضغط لعرض ملاحظة المدرب",
+  "tapToHideDetails": "اضغط لإخفاء التفاصيل"
 }

@@ -18,8 +18,6 @@ class RequestTrainingButton extends StatelessWidget {
     final primary = isDark ? AppColors.flameRed : AppColors.primary;
     final cardBg = isDark ? AppColors.darkSurface : Colors.white;
     final border = isDark ? AppColors.darkBorder : AppColors.border;
-    final textSecondary =
-        isDark ? AppColors.darkTextSecondary : AppColors.textSecondary;
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),

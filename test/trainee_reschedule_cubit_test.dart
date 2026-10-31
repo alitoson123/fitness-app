@@ -6,9 +6,10 @@ import 'package:fitness_app/features/trainee_bookings/presentation/view_model/tr
 import 'package:flutter_test/flutter_test.dart';
 
 class FakeTraineeBookingsRepo implements TraineeBookingsRepo {
-  bool approveCalled = false;
-  bool rejectCalled = false;
+  bool acceptCalled = false;
+  bool declineCalled = false;
   String? lastBookingId;
+  String? lastDeclineReason;
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
@@ -18,22 +19,37 @@ class FakeTraineeBookingsRepo implements TraineeBookingsRepo {
       Stream.value([]);
 
   @override
-  Future<Either<Failure, void>> approveReschedule({
+  Future<Either<Failure, void>> acceptReschedule({
     required BookingModel booking,
   }) async {
-    approveCalled = true;
+    acceptCalled = true;
     lastBookingId = booking.id;
+    return const Right(null);
+  }
+
+  @override
+  Future<Either<Failure, void>> approveReschedule({
+    required BookingModel booking,
+  }) =>
+      acceptReschedule(booking: booking);
+
+  @override
+  Future<Either<Failure, void>> declineReschedule({
+    required String bookingId,
+    String? declineReason,
+  }) async {
+    declineCalled = true;
+    lastBookingId = bookingId;
+    lastDeclineReason = declineReason;
     return const Right(null);
   }
 
   @override
   Future<Either<Failure, void>> rejectReschedule({
     required String bookingId,
-  }) async {
-    rejectCalled = true;
-    lastBookingId = bookingId;
-    return const Right(null);
-  }
+    String? declineReason,
+  }) =>
+      declineReschedule(bookingId: bookingId, declineReason: declineReason);
 }
 
 void main() {
@@ -50,33 +66,54 @@ void main() {
       cubit.close();
     });
 
-    test('approveReschedule calls repository and emits reschedule_approved', () async {
-      const booking = BookingModel(
-        id: 'book-99',
-        coachUid: 'coach-1',
-        traineeUid: 'trainee-1',
-        sport: 'Crossfit',
-        date: '2026-10-18',
-        startTime: '08:00',
-        endTime: '09:00',
-        status: 'reschedule_pending',
-        proposedDate: '2026-10-19',
-        proposedStartTime: '11:00',
-        proposedEndTime: '12:00',
-      );
+    const booking = BookingModel(
+      id: 'book-99',
+      coachUid: 'coach-1',
+      traineeUid: 'trainee-1',
+      sport: 'Crossfit',
+      date: '2026-10-18',
+      startTime: '08:00',
+      endTime: '09:00',
+      status: 'reschedule_pending',
+      proposedDate: '2026-10-19',
+      proposedStartTime: '11:00',
+      proposedEndTime: '12:00',
+    );
 
-      await cubit.approveReschedule(booking);
+    test('acceptReschedule calls repo and emits reschedule_approved', () async {
+      await cubit.acceptReschedule(booking);
 
-      expect(fakeRepo.approveCalled, isTrue);
+      expect(fakeRepo.acceptCalled, isTrue);
       expect(fakeRepo.lastBookingId, 'book-99');
       expect(cubit.state.successMessage, 'reschedule_approved');
     });
 
-    test('rejectReschedule calls repository and emits reschedule_rejected', () async {
-      await cubit.rejectReschedule('book-99');
+    test('approveReschedule alias also calls repo and succeeds', () async {
+      await cubit.approveReschedule(booking);
 
-      expect(fakeRepo.rejectCalled, isTrue);
+      expect(fakeRepo.acceptCalled, isTrue);
       expect(fakeRepo.lastBookingId, 'book-99');
+      expect(cubit.state.successMessage, 'reschedule_approved');
+    });
+
+    test('declineReschedule calls repo with reason and emits message', () async {
+      await cubit.declineReschedule(
+        'book-99',
+        declineReason: 'Schedule conflict on Thursday',
+      );
+
+      expect(fakeRepo.declineCalled, isTrue);
+      expect(fakeRepo.lastBookingId, 'book-99');
+      expect(fakeRepo.lastDeclineReason, 'Schedule conflict on Thursday');
+      expect(cubit.state.successMessage, 'reschedule_rejected');
+    });
+
+    test('rejectReschedule alias passes reason and succeeds', () async {
+      await cubit.rejectReschedule('book-99', declineReason: 'Time conflict');
+
+      expect(fakeRepo.declineCalled, isTrue);
+      expect(fakeRepo.lastBookingId, 'book-99');
+      expect(fakeRepo.lastDeclineReason, 'Time conflict');
       expect(cubit.state.successMessage, 'reschedule_rejected');
     });
   });

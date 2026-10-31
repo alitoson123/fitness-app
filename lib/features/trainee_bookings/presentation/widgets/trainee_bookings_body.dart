@@ -86,7 +86,7 @@ class TraineeBookingsBody extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 60.h),
                       child: Text(
-                        'No bookings found',
+                        s.noBookingsFound,
                         style: TextStyle(
                           fontSize: 13.sp,
                           color: isDark
@@ -103,11 +103,14 @@ class TraineeBookingsBody extends StatelessWidget {
                       booking: b,
                       isActionInProgress:
                           state.actionInProgressBookingId == b.id,
-                      onApproveReschedule: () => cubit.approveReschedule(b),
+                      onApproveReschedule: () => cubit.acceptReschedule(b),
                       onRejectReschedule: () =>
                           TraineeRejectRescheduleDialog.show(
                         context: context,
-                        onConfirm: () => cubit.rejectReschedule(b.id),
+                        onConfirm: (reason) => cubit.declineReschedule(
+                          b.id,
+                          declineReason: reason,
+                        ),
                       ),
                       onRebook: () => context.push(
                         AppRoutes.coachDetails,

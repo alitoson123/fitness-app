@@ -37,7 +37,7 @@ class TraineeBookingsRepo {
         });
   }
 
-  Future<Either<Failure, void>> approveReschedule({
+  Future<Either<Failure, void>> acceptReschedule({
     required BookingModel booking,
   }) async {
     try {
@@ -46,7 +46,7 @@ class TraineeBookingsRepo {
       }
 
       LoggerService.info(
-        'Approving reschedule for booking ${booking.id}',
+        'Accepting reschedule for booking ${booking.id}',
         tag: 'TraineeBookingsRepo',
       );
 
@@ -55,7 +55,10 @@ class TraineeBookingsRepo {
         'date': booking.proposedDate,
         'startTime': booking.proposedStartTime,
         'endTime': booking.proposedEndTime ?? booking.endTime,
-        'updatedAt': FieldValue.serverTimestamp(),
+        'previousDate': booking.date,
+        'previousStartTime': booking.startTime,
+        'previousEndTime': booking.endTime,
+        ..._clearedProposalData(),
       };
 
       await firestoreService.updateData(
@@ -67,7 +70,7 @@ class TraineeBookingsRepo {
       return const Right(null);
     } catch (e, stackTrace) {
       LoggerService.error(
-        'Failed to approve reschedule: $e',
+        'Failed to accept reschedule: $e',
         tag: 'TraineeBookingsRepo',
         error: e,
         stackTrace: stackTrace,
@@ -76,19 +79,29 @@ class TraineeBookingsRepo {
     }
   }
 
-  Future<Either<Failure, void>> rejectReschedule({
+  Future<Either<Failure, void>> approveReschedule({
+    required BookingModel booking,
+  }) =>
+      acceptReschedule(booking: booking);
+
+  Future<Either<Failure, void>> declineReschedule({
     required String bookingId,
+    String? declineReason,
   }) async {
     try {
+      final reason = (declineReason != null && declineReason.trim().isNotEmpty)
+          ? declineReason.trim()
+          : 'Reschedule declined by trainee';
+
       LoggerService.info(
-        'Rejecting reschedule for booking $bookingId',
+        'Declining reschedule for booking $bookingId ($reason)',
         tag: 'TraineeBookingsRepo',
       );
 
       final data = <String, dynamic>{
         'status': 'cancelled',
-        'cancellationReason': 'Reschedule declined by trainee',
-        'updatedAt': FieldValue.serverTimestamp(),
+        'cancellationReason': reason,
+        ..._clearedProposalData(),
       };
 
       await firestoreService.updateData(
@@ -100,7 +113,7 @@ class TraineeBookingsRepo {
       return const Right(null);
     } catch (e, stackTrace) {
       LoggerService.error(
-        'Failed to reject reschedule: $e',
+        'Failed to decline reschedule: $e',
         tag: 'TraineeBookingsRepo',
         error: e,
         stackTrace: stackTrace,
@@ -108,4 +121,23 @@ class TraineeBookingsRepo {
       return Left(ServerFailure(errorMessage: e.toString()));
     }
   }
+
+  Future<Either<Failure, void>> rejectReschedule({
+    required String bookingId,
+    String? declineReason,
+  }) =>
+      declineReschedule(
+        bookingId: bookingId,
+        declineReason: declineReason,
+      );
+
+  Map<String, dynamic> _clearedProposalData() => {
+        'proposedDate': null,
+        'proposedStartTime': null,
+        'proposedEndTime': null,
+        'rescheduleReason': null,
+        'rescheduledBy': null,
+        'rescheduledAt': null,
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
 }

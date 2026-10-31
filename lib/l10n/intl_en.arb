@@ -610,5 +610,12 @@
   "sessionsSelectedCount": "{current}/{total} Sessions",
   "selectedSessionsListTitle": "Selected Sessions ({count}/{total})",
   "confirmSessionsCountPrompt": "Select all {count} sessions to continue",
-  "clearAllSessions": "Clear All"
+  "clearAllSessions": "Clear All",
+  "rescheduleRequestedBadge": "Reschedule Requested",
+  "noBookingsFound": "No bookings found",
+  "declineReasonLabel": "Reason for declining (optional)",
+  "declineReasonHint": "e.g. Schedule conflict, time not suitable...",
+  "declinedReasonTitle": "Decline Reason",
+  "tapToViewDetails": "Tap to view coach's note",
+  "tapToHideDetails": "Tap to hide details"
 }

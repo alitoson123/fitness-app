@@ -34,10 +34,10 @@ class TraineeBookingsCubit extends Cubit<TraineeBookingsState> {
     emit(state.copyWith(selectedTab: tab));
   }
 
-  Future<void> approveReschedule(BookingModel booking) async {
+  Future<void> acceptReschedule(BookingModel booking) async {
     emit(state.copyWith(actionInProgressBookingId: booking.id));
 
-    final result = await repository.approveReschedule(booking: booking);
+    final result = await repository.acceptReschedule(booking: booking);
 
     result.fold(
       (failure) => emit(state.copyWith(
@@ -51,10 +51,19 @@ class TraineeBookingsCubit extends Cubit<TraineeBookingsState> {
     );
   }
 
-  Future<void> rejectReschedule(String bookingId) async {
+  Future<void> approveReschedule(BookingModel booking) =>
+      acceptReschedule(booking);
+
+  Future<void> declineReschedule(
+    String bookingId, {
+    String? declineReason,
+  }) async {
     emit(state.copyWith(actionInProgressBookingId: bookingId));
 
-    final result = await repository.rejectReschedule(bookingId: bookingId);
+    final result = await repository.declineReschedule(
+      bookingId: bookingId,
+      declineReason: declineReason,
+    );
 
     result.fold(
       (failure) => emit(state.copyWith(
@@ -67,6 +76,15 @@ class TraineeBookingsCubit extends Cubit<TraineeBookingsState> {
       )),
     );
   }
+
+  Future<void> rejectReschedule(
+    String bookingId, {
+    String? declineReason,
+  }) =>
+      declineReschedule(
+        bookingId,
+        declineReason: declineReason,
+      );
 
   void clearMessages() {
     emit(state.copyWith(clearMessages: true));
