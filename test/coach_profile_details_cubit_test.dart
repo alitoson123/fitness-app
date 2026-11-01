@@ -37,8 +37,8 @@ void main() {
       name: 'Captain Tamer',
       bio: 'Professional certified fitness trainer',
       sports: const ['Gym', 'Boxing'],
-      sessionPrice: 150.0,
-      currency: 'SAR',
+      sessionPriceUSD: 150.0,
+      currency: 'USD',
       yearsOfExperience: 6,
       weeklyAvailability: [
         const DayAvailability(day: DayOfWeek.saturday, isAvailable: true),

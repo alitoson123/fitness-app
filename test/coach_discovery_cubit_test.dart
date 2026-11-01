@@ -33,7 +33,7 @@ void main() {
       uid: 'c1',
       name: 'Ahmed Hassan',
       sports: const ['Football', 'Gym'],
-      sessionPrice: 100.0,
+      sessionPriceUSD: 100.0,
       yearsOfExperience: 5,
       gender: 'male',
       rating: 4.8,
@@ -44,7 +44,7 @@ void main() {
       uid: 'c2',
       name: 'Sara Ali',
       sports: const ['Swimming', 'Gym'],
-      sessionPrice: 200.0,
+      sessionPriceUSD: 200.0,
       yearsOfExperience: 2,
       gender: 'female',
       rating: 4.2,
@@ -127,13 +127,13 @@ void main() {
         const DiscoveryFilterModel(sortOption: DiscoverySortOption.priceLowToHigh),
       );
       var state = cubit.state as CoachDiscoveryLoaded;
-      expect(state.filteredCoaches.first.sessionPrice, 100.0);
+      expect(state.filteredCoaches.first.sessionPriceUSD, 100.0);
 
       cubit.applyFilters(
         const DiscoveryFilterModel(sortOption: DiscoverySortOption.priceHighToLow),
       );
       state = cubit.state as CoachDiscoveryLoaded;
-      expect(state.filteredCoaches.first.sessionPrice, 200.0);
+      expect(state.filteredCoaches.first.sessionPriceUSD, 200.0);
     });
 
     test('clearFilters resets all filtering back to default', () async {

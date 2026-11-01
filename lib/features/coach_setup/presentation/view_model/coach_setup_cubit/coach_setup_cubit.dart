@@ -23,9 +23,6 @@ class CoachSetupCubit extends Cubit<CoachSetupState> {
   String identityDocumentUrl = '';
   List<String> certificateUrls = [];
 
-  double get sessionPrice => sessionPriceUSD;
-  set sessionPrice(double val) => sessionPriceUSD = val;
-
   CoachSetupCubit({required this.repository})
       : super(const CoachSetupInitialState()) {
     _emitCurrentForm();

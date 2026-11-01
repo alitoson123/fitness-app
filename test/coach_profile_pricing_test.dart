@@ -9,18 +9,15 @@ void main() {
       expect(model.currency, equals('USD'));
       expect(model.sessionPriceUSD, equals(0.0));
       expect(model.monthlyPriceUSD, equals(0.0));
-      expect(model.sessionPrice, equals(0.0));
-      expect(model.hourlyRate, equals(0.0));
     });
 
-    test('constructor maps sessionPrice to sessionPriceUSD for backward compat', () {
+    test('constructor sets sessionPriceUSD and monthlyPriceUSD', () {
       const model = CoachProfileModel(
         uid: 'coach-123',
-        sessionPrice: 45.0,
+        sessionPriceUSD: 45.0,
         monthlyPriceUSD: 180.0,
       );
       expect(model.sessionPriceUSD, equals(45.0));
-      expect(model.sessionPrice, equals(45.0));
       expect(model.monthlyPriceUSD, equals(180.0));
       expect(model.currency, equals('USD'));
     });
@@ -41,18 +38,7 @@ void main() {
       expect(model.currency, equals('USD'));
     });
 
-    test('fromJson falls back to legacy hourlyRate and sessionPrice keys', () {
-      final jsonWithHourlyRate = {
-        'uid': 'coach-789',
-        'hourlyRate': 75.0,
-      };
-      final model = CoachProfileModel.fromJson(jsonWithHourlyRate);
-      expect(model.sessionPriceUSD, equals(75.0));
-      expect(model.monthlyPriceUSD, equals(0.0));
-      expect(model.currency, equals('USD'));
-    });
-
-    test('toMap writes sessionPriceUSD, monthlyPriceUSD, hourlyRate and USD', () {
+    test('toMap writes sessionPriceUSD, monthlyPriceUSD and USD without legacy hourlyRate', () {
       const model = CoachProfileModel(
         uid: 'coach-123',
         sessionPriceUSD: 55.0,
@@ -62,7 +48,8 @@ void main() {
       final map = model.toMap();
       expect(map['sessionPriceUSD'], equals(55.0));
       expect(map['monthlyPriceUSD'], equals(220.0));
-      expect(map['hourlyRate'], equals(55.0));
+      expect(map.containsKey('hourlyRate'), isFalse);
+      expect(map.containsKey('sessionPrice'), isFalse);
       expect(map['currency'], equals('USD'));
     });
   });

@@ -81,6 +81,10 @@ abstract class AppRouter {
         builder: (context, state) => const CoachMainShell(),
       ),
       GoRoute(
+        path: AppRoutes.coachProfile,
+        builder: (context, state) => const CoachMainShell(initialIndex: 3),
+      ),
+      GoRoute(
         path: AppRoutes.coachAvailability,
         builder: (context, state) {
           final coachUid = state.extra as String?;

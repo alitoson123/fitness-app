@@ -22,10 +22,10 @@ class CoachProfileSerializer {
       specialties: CoachProfileParserHelper.parseList(json['specialties']),
       yearsOfExperience: json['yearsOfExperience'] as int? ?? 0,
       sessionPriceUSD: CoachProfileParserHelper.parsePrice(
-        json['sessionPriceUSD'] ?? json['sessionPrice'] ?? json['hourlyRate'],
+        json['sessionPriceUSD'],
       ),
       monthlyPriceUSD: CoachProfileParserHelper.parsePrice(
-        json['monthlyPriceUSD'] ?? json['monthlyPrice'],
+        json['monthlyPriceUSD'],
       ),
       currency: 'USD',
       availabilitySummary: json['availabilitySummary'] as String? ?? '',
@@ -60,7 +60,6 @@ class CoachProfileSerializer {
         'yearsOfExperience': m.yearsOfExperience,
         'sessionPriceUSD': m.sessionPriceUSD,
         'monthlyPriceUSD': m.monthlyPriceUSD,
-        'hourlyRate': m.sessionPriceUSD,
         'currency': 'USD',
         'availabilitySummary': m.availabilitySummary,
         'sessionDurationMinutes': m.sessionDurationMinutes,

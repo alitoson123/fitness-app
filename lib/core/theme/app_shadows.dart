@@ -47,10 +47,10 @@ abstract class AppShadows {
     ),
   ];
 
-  /// Primary button glow (Blue)
+  /// Primary button glow (Flame Red)
   static const List<BoxShadow> primary = [
     BoxShadow(
-      color: Color(0x4D2563EB),
+      color: Color(0x4DFF3D00),
       blurRadius: 16,
       offset: Offset(0, 4),
     ),

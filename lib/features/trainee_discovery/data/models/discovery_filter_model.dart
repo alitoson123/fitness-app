@@ -52,7 +52,7 @@ class DiscoveryFilterModel {
       if (!hasSport) return false;
     }
 
-    if (coach.sessionPrice < minPrice || coach.sessionPrice > maxPrice) {
+    if (coach.sessionPriceUSD < minPrice || coach.sessionPriceUSD > maxPrice) {
       return false;
     }
 

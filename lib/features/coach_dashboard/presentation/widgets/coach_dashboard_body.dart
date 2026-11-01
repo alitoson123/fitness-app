@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/locator_service/service_locator.dart';
 import '../../../../../core/services/auth_service/auth_service.dart';
 import '../../../../../core/theme/app_spacing.dart';
-import '../../../auth/core/presentation/view_model/auth_session_cubit/auth_session_cubit.dart';
 import '../../../booking_request/data/models/booking_model.dart';
 import '../../../coach_setup/data/data_source/coach_setup_local_data_source.dart';
 import '../helpers/coach_booking_date_helper.dart';
@@ -70,7 +69,6 @@ class _CoachDashboardBodyState extends State<CoachDashboardBody> {
 
   @override
   Widget build(BuildContext context) {
-    final authCubit = context.read<AuthSessionCubit>();
     final bookingsCubit = context.read<CoachBookingsCubit>();
     final user = getIt<AuthService>().currentUser;
     final name = _coachName ?? user?.displayName;
@@ -103,8 +101,7 @@ class _CoachDashboardBodyState extends State<CoachDashboardBody> {
                   SizedBox(height: AppSpacing.s2),
                   CoachWelcomeHeader(
                     coachName: name,
-                    phoneNumber:
-                        authCubit.currentUserPhoneNumber ?? user?.phoneNumber,
+
                   ),
                   SizedBox(height: AppSpacing.s3),
                   CoachDashboardStats(

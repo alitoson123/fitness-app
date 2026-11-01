@@ -9,6 +9,7 @@ import '../../../../generated/l10n.dart';
 import '../../../auth/core/presentation/view_model/auth_session_cubit/auth_session_cubit.dart';
 import '../../../auth/core/presentation/view_model/auth_session_cubit/auth_session_states.dart';
 import '../../../coach_availability/presentation/views/coach_availability_view.dart';
+import '../../../coach_profile/presentation/views/coach_profile_view.dart';
 import '../../../coach_setup/presentation/view_model/coach_status_cubit/coach_status_cubit.dart';
 import '../../../coach_setup/presentation/view_model/coach_status_cubit/coach_status_states.dart';
 import '../view_model/coach_bookings_cubit/coach_bookings_cubit.dart';
@@ -18,14 +19,22 @@ import 'coach_bookings_page.dart';
 import 'coach_dashboard_page.dart';
 
 class CoachMainShell extends StatefulWidget {
-  const CoachMainShell({super.key});
+  final int initialIndex;
+
+  const CoachMainShell({super.key, this.initialIndex = 0});
 
   @override
   State<CoachMainShell> createState() => _CoachMainShellState();
 }
 
 class _CoachMainShellState extends State<CoachMainShell> {
-  int _currentIndex = 0;
+  late int _currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.initialIndex;
+  }
 
   void _onTabSelected(int index) {
     if (_currentIndex != index) {
@@ -115,6 +124,7 @@ class _CoachMainShellState extends State<CoachMainShell> {
                 CoachDashboardPage(onNavigateToTab: _onTabSelected),
                 const CoachBookingsPage(),
                 const CoachAvailabilityView(isRootTab: true),
+                const CoachProfileView(),
               ],
             ),
             bottomNavigationBar:

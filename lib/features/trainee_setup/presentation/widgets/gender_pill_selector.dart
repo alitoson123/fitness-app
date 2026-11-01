@@ -81,9 +81,7 @@ class _PillButton extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 4.w),
         decoration: BoxDecoration(
-          color: isSelected
-              ? (isDark ? AppColors.flameRedContainer : const Color(0xFFEFF6FF))
-              : unselectedBg,
+          color: isSelected ? AppColors.flameRedContainer : unselectedBg,
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
             color: isSelected ? primary : unselectedBorder,

@@ -6,12 +6,12 @@ import '../../../../generated/l10n.dart';
 
 class CoachWelcomeHeader extends StatelessWidget {
   final String? coachName;
-  final String? phoneNumber;
+  final bool showSubtitle;
 
   const CoachWelcomeHeader({
     super.key,
     this.coachName,
-    this.phoneNumber,
+    this.showSubtitle = false,
   });
 
   String _getGreeting(BuildContext context, String name) {
@@ -28,9 +28,7 @@ class CoachWelcomeHeader extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final displayName = (coachName != null && coachName!.trim().isNotEmpty)
         ? coachName!.trim()
-        : (phoneNumber != null && phoneNumber!.trim().isNotEmpty
-            ? phoneNumber!.trim()
-            : s.iAmCoach);
+        : "Coach";
     final greeting = _getGreeting(context, displayName);
 
     return Container(
@@ -74,12 +72,13 @@ class CoachWelcomeHeader extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        greeting,
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: greeting,
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w800,
@@ -87,54 +86,33 @@ class CoachWelcomeHeader extends StatelessWidget {
                               ? AppColors.darkTextPrimary
                               : AppColors.textPrimary,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    SizedBox(width: 6.w),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.w,
-                        vertical: 2.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.flameRed.withValues(alpha: 0.12),
-                        borderRadius: AppRadius.fullAll,
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
+                      WidgetSpan(
+                        alignment: PlaceholderAlignment.middle,
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.only(start: 6.w),
+                          child: Icon(
                             Icons.verified_rounded,
-                            size: 11.r,
+                            size: 18.r,
                             color: AppColors.flameRed,
                           ),
-                          SizedBox(width: 3.w),
-                          Text(
-                            s.verifiedCoach,
-                            style: TextStyle(
-                              fontSize: 10.sp,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.flameRed,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 4.h),
-                Text(
-                  s.coachReadySubtitle,
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: isDark
-                        ? AppColors.darkTextSecondary
-                        : AppColors.textSecondary,
+                    ],
                   ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
                 ),
+                if (showSubtitle) ...[
+                  SizedBox(height: 4.h),
+                  Text(
+                    s.coachReadySubtitle,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.textSecondary,
+                    ),
+                  ),
+                ],
               ],
             ),
           ),

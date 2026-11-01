@@ -44,9 +44,9 @@ class AppStatusConfig {
       label: 'Suspended',
     ),
     AppStatus.confirmed: AppStatusConfig(
-      background: Color(0xFFEFF6FF),
-      textColor: Color(0xFF2563EB),
-      dotColor: Color(0xFF2563EB),
+      background: Color(0x2610B981),
+      textColor: Color(0xFF10B981),
+      dotColor: Color(0xFF10B981),
       label: 'Confirmed',
     ),
     AppStatus.cancelled: AppStatusConfig(

@@ -119,12 +119,16 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m43(name) => "Welcome back, ${name}!";
 
+  static String m44(years) => "${years} Years Experience";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "aboutCoach": MessageLookupByLibrary.simpleMessage("About Coach"),
         "acceptNewTime":
             MessageLookupByLibrary.simpleMessage("Accept New Time"),
         "acceptRequest": MessageLookupByLibrary.simpleMessage("Accept"),
+        "accountAndPreferences":
+            MessageLookupByLibrary.simpleMessage("Account & Preferences"),
         "accountCreated":
             MessageLookupByLibrary.simpleMessage("Account Created"),
         "accountCreatedMessage": MessageLookupByLibrary.simpleMessage(
@@ -156,6 +160,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "anyExperience": MessageLookupByLibrary.simpleMessage("Any experience"),
         "anyRating": MessageLookupByLibrary.simpleMessage("Any rating"),
         "appName": MessageLookupByLibrary.simpleMessage("CoachHub"),
+        "appearanceSetting": MessageLookupByLibrary.simpleMessage("Appearance"),
         "apple": MessageLookupByLibrary.simpleMessage("Apple"),
         "applicationApprovedWelcome": MessageLookupByLibrary.simpleMessage(
             "Application approved! Welcome Coach."),
@@ -173,6 +178,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "applyToAllActiveDays": MessageLookupByLibrary.simpleMessage(
             "Apply hours to all working days"),
         "approximateSessionsCount": m2,
+        "arabicLanguage":
+            MessageLookupByLibrary.simpleMessage("العربية (Arabic)"),
         "availTemplateFullTime":
             MessageLookupByLibrary.simpleMessage("Full-time Flexible (Daily)"),
         "availTemplateMornings": MessageLookupByLibrary.simpleMessage(
@@ -194,6 +201,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "availabilityTitle": MessageLookupByLibrary.simpleMessage(
             "Weekly Availability Overview"),
         "available": MessageLookupByLibrary.simpleMessage("Available"),
+        "avatarUpdatedSuccess": MessageLookupByLibrary.simpleMessage(
+            "Profile photo updated successfully"),
         "back": MessageLookupByLibrary.simpleMessage("Back"),
         "backToExplore":
             MessageLookupByLibrary.simpleMessage("Explore More Coaches"),
@@ -229,12 +238,15 @@ class MessageLookup extends MessageLookupByLibrary {
             "Please upload at least one coaching certificate or degree"),
         "certifications":
             MessageLookupByLibrary.simpleMessage("Certifications"),
+        "changePhoto": MessageLookupByLibrary.simpleMessage("Change Photo"),
         "checkStatusAgain":
             MessageLookupByLibrary.simpleMessage("Refresh Status"),
         "chooseAccountType":
             MessageLookupByLibrary.simpleMessage("Choose Account Type"),
         "chooseDocumentSource":
             MessageLookupByLibrary.simpleMessage("Choose Document Source"),
+        "chooseFromGallery":
+            MessageLookupByLibrary.simpleMessage("Choose from Gallery"),
         "choosePhotoSource":
             MessageLookupByLibrary.simpleMessage("Choose Photo Source"),
         "chooseYourRole":
@@ -302,10 +314,14 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Availability"),
         "coachNavBookings": MessageLookupByLibrary.simpleMessage("Bookings"),
         "coachNavDashboard": MessageLookupByLibrary.simpleMessage("Dashboard"),
+        "coachNavProfile": MessageLookupByLibrary.simpleMessage("Profile"),
         "coachPhotoRequired":
             MessageLookupByLibrary.simpleMessage("Profile photo is required"),
+        "coachPricingCardTitle":
+            MessageLookupByLibrary.simpleMessage("Training Rates (USD)"),
         "coachProfileDetails":
             MessageLookupByLibrary.simpleMessage("Coach Profile"),
+        "coachProfileTitle": MessageLookupByLibrary.simpleMessage("My Profile"),
         "coachProposedNewTime": MessageLookupByLibrary.simpleMessage(
             "Coach requested a new session time"),
         "coachReadySubtitle": MessageLookupByLibrary.simpleMessage(
@@ -339,6 +355,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "confirmDecline":
             MessageLookupByLibrary.simpleMessage("Confirm Decline"),
         "confirmSessionsCountPrompt": m5,
+        "confirmSignOutMessage": MessageLookupByLibrary.simpleMessage(
+            "Are you sure you want to sign out from your coach account?"),
+        "confirmSignOutTitle":
+            MessageLookupByLibrary.simpleMessage("Sign Out?"),
         "confirmedSessionsTab":
             MessageLookupByLibrary.simpleMessage("Confirmed"),
         "contactSupport":
@@ -370,6 +390,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "currentUserInfo": m10,
         "customWorkoutPlan":
             MessageLookupByLibrary.simpleMessage("Customized fitness guidance"),
+        "darkMode": MessageLookupByLibrary.simpleMessage("Dark Mode"),
         "dayAvailable": MessageLookupByLibrary.simpleMessage("Available"),
         "dayFri": MessageLookupByLibrary.simpleMessage("Fri"),
         "dayFriday": MessageLookupByLibrary.simpleMessage("Friday"),
@@ -427,7 +448,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "edit": MessageLookupByLibrary.simpleMessage("Edit"),
         "editAndResubmit":
             MessageLookupByLibrary.simpleMessage("Edit & Resubmit"),
+        "editCoachProfile":
+            MessageLookupByLibrary.simpleMessage("Edit Profile"),
         "editNumber": MessageLookupByLibrary.simpleMessage("Edit"),
+        "editPricingAction":
+            MessageLookupByLibrary.simpleMessage("Edit Pricing"),
         "editProfile": MessageLookupByLibrary.simpleMessage("Edit Profile"),
         "egypt": MessageLookupByLibrary.simpleMessage("Egypt"),
         "email": MessageLookupByLibrary.simpleMessage("Email"),
@@ -440,6 +465,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "emailVerificationRequired":
             MessageLookupByLibrary.simpleMessage("Email Verification Required"),
         "endTime": MessageLookupByLibrary.simpleMessage("End Time"),
+        "englishLanguage": MessageLookupByLibrary.simpleMessage("English"),
         "error": MessageLookupByLibrary.simpleMessage("Error"),
         "errorInvalidTimeRange": m12,
         "errorLoadingCoachProfile": MessageLookupByLibrary.simpleMessage(
@@ -501,6 +527,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "groupThisWeek": MessageLookupByLibrary.simpleMessage("This Week"),
         "groupToday": MessageLookupByLibrary.simpleMessage("Today"),
         "groupTomorrow": MessageLookupByLibrary.simpleMessage("Tomorrow"),
+        "helpAndSupport":
+            MessageLookupByLibrary.simpleMessage("Help & Support"),
+        "helpAndSupportDesc": MessageLookupByLibrary.simpleMessage(
+            "Contact our team for inquiries"),
         "hourlyRateHint": MessageLookupByLibrary.simpleMessage("e.g. 150"),
         "hourlyRateRequired": MessageLookupByLibrary.simpleMessage(
             "Please enter a valid hourly rate greater than 0"),
@@ -525,10 +555,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "langFrench": MessageLookupByLibrary.simpleMessage("French"),
         "langGerman": MessageLookupByLibrary.simpleMessage("German"),
         "langSpanish": MessageLookupByLibrary.simpleMessage("Spanish"),
+        "languageSetting": MessageLookupByLibrary.simpleMessage("Language"),
         "languages": MessageLookupByLibrary.simpleMessage("Languages Spoken"),
         "lebanon": MessageLookupByLibrary.simpleMessage("Lebanon"),
         "levelSubtitle": MessageLookupByLibrary.simpleMessage(
             "This helps us match you with the right coaches"),
+        "lightMode": MessageLookupByLibrary.simpleMessage("Light Mode"),
         "loadProfileError": MessageLookupByLibrary.simpleMessage(
             "Failed to load profile. Tap to retry."),
         "male": MessageLookupByLibrary.simpleMessage("Male"),
@@ -574,8 +606,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "No available slots on this day"),
         "noAvailableSlotsForDay": MessageLookupByLibrary.simpleMessage(
             "No available slots for this day"),
+        "noBioProvided":
+            MessageLookupByLibrary.simpleMessage("No bio provided yet."),
         "noBookingsFound":
             MessageLookupByLibrary.simpleMessage("No bookings found"),
+        "noCertificatesUploaded": MessageLookupByLibrary.simpleMessage(
+            "No certificates uploaded yet."),
         "noCoachesFound":
             MessageLookupByLibrary.simpleMessage("No coaches found"),
         "noCoachesFoundDesc": MessageLookupByLibrary.simpleMessage(
@@ -652,6 +688,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Pending Requests"),
         "pendingRequestsPreview":
             MessageLookupByLibrary.simpleMessage("Pending Requests"),
+        "pendingVerificationBadge":
+            MessageLookupByLibrary.simpleMessage("Verification Pending"),
         "perMonthUnit": MessageLookupByLibrary.simpleMessage("/ month"),
         "perSessionUnit": MessageLookupByLibrary.simpleMessage("/ session"),
         "personalInfo":
@@ -695,8 +733,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Set a price per session."),
         "pricingTitle":
             MessageLookupByLibrary.simpleMessage("Hourly Training Rate"),
+        "pricingUpdatedSuccess": MessageLookupByLibrary.simpleMessage(
+            "Pricing updated successfully"),
+        "profileUpdatedSuccess": MessageLookupByLibrary.simpleMessage(
+            "Profile updated successfully"),
         "proposedTimeLabel":
             MessageLookupByLibrary.simpleMessage("Proposed Time"),
+        "pushNotifications":
+            MessageLookupByLibrary.simpleMessage("Push Notifications"),
+        "pushNotificationsDesc": MessageLookupByLibrary.simpleMessage(
+            "Receive booking and message alerts"),
         "quickActionAvailability":
             MessageLookupByLibrary.simpleMessage("Manage Availability"),
         "quickActionAvailabilityDesc":
@@ -708,6 +754,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "quickActions": MessageLookupByLibrary.simpleMessage("Quick Actions"),
         "quickAvailabilityTemplates": MessageLookupByLibrary.simpleMessage(
             "Quick Availability Templates"),
+        "quickEditPricingTitle":
+            MessageLookupByLibrary.simpleMessage("Update Training Rates"),
         "rejectReasonFullyBooked":
             MessageLookupByLibrary.simpleMessage("Fully booked"),
         "rejectReasonOther":
@@ -800,6 +848,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "role": MessageLookupByLibrary.simpleMessage("Role"),
         "saveAvailability":
             MessageLookupByLibrary.simpleMessage("Save Schedule"),
+        "saveChanges": MessageLookupByLibrary.simpleMessage("Save Changes"),
         "savingAvailability": MessageLookupByLibrary.simpleMessage("Saving..."),
         "scheduleAndAvailability": MessageLookupByLibrary.simpleMessage(
             "Weekly Schedule & Availability"),
@@ -820,6 +869,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectRejectionReasonLabel":
             MessageLookupByLibrary.simpleMessage("Select a reason:"),
         "selectRequiredSessionsPrompt": m28,
+        "selectSportsPrompt":
+            MessageLookupByLibrary.simpleMessage("Select Sports"),
         "selectSportsSubtitle": MessageLookupByLibrary.simpleMessage(
             "Select one or more sports you want to train in"),
         "selectSportsYouCoach":
@@ -897,6 +948,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Specialties & Focus Areas"),
         "specialtiesHint": MessageLookupByLibrary.simpleMessage(
             "e.g. Strength, Weight Loss, Technique"),
+        "specialtiesLabel": MessageLookupByLibrary.simpleMessage("Specialties"),
         "splashSubtitle": MessageLookupByLibrary.simpleMessage(
             "Find Your Perfect Sports Coach"),
         "spokenLanguages":
@@ -961,6 +1013,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Supporting Document"),
         "suspendedStatusBadge":
             MessageLookupByLibrary.simpleMessage("Suspended"),
+        "takePhoto": MessageLookupByLibrary.simpleMessage("Take Photo"),
         "tapToHideDetails":
             MessageLookupByLibrary.simpleMessage("Tap to hide details"),
         "tapToUploadPhoto":
@@ -1073,8 +1126,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "workingDays": MessageLookupByLibrary.simpleMessage("Working Days"),
         "workingHoursDescription": MessageLookupByLibrary.simpleMessage(
             "Configure weekly working days and hours"),
+        "yearsExperienceFormat": m44,
         "yearsOfExperience": MessageLookupByLibrary.simpleMessage(
             "Years of Coaching Experience"),
+        "yearsOfExperienceLabel":
+            MessageLookupByLibrary.simpleMessage("Years of Experience"),
         "yourGoal": MessageLookupByLibrary.simpleMessage("Your Goal"),
         "yourLevel": MessageLookupByLibrary.simpleMessage("Your Level"),
         "yourProfile": MessageLookupByLibrary.simpleMessage("Your Profile"),

@@ -11,9 +11,6 @@ class CoachProfileModel {
   final List<DayAvailability> weeklyAvailability;
   final DateTime? updatedAt;
 
-  double get sessionPrice => sessionPriceUSD;
-  double get hourlyRate => sessionPriceUSD;
-
   const CoachProfileModel({
     required this.uid,
     this.name = '',
@@ -28,8 +25,7 @@ class CoachProfileModel {
     this.sports = const [],
     this.specialties = const [],
     this.yearsOfExperience = 0,
-    double? sessionPrice,
-    double? sessionPriceUSD,
+    this.sessionPriceUSD = 0.0,
     this.monthlyPriceUSD = 0.0,
     this.currency = 'USD',
     this.availabilitySummary = '',
@@ -42,7 +38,7 @@ class CoachProfileModel {
     this.reviewsCount = 0,
     this.verificationStatus = 'pending',
     this.updatedAt,
-  }) : sessionPriceUSD = sessionPriceUSD ?? sessionPrice ?? 0.0;
+  });
 
   factory CoachProfileModel.fromJson(
     Map<String, dynamic> json, {
@@ -66,7 +62,6 @@ class CoachProfileModel {
     List<String>? sports,
     List<String>? specialties,
     int? yearsOfExperience,
-    double? sessionPrice,
     double? sessionPriceUSD,
     double? monthlyPriceUSD,
     String? currency,
@@ -95,7 +90,7 @@ class CoachProfileModel {
       sports: sports ?? this.sports,
       specialties: specialties ?? this.specialties,
       yearsOfExperience: yearsOfExperience ?? this.yearsOfExperience,
-      sessionPriceUSD: sessionPriceUSD ?? sessionPrice ?? this.sessionPriceUSD,
+      sessionPriceUSD: sessionPriceUSD ?? this.sessionPriceUSD,
       monthlyPriceUSD: monthlyPriceUSD ?? this.monthlyPriceUSD,
       currency: currency ?? this.currency,
       availabilitySummary: availabilitySummary ?? this.availabilitySummary,

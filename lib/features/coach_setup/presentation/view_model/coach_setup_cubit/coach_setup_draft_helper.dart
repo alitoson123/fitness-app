@@ -20,7 +20,6 @@ class CoachSetupDraftHelper {
       'yearsOfExperience': cubit.yearsOfExperience,
       'sessionPriceUSD': cubit.sessionPriceUSD,
       'monthlyPriceUSD': cubit.monthlyPriceUSD,
-      'hourlyRate': cubit.sessionPriceUSD,
       'currency': 'USD',
       'availabilitySummary': cubit.availabilitySummary,
       'weeklyAvailability':
@@ -81,9 +80,7 @@ class CoachSetupDraftHelper {
     c.selectedSports = profile.sports;
     c.specialties = profile.specialties;
     c.yearsOfExperience = profile.yearsOfExperience;
-    c.sessionPriceUSD = profile.sessionPriceUSD > 0
-        ? profile.sessionPriceUSD
-        : profile.sessionPrice;
+    c.sessionPriceUSD = profile.sessionPriceUSD;
     c.monthlyPriceUSD = profile.monthlyPriceUSD;
     c.currency = 'USD';
     c.availabilitySummary = profile.availabilitySummary;
@@ -115,10 +112,7 @@ class CoachSetupDraftHelper {
             .toList() ??
         [];
     c.yearsOfExperience = data['yearsOfExperience'] as int? ?? 1;
-    final sPrice = (data['sessionPriceUSD'] as num?)?.toDouble() ??
-        (data['hourlyRate'] as num?)?.toDouble() ??
-        0.0;
-    c.sessionPriceUSD = sPrice;
+    c.sessionPriceUSD = (data['sessionPriceUSD'] as num?)?.toDouble() ?? 0.0;
     c.monthlyPriceUSD = (data['monthlyPriceUSD'] as num?)?.toDouble() ?? 0.0;
     c.currency = 'USD';
     c.availabilitySummary = data['availabilitySummary'] as String? ?? '';

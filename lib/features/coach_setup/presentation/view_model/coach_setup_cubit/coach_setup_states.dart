@@ -17,8 +17,6 @@ class CoachSetupFormUpdatedState extends CoachSetupState {
   final String availabilitySummary, identityDocumentUrl;
   final String? validationError;
 
-  double get sessionPrice => sessionPriceUSD;
-
   const CoachSetupFormUpdatedState({
     required this.currentStep,
     required this.photoUrl,
@@ -32,15 +30,14 @@ class CoachSetupFormUpdatedState extends CoachSetupState {
     required this.selectedSports,
     required this.specialties,
     required this.yearsOfExperience,
-    double? sessionPrice,
-    double? sessionPriceUSD,
+    this.sessionPriceUSD = 0.0,
     this.monthlyPriceUSD = 0.0,
     this.currency = 'USD',
     required this.availabilitySummary,
     required this.identityDocumentUrl,
     required this.certificateUrls,
     this.validationError,
-  }) : sessionPriceUSD = sessionPriceUSD ?? sessionPrice ?? 0.0;
+  });
 
   factory CoachSetupFormUpdatedState.fromCubit(
     CoachSetupCubit c, [

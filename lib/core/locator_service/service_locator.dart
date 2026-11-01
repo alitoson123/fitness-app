@@ -36,6 +36,11 @@ import '../../features/coach_dashboard/data/repos/coach_bookings_repo.dart';
 import '../../features/coach_dashboard/presentation/view_model/coach_bookings_cubit/coach_bookings_cubit.dart';
 import '../../features/trainee_bookings/data/repos/trainee_bookings_repo.dart';
 import '../../features/trainee_bookings/presentation/view_model/trainee_bookings_cubit/trainee_bookings_cubit.dart';
+import '../../features/coach_profile/data/data_source/coach_profile_remote_data_source.dart';
+import '../../features/coach_profile/data/repos/coach_profile_repo.dart';
+import '../../features/coach_profile/presentation/view_model/coach_profile_cubit/coach_profile_cubit.dart';
+import '../app_settings/data/repos/app_settings_repo.dart';
+import '../app_settings/presentation/view_model/app_settings_cubit/app_settings_cubit.dart';
 import '../services/Local_service/general_local_service.dart';
 import '../services/auth_service/auth_service.dart';
 import '../services/database_service/firestore_service.dart';
@@ -256,6 +261,39 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory<TraineeBookingsCubit>(
     () => TraineeBookingsCubit(
       repository: getIt<TraineeBookingsRepo>(),
+    ),
+  );
+
+  // 17. App Settings Dependencies
+  getIt.registerLazySingleton<AppSettingsRepo>(
+    () => AppSettingsRepo(
+      generalLocalService: getIt<GeneralLocalService>(),
+    ),
+  );
+  getIt.registerLazySingleton<AppSettingsCubit>(
+    () => AppSettingsCubit(
+      repository: getIt<AppSettingsRepo>(),
+    ),
+  );
+
+  // 18. Coach Profile Dependencies
+  getIt.registerLazySingleton<CoachProfileRemoteDataSource>(
+    () => CoachProfileRemoteDataSource(
+      firestoreService: getIt<FirestoreService>(),
+      storageService: getIt<StorageService>(),
+    ),
+  );
+  getIt.registerLazySingleton<CoachProfileRepo>(
+    () => CoachProfileRepo(
+      remoteDataSource: getIt<CoachProfileRemoteDataSource>(),
+      localDataSource: getIt<CoachSetupLocalDataSource>(),
+      authService: getIt<AuthService>(),
+      authLocalDataSource: getIt<AuthLocalDataSource>(),
+    ),
+  );
+  getIt.registerFactory<CoachProfileCubit>(
+    () => CoachProfileCubit(
+      repository: getIt<CoachProfileRepo>(),
     ),
   );
 }

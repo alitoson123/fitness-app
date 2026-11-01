@@ -117,7 +117,6 @@ void main() {
 
       cubit.setSessionPrice(50.0);
       expect(cubit.sessionPriceUSD, equals(50.0));
-      expect(cubit.sessionPrice, equals(50.0));
       expect(repo.lastDraftData?['sessionPriceUSD'], equals(50.0));
 
       cubit.setMonthlyPrice(200.0);

@@ -10,9 +10,9 @@ enum DiscoverySortOption {
   void sort(List<CoachProfileModel> coaches) {
     switch (this) {
       case DiscoverySortOption.priceLowToHigh:
-        coaches.sort((a, b) => a.sessionPrice.compareTo(b.sessionPrice));
+        coaches.sort((a, b) => a.sessionPriceUSD.compareTo(b.sessionPriceUSD));
       case DiscoverySortOption.priceHighToLow:
-        coaches.sort((a, b) => b.sessionPrice.compareTo(a.sessionPrice));
+        coaches.sort((a, b) => b.sessionPriceUSD.compareTo(a.sessionPriceUSD));
       case DiscoverySortOption.ratingHighToLow:
       case DiscoverySortOption.recommended:
         coaches.sort((a, b) => b.rating.compareTo(a.rating));

@@ -20,4 +20,5 @@ abstract class AppRoutes {
   static const String coachVerificationPending = '/coach/verification-pending';
   static const String coachDashboard = '/coach/dashboard';
   static const String coachAvailability = '/coach/availability';
+  static const String coachProfile = '/coach/profile';
 }

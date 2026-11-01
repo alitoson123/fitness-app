@@ -22,9 +22,7 @@ class DocumentSourceBottomSheet extends StatelessWidget {
   }) {
     return showModalBottomSheet<DocumentPickerAction>(
       context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-      ),
+      backgroundColor: Colors.transparent,
       builder: (_) =>
           DocumentSourceBottomSheet(hasExistingFile: hasExistingFile),
     );
@@ -38,13 +36,13 @@ class DocumentSourceBottomSheet extends StatelessWidget {
     final primary = isDark ? AppColors.flameRed : AppColors.primary;
     final cardBg = isDark ? AppColors.darkSurface : Colors.white;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: cardBg,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-      ),
-      padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 28.h),
-      child: Column(
+    return Material(
+      color: cardBg,
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 28.h),
+        child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -101,6 +99,7 @@ class DocumentSourceBottomSheet extends StatelessWidget {
           ],
         ],
       ),
-    );
+    ),
+  );
   }
 }

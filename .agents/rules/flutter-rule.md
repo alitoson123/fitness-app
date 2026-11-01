@@ -21,11 +21,14 @@ lib/
 ```
 
 ### Strict Anti-Overengineering Rules (NEVER Violate):
+- **Mandatory Clean Data Flow Pipeline**:
+  `Core Services (FirestoreService, StorageService, etc.) -> Remote Data Source and/or Local Data Source -> Concrete Repository -> Cubit -> UI (Views & Widgets)`
+  Always create a concrete `RemoteDataSource` (and/or `LocalDataSource`) for each feature. Repositories MUST coordinate between remote and local data sources and handle exception-to-Failure mapping. Repositories must NEVER interact directly with raw services when remote operations belong in a remote data source.
 - **NO Entities**: NEVER create separate domain entity classes that mirror models. Use Models (e.g. `UserModel`, `BookingModel`) directly across data, repositories, state management, and UI. No entity-to-model mappers.
 - **NO Use Cases**: NEVER create UseCase classes (e.g. `SignInAdminUseCase`, `GetCurrentAdminUseCase`). Use cases add needless indirection. Cubits/Blocs MUST call concrete repositories or services directly.
 - **NO Abstract Classes for Repositories or Data Sources**: NEVER create `abstract class FooRepository` with a separate `FooRepositoryImpl` or abstract data sources. Implement repositories and data sources directly as concrete classes (e.g., `class AuthRepository`, `class AuthRemoteDataSource`).
 - **Pragmatic Layer Separation**:
-  - `data/`: Houses data models, concrete data sources (e.g. Firestore/HTTP), and concrete repositories. Repositories handle data coordination, exception handling, and return `Either<Failure, T>` or models.
+  - `data/`: Houses data models, concrete data sources (e.g. Firestore/HTTP/Storage), and concrete repositories. Repositories handle data coordination, exception handling, and return `Either<Failure, T>` or models.
   - `presentation/`: Handles UI widgets and state (`Cubit`). Cubits call repositories directly. No business logic in widgets.
 
 ---

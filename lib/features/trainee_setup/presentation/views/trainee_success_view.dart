@@ -91,7 +91,7 @@ class TraineeSuccessView extends StatelessWidget {
       height: 100.r,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: isDark ? AppColors.darkSurfaceVariant : const Color(0xFFEFF6FF),
+        color: AppColors.darkSurfaceVariant,
         boxShadow: [
           BoxShadow(
             color: primary.withValues(alpha: 0.18),

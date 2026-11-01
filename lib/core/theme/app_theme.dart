@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dark_theme.dart';
-import 'light_theme.dart';
 
-/// CoachHub Theme Provider (Light & Sporty Dark Mode)
+/// CoachHub Theme Provider (Pure Sporty Dark Mode)
 abstract class AppTheme {
-  static ThemeData get lightTheme => buildLightTheme();
+  static ThemeData get lightTheme => buildDarkTheme();
   static ThemeData get darkTheme => buildDarkTheme();
+  static ThemeData get theme => buildDarkTheme();
 }

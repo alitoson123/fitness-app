@@ -64,6 +64,11 @@ class CoachBottomNavBar extends StatelessWidget {
               activeIcon: const Icon(Icons.schedule_rounded),
               label: s.coachNavAvailability,
             ),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.person_outline_rounded),
+              activeIcon: const Icon(Icons.person_rounded),
+              label: s.coachNavProfile,
+            ),
           ],
         ),
       ),

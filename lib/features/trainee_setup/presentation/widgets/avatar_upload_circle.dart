@@ -157,7 +157,7 @@ class _AvatarUploadCircleState extends State<AvatarUploadCircle> {
       child: Icon(
         Icons.person_outline_rounded,
         size: 48.r,
-        color: isDark ? AppColors.darkTextSecondary : const Color(0xFF60A5FA),
+        color: AppColors.darkTextSecondary,
       ),
     );
   }

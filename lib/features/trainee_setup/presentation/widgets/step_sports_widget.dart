@@ -94,10 +94,10 @@ class _SportsCountBadge extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 16.w),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurface : const Color(0xFFEFF6FF),
+        color: AppColors.darkSurface,
         borderRadius: BorderRadius.circular(14.r),
         border: Border.all(
-          color: isDark ? AppColors.darkBorder : const Color(0xFFBFDBFE),
+          color: AppColors.darkBorder,
           width: 1,
         ),
       ),

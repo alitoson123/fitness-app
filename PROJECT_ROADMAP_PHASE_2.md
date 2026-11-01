@@ -16,19 +16,26 @@ All code created or modified in Phase 2 must adhere strictly to these architectu
    - **NO Domain Entities**: NEVER create separate entity classes that mirror models. Use Models (`UserModel`, `CoachProfileModel`, `TraineeProfileModel`, `BookingModel`, `NotificationModel`) directly across data sources, repositories, Cubits, and UI.
    - **NO Use Cases**: NEVER create UseCase classes (e.g., `SendOtpUseCase`, `ApproveBookingUseCase`). Cubits must call concrete repositories or services directly.
    - **NO Abstract Classes for Repositories or Data Sources**: Implement concrete repositories and data sources directly (e.g., `class AuthPhoneRepository`, `class NotificationsRepository`).
-2. **State Management**:
+2. **Mandatory Clean Data Flow Pipeline**:
+   - **Standard Flow**: `Core Services -> Remote Data Source and/or Local Data Source -> Concrete Repository -> Cubit -> UI`.
+   - **Core Services** (`FirestoreService`, `StorageService`, `AuthService`, etc.) handle raw, low-level Firebase/device operations.
+   - **Data Sources** (`*RemoteDataSource`, `*LocalDataSource`) encapsulate feature-specific queries, Firestore collections, Firebase Storage buckets, or local Hive boxes. Repositories must NEVER interact directly with raw services when a data source can isolate the I/O.
+   - **Concrete Repositories** (`*Repo` or `*Repository`) coordinate data sources, map exceptions to user-facing error messages, and return domain models or `Either<Failure, T>`.
+   - **Cubits** consume concrete repositories directly and emit immutable states.
+   - **UI Widgets** consume Cubits and focus purely on presentation (< 150 lines per file).
+3. **State Management**:
    - `flutter_bloc` (`Cubit` pattern) is the mandatory state management standard.
    - UI widgets must never query Firestore directly; all data fetching and mutations delegate to Cubits.
    - States must be immutable, utilizing `copyWith` or distinct subclasses.
-3. **Modularity & File Length Limit**:
+4. **Modularity & File Length Limit**:
    - **Strict 150-line file limit**: Any file approaching 150 lines must be split immediately.
    - Screen files (`*_view.dart`) handle only high-level layout/scaffolding and delegate content to sub-widgets located in `widgets/`.
    - Private widget classes (`_MyWidget`) are permitted only for trivial wrappers (≤ 20 lines).
-4. **Design & Responsiveness**:
+5. **Design & Responsiveness**:
    - Material 3 theming with `flutter_screenutil` for proportional scaling across phone screens.
    - 60-30-10 color rule with complete Light and Dark theme support.
    - Shimmer loaders, explicit error banners with retry triggers, and friendly empty states.
-5. **Strict Localization (l10n)**:
+6. **Strict Localization (l10n)**:
    - **Zero hardcoded user-facing strings**. Every single label, error message, button, and badge must be localized via `S.of(context)`.
    - Synchronized ARB maintenance: Every new key must be added to both `lib/l10n/intl_en.arb` and `lib/l10n/intl_ar.arb` simultaneously.
    - Seamless LTR (English) and RTL (Arabic) support with dynamic directionality and alignment.
@@ -267,9 +274,10 @@ graph TD
 
 **Goal**: Build a complete, dedicated Coach Profile page within the Coach navigation shell, allowing coaches to view their public-facing details, edit information, adjust USD prices, and manage account preferences.
 
-- [ ] **Step 6.1: Feature Architecture & Navigation Shell Update**
-  - Create directory: `lib/features/coach_profile/`
-    - `data/repos/coach_profile_repo.dart`: Concrete repo for updating bio, USD prices, specialties, and avatar.
+- [x] **Step 6.1: Feature Architecture & Navigation Shell Update**
+  - Create directory: `lib/features/coach_profile/` following the mandatory data pipeline (`Services -> Remote/Local Data Source -> Repo -> Cubit -> UI`):
+    - `data/data_source/coach_profile_remote_data_source.dart`: Concrete remote data source delegating Firestore and Firebase Storage calls.
+    - `data/repos/coach_profile_repo.dart`: Concrete repo coordinating between `CoachProfileRemoteDataSource`, `CoachSetupLocalDataSource`, and `AuthService`.
     - `presentation/view_model/coach_profile_cubit/`: Manages profile loading, edits, saving, and error states.
     - `presentation/views/coach_profile_view.dart`: Clean layout (<150 lines) delegating to widgets.
     - `presentation/widgets/`: Sub-components for profile sections.
@@ -277,7 +285,7 @@ graph TD
     - Add a 4th tab: **Profile** (`CoachProfileView`).
     - Update `CoachBottomNavBar` with a 4th navigation item (Person icon, label: "Profile" / "الملف الشخصي").
 
-- [ ] **Step 6.2: Coach Profile View Components**
+- [x] **Step 6.2: Coach Profile View Components**
   - `CoachProfileHeaderWidget`: Avatar with change photo button, Verified badge, Full Name, Coach ID / Phone, and Sport badges.
   - `CoachProfilePricingCardWidget`:
     - Displays current **USD Price per Session** ($).
@@ -293,7 +301,7 @@ graph TD
     - Sign Out button (with confirm dialog).
     - Delete Account button (with warning dialog and security re-check).
 
-- [ ] **Step 6.3: Edit Coach Profile Flow**
+- [x] **Step 6.3: Edit Coach Profile Flow**
   - Create `EditCoachProfileSheet` or sub-screen:
     - Edit Full Name, Bio, Sports, Specialties, and Years of Experience.
     - Update `sessionPriceUSD` and `monthlyPriceUSD`.
@@ -306,7 +314,8 @@ graph TD
 
 **Goal**: Implement a complete notification infrastructure sending in-app alerts and push notifications for all critical marketplace, booking, and administrative events.
 
-- [ ] **Step 7.1: Global Notification Model & Firestore Architecture**
+- [ ] **Step 7.1: Global Notification Model & Data Layer Architecture**
+  - Follow the mandatory pipeline: `Services -> Remote/Local Data Source -> Concrete Repository -> Cubit -> UI`.
   - Create `NotificationModel`:
     - `id`: Unique document ID.
     - `recipientUid`: Target user UID or `'admin'`.
@@ -319,8 +328,10 @@ graph TD
     - `data`: Payload map containing `bookingId`, `priceUSD`, `date`, `reason`, `bookingType`.
     - `isRead`: Boolean flag.
     - `createdAt`: Timestamp.
+  - Create `NotificationsRemoteDataSource`:
+    - Handles raw Firestore collection and document queries for `notifications`.
   - Create `NotificationsRepository`:
-    - Methods to create notification documents, stream user notifications, mark as read, and delete.
+    - Coordinates notifications data, unread counters, and persistence via `NotificationsRemoteDataSource`.
 
 - [ ] **Step 7.2: Comprehensive Notification Event Trigger Matrix**
 
@@ -488,18 +499,28 @@ lib/
 │   │       └── reschedule_booking_sheet.dart      # Reschedule date & time picker
 │   ├── coach_profile/                             # NEW: Dedicated Coach Profile feature
 │   │   ├── data/
+│   │   │   ├── data_source/coach_profile_remote_data_source.dart
 │   │   │   └── repos/coach_profile_repo.dart
 │   │   └── presentation/
 │   │       ├── view_model/coach_profile_cubit/
 │   │       ├── views/
 │   │       │   ├── coach_profile_view.dart
-│   │       │   └── edit_coach_profile_view.dart
+│   │       │   └── edit_coach_profile_sheet.dart
 │   │       └── widgets/
 │   │           ├── coach_profile_header_widget.dart
+│   │           ├── coach_profile_avatar.dart
 │   │           ├── coach_profile_pricing_card_widget.dart
+│   │           ├── coach_profile_rate_tile.dart
 │   │           ├── coach_profile_bio_section.dart
 │   │           ├── coach_profile_certificates_section.dart
-│   │           └── coach_account_settings_section.dart
+│   │           ├── coach_account_settings_section.dart
+│   │           ├── coach_account_danger_zone.dart
+│   │           ├── edit_profile_sheet_header.dart
+│   │           ├── edit_profile_form_body.dart
+│   │           ├── edit_profile_form_fields.dart
+│   │           ├── edit_profile_sports_chips.dart
+│   │           ├── edit_pricing_dialog.dart
+│   │           └── photo_picker_bottom_sheet.dart
 │   ├── booking_request/
 │   │   ├── data/models/booking_model.dart         # Updated: bookingType, price in USD
 │   │   └── presentation/
@@ -515,6 +536,7 @@ lib/
 │   │       └── trainee_reschedule_dialog.dart
 │   └── notifications/                             # NEW: In-App Notifications Center
 │       ├── data/
+│       │   ├── data_source/notifications_remote_data_source.dart
 │       │   ├── models/notification_model.dart
 │       │   └── repos/notifications_repo.dart
 │       └── presentation/

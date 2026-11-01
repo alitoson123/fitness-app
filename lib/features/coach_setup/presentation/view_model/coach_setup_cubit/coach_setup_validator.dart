@@ -32,7 +32,6 @@ class CoachSetupValidator {
     required List<String> selectedSports,
     double sessionPriceUSD = 0.0,
     double monthlyPriceUSD = 0.0,
-    double? hourlyRate,
     required String availabilitySummary,
     required String identityDocumentUrl,
     required List<String> certificateUrls,
@@ -49,8 +48,7 @@ class CoachSetupValidator {
     } else if (step == 1) {
       if (selectedSports.isEmpty) return 'sport_required';
     } else if (step == 2) {
-      final sPrice = sessionPriceUSD > 0 ? sessionPriceUSD : (hourlyRate ?? 0.0);
-      if (sPrice <= 0) return 'session_rate_required';
+      if (sessionPriceUSD <= 0) return 'session_rate_required';
       if (monthlyPriceUSD <= 0) return 'monthly_rate_required';
     } else if (step == 3) {
       if (availabilitySummary.trim().isEmpty) return 'availability_required';

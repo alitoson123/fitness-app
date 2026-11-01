@@ -6251,6 +6251,336 @@ class S {
       args: [],
     );
   }
+
+  /// `Profile`
+  String get coachNavProfile {
+    return Intl.message(
+      'Profile',
+      name: 'coachNavProfile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `My Profile`
+  String get coachProfileTitle {
+    return Intl.message(
+      'My Profile',
+      name: 'coachProfileTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit Profile`
+  String get editCoachProfile {
+    return Intl.message(
+      'Edit Profile',
+      name: 'editCoachProfile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Training Rates (USD)`
+  String get coachPricingCardTitle {
+    return Intl.message(
+      'Training Rates (USD)',
+      name: 'coachPricingCardTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit Pricing`
+  String get editPricingAction {
+    return Intl.message(
+      'Edit Pricing',
+      name: 'editPricingAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update Training Rates`
+  String get quickEditPricingTitle {
+    return Intl.message(
+      'Update Training Rates',
+      name: 'quickEditPricingTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save Changes`
+  String get saveChanges {
+    return Intl.message(
+      'Save Changes',
+      name: 'saveChanges',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile updated successfully`
+  String get profileUpdatedSuccess {
+    return Intl.message(
+      'Profile updated successfully',
+      name: 'profileUpdatedSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pricing updated successfully`
+  String get pricingUpdatedSuccess {
+    return Intl.message(
+      'Pricing updated successfully',
+      name: 'pricingUpdatedSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile photo updated successfully`
+  String get avatarUpdatedSuccess {
+    return Intl.message(
+      'Profile photo updated successfully',
+      name: 'avatarUpdatedSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change Photo`
+  String get changePhoto {
+    return Intl.message(
+      'Change Photo',
+      name: 'changePhoto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Take Photo`
+  String get takePhoto {
+    return Intl.message(
+      'Take Photo',
+      name: 'takePhoto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose from Gallery`
+  String get chooseFromGallery {
+    return Intl.message(
+      'Choose from Gallery',
+      name: 'chooseFromGallery',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification Pending`
+  String get pendingVerificationBadge {
+    return Intl.message(
+      'Verification Pending',
+      name: 'pendingVerificationBadge',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No bio provided yet.`
+  String get noBioProvided {
+    return Intl.message(
+      'No bio provided yet.',
+      name: 'noBioProvided',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{years} Years Experience`
+  String yearsExperienceFormat(Object years) {
+    return Intl.message(
+      '$years Years Experience',
+      name: 'yearsExperienceFormat',
+      desc: '',
+      args: [years],
+    );
+  }
+
+  /// `Specialties`
+  String get specialtiesLabel {
+    return Intl.message(
+      'Specialties',
+      name: 'specialtiesLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No certificates uploaded yet.`
+  String get noCertificatesUploaded {
+    return Intl.message(
+      'No certificates uploaded yet.',
+      name: 'noCertificatesUploaded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Account & Preferences`
+  String get accountAndPreferences {
+    return Intl.message(
+      'Account & Preferences',
+      name: 'accountAndPreferences',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Language`
+  String get languageSetting {
+    return Intl.message(
+      'Language',
+      name: 'languageSetting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `English`
+  String get englishLanguage {
+    return Intl.message(
+      'English',
+      name: 'englishLanguage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `العربية (Arabic)`
+  String get arabicLanguage {
+    return Intl.message(
+      'العربية (Arabic)',
+      name: 'arabicLanguage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Appearance`
+  String get appearanceSetting {
+    return Intl.message(
+      'Appearance',
+      name: 'appearanceSetting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dark Mode`
+  String get darkMode {
+    return Intl.message(
+      'Dark Mode',
+      name: 'darkMode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Light Mode`
+  String get lightMode {
+    return Intl.message(
+      'Light Mode',
+      name: 'lightMode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Push Notifications`
+  String get pushNotifications {
+    return Intl.message(
+      'Push Notifications',
+      name: 'pushNotifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Receive booking and message alerts`
+  String get pushNotificationsDesc {
+    return Intl.message(
+      'Receive booking and message alerts',
+      name: 'pushNotificationsDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Help & Support`
+  String get helpAndSupport {
+    return Intl.message(
+      'Help & Support',
+      name: 'helpAndSupport',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contact our team for inquiries`
+  String get helpAndSupportDesc {
+    return Intl.message(
+      'Contact our team for inquiries',
+      name: 'helpAndSupportDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign Out?`
+  String get confirmSignOutTitle {
+    return Intl.message(
+      'Sign Out?',
+      name: 'confirmSignOutTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to sign out from your coach account?`
+  String get confirmSignOutMessage {
+    return Intl.message(
+      'Are you sure you want to sign out from your coach account?',
+      name: 'confirmSignOutMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Years of Experience`
+  String get yearsOfExperienceLabel {
+    return Intl.message(
+      'Years of Experience',
+      name: 'yearsOfExperienceLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select Sports`
+  String get selectSportsPrompt {
+    return Intl.message(
+      'Select Sports',
+      name: 'selectSportsPrompt',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
