@@ -10,7 +10,10 @@ import '../../features/trainee_setup/data/data_source/trainee_setup_local_data_s
 import '../../features/trainee_setup/data/data_source/trainee_setup_remote_data_source.dart';
 import '../../features/trainee_setup/data/repos/trainee_setup_repo.dart';
 import '../../features/trainee_setup/presentation/view_model/trainee_setup_cubit/trainee_setup_cubit.dart';
+import '../../features/trainee_profile/data/data_source/trainee_profile_remote_data_source.dart';
+import '../../features/trainee_profile/data/repos/trainee_profile_repo.dart';
 import '../../features/trainee_profile/presentation/view_model/trainee_profile_cubit/trainee_profile_cubit.dart';
+import '../../features/trainee_profile/presentation/view_model/training_insights_cubit/training_insights_cubit.dart';
 import '../../features/coach_setup/data/data_source/coach_setup_local_data_source.dart';
 import '../../features/coach_setup/data/data_source/coach_setup_remote_data_source.dart';
 import '../../features/coach_setup/data/repo_impl/coach_setup_repo_impl.dart';
@@ -131,9 +134,30 @@ Future<void> setupServiceLocator() async {
       repository: getIt<TraineeSetupRepo>(),
     ),
   );
+
+  // 8b. Trainee Profile Dependencies
+  getIt.registerLazySingleton<TraineeProfileRemoteDataSource>(
+    () => TraineeProfileRemoteDataSource(
+      firestoreService: getIt<FirestoreService>(),
+      storageService: getIt<StorageService>(),
+    ),
+  );
+  getIt.registerLazySingleton<TraineeProfileRepo>(
+    () => TraineeProfileRepo(
+      remoteDataSource: getIt<TraineeProfileRemoteDataSource>(),
+      localDataSource: getIt<TraineeSetupLocalDataSource>(),
+      authService: getIt<AuthService>(),
+      authLocalDataSource: getIt<AuthLocalDataSource>(),
+    ),
+  );
   getIt.registerFactory<TraineeProfileCubit>(
     () => TraineeProfileCubit(
-      repository: getIt<TraineeSetupRepo>(),
+      repository: getIt<TraineeProfileRepo>(),
+    ),
+  );
+  getIt.registerFactory<TrainingInsightsCubit>(
+    () => TrainingInsightsCubit(
+      repository: getIt<TraineeProfileRepo>(),
     ),
   );
 

@@ -6581,6 +6581,200 @@ class S {
       args: [],
     );
   }
+
+  /// `Are you sure you want to sign out of your account?`
+  String get confirmSignOutTraineeMessage {
+    return Intl.message(
+      'Are you sure you want to sign out of your account?',
+      name: 'confirmSignOutTraineeMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Active Trainee`
+  String get traineeActiveBadge {
+    return Intl.message(
+      'Active Trainee',
+      name: 'traineeActiveBadge',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fitness Overview`
+  String get fitnessOverviewTitle {
+    return Intl.message(
+      'Fitness Overview',
+      name: 'fitnessOverviewTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit Goals`
+  String get editFitnessAction {
+    return Intl.message(
+      'Edit Goals',
+      name: 'editFitnessAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `yrs`
+  String get yearsUnit {
+    return Intl.message(
+      'yrs',
+      name: 'yearsUnit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select Fitness Level`
+  String get selectFitnessLevel {
+    return Intl.message(
+      'Select Fitness Level',
+      name: 'selectFitnessLevel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select Fitness Goal`
+  String get selectFitnessGoal {
+    return Intl.message(
+      'Select Fitness Goal',
+      name: 'selectFitnessGoal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Training Insights`
+  String get trainingInsightsTitle {
+    return Intl.message(
+      'Training Insights',
+      name: 'trainingInsightsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Day`
+  String get periodDay {
+    return Intl.message(
+      'Day',
+      name: 'periodDay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Month`
+  String get periodMonth {
+    return Intl.message(
+      'Month',
+      name: 'periodMonth',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Year`
+  String get periodYear {
+    return Intl.message(
+      'Year',
+      name: 'periodYear',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count, plural, =1{training day} other{training days}}`
+  String trainingDaysUnit(num count) {
+    return Intl.plural(
+      count,
+      one: 'training day',
+      other: 'training days',
+      name: 'trainingDaysUnit',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count, plural, =1{1 training day} other{{count} training days}}`
+  String trainingDaysCount(num count) {
+    return Intl.plural(
+      count,
+      one: '1 training day',
+      other: '$count training days',
+      name: 'trainingDaysCount',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `No completed training sessions for this period`
+  String get trainingInsightsEmpty {
+    return Intl.message(
+      'No completed training sessions for this period',
+      name: 'trainingInsightsEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Completed workouts will appear here`
+  String get trainingInsightsEmptySubtitle {
+    return Intl.message(
+      'Completed workouts will appear here',
+      name: 'trainingInsightsEmptySubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Training Activity`
+  String get trainingActivityTitle {
+    return Intl.message(
+      'Training Activity',
+      name: 'trainingActivityTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Completed on this day`
+  String get completedOnThisDay {
+    return Intl.message(
+      'Completed on this day',
+      name: 'completedOnThisDay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unique training days this month`
+  String get uniqueDaysInMonth {
+    return Intl.message(
+      'Unique training days this month',
+      name: 'uniqueDaysInMonth',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unique training days this year`
+  String get uniqueDaysInYear {
+    return Intl.message(
+      'Unique training days this year',
+      name: 'uniqueDaysInYear',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

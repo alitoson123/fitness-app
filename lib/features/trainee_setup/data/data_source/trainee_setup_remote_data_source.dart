@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../core/constant/app_constants.dart';
 import '../../../../core/services/database_service/firestore_service.dart';
 import '../../../../core/services/logger_service/logger_service.dart';
@@ -36,6 +37,7 @@ class TraineeSetupRemoteDataSource {
       data: {
         'role': role,
         if (name.isNotEmpty) 'name': name,
+        'updatedAt': FieldValue.serverTimestamp(),
       },
       merge: true,
     );

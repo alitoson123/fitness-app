@@ -10,7 +10,7 @@ import '../../../coach_setup/data/models/coach_profile_model.dart';
 import '../view_model/coach_profile_cubit/coach_profile_cubit.dart';
 import 'coach_profile_avatar.dart';
 import 'edit_coach_profile_sheet.dart';
-import 'photo_picker_bottom_sheet.dart';
+import '../../../../core/widgets/photo_picker_bottom_sheet.dart';
 
 class CoachProfileHeaderWidget extends StatelessWidget {
   final CoachProfileModel profile;

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../core/constant/app_constants.dart';
 import '../../../../core/services/database_service/firestore_service.dart';
 import '../../../../core/services/logger_service/logger_service.dart';
@@ -85,7 +86,10 @@ class CoachProfileRemoteDataSource {
     await firestoreService.setData(
       collection: AppConstants.usersCollection,
       docId: uid,
-      data: {'name': name},
+      data: {
+        'name': name,
+        'updatedAt': FieldValue.serverTimestamp(),
+      },
       merge: true,
     );
   }

@@ -10,7 +10,6 @@ import '../../../auth/core/presentation/view_model/auth_session_cubit/auth_sessi
 import '../../../auth/core/presentation/view_model/auth_session_cubit/auth_session_states.dart';
 import '../../../trainee_bookings/presentation/view_model/trainee_bookings_cubit/trainee_bookings_cubit.dart';
 import '../../../trainee_bookings/presentation/views/trainee_bookings_page.dart';
-import '../../../trainee_profile/presentation/view_model/trainee_profile_cubit/trainee_profile_cubit.dart';
 import '../../../trainee_profile/presentation/views/trainee_profile_page.dart';
 import '../view_model/coach_discovery_cubit/coach_discovery_cubit.dart';
 import '../widgets/trainee_bottom_nav_bar.dart';
@@ -53,9 +52,6 @@ class _TraineeHomeViewState extends State<TraineeHomeView> {
           create: (_) => getIt<CoachDiscoveryCubit>()..loadCoaches(),
         ),
         BlocProvider(create: (_) => getIt<AuthSessionCubit>()),
-        BlocProvider(
-          create: (_) => getIt<TraineeProfileCubit>()..loadProfile(),
-        ),
         BlocProvider(
           create: (_) => getIt<TraineeBookingsCubit>()..listenToBookings(currentUid),
         ),

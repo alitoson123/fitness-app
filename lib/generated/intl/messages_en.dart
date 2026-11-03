@@ -117,9 +117,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m42(hours) => "${hours} hrs available";
 
-  static String m43(name) => "Welcome back, ${name}!";
+  static String m43(count) =>
+      "${Intl.plural(count, one: '1 training day', other: '${count} training days')}";
 
-  static String m44(years) => "${years} Years Experience";
+  static String m44(count) =>
+      "${Intl.plural(count, one: 'training day', other: 'training days')}";
+
+  static String m45(name) => "Welcome back, ${name}!";
+
+  static String m46(years) => "${years} Years Experience";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -350,6 +356,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Complete Profile"),
         "completeYourProfile":
             MessageLookupByLibrary.simpleMessage("Complete Your Profile"),
+        "completedOnThisDay":
+            MessageLookupByLibrary.simpleMessage("Completed on this day"),
         "confirmAndSendRequest":
             MessageLookupByLibrary.simpleMessage("Confirm & Send Request"),
         "confirmDecline":
@@ -359,6 +367,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Are you sure you want to sign out from your coach account?"),
         "confirmSignOutTitle":
             MessageLookupByLibrary.simpleMessage("Sign Out?"),
+        "confirmSignOutTraineeMessage": MessageLookupByLibrary.simpleMessage(
+            "Are you sure you want to sign out of your account?"),
         "confirmedSessionsTab":
             MessageLookupByLibrary.simpleMessage("Confirmed"),
         "contactSupport":
@@ -450,6 +460,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Edit & Resubmit"),
         "editCoachProfile":
             MessageLookupByLibrary.simpleMessage("Edit Profile"),
+        "editFitnessAction": MessageLookupByLibrary.simpleMessage("Edit Goals"),
         "editNumber": MessageLookupByLibrary.simpleMessage("Edit"),
         "editPricingAction":
             MessageLookupByLibrary.simpleMessage("Edit Pricing"),
@@ -498,6 +509,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "filters": MessageLookupByLibrary.simpleMessage("Filters"),
         "fitnessGoal": MessageLookupByLibrary.simpleMessage("Fitness Goal"),
         "fitnessLevel": MessageLookupByLibrary.simpleMessage("Fitness Level"),
+        "fitnessOverviewTitle":
+            MessageLookupByLibrary.simpleMessage("Fitness Overview"),
         "fitnessProfile":
             MessageLookupByLibrary.simpleMessage("Fitness & Goals"),
         "flexibleSchedule": MessageLookupByLibrary.simpleMessage(
@@ -692,6 +705,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Verification Pending"),
         "perMonthUnit": MessageLookupByLibrary.simpleMessage("/ month"),
         "perSessionUnit": MessageLookupByLibrary.simpleMessage("/ session"),
+        "periodDay": MessageLookupByLibrary.simpleMessage("Day"),
+        "periodMonth": MessageLookupByLibrary.simpleMessage("Month"),
+        "periodYear": MessageLookupByLibrary.simpleMessage("Year"),
         "personalInfo":
             MessageLookupByLibrary.simpleMessage("Personal Information"),
         "phoneAuthFailed": MessageLookupByLibrary.simpleMessage(
@@ -862,6 +878,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Select Currency"),
         "selectDaysAndHours": MessageLookupByLibrary.simpleMessage(
             "Select the days and hours you\'re available for training."),
+        "selectFitnessGoal":
+            MessageLookupByLibrary.simpleMessage("Select Fitness Goal"),
+        "selectFitnessLevel":
+            MessageLookupByLibrary.simpleMessage("Select Fitness Level"),
         "selectLanguages":
             MessageLookupByLibrary.simpleMessage("Select Languages"),
         "selectPackageStartDate":
@@ -1033,6 +1053,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "totalSessionPrice":
             MessageLookupByLibrary.simpleMessage("Session Price"),
         "trainee": MessageLookupByLibrary.simpleMessage("Trainee"),
+        "traineeActiveBadge":
+            MessageLookupByLibrary.simpleMessage("Active Trainee"),
         "traineeDesc": MessageLookupByLibrary.simpleMessage(
             "Find qualified coaches, book training sessions, and reach your goals."),
         "traineeDiscovery":
@@ -1048,10 +1070,24 @@ class MessageLookup extends MessageLookupByLibrary {
         "traineeSetup": MessageLookupByLibrary.simpleMessage("Trainee Setup"),
         "traineeSetupSubtitle": MessageLookupByLibrary.simpleMessage(
             "Create your trainee profile and start your fitness journey"),
+        "trainingActivityTitle":
+            MessageLookupByLibrary.simpleMessage("Training Activity"),
+        "trainingDaysCount": m43,
+        "trainingDaysUnit": m44,
+        "trainingInsightsEmpty": MessageLookupByLibrary.simpleMessage(
+            "No completed training sessions for this period"),
+        "trainingInsightsEmptySubtitle": MessageLookupByLibrary.simpleMessage(
+            "Completed workouts will appear here"),
+        "trainingInsightsTitle":
+            MessageLookupByLibrary.simpleMessage("Training Insights"),
         "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
         "unavailable": MessageLookupByLibrary.simpleMessage("Unavailable"),
         "underReviewNotice": MessageLookupByLibrary.simpleMessage(
             "Your application is currently locked in read-only mode while under review. You will receive an update once the review is completed."),
+        "uniqueDaysInMonth": MessageLookupByLibrary.simpleMessage(
+            "Unique training days this month"),
+        "uniqueDaysInYear": MessageLookupByLibrary.simpleMessage(
+            "Unique training days this year"),
         "upcomingSessions":
             MessageLookupByLibrary.simpleMessage("Upcoming Sessions"),
         "uploadDocument":
@@ -1120,17 +1156,18 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Weekly Training Frequency"),
         "weightLoss": MessageLookupByLibrary.simpleMessage("Weight Loss"),
         "welcomeBack": MessageLookupByLibrary.simpleMessage("Welcome Back"),
-        "welcomeBackUser": m43,
+        "welcomeBackUser": m45,
         "whatsIncluded":
             MessageLookupByLibrary.simpleMessage("What\'s Included"),
         "workingDays": MessageLookupByLibrary.simpleMessage("Working Days"),
         "workingHoursDescription": MessageLookupByLibrary.simpleMessage(
             "Configure weekly working days and hours"),
-        "yearsExperienceFormat": m44,
+        "yearsExperienceFormat": m46,
         "yearsOfExperience": MessageLookupByLibrary.simpleMessage(
             "Years of Coaching Experience"),
         "yearsOfExperienceLabel":
             MessageLookupByLibrary.simpleMessage("Years of Experience"),
+        "yearsUnit": MessageLookupByLibrary.simpleMessage("yrs"),
         "yourGoal": MessageLookupByLibrary.simpleMessage("Your Goal"),
         "yourLevel": MessageLookupByLibrary.simpleMessage("Your Level"),
         "yourProfile": MessageLookupByLibrary.simpleMessage("Your Profile"),

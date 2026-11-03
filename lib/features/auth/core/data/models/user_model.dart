@@ -75,6 +75,7 @@ class UserModel {
       'countryCode': countryCode,
       'role': role,
       'status': status,
+      'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
     };
   }

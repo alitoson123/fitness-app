@@ -2,12 +2,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../../core/locator_service/service_locator.dart';
-import '../../../../core/services/media_service/media_picker_service.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_radius.dart';
-import '../../../../core/theme/app_spacing.dart';
-import '../../../../generated/l10n.dart';
+import '../locator_service/service_locator.dart';
+import '../services/media_service/media_picker_service.dart';
+import '../theme/app_colors.dart';
+import '../theme/app_radius.dart';
+import '../theme/app_spacing.dart';
+import '../../generated/l10n.dart';
 
 class PhotoPickerBottomSheet extends StatelessWidget {
   const PhotoPickerBottomSheet({super.key});
@@ -58,8 +58,10 @@ class PhotoPickerBottomSheet extends StatelessWidget {
                     color: AppColors.primary.withValues(alpha: 0.1),
                     borderRadius: AppRadius.mdAll,
                   ),
-                  child: const Icon(Icons.camera_alt_rounded,
-                      color: AppColors.primary),
+                  child: const Icon(
+                    Icons.camera_alt_rounded,
+                    color: AppColors.primary,
+                  ),
                 ),
                 title: Text(s.takePhoto),
                 onTap: () => _pick(context, ImageSource.camera),
@@ -71,8 +73,10 @@ class PhotoPickerBottomSheet extends StatelessWidget {
                     color: AppColors.secondary.withValues(alpha: 0.1),
                     borderRadius: AppRadius.mdAll,
                   ),
-                  child: const Icon(Icons.photo_library_rounded,
-                      color: AppColors.secondary),
+                  child: const Icon(
+                    Icons.photo_library_rounded,
+                    color: AppColors.secondary,
+                  ),
                 ),
                 title: Text(s.chooseFromGallery),
                 onTap: () => _pick(context, ImageSource.gallery),

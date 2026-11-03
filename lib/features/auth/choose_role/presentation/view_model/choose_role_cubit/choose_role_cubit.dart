@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../core/constant/app_constants.dart';
 import '../../../../../../core/services/auth_service/auth_service.dart';
@@ -31,7 +32,10 @@ class ChooseRoleCubit extends Cubit<ChooseRoleStates> {
       await firestoreService.updateData(
         collection: AppConstants.usersCollection,
         docId: uid,
-        data: {'role': role},
+        data: {
+          'role': role,
+          'updatedAt': FieldValue.serverTimestamp(),
+        },
       );
 
 
