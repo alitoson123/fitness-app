@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../generated/l10n.dart';
+import '../../../coach_setup/presentation/helpers/coach_setup_localization_helper.dart';
 
 class BookingSportChips extends StatelessWidget {
   final List<String> sports;
@@ -58,7 +59,10 @@ class BookingSportChips extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  sport,
+                  CoachSetupLocalizationHelper.getLocalizedSport(
+                    context,
+                    sport,
+                  ),
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,

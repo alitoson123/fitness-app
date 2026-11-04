@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/constant/app_constants.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/app_chip.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import '../../../../core/widgets/sports_selector_widget.dart';
 import '../../../../generated/l10n.dart';
-import '../helpers/coach_setup_localization_helper.dart';
 import '../view_model/coach_setup_cubit/coach_setup_cubit.dart';
 import 'experience_option_card.dart';
 
@@ -27,7 +25,7 @@ class StepProfessionalInfoWidget extends StatelessWidget {
           Text(
             S.of(context).sportsAndSpecialties,
             style: TextStyle(
-              fontSize: 14.sp,
+              fontSize: 16.sp,
               fontWeight: FontWeight.w700,
               color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
             ),
@@ -42,23 +40,14 @@ class StepProfessionalInfoWidget extends StatelessWidget {
                   : AppColors.textSecondary,
             ),
           ),
-          SizedBox(height: 12.h),
-          Wrap(
-            spacing: 8.w,
-            runSpacing: 8.h,
-            children: AppConstants.sports.map((sport) {
-              final isSelected = cubit.selectedSports.contains(sport);
-              return AppChip(
-                label: CoachSetupLocalizationHelper.getLocalizedSport(
-                  context,
-                  sport,
-                ),
-                selected: isSelected,
-                onTap: () => cubit.toggleSport(sport),
-              );
-            }).toList(),
+          SizedBox(height: 14.h),
+          SportsSelectorWidget(
+            selectedSports: cubit.selectedSports,
+            onSportToggled: cubit.toggleSport,
+            onCustomSportAdded: cubit.addCustomSport,
+            onCustomSportRemoved: cubit.removeCustomSport,
           ),
-          SizedBox(height: 18.h),
+          SizedBox(height: 20.h),
           AppTextField(
             label: S.of(context).specialties1,
             hint: S.of(context).specialtiesHint,
@@ -72,7 +61,7 @@ class StepProfessionalInfoWidget extends StatelessWidget {
               cubit.setSpecialties(tags);
             },
           ),
-          SizedBox(height: 18.h),
+          SizedBox(height: 20.h),
           Text(
             S.of(context).yearsOfExperience,
             style: TextStyle(

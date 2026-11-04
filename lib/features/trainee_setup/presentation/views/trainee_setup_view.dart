@@ -113,6 +113,8 @@ class _TraineeSetupContent extends StatelessWidget {
         return StepSportsWidget(
           selectedSports: cubit.selectedSports,
           onSportToggled: cubit.toggleSport,
+          onCustomSportAdded: cubit.addCustomSport,
+          onCustomSportRemoved: cubit.removeCustomSport,
         );
       case 2:
         return StepLevelWidget(

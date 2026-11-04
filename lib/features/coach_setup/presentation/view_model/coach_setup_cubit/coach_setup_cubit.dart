@@ -63,8 +63,37 @@ class CoachSetupCubit extends Cubit<CoachSetupState> {
 
   void toggleSport(String sport) {
     final list = List<String>.from(selectedSports);
-    list.contains(sport) ? list.remove(sport) : list.add(sport);
+    final target = sport.toLowerCase().replaceAll(' ', '_').trim();
+    final index = list.indexWhere(
+      (s) => s.toLowerCase().replaceAll(' ', '_').trim() == target,
+    );
+    if (index >= 0) {
+      list.removeAt(index);
+    } else {
+      list.add(sport);
+    }
     selectedSports = list;
+    _emitCurrentForm();
+  }
+
+  void addCustomSport(String sport) {
+    final trimmed = sport.trim();
+    if (trimmed.isEmpty) return;
+    final target = trimmed.toLowerCase().replaceAll(' ', '_');
+    final exists = selectedSports.any(
+      (s) => s.toLowerCase().replaceAll(' ', '_').trim() == target,
+    );
+    if (!exists) {
+      selectedSports = List<String>.from(selectedSports)..add(trimmed);
+      _emitCurrentForm();
+    }
+  }
+
+  void removeCustomSport(String sport) {
+    final target = sport.toLowerCase().replaceAll(' ', '_').trim();
+    selectedSports = selectedSports
+        .where((s) => s.toLowerCase().replaceAll(' ', '_').trim() != target)
+        .toList();
     _emitCurrentForm();
   }
 

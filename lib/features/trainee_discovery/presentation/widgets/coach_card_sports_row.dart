@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
+import '../../../coach_setup/presentation/helpers/coach_setup_localization_helper.dart';
 
 class CoachCardSportsRow extends StatelessWidget {
   final List<String> sports;
@@ -32,7 +33,7 @@ class CoachCardSportsRow extends StatelessWidget {
               borderRadius: AppRadius.smAll,
             ),
             child: Text(
-              sport,
+              CoachSetupLocalizationHelper.getLocalizedSport(context, sport),
               style: TextStyle(
                 fontSize: 11.sp,
                 fontWeight: FontWeight.w600,

@@ -15,6 +15,7 @@ class AppTextField extends StatelessWidget {
   final bool obscureText;
   final bool enabled;
   final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onFieldSubmitted;
   final String? Function(String?)? validator;
   final String? initialValue;
   final int maxLines;
@@ -32,6 +33,7 @@ class AppTextField extends StatelessWidget {
     this.obscureText = false,
     this.enabled = true,
     this.onChanged,
+    this.onFieldSubmitted,
     this.validator,
     this.initialValue,
     this.minLines = 1,
@@ -70,6 +72,7 @@ class AppTextField extends StatelessWidget {
           obscureText: obscureText,
           enabled: enabled,
           onChanged: onChanged,
+          onFieldSubmitted: onFieldSubmitted,
           validator: validator,
           initialValue: initialValue,
           style: TextStyle(

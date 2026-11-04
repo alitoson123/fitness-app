@@ -1362,11 +1362,11 @@ class S {
     );
   }
 
-  /// `Yoga`
-  String get sportYoga {
+  /// `Handball`
+  String get sportHandball {
     return Intl.message(
-      'Yoga',
-      name: 'sportYoga',
+      'Handball',
+      name: 'sportHandball',
       desc: '',
       args: [],
     );
@@ -1392,11 +1392,71 @@ class S {
     );
   }
 
+  /// `Padel`
+  String get sportPadel {
+    return Intl.message(
+      'Padel',
+      name: 'sportPadel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Badminton`
+  String get sportBadminton {
+    return Intl.message(
+      'Badminton',
+      name: 'sportBadminton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Table Tennis`
+  String get sportTableTennis {
+    return Intl.message(
+      'Table Tennis',
+      name: 'sportTableTennis',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `CrossFit`
+  String get sportCrossFit {
+    return Intl.message(
+      'CrossFit',
+      name: 'sportCrossFit',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Other`
   String get sportOther {
     return Intl.message(
       'Other',
       name: 'sportOther',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter sport name (e.g. Squash)`
+  String get enterOtherSport {
+    return Intl.message(
+      'Enter sport name (e.g. Squash)',
+      name: 'enterOtherSport',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add`
+  String get addSport {
+    return Intl.message(
+      'Add',
+      name: 'addSport',
       desc: '',
       args: [],
     );

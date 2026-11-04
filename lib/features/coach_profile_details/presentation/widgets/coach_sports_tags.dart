@@ -1,4 +1,5 @@
 import 'package:fitness_app/core/theme/app_radius.dart';
+import 'package:fitness_app/features/coach_setup/presentation/helpers/coach_setup_localization_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -34,7 +35,7 @@ class CoachSportsTags extends StatelessWidget {
             ),
           ),
           child: Text(
-            sport,
+            CoachSetupLocalizationHelper.getLocalizedSport(context, sport),
             style: TextStyle(
               fontSize: 12.sp,
               fontWeight: FontWeight.w600,

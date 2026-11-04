@@ -7,6 +7,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../generated/l10n.dart';
 import '../../../coach_setup/data/models/coach_profile_model.dart';
+import '../../../coach_setup/presentation/helpers/coach_setup_localization_helper.dart';
 import '../view_model/coach_profile_cubit/coach_profile_cubit.dart';
 import 'coach_profile_avatar.dart';
 import 'edit_coach_profile_sheet.dart';
@@ -82,7 +83,10 @@ class CoachProfileHeaderWidget extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  sport,
+                  CoachSetupLocalizationHelper.getLocalizedSport(
+                    context,
+                    sport,
+                  ),
                   style: TextStyle(
                     fontSize: 11.sp,
                     fontWeight: FontWeight.w600,

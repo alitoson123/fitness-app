@@ -29,15 +29,23 @@ abstract class AppConstants {
     'German',
   ];
 
-  // Supported Sports
+  // Supported Sports (Top 15 Most Popular Sports)
   static const List<String> sports = [
-    'Gym',
-    'Football',
-    'Boxing',
-    'Swimming',
-    'Basketball',
-    'Tennis',
-    'Volleyball',
+    'football',
+    'basketball',
+    'swimming',
+    'tennis',
+    'running',
+    'boxing',
+    'gym',
+    'cycling',
+    'martial_arts',
+    'volleyball',
+    'padel',
+    'badminton',
+    'table_tennis',
+    'crossfit',
+    'handball',
   ];
 
   // Experience levels

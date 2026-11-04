@@ -146,6 +146,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "activeDaysCount": m0,
         "addPhotoPrompt": MessageLookupByLibrary.simpleMessage(
             "أضف صورة ليتمكن المدربون من التعرف عليك"),
+        "addSport": MessageLookupByLibrary.simpleMessage("إضافة"),
         "addSupportingDocument":
             MessageLookupByLibrary.simpleMessage("إضافة مستند داعم"),
         "additionalCertificate": m1,
@@ -482,6 +483,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "تأكيد البريد الإلكتروني مطلوب"),
         "endTime": MessageLookupByLibrary.simpleMessage("وقت الانتهاء"),
         "englishLanguage": MessageLookupByLibrary.simpleMessage("الإنجليزية"),
+        "enterOtherSport": MessageLookupByLibrary.simpleMessage(
+            "أدخل اسم الرياضة (مثل الاسكواش)"),
         "error": MessageLookupByLibrary.simpleMessage("خطأ"),
         "errorInvalidTimeRange": m12,
         "errorLoadingCoachProfile": MessageLookupByLibrary.simpleMessage(
@@ -971,17 +974,22 @@ class MessageLookup extends MessageLookupByLibrary {
             "اعثر على مدربك الرياضي المثالي"),
         "spokenLanguages": MessageLookupByLibrary.simpleMessage("اللغات"),
         "sportBasketball": MessageLookupByLibrary.simpleMessage("كرة السلة"),
+        "sportBadminton": MessageLookupByLibrary.simpleMessage("كرة الريشة"),
         "sportBoxing": MessageLookupByLibrary.simpleMessage("الملاكمة"),
+        "sportCrossFit": MessageLookupByLibrary.simpleMessage("كروس فيت"),
         "sportCycling": MessageLookupByLibrary.simpleMessage("ركوب الدراجات"),
         "sportFootball": MessageLookupByLibrary.simpleMessage("كرة القدم"),
         "sportGym": MessageLookupByLibrary.simpleMessage("جيم وكمال أجسام"),
+        "sportHandball": MessageLookupByLibrary.simpleMessage("كرة اليد"),
         "sportMartialArts": MessageLookupByLibrary.simpleMessage("فنون قتالية"),
         "sportOther": MessageLookupByLibrary.simpleMessage("أخرى"),
+        "sportPadel": MessageLookupByLibrary.simpleMessage("بادل"),
         "sportRunning": MessageLookupByLibrary.simpleMessage("الجري"),
         "sportSwimming": MessageLookupByLibrary.simpleMessage("السباحة"),
+        "sportTableTennis":
+            MessageLookupByLibrary.simpleMessage("كرة الطاولة"),
         "sportTennis": MessageLookupByLibrary.simpleMessage("التنس"),
         "sportVolleyball": MessageLookupByLibrary.simpleMessage("كرة الطائرة"),
-        "sportYoga": MessageLookupByLibrary.simpleMessage("اليوغا"),
         "sportsAndSpecialties":
             MessageLookupByLibrary.simpleMessage("الرياضات والتخصصات"),
         "sportsSelected": m37,

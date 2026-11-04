@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/constant/app_sports.dart';
 import '../../../../generated/l10n.dart';
 
 class TraineeProfileFormatters {
@@ -48,36 +49,7 @@ class TraineeProfileFormatters {
     }
   }
 
-  static String formatSport(BuildContext context, String sport) {
-    final s = S.of(context);
-    switch (sport.toLowerCase().replaceAll(' ', '_')) {
-      case 'gym':
-        return s.sportGym;
-      case 'football':
-        return s.sportFootball;
-      case 'boxing':
-        return s.sportBoxing;
-      case 'swimming':
-        return s.sportSwimming;
-      case 'basketball':
-        return s.sportBasketball;
-      case 'tennis':
-        return s.sportTennis;
-      case 'running':
-        return s.sportRunning;
-      case 'cycling':
-        return s.sportCycling;
-      case 'yoga':
-        return s.sportYoga;
-      case 'martial_arts':
-        return s.sportMartialArts;
-      case 'volleyball':
-        return s.sportVolleyball;
-      case 'other':
-        return s.sportOther;
-      default:
-        return sport;
-    }
-  }
+  static String formatSport(BuildContext context, String sport) =>
+      AppSports.getLocalizedSportName(context, sport);
 }
 

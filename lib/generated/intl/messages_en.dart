@@ -146,6 +146,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "activeDaysCount": m0,
         "addPhotoPrompt": MessageLookupByLibrary.simpleMessage(
             "Add a photo so coaches know who you are"),
+        "addSport": MessageLookupByLibrary.simpleMessage("Add"),
         "addSupportingDocument":
             MessageLookupByLibrary.simpleMessage("Add Supporting Document"),
         "additionalCertificate": m1,
@@ -477,6 +478,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Email Verification Required"),
         "endTime": MessageLookupByLibrary.simpleMessage("End Time"),
         "englishLanguage": MessageLookupByLibrary.simpleMessage("English"),
+        "enterOtherSport": MessageLookupByLibrary.simpleMessage(
+            "Enter sport name (e.g. Squash)"),
         "error": MessageLookupByLibrary.simpleMessage("Error"),
         "errorInvalidTimeRange": m12,
         "errorLoadingCoachProfile": MessageLookupByLibrary.simpleMessage(
@@ -974,18 +977,23 @@ class MessageLookup extends MessageLookupByLibrary {
         "spokenLanguages":
             MessageLookupByLibrary.simpleMessage("Spoken Languages"),
         "sportBasketball": MessageLookupByLibrary.simpleMessage("Basketball"),
+        "sportBadminton": MessageLookupByLibrary.simpleMessage("Badminton"),
         "sportBoxing": MessageLookupByLibrary.simpleMessage("Boxing"),
+        "sportCrossFit": MessageLookupByLibrary.simpleMessage("CrossFit"),
         "sportCycling": MessageLookupByLibrary.simpleMessage("Cycling"),
         "sportFootball": MessageLookupByLibrary.simpleMessage("Football"),
         "sportGym": MessageLookupByLibrary.simpleMessage("Gym"),
+        "sportHandball": MessageLookupByLibrary.simpleMessage("Handball"),
         "sportMartialArts":
             MessageLookupByLibrary.simpleMessage("Martial Arts"),
         "sportOther": MessageLookupByLibrary.simpleMessage("Other"),
+        "sportPadel": MessageLookupByLibrary.simpleMessage("Padel"),
         "sportRunning": MessageLookupByLibrary.simpleMessage("Running"),
         "sportSwimming": MessageLookupByLibrary.simpleMessage("Swimming"),
+        "sportTableTennis":
+            MessageLookupByLibrary.simpleMessage("Table Tennis"),
         "sportTennis": MessageLookupByLibrary.simpleMessage("Tennis"),
         "sportVolleyball": MessageLookupByLibrary.simpleMessage("Volleyball"),
-        "sportYoga": MessageLookupByLibrary.simpleMessage("Yoga"),
         "sportsAndSpecialties":
             MessageLookupByLibrary.simpleMessage("Sports & Specialties"),
         "sportsSelected": m37,

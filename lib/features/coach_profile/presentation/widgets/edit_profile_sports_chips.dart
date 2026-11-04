@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/constant/app_constants.dart';
+import '../../../../core/constant/app_sports.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_radius.dart';
+import '../../../../core/widgets/sports_selector_widget.dart';
 import '../../../../generated/l10n.dart';
 
 class EditProfileSportsChips extends StatelessWidget {
@@ -17,14 +17,34 @@ class EditProfileSportsChips extends StatelessWidget {
 
   void _toggle(String sport) {
     final list = List<String>.from(selectedSports);
-    if (list.contains(sport)) {
+    final target = AppSports.normalize(sport);
+    final index = list.indexWhere((s) => AppSports.normalize(s) == target);
+    if (index >= 0) {
       if (list.length > 1) {
-        list.remove(sport);
+        list.removeAt(index);
         onChanged(list);
       }
     } else {
       list.add(sport);
       onChanged(list);
+    }
+  }
+
+  void _addCustom(String sport) {
+    final trimmed = sport.trim();
+    if (trimmed.isEmpty) return;
+    final target = AppSports.normalize(trimmed);
+    if (!selectedSports.any((s) => AppSports.normalize(s) == target)) {
+      onChanged(List<String>.from(selectedSports)..add(trimmed));
+    }
+  }
+
+  void _removeCustom(String sport) {
+    if (selectedSports.length > 1) {
+      final target = AppSports.normalize(sport);
+      onChanged(
+        selectedSports.where((s) => AppSports.normalize(s) != target).toList(),
+      );
     }
   }
 
@@ -44,35 +64,14 @@ class EditProfileSportsChips extends StatelessWidget {
             color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
           ),
         ),
-        SizedBox(height: 8.h),
-        Wrap(
-          spacing: 8.w,
-          runSpacing: 8.h,
-          children: AppConstants.sports.map((sport) {
-            final isSelected = selectedSports.contains(sport);
-            return ChoiceChip(
-              label: Text(sport),
-              selected: isSelected,
-              onSelected: (_) => _toggle(sport),
-              selectedColor: AppColors.primary,
-              backgroundColor: isDark
-                  ? AppColors.darkSurfaceVariant
-                  : AppColors.surfaceVariant,
-              labelStyle: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                color: isSelected
-                    ? Colors.white
-                    : (isDark
-                        ? AppColors.darkTextSecondary
-                        : AppColors.textSecondary),
-              ),
-              shape: RoundedRectangleBorder(borderRadius: AppRadius.fullAll),
-            );
-          }).toList(),
+        SizedBox(height: 10.h),
+        SportsSelectorWidget(
+          selectedSports: selectedSports,
+          onSportToggled: _toggle,
+          onCustomSportAdded: _addCustom,
+          onCustomSportRemoved: _removeCustom,
         ),
       ],
     );
   }
 }
-

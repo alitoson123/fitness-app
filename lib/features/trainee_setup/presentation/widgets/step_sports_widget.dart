@@ -1,41 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/sports_selector_widget.dart';
 import '../../../../generated/l10n.dart';
-import 'sport_chip_item.dart';
 
 class StepSportsWidget extends StatelessWidget {
   final List<String> selectedSports;
   final ValueChanged<String> onSportToggled;
+  final ValueChanged<String> onCustomSportAdded;
+  final ValueChanged<String> onCustomSportRemoved;
 
   const StepSportsWidget({
     super.key,
     required this.selectedSports,
     required this.onSportToggled,
+    required this.onCustomSportAdded,
+    required this.onCustomSportRemoved,
   });
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.textPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.textSecondary;
-
-    final sportsList = [
-      {'key': 'football', 'emoji': '⚽', 'label': S.of(context).sportFootball},
-      {'key': 'basketball', 'emoji': '🏀', 'label': S.of(context).sportBasketball},
-      {'key': 'swimming', 'emoji': '🏊', 'label': S.of(context).sportSwimming},
-      {'key': 'tennis', 'emoji': '🎾', 'label': S.of(context).sportTennis},
-      {'key': 'running', 'emoji': '🏃', 'label': S.of(context).sportRunning},
-      {'key': 'boxing', 'emoji': '🥊', 'label': S.of(context).sportBoxing},
-      {'key': 'gym', 'emoji': '🏋️', 'label': S.of(context).sportGym},
-      {'key': 'cycling', 'emoji': '🚴', 'label': S.of(context).sportCycling},
-      {'key': 'yoga', 'emoji': '🧘', 'label': S.of(context).sportYoga},
-      {'key': 'martial_arts', 'emoji': '🥋', 'label': S.of(context).sportMartialArts},
-      {'key': 'volleyball', 'emoji': '🏐', 'label': S.of(context).sportVolleyball},
-      {'key': 'other', 'emoji': '+', 'label': S.of(context).sportOther},
-    ];
+    final textPrimary =
+        isDark ? AppColors.darkTextPrimary : AppColors.textPrimary;
+    final textSecondary =
+        isDark ? AppColors.darkTextSecondary : AppColors.textSecondary;
 
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,18 +50,11 @@ class StepSportsWidget extends StatelessWidget {
             ),
           ),
           SizedBox(height: 20.h),
-          Wrap(
-            spacing: 8.w,
-            runSpacing: 10.h,
-            children: sportsList.map((sport) {
-              final isSelected = selectedSports.contains(sport['key']);
-              return SportChipItem(
-                emoji: sport['emoji']!,
-                label: sport['label']!,
-                isSelected: isSelected,
-                onTap: () => onSportToggled(sport['key']!),
-              );
-            }).toList(),
+          SportsSelectorWidget(
+            selectedSports: selectedSports,
+            onSportToggled: onSportToggled,
+            onCustomSportAdded: onCustomSportAdded,
+            onCustomSportRemoved: onCustomSportRemoved,
           ),
           SizedBox(height: 24.h),
           _SportsCountBadge(count: selectedSports.length),
