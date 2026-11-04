@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../booking_request/data/models/booking_model.dart';
 import '../../../coach_setup/data/models/coach_profile_model.dart';
 import 'reschedule_date_picker.dart';
 import 'reschedule_reason_input.dart';
@@ -8,6 +9,7 @@ import 'reschedule_submit_button.dart';
 import 'reschedule_time_slots.dart';
 
 class RescheduleFormContent extends StatelessWidget {
+  final BookingModel? booking;
   final List<DateTime> dates;
   final CoachProfileModel? coach;
   final DateTime? selectedDate;
@@ -24,6 +26,7 @@ class RescheduleFormContent extends StatelessWidget {
 
   const RescheduleFormContent({
     super.key,
+    this.booking,
     required this.dates,
     required this.coach,
     required this.selectedDate,
@@ -46,7 +49,7 @@ class RescheduleFormContent extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const RescheduleSheetHeader(),
+          RescheduleSheetHeader(booking: booking),
           SizedBox(height: 14.h),
           if (coach != null)
             RescheduleDatePicker(

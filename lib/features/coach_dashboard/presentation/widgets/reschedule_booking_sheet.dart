@@ -34,10 +34,7 @@ class RescheduleBookingSheet extends StatefulWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => RescheduleBookingSheet(
-        booking: booking,
-        onConfirm: onConfirm,
-      ),
+      builder: (_) => RescheduleBookingSheet(booking: booking, onConfirm: onConfirm),
     );
   }
 
@@ -131,6 +128,7 @@ class _RescheduleBookingSheetState extends State<RescheduleBookingSheet> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
       child: RescheduleFormContent(
+        booking: widget.booking,
         dates: dates,
         coach: _coach,
         selectedDate: _selectedDate,

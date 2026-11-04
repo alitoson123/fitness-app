@@ -5,7 +5,6 @@ import 'package:fitness_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'coach_personal_badges.dart';
-import 'coach_sports_tags.dart';
 
 class CoachProfileHeader extends StatelessWidget {
   final CoachProfileModel coach;
@@ -79,12 +78,6 @@ class CoachProfileHeader extends StatelessWidget {
         ],
         SizedBox(height: 8.h),
         _buildRatingRow(context, primary, textSecondary),
-        SizedBox(height: 12.h),
-        CoachSportsTags(
-          sports: coach.sports,
-          isDark: isDark,
-          primary: primary,
-        ),
       ],
     );
   }

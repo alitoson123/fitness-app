@@ -6,6 +6,7 @@ import '../../../../core/widgets/sports_selector_widget.dart';
 import '../../../../generated/l10n.dart';
 import '../view_model/coach_setup_cubit/coach_setup_cubit.dart';
 import 'experience_option_card.dart';
+import 'sports_locations_list_widget.dart';
 
 class StepProfessionalInfoWidget extends StatelessWidget {
   final CoachSetupCubit cubit;
@@ -48,6 +49,8 @@ class StepProfessionalInfoWidget extends StatelessWidget {
             onCustomSportRemoved: cubit.removeCustomSport,
           ),
           SizedBox(height: 20.h),
+          SportsLocationsListWidget(cubit: cubit),
+          SizedBox(height: 10.h),
           AppTextField(
             label: S.of(context).specialties1,
             hint: S.of(context).specialtiesHint,

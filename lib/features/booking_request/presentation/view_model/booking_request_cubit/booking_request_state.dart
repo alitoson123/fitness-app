@@ -19,6 +19,8 @@ class BookingRequestState {
   final List<String> availableSlots;
   final String? selectedSlot;
   final String? selectedSport;
+  final String? selectedLocation;
+  final bool isOnlineTraining;
   final List<BookingSessionModel> selectedMonthlySessions;
   final int requiredMonthlySessions;
   final int durationMonths;
@@ -34,6 +36,8 @@ class BookingRequestState {
     this.availableSlots = const [],
     this.selectedSlot,
     this.selectedSport,
+    this.selectedLocation,
+    this.isOnlineTraining = false,
     this.selectedMonthlySessions = const [],
     this.requiredMonthlySessions = 8,
     this.durationMonths = 1,
@@ -52,8 +56,14 @@ class BookingRequestState {
     return isMonthly ? (c.monthlyPriceUSD * durationMonths) : c.sessionPriceUSD;
   }
 
+  bool get isDeliverySelected =>
+      isOnlineTraining ||
+      (selectedLocation != null && selectedLocation!.isNotEmpty);
+
   bool get isSubmitReady {
-    if (coach == null || selectedSport == null) return false;
+    if (coach == null || selectedSport == null || !isDeliverySelected) {
+      return false;
+    }
     if (isSession) return selectedDate != null && selectedSlot != null;
     return isMonthlyComplete;
   }
@@ -79,6 +89,9 @@ class BookingRequestState {
     String? selectedSlot,
     bool clearSelectedSlot = false,
     String? selectedSport,
+    String? selectedLocation,
+    bool clearSelectedLocation = false,
+    bool? isOnlineTraining,
     List<BookingSessionModel>? selectedMonthlySessions,
     int? requiredMonthlySessions,
     int? durationMonths,
@@ -95,6 +108,10 @@ class BookingRequestState {
       selectedSlot:
           clearSelectedSlot ? null : (selectedSlot ?? this.selectedSlot),
       selectedSport: selectedSport ?? this.selectedSport,
+      selectedLocation: clearSelectedLocation
+          ? null
+          : (selectedLocation ?? this.selectedLocation),
+      isOnlineTraining: isOnlineTraining ?? this.isOnlineTraining,
       selectedMonthlySessions:
           selectedMonthlySessions ?? this.selectedMonthlySessions,
       requiredMonthlySessions:

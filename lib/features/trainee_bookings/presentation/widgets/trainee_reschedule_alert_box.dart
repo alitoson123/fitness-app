@@ -24,6 +24,8 @@ class TraineeRescheduleAlertBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+    final textSecondary =
+        isDark ? AppColors.darkTextSecondary : AppColors.textSecondary;
     const amberColor = Color(0xFFF59E0B);
 
     return Container(
@@ -32,10 +34,7 @@ class TraineeRescheduleAlertBox extends StatelessWidget {
       decoration: BoxDecoration(
         color: amberColor.withValues(alpha: 0.08),
         borderRadius: AppRadius.smAll,
-        border: Border.all(
-          color: amberColor.withValues(alpha: 0.4),
-          width: 1.2,
-        ),
+        border: Border.all(color: amberColor.withValues(alpha: 0.4), width: 1.2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,21 +58,39 @@ class TraineeRescheduleAlertBox extends StatelessWidget {
           SizedBox(height: 8.h),
           Text(
             '${s.proposedTimeLabel}: ${booking.proposedDate} (${booking.proposedStartTime} - ${booking.proposedEndTime})',
-            style: TextStyle(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w700,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
-            ),
+            style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700, color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary),
           ),
           SizedBox(height: 3.h),
           Text(
             '${s.originalTimeLabel}: ${booking.date} (${booking.startTime} - ${booking.endTime})',
-            style: TextStyle(
-              fontSize: 11.sp,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.textSecondary,
-              decoration: TextDecoration.lineThrough,
-            ),
+            style: TextStyle(fontSize: 11.sp, color: textSecondary, decoration: TextDecoration.lineThrough),
           ),
+          if (booking.isOnline || booking.trainingLocation.isNotEmpty)
+            Padding(
+              padding: EdgeInsets.only(top: 4.h),
+              child: Row(
+                children: [
+                  Icon(
+                    booking.isOnline
+                        ? Icons.laptop_chromebook_rounded
+                        : Icons.location_on_rounded,
+                    size: 12.r,
+                    color: textSecondary,
+                  ),
+                  SizedBox(width: 4.w),
+                  Text(
+                    booking.isOnline
+                        ? s.onlineTrainingOption
+                        : booking.trainingLocation,
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w600,
+                      color: textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           if (booking.rescheduleReason?.isNotEmpty == true) ...[
             SizedBox(height: 6.h),
             Text(
@@ -104,7 +121,6 @@ class TraineeRescheduleAlertBox extends StatelessWidget {
                       foregroundColor: AppColors.error,
                       side: const BorderSide(color: AppColors.error),
                       shape: RoundedRectangleBorder(borderRadius: AppRadius.smAll),
-                      padding: EdgeInsets.symmetric(vertical: 8.h),
                     ),
                     child: Text(s.declineReschedule, style: TextStyle(fontSize: 11.sp)),
                   ),
@@ -116,7 +132,6 @@ class TraineeRescheduleAlertBox extends StatelessWidget {
                     style: FilledButton.styleFrom(
                       backgroundColor: AppColors.success,
                       shape: RoundedRectangleBorder(borderRadius: AppRadius.smAll),
-                      padding: EdgeInsets.symmetric(vertical: 8.h),
                     ),
                     child: Text(s.acceptNewTime, style: TextStyle(fontSize: 11.sp)),
                   ),

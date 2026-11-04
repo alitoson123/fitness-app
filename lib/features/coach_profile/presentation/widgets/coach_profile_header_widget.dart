@@ -7,7 +7,6 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../generated/l10n.dart';
 import '../../../coach_setup/data/models/coach_profile_model.dart';
-import '../../../coach_setup/presentation/helpers/coach_setup_localization_helper.dart';
 import '../view_model/coach_profile_cubit/coach_profile_cubit.dart';
 import 'coach_profile_avatar.dart';
 import 'edit_coach_profile_sheet.dart';
@@ -64,37 +63,6 @@ class CoachProfileHeaderWidget extends StatelessWidget {
                 style: TextStyle(fontSize: 13.sp, color: textSecondary),
               ),
             ],
-          ),
-        ],
-        if (profile.sports.isNotEmpty) ...[
-          SizedBox(height: AppSpacing.s3),
-          Wrap(
-            spacing: 6.w,
-            runSpacing: 6.h,
-            alignment: WrapAlignment.center,
-            children: profile.sports.map((sport) {
-              return Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.12),
-                  borderRadius: AppRadius.fullAll,
-                  border: Border.all(
-                    color: AppColors.primary.withValues(alpha: 0.25),
-                  ),
-                ),
-                child: Text(
-                  CoachSetupLocalizationHelper.getLocalizedSport(
-                    context,
-                    sport,
-                  ),
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.primary,
-                  ),
-                ),
-              );
-            }).toList(),
           ),
         ],
         SizedBox(height: AppSpacing.s4),

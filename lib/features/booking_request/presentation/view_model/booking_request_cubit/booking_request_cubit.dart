@@ -2,6 +2,7 @@ import 'package:fitness_app/features/booking_request/data/repos/booking_request_
 import 'package:fitness_app/features/coach_setup/data/models/coach_profile_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'booking_builder_helper.dart';
+import 'booking_location_helper.dart';
 import 'booking_request_state.dart';
 import 'booking_slot_calculator.dart';
 import 'monthly_sessions_manager.dart';
@@ -9,39 +10,36 @@ import 'monthly_sessions_manager.dart';
 class BookingRequestCubit extends Cubit<BookingRequestState> {
   final BookingRequestRepo repository;
 
-  BookingRequestCubit({required this.repository})
-      : super(const BookingRequestState());
+  BookingRequestCubit({required this.repository}) : super(const BookingRequestState());
 
   void init(CoachProfileModel coach) {
     final now = DateTime.now();
-    final dates = List.generate(
-      30,
-      (i) => DateTime(now.year, now.month, now.day + i),
-    );
+    final dates = List.generate(30, (i) => DateTime(now.year, now.month, now.day + i));
     final firstWorkingDate = dates.firstWhere(
       (d) => BookingSlotCalculator.isCoachWorkingOnDay(coach, d),
       orElse: () => dates.first,
     );
-    final defaultSport =
-        coach.sports.isNotEmpty ? coach.sports.first : 'Fitness';
-
-    emit(
-      state.copyWith(
-        coach: coach,
-        availableDates: dates,
-        selectedDate: firstWorkingDate,
-        selectedSport: defaultSport,
-        status: BookingRequestStatus.loadingSlots,
-      ),
+    final defaultSport = coach.sports.isNotEmpty ? coach.sports.first : 'Fitness';
+    final delivery = BookingLocationHelper.resolveInitialDelivery(
+      coach: coach,
+      sport: defaultSport,
     );
+
+    emit(state.copyWith(
+      coach: coach,
+      availableDates: dates,
+      selectedDate: firstWorkingDate,
+      selectedSport: defaultSport,
+      isOnlineTraining: delivery.isOnline,
+      selectedLocation: delivery.location,
+      status: BookingRequestStatus.loadingSlots,
+    ));
     loadSlotsForDate(firstWorkingDate);
   }
 
   void selectBookingType(String type) {
     emit(state.copyWith(bookingType: type));
-    if (type == 'session' &&
-        state.availableSlots.isEmpty &&
-        state.selectedDate != null) {
+    if (type == 'session' && state.availableSlots.isEmpty && state.selectedDate != null) {
       loadSlotsForDate(state.selectedDate!);
     }
   }
@@ -49,41 +47,27 @@ class BookingRequestCubit extends Cubit<BookingRequestState> {
   Future<void> loadSlotsForDate(DateTime date) async {
     final coach = state.coach;
     if (coach == null) return;
-
-    emit(
-      state.copyWith(
-        selectedDate: date,
-        clearSelectedSlot: true,
-        status: BookingRequestStatus.loadingSlots,
-      ),
-    );
+    emit(state.copyWith(
+      selectedDate: date,
+      clearSelectedSlot: true,
+      status: BookingRequestStatus.loadingSlots,
+    ));
 
     final dateStr = BookingBuilderHelper.formatDate(date);
-    final result = await repository.getBookedSlots(
-      coachUid: coach.uid,
-      date: dateStr,
-    );
-
+    final result = await repository.getBookedSlots(coachUid: coach.uid, date: dateStr);
     result.fold(
-      (failure) => emit(
-        state.copyWith(
-          status: BookingRequestStatus.ready,
-          availableSlots: [],
-          errorMessage: failure.errorMessage,
-        ),
-      ),
+      (failure) => emit(state.copyWith(
+        status: BookingRequestStatus.ready,
+        availableSlots: [],
+        errorMessage: failure.errorMessage,
+      )),
       (booked) {
         final slots = BookingSlotCalculator.generateDaySlots(
           coach: coach,
           date: date,
           bookedSlots: booked,
         );
-        emit(
-          state.copyWith(
-            status: BookingRequestStatus.ready,
-            availableSlots: slots,
-          ),
-        );
+        emit(state.copyWith(status: BookingRequestStatus.ready, availableSlots: slots));
       },
     );
   }
@@ -116,11 +100,26 @@ class BookingRequestCubit extends Cubit<BookingRequestState> {
     emit(state.copyWith(selectedMonthlySessions: updated));
   }
 
-  void clearMonthlySessions() {
-    emit(state.copyWith(selectedMonthlySessions: const []));
+  void clearMonthlySessions() => emit(state.copyWith(selectedMonthlySessions: const []));
+
+  void selectSport(String sport) {
+    final coach = state.coach;
+    final delivery = coach != null
+        ? BookingLocationHelper.resolveInitialDelivery(coach: coach, sport: sport)
+        : (isOnline: false, location: null);
+    emit(state.copyWith(
+      selectedSport: sport,
+      isOnlineTraining: delivery.isOnline,
+      selectedLocation: delivery.location,
+      clearSelectedLocation: delivery.location == null,
+    ));
   }
 
-  void selectSport(String sport) => emit(state.copyWith(selectedSport: sport));
+  void selectTrainingLocation(String location) =>
+      emit(state.copyWith(selectedLocation: location, isOnlineTraining: false));
+
+  void selectOnlineTraining() =>
+      emit(state.copyWith(isOnlineTraining: true, clearSelectedLocation: true));
 
   void updateNotes(String notes) => emit(state.copyWith(notes: notes));
 
@@ -139,12 +138,7 @@ class BookingRequestCubit extends Cubit<BookingRequestState> {
 
     final result = await repository.createBooking(booking);
     result.fold(
-      (failure) => emit(
-        state.copyWith(
-          status: BookingRequestStatus.error,
-          errorMessage: failure.errorMessage,
-        ),
-      ),
+      (f) => emit(state.copyWith(status: BookingRequestStatus.error, errorMessage: f.errorMessage)),
       (_) => emit(state.copyWith(status: BookingRequestStatus.success)),
     );
   }

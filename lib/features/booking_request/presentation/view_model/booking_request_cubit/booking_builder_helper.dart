@@ -54,6 +54,10 @@ class BookingBuilderHelper {
       traineePhotoUrl: traineePhotoUrl ?? '',
       sport: state.selectedSport!,
       bookingType: state.bookingType,
+      trainingLocation: state.isOnlineTraining
+          ? 'Online'
+          : (state.selectedLocation ?? ''),
+      isOnline: state.isOnlineTraining,
       date: dateStr,
       startTime: slot,
       endTime: endTime,

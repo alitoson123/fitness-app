@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../core/models/day_availability.dart';
+import 'sport_location_model.dart';
 
 abstract class CoachProfileParserHelper {
   static double parsePrice(dynamic val) {
@@ -43,5 +44,24 @@ abstract class CoachProfileParserHelper {
       return Map<String, dynamic>.from(val);
     }
     return null;
+  }
+
+  static List<SportLocationModel> parseSportLocations(
+    dynamic val,
+    List<String> sports,
+  ) {
+    if (val is List && val.isNotEmpty) {
+      final list = val
+          .whereType<Map>()
+          .map((e) => SportLocationModel.fromMap(Map<String, dynamic>.from(e)))
+          .toList();
+      if (list.isNotEmpty) return list;
+    }
+    if (sports.isNotEmpty) {
+      return sports
+          .map((s) => SportLocationModel(sport: s, isOnline: true))
+          .toList();
+    }
+    return const [];
   }
 }

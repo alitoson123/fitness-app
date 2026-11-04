@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../coach_setup/data/models/coach_profile_model.dart';
+import '../../../coach_setup/data/models/sport_location_model.dart';
 import '../view_model/coach_profile_cubit/coach_profile_cubit.dart';
 import 'edit_profile_form_body.dart';
 import 'edit_profile_sheet_header.dart';
@@ -38,6 +39,7 @@ class _EditCoachProfileSheetState extends State<EditCoachProfileSheet> {
   late final TextEditingController _sessionPriceController;
   late final TextEditingController _monthlyPriceController;
   late List<String> _selectedSports;
+  late List<SportLocationModel> _sportLocations;
 
   @override
   void initState() {
@@ -58,17 +60,18 @@ class _EditCoachProfileSheetState extends State<EditCoachProfileSheet> {
       text: p.monthlyPriceUSD > 0 ? p.monthlyPriceUSD.toStringAsFixed(0) : '',
     );
     _selectedSports = List<String>.from(p.sports);
+    _sportLocations = p.sportLocations.isNotEmpty
+        ? List<SportLocationModel>.from(p.sportLocations)
+        : p.sports
+            .map((s) => SportLocationModel(sport: s, isOnline: true))
+            .toList();
   }
 
   @override
   void dispose() {
     for (final c in [
-      _nameController,
-      _bioController,
-      _experienceController,
-      _specialtiesController,
-      _sessionPriceController,
-      _monthlyPriceController,
+      _nameController, _bioController, _experienceController,
+      _specialtiesController, _sessionPriceController, _monthlyPriceController,
     ]) {
       c.dispose();
     }
@@ -90,6 +93,7 @@ class _EditCoachProfileSheetState extends State<EditCoachProfileSheet> {
       yearsOfExperience: int.tryParse(_experienceController.text.trim()) ?? 0,
       specialties: specs,
       sports: _selectedSports,
+      sportLocations: _sportLocations,
       sessionPriceUSD:
           double.tryParse(_sessionPriceController.text.trim()) ?? 0.0,
       monthlyPriceUSD:
@@ -129,8 +133,11 @@ class _EditCoachProfileSheetState extends State<EditCoachProfileSheet> {
                 sessionPriceController: _sessionPriceController,
                 monthlyPriceController: _monthlyPriceController,
                 selectedSports: _selectedSports,
+                sportLocations: _sportLocations,
                 onSportsChanged: (sports) =>
                     setState(() => _selectedSports = sports),
+                onLocationsChanged: (locs) =>
+                    setState(() => _sportLocations = locs),
                 onSubmit: _submit,
               ),
             ),

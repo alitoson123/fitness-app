@@ -1,5 +1,6 @@
 import '../../../../core/models/day_availability.dart';
 import 'coach_profile_serializer.dart';
+import 'sport_location_model.dart';
 
 class CoachProfileModel {
   final String uid, name, phoneNumber, photoUrl, bio, country, city, gender;
@@ -7,6 +8,7 @@ class CoachProfileModel {
   final double sessionPriceUSD, monthlyPriceUSD, rating;
   final String currency, availabilitySummary, verificationStatus;
   final List<String> languages, sports, specialties, workingDays, certificateUrls;
+  final List<SportLocationModel> sportLocations;
   final Map<String, dynamic>? workingHours;
   final List<DayAvailability> weeklyAvailability;
   final DateTime? updatedAt;
@@ -24,6 +26,7 @@ class CoachProfileModel {
     this.languages = const [],
     this.sports = const [],
     this.specialties = const [],
+    this.sportLocations = const [],
     this.yearsOfExperience = 0,
     this.sessionPriceUSD = 0.0,
     this.monthlyPriceUSD = 0.0,
@@ -39,6 +42,22 @@ class CoachProfileModel {
     this.verificationStatus = 'pending',
     this.updatedAt,
   });
+
+  SportLocationModel? getLocationConfigForSport(String sport) {
+    final target = sport.toLowerCase().replaceAll(' ', '_').trim();
+    for (final loc in sportLocations) {
+      if (loc.sport.toLowerCase().replaceAll(' ', '_').trim() == target) {
+        return loc;
+      }
+    }
+    final sportExists = sports.any(
+      (s) => s.toLowerCase().replaceAll(' ', '_').trim() == target,
+    );
+    if (sportExists) {
+      return SportLocationModel(sport: sport, isOnline: true);
+    }
+    return null;
+  }
 
   factory CoachProfileModel.fromJson(
     Map<String, dynamic> json, {
@@ -61,6 +80,7 @@ class CoachProfileModel {
     List<String>? languages,
     List<String>? sports,
     List<String>? specialties,
+    List<SportLocationModel>? sportLocations,
     int? yearsOfExperience,
     double? sessionPriceUSD,
     double? monthlyPriceUSD,
@@ -89,6 +109,7 @@ class CoachProfileModel {
       languages: languages ?? this.languages,
       sports: sports ?? this.sports,
       specialties: specialties ?? this.specialties,
+      sportLocations: sportLocations ?? this.sportLocations,
       yearsOfExperience: yearsOfExperience ?? this.yearsOfExperience,
       sessionPriceUSD: sessionPriceUSD ?? this.sessionPriceUSD,
       monthlyPriceUSD: monthlyPriceUSD ?? this.monthlyPriceUSD,

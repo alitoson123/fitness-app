@@ -1,6 +1,7 @@
 import 'package:fitness_app/core/models/day_availability.dart';
 import 'package:fitness_app/features/coach_setup/data/models/coach_application_model.dart';
 import 'package:fitness_app/features/coach_setup/data/models/coach_profile_model.dart';
+import 'package:fitness_app/features/coach_setup/data/models/sport_location_model.dart';
 import 'coach_setup_cubit.dart';
 
 class CoachSetupDraftHelper {
@@ -16,6 +17,8 @@ class CoachSetupDraftHelper {
       'gender': cubit.gender,
       'selectedLanguages': cubit.selectedLanguages,
       'selectedSports': cubit.selectedSports,
+      'sportLocations':
+          cubit.sportLocations.map((e) => e.toMap()).toList(),
       'specialties': cubit.specialties,
       'yearsOfExperience': cubit.yearsOfExperience,
       'sessionPriceUSD': cubit.sessionPriceUSD,
@@ -42,6 +45,7 @@ class CoachSetupDraftHelper {
       languages: cubit.selectedLanguages,
       sports: cubit.selectedSports,
       specialties: cubit.specialties,
+      sportLocations: cubit.sportLocations,
       yearsOfExperience: cubit.yearsOfExperience,
       sessionPriceUSD: cubit.sessionPriceUSD,
       monthlyPriceUSD: cubit.monthlyPriceUSD,
@@ -78,6 +82,9 @@ class CoachSetupDraftHelper {
     c.gender = profile.gender.isNotEmpty ? profile.gender : 'male';
     c.selectedLanguages = profile.languages;
     c.selectedSports = profile.sports;
+    c.sportLocations = profile.sportLocations.isNotEmpty
+        ? List.from(profile.sportLocations)
+        : profile.sports.map((s) => SportLocationModel(sport: s, isOnline: true)).toList();
     c.specialties = profile.specialties;
     c.yearsOfExperience = profile.yearsOfExperience;
     c.sessionPriceUSD = profile.sessionPriceUSD;
@@ -107,6 +114,16 @@ class CoachSetupDraftHelper {
             ?.map((e) => e.toString())
             .toList() ??
         [];
+    if (data['sportLocations'] != null) {
+      final list = data['sportLocations'] as List<dynamic>;
+      c.sportLocations = list
+          .whereType<Map>()
+          .map((e) => SportLocationModel.fromMap(Map<String, dynamic>.from(e)))
+          .toList();
+    } else {
+      c.sportLocations =
+          c.selectedSports.map((s) => SportLocationModel(sport: s)).toList();
+    }
     c.specialties = (data['specialties'] as List<dynamic>?)
             ?.map((e) => e.toString())
             .toList() ??

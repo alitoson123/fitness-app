@@ -20,6 +20,10 @@ class CoachProfileSerializer {
       languages: CoachProfileParserHelper.parseList(json['languages']),
       sports: CoachProfileParserHelper.parseList(json['sports']),
       specialties: CoachProfileParserHelper.parseList(json['specialties']),
+      sportLocations: CoachProfileParserHelper.parseSportLocations(
+        json['sportLocations'],
+        CoachProfileParserHelper.parseList(json['sports']),
+      ),
       yearsOfExperience: json['yearsOfExperience'] as int? ?? 0,
       sessionPriceUSD: CoachProfileParserHelper.parsePrice(
         json['sessionPriceUSD'],
@@ -57,6 +61,8 @@ class CoachProfileSerializer {
         'languages': m.languages,
         'sports': m.sports,
         'specialties': m.specialties,
+        if (m.sportLocations.isNotEmpty)
+          'sportLocations': m.sportLocations.map((e) => e.toMap()).toList(),
         'yearsOfExperience': m.yearsOfExperience,
         'sessionPriceUSD': m.sessionPriceUSD,
         'monthlyPriceUSD': m.monthlyPriceUSD,

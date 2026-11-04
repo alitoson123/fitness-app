@@ -14,6 +14,7 @@ import '../widgets/coach_profile_bio_section.dart';
 import '../widgets/coach_profile_certificates_section.dart';
 import '../widgets/coach_profile_header_widget.dart';
 import '../widgets/coach_profile_pricing_card_widget.dart';
+import '../widgets/coach_profile_sports_locations_widget.dart';
 
 class CoachProfileView extends StatelessWidget {
   const CoachProfileView({super.key});
@@ -86,6 +87,10 @@ class _CoachProfileContent extends StatelessWidget {
                     certificateUrls: profile.certificateUrls,
                     verificationStatus: profile.verificationStatus,
                   ),
+                  if (profile.sports.isNotEmpty) ...[
+                    SizedBox(height: AppSpacing.s4),
+                    CoachProfileSportsLocationsWidget(profile: profile),
+                  ],
                   SizedBox(height: AppSpacing.s4),
                   const CoachAccountSettingsSection(),
                   SizedBox(height: AppSpacing.s5),

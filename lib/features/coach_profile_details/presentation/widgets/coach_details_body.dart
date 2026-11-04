@@ -6,6 +6,7 @@ import 'coach_credentials_section.dart';
 import 'coach_pricing_card.dart';
 import 'coach_profile_header.dart';
 import 'coach_schedule_preview.dart';
+import 'coach_sports_tags.dart';
 
 class CoachDetailsBody extends StatelessWidget {
   final CoachProfileModel coach;
@@ -35,6 +36,13 @@ class CoachDetailsBody extends StatelessWidget {
             CoachBioSection(coach: coach),
             SizedBox(height: 14.h),
             CoachCredentialsSection(coach: coach),
+            if (coach.sports.isNotEmpty) ...[
+              SizedBox(height: 14.h),
+              CoachSportsTags(
+                sports: coach.sports,
+                sportLocations: coach.sportLocations,
+              ),
+            ],
             SizedBox(height: 14.h),
             CoachSchedulePreview(coach: coach),
             SizedBox(height: 24.h),

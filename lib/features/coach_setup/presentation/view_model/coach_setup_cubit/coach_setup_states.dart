@@ -1,3 +1,4 @@
+import 'package:fitness_app/features/coach_setup/data/models/sport_location_model.dart';
 import 'coach_setup_cubit.dart';
 
 abstract class CoachSetupState {
@@ -13,6 +14,7 @@ class CoachSetupFormUpdatedState extends CoachSetupState {
   final String photoUrl, name, bio, country, city, gender, currency;
   final int age, yearsOfExperience;
   final List<String> selectedLanguages, selectedSports, specialties, certificateUrls;
+  final List<SportLocationModel> sportLocations;
   final double sessionPriceUSD, monthlyPriceUSD;
   final String availabilitySummary, identityDocumentUrl;
   final String? validationError;
@@ -29,6 +31,7 @@ class CoachSetupFormUpdatedState extends CoachSetupState {
     required this.selectedLanguages,
     required this.selectedSports,
     required this.specialties,
+    this.sportLocations = const [],
     required this.yearsOfExperience,
     this.sessionPriceUSD = 0.0,
     this.monthlyPriceUSD = 0.0,
@@ -55,6 +58,7 @@ class CoachSetupFormUpdatedState extends CoachSetupState {
         selectedLanguages: List.unmodifiable(c.selectedLanguages),
         selectedSports: List.unmodifiable(c.selectedSports),
         specialties: List.unmodifiable(c.specialties),
+        sportLocations: List.unmodifiable(c.sportLocations),
         yearsOfExperience: c.yearsOfExperience,
         sessionPriceUSD: c.sessionPriceUSD,
         monthlyPriceUSD: c.monthlyPriceUSD,

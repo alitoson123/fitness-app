@@ -1,49 +1,59 @@
-import 'package:fitness_app/core/theme/app_radius.dart';
-import 'package:fitness_app/features/coach_setup/presentation/helpers/coach_setup_localization_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/sport_delivery_carousel.dart';
+import '../../../../generated/l10n.dart';
+import '../../../coach_setup/data/models/sport_location_model.dart';
 
 class CoachSportsTags extends StatelessWidget {
   final List<String> sports;
-  final bool isDark;
-  final Color primary;
+  final List<SportLocationModel> sportLocations;
 
   const CoachSportsTags({
     super.key,
     required this.sports,
-    required this.isDark,
-    required this.primary,
+    this.sportLocations = const [],
   });
 
   @override
   Widget build(BuildContext context) {
     if (sports.isEmpty) return const SizedBox.shrink();
 
-    return Wrap(
-      alignment: WrapAlignment.center,
-      spacing: 6.w,
-      runSpacing: 6.h,
-      children: sports.map((sport) {
-        return Container(
-          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-          decoration: BoxDecoration(
-            color: primary.withValues(alpha: isDark ? 0.15 : 0.08),
-            borderRadius: AppRadius.fullAll,
-            border: Border.all(
-              color: primary.withValues(alpha: 0.25),
-              width: 1,
-            ),
+    final s = S.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primary = isDark ? AppColors.flameRed : AppColors.primary;
+    final textPrimary =
+        isDark ? AppColors.darkTextPrimary : AppColors.textPrimary;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 4.w),
+          child: Row(
+            children: [
+              Icon(Icons.sports_score_rounded, size: 18.r, color: primary),
+              SizedBox(width: 8.w),
+              Text(
+                s.sportsAndLocationsTitle,
+                style: TextStyle(
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w700,
+                  color: textPrimary,
+                ),
+              ),
+            ],
           ),
-          child: Text(
-            CoachSetupLocalizationHelper.getLocalizedSport(context, sport),
-            style: TextStyle(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w600,
-              color: primary,
-            ),
-          ),
-        );
-      }).toList(),
+        ),
+        SizedBox(height: 10.h),
+        SportDeliveryCarousel(
+          sports: sports,
+          sportLocations: sportLocations,
+          isDark: isDark,
+          primary: primary,
+          margin: EdgeInsets.zero,
+        ),
+      ],
     );
   }
 }

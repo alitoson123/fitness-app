@@ -4,7 +4,7 @@
 > **Platform**: Flutter (Android & iOS)  
 > **Connected Firebase Project**: `coach-hub-app-522cd`  
 > **Phase Target**: Client Review Iteration & Feature Expansion (Phase 2)  
-> **Core Theme**: Phone-Only Authentication (EG & LB), Dual USD Pricing (Session & Monthly), 3-Way Booking Actions, Dedicated Coach Profile, and Unified Notification Engine (Trainee, Coach, & Admin).
+> **Core Theme**: Phone-Only Authentication (EG & LB), Dual USD Pricing (Session & Monthly), Per-Sport Multi-Location & Online Delivery, 3-Way Booking Actions, Dedicated Coach Profile, and Unified Notification Engine (Trainee, Coach, & Admin).
 
 ---
 
@@ -49,9 +49,9 @@ All code created or modified in Phase 2 must adhere strictly to these architectu
 | Collection | Document ID | Key Fields | Description |
 | :--- | :--- | :--- | :--- |
 | `users` | `uid` | `uid`, `phoneNumber`, `countryCode` (`'+20'` \| `'+961'`), `name`, `role` (`'coach'` \| `'trainee'` \| `'admin'`), `status` (`'active'` \| `'suspended'`), `createdAt`, `updatedAt` | Base account profile after phone verification |
-| `coach_profiles` | `coachUid` | `uid`, `name`, `phoneNumber`, `photoUrl`, `bio`, `country`, `city`, `sports` (`List<String>`), `specialties` (`List<String>`), `sessionPriceUSD` (`double`), `monthlyPriceUSD` (`double`), `currency` (`'USD'`), `yearsOfExperience`, `rating`, `reviewsCount`, `workingDays`, `workingHours`, `isProfileCompleted`, `updatedAt` | Public coach profile and marketplace pricing |
+| `coach_profiles` | `coachUid` | `uid`, `name`, `phoneNumber`, `photoUrl`, `bio`, `country`, `city`, `sports` (`List<String>`), `sportLocations` (`List<Map<String, dynamic>>`: `sport`, `isOnline`, `locations`), `specialties` (`List<String>`), `sessionPriceUSD` (`double`), `monthlyPriceUSD` (`double`), `currency` (`'USD'`), `yearsOfExperience`, `rating`, `reviewsCount`, `workingDays`, `workingHours`, `isProfileCompleted`, `updatedAt` | Public coach profile, per-sport delivery modes/locations, and marketplace pricing |
 | `trainee_profiles` | `uid` | `uid`, `name`, `phoneNumber`, `photoUrl`, `country`, `city`, `age`, `gender`, `sports` (`List<String>`), `level`, `goal`, `trainingType`, `isProfileCompleted`, `updatedAt` | Trainee profile preferences |
-| `bookings` | `bookingId` | `id`, `coachUid`, `coachName`, `coachPhotoUrl`, `traineeUid`, `traineeName`, `traineePhotoUrl`, `sport`, `bookingType` (`'session'` \| `'monthly'`), `date`, `startTime`, `endTime`, `durationMonths` (`int?`), `monthlyScheduleNotes` (`String?`), `price` (`double`), `currency` (`'USD'`), `notes`, `status` (`'pending'` \| `'confirmed'` \| `'rejected'` \| `'reschedule_pending'`), `rejectionReason` (`String?`), `proposedDate` (`String?`), `proposedStartTime` (`String?`), `proposedEndTime` (`String?`), `rescheduleReason` (`String?`), `rescheduledBy` (`'coach'` \| `'trainee'`), `createdAt`, `updatedAt` | Training bookings supporting both per-session and per-month plans |
+| `bookings` | `bookingId` | `id`, `coachUid`, `coachName`, `coachPhotoUrl`, `traineeUid`, `traineeName`, `traineePhotoUrl`, `sport`, `trainingLocation` (`String`), `isOnline` (`bool`), `bookingType` (`'session'` \| `'monthly'`), `date`, `startTime`, `endTime`, `durationMonths` (`int?`), `monthlyScheduleNotes` (`String?`), `price` (`double`), `currency` (`'USD'`), `notes`, `status` (`'pending'` \| `'confirmed'` \| `'rejected'` \| `'reschedule_pending'`), `rejectionReason` (`String?`), `proposedDate` (`String?`), `proposedStartTime` (`String?`), `proposedEndTime` (`String?`), `rescheduleReason` (`String?`), `rescheduledBy` (`'coach'` \| `'trainee'`), `createdAt`, `updatedAt` | Training bookings supporting physical locations, online sessions, and per-session/per-month plans |
 | `notifications` | `notificationId` | `id`, `recipientUid`, `recipientRole` (`'trainee'` \| `'coach'` \| `'admin'`), `senderUid`, `senderName`, `senderPhotoUrl`, `type`, `titleEn`, `titleAr`, `bodyEn`, `bodyAr`, `data` (`Map<String, dynamic>`), `isRead` (`bool`), `createdAt` (`DateTime`) | Global notifications store for Trainees, Coaches, and Admin |
 | `admin_notifications` | `notificationId` | `id`, `type`, `sourceUid`, `sourceName`, `title`, `message`, `data`, `isRead` (`bool`), `createdAt` (`DateTime`) | Dedicated queue for Admin Dashboard monitoring |
 | `fcm_tokens` | `uid` | `uid`, `token`, `platform` (`'android'` \| `'ios'`), `role`, `updatedAt` | Push notification device registration tokens |
@@ -84,12 +84,14 @@ graph TD
     M3 --> M4[Milestone 4: Booking Card 3-Action Controls]
     M4 --> M5[Milestone 5: Trainee Reschedule Resolution]
     M1 --> M6[Milestone 6: Dedicated Coach Profile]
-    M4 --> M7[Milestone 7: Unified Multi-Role Notifications Engine]
-    M6 --> M7
-    M7 --> M8[Milestone 8: In-App Notification Center & Badges]
-    M7 --> M9[Milestone 9: Admin Dashboard Integration]
-    M8 --> M10[Milestone 10: Localization & Release Hardening]
-    M9 --> M10
+    M6 --> M7[Milestone 7: Per-Sport Multi-Location & Online Delivery]
+    M3 --> M7
+    M7 --> M8[Milestone 8: Unified Multi-Role Notifications Engine]
+    M4 --> M8
+    M8 --> M9[Milestone 9: In-App Notification Center & Badges]
+    M8 --> M10[Milestone 10: Admin Dashboard Integration]
+    M9 --> M11[Milestone 11: Localization & Release Hardening]
+    M10 --> M11
 ```
 
 ---
@@ -310,11 +312,119 @@ graph TD
 
 ---
 
-### Milestone 7: Centralized Multi-Role Notification Engine (Trainee, Coach, Admin Dashboard)
+### Milestone 7: Per-Sport Multi-Location & Online Training Delivery System
+
+**Goal**: Empower coaches to specify delivery modes (Online training and/or multiple physical training locations/gyms/clubs) individually for each sport they coach, showcase these delivery modes on the coach's public profile, and enable trainees to select their preferred location or online mode when submitting a booking.
+
+- [x] **Step 7.1: Data Layer & Schema Evolution (`SportLocationModel`, `CoachProfileModel`, `BookingModel`)**
+  - Create `SportLocationModel` (`lib/features/coach_setup/data/models/sport_location_model.dart`):
+    - `sport` (`String`): Normalized sport identifier (e.g., `'football'`, `'tennis'`, `'fitness'`).
+    - `isOnline` (`bool`, default: `false`): Enables virtual/remote training sessions for this sport.
+    - `locations` (`List<String>`, default: `const []`): Physical clubs, gyms, fields, or facilities (e.g., `['Gezira Sporting Club', 'Smouha Club']`).
+    - Helper getters: `hasPhysicalLocations`, `isValid` (`isOnline || locations.isNotEmpty`), `hasMultipleLocations`.
+    - `fromMap`, `toMap`, `copyWith`, and value equality methods.
+  - Update `CoachProfileModel` & `CoachProfileSerializer`:
+    - Add `sportLocations` (`List<SportLocationModel>`, default: `const []`).
+    - Add helper: `SportLocationModel? getLocationConfigForSport(String sport)`.
+    - Update `fromJson` and `toMap` to parse and serialize `sportLocations` with full backward compatibility (auto-synthesize configs for legacy profiles where only `sports` exists).
+  - Update `BookingModel` & `BookingSerializer`:
+    - Add `trainingLocation` (`String`, default: `''`): Name of chosen venue (e.g., `'Gezira Sporting Club'`) or `'Online'`.
+    - Add `isOnline` (`bool`, default: `false`): Boolean flag distinguishing remote sessions from on-site sessions.
+    - Update `fromJson`, `toMap`, and `copyWith` with backward compatibility.
+  - Update `NotificationModel`: ensure `trainingLocation` and `isOnline` are preserved in notification data payloads.
+
+- [x] **Step 7.2: Coach Registration Step 2 — Per-Sport Location Configuration Wizard**
+  - Update `CoachSetupCubit` state management:
+    - Maintain `sportLocations` (`List<SportLocationModel>`) synchronized with `selectedSports`.
+    - Automatically create a `SportLocationModel` template when a sport is toggled or added.
+    - Methods:
+      - `toggleSportOnline(String sport, bool isOnline)`: toggle remote coaching capability.
+      - `addSportLocation(String sport, String locationName)`: append a physical club/gym to the sport's venue list.
+      - `removeSportLocation(String sport, int index)`: remove venue from the sport.
+    - Update `CoachSetupDraftHelper` to persist and restore sport location drafts in local storage.
+    - Update `CoachSetupValidator`:
+      - Validate Step 1 (Professional Info): verify that every selected sport has at least one valid delivery mode (`isOnline == true` or `locations.isNotEmpty`).
+      - Return localized validation error `'sport_locations_required'` if any sport lacks delivery details.
+  - Build UI Components in `lib/features/coach_setup/presentation/widgets/`:
+    - Create `SportLocationConfigCard` (<150 lines):
+      - Renders for each selected sport: localized sport title with icon badge.
+      - "Available for Online Training" switch / checkbox with friendly subtitle.
+      - "Physical Locations" section: chips for added venues with remove button (`[x]`).
+      - Inline location input field (`AppTextField`) + "Add Location" button with validation.
+      - Dynamic guidance banner if neither online nor a location is configured.
+    - Create `SportsLocationsListWidget` (<150 lines):
+      - Lists all configured `SportLocationConfigCard`s reactively based on `cubit.selectedSports`.
+    - Refactor `StepProfessionalInfoWidget`:
+      - Integrates `SportsLocationsListWidget` right below `SportsSelectorWidget`.
+
+- [x] **Step 7.3: Coach Profile Presentation & Edit Flow**
+  - In Coach's Own Profile (`lib/features/coach_profile/`):
+    - Update `CoachProfileHeaderWidget` & create `CoachProfileSportsLocationsWidget` (<150 lines):
+      - Replaces flat sport chips with informative cards/chips showing sport name, `💻 Online Available` badge, and physical location chips (`📍 [Location]`).
+    - In `EditCoachProfileSheet`:
+      - Create `EditSportLocationsSection` allowing coaches to add/remove venues or toggle online status for each sport they coach.
+      - Save updated `sportLocations` directly to Firestore `coach_profiles/{uid}` and sync Hive cache.
+  - In Trainee Coach Discovery & Details (`lib/features/coach_profile_details/`):
+    - Update `CoachSportsTags` or create `CoachDetailsSportsLocationsWidget` (<150 lines):
+      - Displays each sport with its available delivery options:
+        - `💻 Online Coaching Available` badge.
+        - `📍 [Location Name]` venue tags.
+    - In `CoachCard` (`features/trainee_discovery/presentation/widgets/coach_card.dart`):
+      - Add quick delivery badge (e.g. `💻 Online Available` or `📍 X Locations`).
+
+- [x] **Step 7.4: Trainee Booking Flow — Location & Delivery Mode Selection**
+  - Update `BookingRequestCubit` & `BookingRequestState`:
+    - Add `selectedLocation` (`String?`): Selected venue name.
+    - Add `isOnlineTraining` (`bool`, default: `false`): Flag for virtual sessions.
+    - In `init()` and `selectSport(sport)`:
+      - Automatically inspect coach's `sportLocations` for that sport.
+      - Auto-select initial location or online mode if only one option exists, or prompt trainee to choose.
+    - Methods:
+      - `selectTrainingLocation(String location)`
+      - `selectOnlineTraining()`
+    - Update `isSubmitReady`:
+      - Require `selectedLocation != null || isOnlineTraining == true`.
+    - Update `BookingBuilderHelper.buildFromState`:
+      - Set `trainingLocation: state.isOnlineTraining ? 'Online' : state.selectedLocation!`.
+      - Set `isOnline: state.isOnlineTraining`.
+  - Build UI Components in `lib/features/booking_request/presentation/widgets/`:
+    - Create `BookingLocationSelector` (<150 lines):
+      - Displays below sport selection:
+      - Online option chip (`💻 Online Session`) if offered for the selected sport.
+      - Physical location chips/cards (`📍 [Location Name]`) for each venue configured by the coach.
+      - Visual active state with checkmark and primary color accent.
+    - Update `BookingSummaryCard`:
+      - Add "Training Location" row: displays selected venue name with location pin or "💻 Online Training".
+    - Update `BookingRequestBody`:
+      - Place `BookingLocationSelector` cleanly beneath `BookingSportChips`.
+
+- [x] **Step 7.5: Coach & Trainee Booking Cards Location Display**
+  - Coach Dashboard (`features/coach_dashboard/presentation/widgets/`):
+    - Update `BookingCardInfo` & `BookingCardHeader`:
+      - Display training delivery badge: `💻 Online` or `📍 [Location Name]`.
+  - Trainee Bookings (`features/trainee_bookings/presentation/widgets/`):
+    - Update `TraineeBookingCard`:
+      - Display training location tag alongside sport name.
+  - Reschedule Sheets (`reschedule_booking_sheet.dart` & `trainee_reschedule_dialog.dart`):
+    - Preserve and clearly display the chosen sport and training location/online mode.
+
+- [x] **Step 7.6: Complete Localization (EN/AR) & Unit Testing**
+  - Add all localized strings in `lib/l10n/intl_en.arb` and `lib/l10n/intl_ar.arb`:
+    - Location configuration labels: "Training Mode & Locations", "Online Training", "Online Available", "Physical Locations", "Add Location", "Enter location or gym name", "Please configure at least one location or online training for {sport}".
+    - Booking selection labels: "Choose Training Location", "Online Session", "Venue / Club", "Sport Delivery Mode".
+  - Run `flutter pub run intl_utils:generate` to regenerate `S` class.
+  - Write unit tests for:
+    - `SportLocationModel` serialization and validation helpers.
+    - `CoachSetupCubit` sport location add/remove/toggle methods and Step 1 validation.
+    - `BookingRequestCubit` location selection and submit validation.
+
+---
+
+### Milestone 8: Centralized Multi-Role Notification Engine (Trainee, Coach, Admin Dashboard)
 
 **Goal**: Implement a complete notification infrastructure sending in-app alerts and push notifications for all critical marketplace, booking, and administrative events.
 
-- [ ] **Step 7.1: Global Notification Model & Data Layer Architecture**
+- [ ] **Step 8.1: Global Notification Model & Data Layer Architecture**
   - Follow the mandatory pipeline: `Services -> Remote/Local Data Source -> Concrete Repository -> Cubit -> UI`.
   - Create `NotificationModel`:
     - `id`: Unique document ID.
@@ -333,7 +443,7 @@ graph TD
   - Create `NotificationsRepository`:
     - Coordinates notifications data, unread counters, and persistence via `NotificationsRemoteDataSource`.
 
-- [ ] **Step 7.2: Comprehensive Notification Event Trigger Matrix**
+- [ ] **Step 8.2: Comprehensive Notification Event Trigger Matrix**
 
 | Event | Triggered By | Recipient | Type | Content / Details |
 | :--- | :--- | :--- | :--- | :--- |
@@ -350,7 +460,7 @@ graph TD
 | **Admin Warning Message** | Admin | Coach / Trainee | `admin_warning` | *"[Admin Warning Title]: [Warning Message Details]"* |
 | **Account Suspension** | Admin | Coach / Trainee | `account_suspended` | *"Your account has been suspended by the administrator"* |
 
-- [ ] **Step 7.3: Push Notification Service (FCM)**
+- [ ] **Step 8.3: Push Notification Service (FCM)**
   - Initialize Firebase Cloud Messaging in `lib/core/services/notification_service.dart`.
   - Request user notification permissions on Android 13+ and iOS with explanatory prompt.
   - Store FCM token in `fcm_tokens/{uid}` upon login and refresh on token updates.
@@ -359,17 +469,17 @@ graph TD
 
 ---
 
-### Milestone 8: In-App Notification Center & Real-Time Badges
+### Milestone 9: In-App Notification Center & Real-Time Badges
 
 **Goal**: Deliver a polished in-app Notification Center for Trainees and Coaches with unread counter badges and interactive item navigation.
 
-- [ ] **Step 8.1: Notifications State Management (`NotificationsCubit`)**
+- [ ] **Step 9.1: Notifications State Management (`NotificationsCubit`)**
   - Implement `NotificationsCubit`:
     - Real-time Firestore stream: `listenToNotifications(uid)`.
     - State holds `List<NotificationModel>`, `unreadCount`, filter type (`all`, `bookings`, `admin`).
     - Methods: `markAsRead(notificationId)`, `markAllAsRead()`, `deleteNotification(notificationId)`.
 
-- [ ] **Step 8.2: Notification Bell & Badge in AppBars**
+- [ ] **Step 9.2: Notification Bell & Badge in AppBars**
   - Create reusable `NotificationIconButton`:
     - Bell icon with reactive badge showing `unreadCount`.
     - Animates badge on new incoming notification.
@@ -377,7 +487,7 @@ graph TD
       - Trainee Home AppBar (`features/trainee_discovery/presentation/views/trainee_home_view.dart`).
       - Coach Dashboard AppBar (`features/coach_dashboard/presentation/views/coach_dashboard_page.dart`).
 
-- [ ] **Step 8.3: Notification Center View**
+- [ ] **Step 9.3: Notification Center View**
   - Create `lib/features/notifications/presentation/views/notifications_view.dart`:
     - Screen layout delegates strictly to widgets (<150 lines).
     - Filter tabs: **All**, **Bookings**, **System & Admin**.
@@ -392,11 +502,11 @@ graph TD
 
 ---
 
-### Milestone 9: Admin Dashboard Notification & Moderation Integration
+### Milestone 10: Admin Dashboard Notification & Moderation Integration
 
 **Goal**: Provide full backend and data contract compatibility with the Admin Dashboard for two-way communication, moderation, and alerts.
 
-- [ ] **Step 9.1: Admin Notifications Queue Contract**
+- [ ] **Step 10.1: Admin Notifications Queue Contract**
   - Standardize Firestore collection `admin_notifications` for web dashboard consumption:
     - Automatically triggered whenever:
       - A new coach finishes onboarding and submits identity documents (`coach_verification_submitted`).
@@ -404,7 +514,7 @@ graph TD
       - A dispute or booking cancellation occurs.
     - Fields: `id`, `type`, `sourceUid`, `sourceName`, `title`, `message`, `data`, `isRead`, `createdAt`.
 
-- [ ] **Step 9.2: Mobile App Receivers for Admin Actions**
+- [ ] **Step 10.2: Mobile App Receivers for Admin Actions**
   - **Coach Verification Approval/Rejection Listener**:
     - Update `CoachVerificationStatusCubit`:
       - Listens for status change (`approved` or `rejected`).
@@ -417,11 +527,11 @@ graph TD
 
 ---
 
-### Milestone 10: Localization (EN/AR), Quality Assurance, & Production Hardening
+### Milestone 11: Localization (EN/AR), Quality Assurance, & Production Hardening
 
 **Goal**: Complete 100% Arabic & English localization, verify RTL/LTR responsiveness, write unit tests for new Cubits, and prepare production builds.
 
-- [ ] **Step 10.1: Complete ARB Localization Keys**
+- [ ] **Step 11.1: Complete ARB Localization Keys**
   - Add all new Phase 2 strings to `lib/l10n/intl_en.arb` and `lib/l10n/intl_ar.arb`:
     - Phone authentication: phone label, country selection (Egypt, Lebanon), send OTP, verify OTP, invalid number, resend countdown.
     - Pricing & Booking: session price ($ USD), monthly price ($ USD), booking per session, booking per month, duration, frequency.
@@ -431,7 +541,7 @@ graph TD
   - Run `flutter pub run intl_utils:generate` to regenerate `S` class.
   - Verify zero hardcoded strings in the codebase.
 
-- [ ] **Step 10.2: RTL & Accessibility Verification**
+- [ ] **Step 11.2: RTL & Accessibility Verification**
   - Test all new views in Arabic RTL layout:
     - Phone number and country code directionality.
     - 3-button booking card alignment.
@@ -440,7 +550,7 @@ graph TD
     - Notification list tiles and timestamps.
   - Verify minimum touch targets (≥48x48 dp) and WCAG contrast ratios.
 
-- [ ] **Step 10.3: Unit & Integration Testing**
+- [ ] **Step 11.3: Unit & Integration Testing**
   - Write unit tests for:
     - `PhoneAuthCubit` (phone validation, OTP dispatch, verify success/failure).
     - `CoachBookingsCubit` (approve, reject with reason, reschedule proposal).
@@ -491,6 +601,14 @@ lib/
 │   │               ├── phone_number_text_field.dart
 │   │               ├── otp_pin_input.dart
 │   │               └── otp_timer_resend.dart
+│   ├── coach_setup/
+│   │   ├── data/models/
+│   │   │   ├── coach_profile_model.dart           # Updated: sportLocations list
+│   │   │   └── sport_location_model.dart          # NEW: Per-sport locations & online model
+│   │   └── presentation/widgets/
+│   │       ├── sport_location_config_card.dart    # NEW: Per-sport location & online manager card
+│   │       ├── sports_locations_list_widget.dart  # NEW: List of sport location configs
+│   │       └── step_professional_info_widget.dart # Updated: includes sports locations wizard
 │   ├── coach_dashboard/
 │   │   └── presentation/widgets/
 │   │       ├── booking_card.dart
@@ -508,6 +626,7 @@ lib/
 │   │       │   └── edit_coach_profile_sheet.dart
 │   │       └── widgets/
 │   │           ├── coach_profile_header_widget.dart
+│   │           ├── coach_profile_sports_locations_widget.dart # NEW: Sports & delivery chips
 │   │           ├── coach_profile_avatar.dart
 │   │           ├── coach_profile_pricing_card_widget.dart
 │   │           ├── coach_profile_rate_tile.dart
@@ -519,14 +638,19 @@ lib/
 │   │           ├── edit_profile_form_body.dart
 │   │           ├── edit_profile_form_fields.dart
 │   │           ├── edit_profile_sports_chips.dart
+│   │           ├── edit_sport_locations_section.dart  # NEW: Location editor in edit profile
 │   │           ├── edit_pricing_dialog.dart
 │   │           └── photo_picker_bottom_sheet.dart
+│   ├── coach_profile_details/
+│   │   └── presentation/widgets/
+│   │       └── coach_details_sports_locations_widget.dart # NEW: Trainee view of delivery modes
 │   ├── booking_request/
-│   │   ├── data/models/booking_model.dart         # Updated: bookingType, price in USD
+│   │   ├── data/models/booking_model.dart         # Updated: trainingLocation, isOnline
 │   │   └── presentation/
 │   │       ├── views/booking_request_view.dart
 │   │       └── widgets/
 │   │           ├── booking_type_selector.dart     # Per Session vs. Per Month toggle
+│   │           ├── booking_location_selector.dart # NEW: Choose physical venue or Online
 │   │           ├── booking_date_picker.dart
 │   │           ├── monthly_schedule_selector.dart
 │   │           └── booking_summary_card.dart
@@ -577,6 +701,13 @@ Before client delivery of Phase 2, verify each item:
   - Coach has a dedicated 4th profile tab in bottom navigation.
   - Coach can view and edit profile details, photo, and USD pricing.
   - Coach can toggle language, theme, and sign out safely.
+- [ ] **Per-Sport Locations & Online Training Delivery**:
+  - Coach complete profile / registration requires at least one location or Online mode for every selected sport.
+  - Coaches can configure multiple physical locations (gyms, clubs, venues) for a single sport.
+  - Coaches can toggle Online training on or off per sport.
+  - Coach profile and Coach details screens display each sport's physical locations and/or Online badge.
+  - Trainees can choose between the coach's available locations or Online when requesting a booking.
+  - Booking records and booking cards (Coach Dashboard & Trainee Bookings) display the selected location or Online status.
 - [ ] **Notifications Engine**:
   - Trainee receives instant notifications on booking approved, rejected (with reason), and rescheduled.
   - Coach receives instant notifications on new bookings and reschedule responses.

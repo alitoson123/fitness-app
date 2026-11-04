@@ -95,6 +95,7 @@ class CoachCard extends StatelessWidget {
                       SizedBox(height: 8.h),
                       CoachCardSportsRow(
                         sports: coach.sports,
+                        sportLocations: coach.sportLocations,
                         primaryColor: primary,
                         isDark: isDark,
                       ),

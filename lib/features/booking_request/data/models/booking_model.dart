@@ -5,6 +5,8 @@ class BookingModel {
   final String id, coachUid, coachName, coachPhotoUrl;
   final String traineeUid, traineeName, traineePhotoUrl;
   final String sport, bookingType, date, startTime, endTime;
+  final String trainingLocation;
+  final bool isOnline;
   final double price;
   final String currency;
   final int durationMonths;
@@ -25,6 +27,8 @@ class BookingModel {
     this.traineePhotoUrl = '',
     required this.sport,
     this.bookingType = 'session',
+    this.trainingLocation = '',
+    this.isOnline = false,
     required this.date,
     required this.startTime,
     required this.endTime,
@@ -69,6 +73,8 @@ class BookingModel {
     String? traineePhotoUrl,
     String? sport,
     String? bookingType,
+    String? trainingLocation,
+    bool? isOnline,
     String? date,
     String? startTime,
     String? endTime,
@@ -102,6 +108,8 @@ class BookingModel {
       traineePhotoUrl: traineePhotoUrl ?? this.traineePhotoUrl,
       sport: sport ?? this.sport,
       bookingType: bookingType ?? this.bookingType,
+      trainingLocation: trainingLocation ?? this.trainingLocation,
+      isOnline: isOnline ?? this.isOnline,
       date: date ?? this.date,
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,

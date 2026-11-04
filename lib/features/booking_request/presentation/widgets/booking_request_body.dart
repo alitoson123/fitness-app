@@ -6,6 +6,7 @@ import '../view_model/booking_request_cubit/booking_request_cubit.dart';
 import '../view_model/booking_request_cubit/booking_request_state.dart';
 import 'booking_coach_summary_card.dart';
 import 'booking_date_strip.dart';
+import 'booking_location_selector.dart';
 import 'booking_notes_field.dart';
 import 'booking_sport_chips.dart';
 import 'booking_summary_card.dart';
@@ -67,6 +68,15 @@ class BookingRequestBody extends StatelessWidget {
               selectedSport: state.selectedSport,
               onSelectSport: cubit.selectSport,
             ),
+            SizedBox(height: 14.h),
+            BookingLocationSelector(
+              coach: coach,
+              selectedSport: state.selectedSport,
+              selectedLocation: state.selectedLocation,
+              isOnlineTraining: state.isOnlineTraining,
+              onSelectLocation: cubit.selectTrainingLocation,
+              onSelectOnline: cubit.selectOnlineTraining,
+            ),
             SizedBox(height: 18.h),
           ],
           BookingDateStrip(
@@ -89,6 +99,8 @@ class BookingRequestBody extends StatelessWidget {
             coach: coach,
             bookingType: state.bookingType,
             sport: state.selectedSport,
+            location: state.selectedLocation,
+            isOnline: state.isOnlineTraining,
             date: state.selectedDate,
             slot: activeDateSlot,
             sessionsCount: state.selectedMonthlySessions.length,

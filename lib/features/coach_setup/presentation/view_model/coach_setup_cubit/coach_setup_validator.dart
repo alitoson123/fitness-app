@@ -1,3 +1,4 @@
+import 'package:fitness_app/features/coach_setup/data/models/sport_location_model.dart';
 import 'coach_setup_cubit.dart';
 
 class CoachSetupValidator {
@@ -12,6 +13,7 @@ class CoachSetupValidator {
         bio: c.bio,
         selectedLanguages: c.selectedLanguages,
         selectedSports: c.selectedSports,
+        sportLocations: c.sportLocations,
         sessionPriceUSD: c.sessionPriceUSD,
         monthlyPriceUSD: c.monthlyPriceUSD,
         availabilitySummary: c.availabilitySummary,
@@ -30,6 +32,7 @@ class CoachSetupValidator {
     required String bio,
     required List<String> selectedLanguages,
     required List<String> selectedSports,
+    List<SportLocationModel> sportLocations = const [],
     double sessionPriceUSD = 0.0,
     double monthlyPriceUSD = 0.0,
     required String availabilitySummary,
@@ -47,6 +50,18 @@ class CoachSetupValidator {
       if (selectedLanguages.isEmpty) return 'language_required';
     } else if (step == 1) {
       if (selectedSports.isEmpty) return 'sport_required';
+      for (final sport in selectedSports) {
+        final target = sport.toLowerCase().replaceAll(' ', '_').trim();
+        final config = sportLocations.cast<SportLocationModel?>().firstWhere(
+              (loc) =>
+                  loc?.sport.toLowerCase().replaceAll(' ', '_').trim() ==
+                  target,
+              orElse: () => null,
+            );
+        if (config == null || !config.isValid) {
+          return 'sport_locations_required';
+        }
+      }
     } else if (step == 2) {
       if (sessionPriceUSD <= 0) return 'session_rate_required';
       if (monthlyPriceUSD <= 0) return 'monthly_rate_required';

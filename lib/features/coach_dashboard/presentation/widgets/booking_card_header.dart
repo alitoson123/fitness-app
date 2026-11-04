@@ -17,6 +17,11 @@ class BookingCardHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textSecondary =
+        isDark ? AppColors.darkTextSecondary : AppColors.textSecondary;
+    final badgeBg =
+        isDark ? AppColors.darkBackground : AppColors.backgroundSecondary;
+
     return Row(
       children: [
         CircleAvatar(
@@ -56,33 +61,28 @@ class BookingCardHeader extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               SizedBox(height: 3.h),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-                decoration: BoxDecoration(
-                  color: isDark
-                      ? AppColors.darkBackground
-                      : AppColors.backgroundSecondary,
-                  borderRadius: BorderRadius.circular(6.r),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.fitness_center_rounded,
-                      size: 10.r,
-                      color: AppColors.flameRed,
-                    ),
-                    SizedBox(width: 3.w),
-                    Text(
-                      booking.sport,
-                      style: TextStyle(
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.flameRed,
-                      ),
+              Row(
+                children: [
+                  _buildBadge(
+                    icon: Icons.fitness_center_rounded,
+                    label: booking.sport,
+                    iconColor: AppColors.flameRed,
+                    textColor: AppColors.flameRed,
+                    bg: badgeBg,
+                  ),
+                  if (booking.isOnline || booking.trainingLocation.isNotEmpty) ...[
+                    SizedBox(width: 4.w),
+                    _buildBadge(
+                      icon: booking.isOnline
+                          ? Icons.laptop_chromebook_rounded
+                          : Icons.location_on_rounded,
+                      label: booking.isOnline ? 'Online' : booking.trainingLocation,
+                      iconColor: textSecondary,
+                      textColor: textSecondary,
+                      bg: badgeBg,
                     ),
                   ],
-                ),
+                ],
               ),
             ],
           ),
@@ -105,6 +105,37 @@ class BookingCardHeader extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+
+  Widget _buildBadge({
+    required IconData icon,
+    required String label,
+    required Color iconColor,
+    required Color textColor,
+    required Color bg,
+  }) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(6.r),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 10.r, color: iconColor),
+          SizedBox(width: 3.w),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10.sp,
+              fontWeight: FontWeight.w600,
+              color: textColor,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -4256,6 +4256,16 @@ class S {
     );
   }
 
+  /// `Sports & Training Locations`
+  String get sportsAndLocationsTitle {
+    return Intl.message(
+      'Sports & Training Locations',
+      name: 'sportsAndLocationsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `{age} yrs`
   String coachAgeYears(Object age) {
     return Intl.message(
@@ -6831,6 +6841,188 @@ class S {
     return Intl.message(
       'Unique training days this year',
       name: 'uniqueDaysInYear',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please configure at least one location or online training for each selected sport`
+  String get validationSportLocationsRequired {
+    return Intl.message(
+      'Please configure at least one location or online training for each selected sport',
+      name: 'validationSportLocationsRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Training Mode & Locations`
+  String get sportDeliveryModeTitle {
+    return Intl.message(
+      'Training Mode & Locations',
+      name: 'sportDeliveryModeTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Configure physical venues or virtual coaching for each sport`
+  String get sportDeliveryModeSubtitle {
+    return Intl.message(
+      'Configure physical venues or virtual coaching for each sport',
+      name: 'sportDeliveryModeSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Available for Online Training`
+  String get availableForOnlineTraining {
+    return Intl.message(
+      'Available for Online Training',
+      name: 'availableForOnlineTraining',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Conduct remote sessions via video call`
+  String get availableForOnlineTrainingSubtitle {
+    return Intl.message(
+      'Conduct remote sessions via video call',
+      name: 'availableForOnlineTrainingSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Physical Locations & Clubs`
+  String get physicalLocations {
+    return Intl.message(
+      'Physical Locations & Clubs',
+      name: 'physicalLocations',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Location`
+  String get addLocation {
+    return Intl.message(
+      'Add Location',
+      name: 'addLocation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter club, gym, or field name...`
+  String get enterLocationHint {
+    return Intl.message(
+      'Enter club, gym, or field name...',
+      name: 'enterLocationHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enable online training or add at least one location`
+  String get noLocationsOrOnlineWarning {
+    return Intl.message(
+      'Please enable online training or add at least one location',
+      name: 'noLocationsOrOnlineWarning',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Online Available`
+  String get onlineAvailableBadge {
+    return Intl.message(
+      'Online Available',
+      name: 'onlineAvailableBadge',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Online Coaching Available`
+  String get onlineCoachingAvailableBadge {
+    return Intl.message(
+      'Online Coaching Available',
+      name: 'onlineCoachingAvailableBadge',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select Training Delivery / Location`
+  String get chooseTrainingLocation {
+    return Intl.message(
+      'Select Training Delivery / Location',
+      name: 'chooseTrainingLocation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Online Training`
+  String get onlineTrainingOption {
+    return Intl.message(
+      'Online Training',
+      name: 'onlineTrainingOption',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Virtual coaching session via app / video`
+  String get onlineTrainingOptionSubtitle {
+    return Intl.message(
+      'Virtual coaching session via app / video',
+      name: 'onlineTrainingOptionSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Training Location`
+  String get trainingLocationLabel {
+    return Intl.message(
+      'Training Location',
+      name: 'trainingLocationLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please select where you would like this training to take place.`
+  String get selectDeliveryLocationPrompt {
+    return Intl.message(
+      'Please select where you would like this training to take place.',
+      name: 'selectDeliveryLocationPrompt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count, plural, =1{1 Location} other{{count} Locations}}`
+  String locationsCount(num count) {
+    return Intl.plural(
+      count,
+      one: '1 Location',
+      other: '$count Locations',
+      name: 'locationsCount',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Edit Sport Locations & Delivery`
+  String get editSportLocations {
+    return Intl.message(
+      'Edit Sport Locations & Delivery',
+      name: 'editSportLocations',
       desc: '',
       args: [],
     );

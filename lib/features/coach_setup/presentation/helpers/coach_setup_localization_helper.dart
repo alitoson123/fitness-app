@@ -68,6 +68,8 @@ abstract class CoachSetupLocalizationHelper {
         return s.validationLanguageRequired;
       case 'sport_required':
         return s.validationSportRequired;
+      case 'sport_locations_required':
+        return s.validationSportLocationsRequired;
       case 'rate_required':
         return s.validationRateRequired;
       case 'session_rate_required':
