@@ -45,27 +45,35 @@ class _CoachDashboardBodyState extends State<CoachDashboardBody> {
     }
   }
 
-  void _handleReject(BookingModel booking, CoachBookingsCubit cubit) {
-    RejectBookingDialog.show(
-      context: context,
-      booking: booking,
-      onConfirm: (reason) => cubit.rejectBooking(booking.id, reason: reason),
-    );
-  }
-
-  void _handleReschedule(BookingModel booking, CoachBookingsCubit cubit) {
-    RescheduleBookingSheet.show(
-      context: context,
-      booking: booking,
-      onConfirm: (date, start, end, reason) => cubit.requestReschedule(
+  void _handleReject(BookingModel booking, CoachBookingsCubit cubit) =>
+      RejectBookingDialog.show(
+        context: context,
         booking: booking,
-        proposedDate: date,
-        proposedStartTime: start,
-        proposedEndTime: end,
-        reason: reason,
-      ),
-    );
-  }
+        onConfirm: (reason) => cubit.rejectBooking(booking.id, reason: reason),
+      );
+
+  void _handleReschedule(BookingModel booking, CoachBookingsCubit cubit) =>
+      RescheduleBookingSheet.show(
+        context: context,
+        booking: booking,
+        onConfirm: (date, start, end, reason, {sessionId}) =>
+            booking.isMonthly && sessionId != null
+                ? cubit.requestMonthlySessionReschedule(
+                    booking: booking,
+                    sessionId: sessionId,
+                    proposedDate: date,
+                    proposedStartTime: start,
+                    proposedEndTime: end,
+                    reason: reason,
+                  )
+                : cubit.requestReschedule(
+                    booking: booking,
+                    proposedDate: date,
+                    proposedStartTime: start,
+                    proposedEndTime: end,
+                    reason: reason,
+                  ),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -78,31 +86,22 @@ class _CoachDashboardBodyState extends State<CoachDashboardBody> {
         if (state.isLoading && state.allBookings.isEmpty) {
           return const SafeArea(child: CoachDashboardSkeleton());
         }
-        final earnings =
-            CoachBookingDateHelper.calculateMonthEarnings(state.allBookings);
-        final currency =
-            state.allBookings.isNotEmpty ? state.allBookings.first.currency : 'USD';
+        final earnings = CoachBookingDateHelper.calculateMonthEarnings(state.allBookings);
+        final currency = state.allBookings.isNotEmpty ? state.allBookings.first.currency : 'USD';
 
         return SafeArea(
           child: RefreshIndicator(
             onRefresh: () async {
-              if (user != null) {
-                bookingsCubit.listenToBookings(user.uid);
-              }
+              if (user != null) bookingsCubit.listenToBookings(user.uid);
             },
             child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(
-                parent: BouncingScrollPhysics(),
-              ),
+              physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
               padding: AppSpacing.screenPadding,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: AppSpacing.s2),
-                  CoachWelcomeHeader(
-                    coachName: name,
-
-                  ),
+                  CoachWelcomeHeader(coachName: name),
                   SizedBox(height: AppSpacing.s3),
                   CoachDashboardStats(
                     state: state,

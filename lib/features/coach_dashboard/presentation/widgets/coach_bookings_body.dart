@@ -21,11 +21,7 @@ import 'reschedule_booking_sheet.dart';
 class CoachBookingsBody extends StatelessWidget {
   const CoachBookingsBody({super.key});
 
-  void _handleReject(
-    BuildContext context,
-    BookingModel booking,
-    CoachBookingsCubit cubit,
-  ) {
+  void _handleReject(BuildContext context, BookingModel booking, CoachBookingsCubit cubit) {
     RejectBookingDialog.show(
       context: context,
       booking: booking,
@@ -33,21 +29,27 @@ class CoachBookingsBody extends StatelessWidget {
     );
   }
 
-  void _handleReschedule(
-    BuildContext context,
-    BookingModel booking,
-    CoachBookingsCubit cubit,
-  ) {
+  void _handleReschedule(BuildContext context, BookingModel booking, CoachBookingsCubit cubit) {
     RescheduleBookingSheet.show(
       context: context,
       booking: booking,
-      onConfirm: (date, start, end, reason) => cubit.requestReschedule(
-        booking: booking,
-        proposedDate: date,
-        proposedStartTime: start,
-        proposedEndTime: end,
-        reason: reason,
-      ),
+      onConfirm: (date, start, end, reason, {sessionId}) =>
+          booking.isMonthly && sessionId != null
+              ? cubit.requestMonthlySessionReschedule(
+                  booking: booking,
+                  sessionId: sessionId,
+                  proposedDate: date,
+                  proposedStartTime: start,
+                  proposedEndTime: end,
+                  reason: reason,
+                )
+              : cubit.requestReschedule(
+                  booking: booking,
+                  proposedDate: date,
+                  proposedStartTime: start,
+                  proposedEndTime: end,
+                  reason: reason,
+                ),
     );
   }
 
@@ -125,6 +127,8 @@ class CoachBookingsBody extends StatelessWidget {
                             onAccept: () => cubit.acceptBooking(b.id),
                             onReject: () => _handleReject(context, b, cubit),
                             onReschedule: () => _handleReschedule(context, b, cubit),
+                            onAcceptReschedule: () => cubit.acceptReschedule(b),
+                            onDeclineReschedule: () => cubit.declineReschedule(b.id),
                           ),
                         ),
                       ),

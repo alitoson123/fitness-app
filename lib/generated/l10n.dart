@@ -5682,30 +5682,30 @@ class S {
     );
   }
 
-  /// `Decline & Cancel`
+  /// `Decline Proposed Time`
   String get declineReschedule {
     return Intl.message(
-      'Decline & Cancel',
+      'Decline Proposed Time',
       name: 'declineReschedule',
       desc: '',
       args: [],
     );
   }
 
-  /// `Decline Reschedule?`
+  /// `Decline Proposed Time?`
   String get declineConfirmTitle {
     return Intl.message(
-      'Decline Reschedule?',
+      'Decline Proposed Time?',
       name: 'declineConfirmTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `If you decline, this booking will be cancelled and you will need to book a new session. Proceed?`
+  /// `If you decline, the booking will remain at its original scheduled time and will not be cancelled. Proceed?`
   String get declineConfirmMessage {
     return Intl.message(
-      'If you decline, this booking will be cancelled and you will need to book a new session. Proceed?',
+      'If you decline, the booking will remain at its original scheduled time and will not be cancelled. Proceed?',
       name: 'declineConfirmMessage',
       desc: '',
       args: [],
@@ -5722,10 +5722,10 @@ class S {
     );
   }
 
-  /// `Booking cancelled. You can schedule a new session anytime.`
+  /// `Proposed time declined. The booking remains at its original scheduled time.`
   String get rescheduleDeclinedMessage {
     return Intl.message(
-      'Booking cancelled. You can schedule a new session anytime.',
+      'Proposed time declined. The booking remains at its original scheduled time.',
       name: 'rescheduleDeclinedMessage',
       desc: '',
       args: [],
@@ -7023,6 +7023,348 @@ class S {
     return Intl.message(
       'Edit Sport Locations & Delivery',
       name: 'editSportLocations',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select session to reschedule`
+  String get selectSessionToReschedule {
+    return Intl.message(
+      'Select session to reschedule',
+      name: 'selectSessionToReschedule',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Modifying Session #{index}`
+  String modifyingSession(Object index) {
+    return Intl.message(
+      'Modifying Session #$index',
+      name: 'modifyingSession',
+      desc: '',
+      args: [index],
+    );
+  }
+
+  /// `Session #{number}`
+  String sessionIndex(Object number) {
+    return Intl.message(
+      'Session #$number',
+      name: 'sessionIndex',
+      desc: '',
+      args: [number],
+    );
+  }
+
+  /// `View Sessions Schedule`
+  String get viewSessionsSchedule {
+    return Intl.message(
+      'View Sessions Schedule',
+      name: 'viewSessionsSchedule',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sessions Schedule`
+  String get sessionsSchedule {
+    return Intl.message(
+      'Sessions Schedule',
+      name: 'sessionsSchedule',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mark as Completed`
+  String get markAsCompleted {
+    return Intl.message(
+      'Mark as Completed',
+      name: 'markAsCompleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Session Completed`
+  String get sessionCompleted {
+    return Intl.message(
+      'Session Completed',
+      name: 'sessionCompleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sessions Progress: {completed} of {total} completed`
+  String sessionsProgress(Object completed, Object total) {
+    return Intl.message(
+      'Sessions Progress: $completed of $total completed',
+      name: 'sessionsProgress',
+      desc: '',
+      args: [completed, total],
+    );
+  }
+
+  /// `{completed} of {total} Sessions Completed`
+  String monthlyProgressCompleted(Object completed, Object total) {
+    return Intl.message(
+      '$completed of $total Sessions Completed',
+      name: 'monthlyProgressCompleted',
+      desc: '',
+      args: [completed, total],
+    );
+  }
+
+  /// `Reschedule This Session`
+  String get rescheduleThisSession {
+    return Intl.message(
+      'Reschedule This Session',
+      name: 'rescheduleThisSession',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Coach proposed rescheduling Session #{index} to {date} at {time}`
+  String coachProposedMonthlyReschedule(
+      Object index, Object date, Object time) {
+    return Intl.message(
+      'Coach proposed rescheduling Session #$index to $date at $time',
+      name: 'coachProposedMonthlyReschedule',
+      desc: '',
+      args: [index, date, time],
+    );
+  }
+
+  /// `Trainee proposed rescheduling Session #{index} to {date} at {time}`
+  String traineeProposedMonthlyReschedule(
+      Object index, Object date, Object time) {
+    return Intl.message(
+      'Trainee proposed rescheduling Session #$index to $date at $time',
+      name: 'traineeProposedMonthlyReschedule',
+      desc: '',
+      args: [index, date, time],
+    );
+  }
+
+  /// `Next Session: {date} at {time}`
+  String nextSessionLabel(Object date, Object time) {
+    return Intl.message(
+      'Next Session: $date at $time',
+      name: 'nextSessionLabel',
+      desc: '',
+      args: [date, time],
+    );
+  }
+
+  /// `No upcoming sessions`
+  String get noUpcomingSessions {
+    return Intl.message(
+      'No upcoming sessions',
+      name: 'noUpcomingSessions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upcoming`
+  String get statusUpcoming {
+    return Intl.message(
+      'Upcoming',
+      name: 'statusUpcoming',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reschedule Pending`
+  String get statusReschedulePending {
+    return Intl.message(
+      'Reschedule Pending',
+      name: 'statusReschedulePending',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Booking Details`
+  String get bookingDetailsTitle {
+    return Intl.message(
+      'Booking Details',
+      name: 'bookingDetailsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Client Information`
+  String get clientInfo {
+    return Intl.message(
+      'Client Information',
+      name: 'clientInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Coach Information`
+  String get coachInfo {
+    return Intl.message(
+      'Coach Information',
+      name: 'coachInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Booking Overview`
+  String get bookingOverview {
+    return Intl.message(
+      'Booking Overview',
+      name: 'bookingOverview',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View Details`
+  String get viewDetails {
+    return Intl.message(
+      'View Details',
+      name: 'viewDetails',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Call`
+  String get callClient {
+    return Intl.message(
+      'Call',
+      name: 'callClient',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Message`
+  String get chatClient {
+    return Intl.message(
+      'Message',
+      name: 'chatClient',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Client Notes`
+  String get clientNotesTitle {
+    return Intl.message(
+      'Client Notes',
+      name: 'clientNotesTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No additional notes provided`
+  String get noNotesAvailable {
+    return Intl.message(
+      'No additional notes provided',
+      name: 'noNotesAvailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rejection Reason`
+  String get rejectionReasonTitle {
+    return Intl.message(
+      'Rejection Reason',
+      name: 'rejectionReasonTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancellation Reason`
+  String get cancellationReasonTitle {
+    return Intl.message(
+      'Cancellation Reason',
+      name: 'cancellationReasonTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Single Session`
+  String get singleSessionPlan {
+    return Intl.message(
+      'Single Session',
+      name: 'singleSessionPlan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Paid`
+  String get paymentStatusPaid {
+    return Intl.message(
+      'Paid',
+      name: 'paymentStatusPaid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payment Pending`
+  String get paymentStatusPending {
+    return Intl.message(
+      'Payment Pending',
+      name: 'paymentStatusPending',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Trainee requested a new session time`
+  String get traineeProposedNewTime {
+    return Intl.message(
+      'Trainee requested a new session time',
+      name: 'traineeProposedNewTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Trainee's Note`
+  String get traineeReasonLabel {
+    return Intl.message(
+      'Trainee\'s Note',
+      name: 'traineeReasonLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reschedule Awaiting Coach`
+  String get reschedulePendingCoachBadge {
+    return Intl.message(
+      'Reschedule Awaiting Coach',
+      name: 'reschedulePendingCoachBadge',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reschedule request sent to coach`
+  String get rescheduleRequestedCoachSuccess {
+    return Intl.message(
+      'Reschedule request sent to coach',
+      name: 'rescheduleRequestedCoachSuccess',
       desc: '',
       args: [],
     );

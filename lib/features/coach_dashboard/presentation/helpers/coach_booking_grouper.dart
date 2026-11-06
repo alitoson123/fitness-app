@@ -10,13 +10,16 @@ abstract class CoachBookingGrouper {
     if (confirmedBookings.isEmpty) return null;
     final now = DateTime.now();
 
-    final valid = confirmedBookings.map((b) {
-      final dt = CoachDateFormatter.parseDateTime(b.date, b.startTime);
-      return (booking: b, dt: dt);
-    }).where((item) {
-      if (item.dt == null) return false;
-      return item.dt!.isAfter(now.subtract(const Duration(hours: 1)));
-    }).toList();
+    final valid = confirmedBookings
+        .map((b) {
+          final dt = CoachDateFormatter.parseDateTime(b.date, b.startTime);
+          return (booking: b, dt: dt);
+        })
+        .where((item) {
+          if (item.dt == null) return false;
+          return item.dt!.isAfter(now.subtract(const Duration(hours: 1)));
+        })
+        .toList();
 
     if (valid.isEmpty) return null;
     valid.sort((a, b) => a.dt!.compareTo(b.dt!));
@@ -45,9 +48,8 @@ abstract class CoachBookingGrouper {
 
     return List.generate(7, (index) {
       final day = DateTime(monday.year, monday.month, monday.day + index);
-      final isToday = day.year == now.year &&
-          day.month == now.month &&
-          day.day == now.day;
+      final isToday =
+          day.year == now.year && day.month == now.month && day.day == now.day;
 
       final count = bookings.where((b) {
         if (b.status != 'confirmed' && b.status != 'pending') return false;

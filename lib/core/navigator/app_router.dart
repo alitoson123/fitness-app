@@ -17,6 +17,10 @@ import '../../features/coach_profile_details/presentation/views/coach_details_vi
 import '../../features/coach_availability/presentation/views/coach_availability_view.dart';
 import '../../features/trainee_setup/presentation/views/trainee_setup_view.dart';
 import '../../features/trainee_setup/presentation/views/trainee_success_view.dart';
+import '../../core/services/auth_service/auth_service.dart';
+import '../../features/booking_details/presentation/view_model/booking_details_args.dart';
+import '../../features/booking_details/presentation/views/booking_details_view.dart';
+import '../../features/booking_request/data/models/booking_model.dart';
 import '../../features/booking_request/presentation/views/booking_request_view.dart';
 import 'app_routes.dart';
 
@@ -116,6 +120,22 @@ abstract class AppRouter {
       GoRoute(
         path: AppRoutes.traineeBookings,
         builder: (context, state) => const TraineeHomeView(initialIndex: 1),
+      ),
+      GoRoute(
+        path: AppRoutes.bookingDetails,
+        builder: (context, state) {
+          final extra = state.extra;
+          if (extra is BookingDetailsArgs) {
+            return BookingDetailsView(args: extra);
+          } else if (extra is BookingModel) {
+            final currentUid = getIt<AuthService>().currentUser?.uid;
+            final isCoach = currentUid == extra.coachUid;
+            return BookingDetailsView(
+              args: BookingDetailsArgs(booking: extra, isCoach: isCoach),
+            );
+          }
+          return const SplashView();
+        },
       ),
     ],
   );

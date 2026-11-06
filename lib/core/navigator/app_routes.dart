@@ -21,4 +21,7 @@ abstract class AppRoutes {
   static const String coachDashboard = '/coach/dashboard';
   static const String coachAvailability = '/coach/availability';
   static const String coachProfile = '/coach/profile';
+
+  // Shared booking details route
+  static const String bookingDetails = '/booking-details';
 }

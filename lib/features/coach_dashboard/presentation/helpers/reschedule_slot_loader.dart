@@ -8,7 +8,7 @@ abstract class RescheduleSlotLoader {
   static List<DateTime> generateNext14Days() {
     final now = DateTime.now();
     return List.generate(
-      14,
+      30,
       (i) => DateTime(now.year, now.month, now.day + 1 + i),
     );
   }

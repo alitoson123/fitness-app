@@ -6,6 +6,8 @@ import '../../../../core/navigator/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../generated/l10n.dart';
+import '../../../booking_request/data/models/booking_model.dart';
+import '../../../coach_dashboard/presentation/widgets/reschedule_booking_sheet.dart';
 import '../view_model/trainee_bookings_cubit/trainee_bookings_cubit.dart';
 import '../view_model/trainee_bookings_cubit/trainee_bookings_states.dart';
 import 'trainee_booking_card.dart';
@@ -16,6 +18,34 @@ class TraineeBookingsBody extends StatelessWidget {
   final String traineeUid;
 
   const TraineeBookingsBody({super.key, required this.traineeUid});
+
+  void _handleReschedule(
+    BuildContext context,
+    BookingModel booking,
+    TraineeBookingsCubit cubit,
+  ) {
+    RescheduleBookingSheet.show(
+      context: context,
+      booking: booking,
+      onConfirm: (date, start, end, reason, {sessionId}) =>
+          booking.isMonthly && sessionId != null
+              ? cubit.requestMonthlySessionReschedule(
+                  bookingId: booking.id,
+                  sessionId: sessionId,
+                  proposedDate: date,
+                  proposedStartTime: start,
+                  proposedEndTime: end,
+                  reason: reason,
+                )
+              : cubit.requestReschedule(
+                  booking: booking,
+                  proposedDate: date,
+                  proposedStartTime: start,
+                  proposedEndTime: end,
+                  reason: reason,
+                ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +77,16 @@ class TraineeBookingsBody extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(s.rescheduleDeclinedMessage),
-              backgroundColor: AppColors.error,
+              backgroundColor: AppColors.primary,
+            ),
+          );
+          cubit.clearMessages();
+        }
+        if (state.successMessage == 'rescheduled') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(s.rescheduleRequestedCoachSuccess),
+              backgroundColor: AppColors.primary,
             ),
           );
           cubit.clearMessages();
@@ -116,6 +155,7 @@ class TraineeBookingsBody extends StatelessWidget {
                         AppRoutes.coachDetails,
                         extra: b.coachUid,
                       ),
+                      onReschedule: () => _handleReschedule(context, b, cubit),
                     ),
                   ),
                 SizedBox(height: 24.h),

@@ -58,6 +58,111 @@ class BookingModel {
   bool get isSession => bookingType != 'monthly';
   int get sessionsCount => sessions.isNotEmpty ? sessions.length : 1;
 
+  BookingSessionModel? getSessionById(String id) =>
+      sessions.where((s) => s.id == id).firstOrNull;
+
+  bool get hasPendingSessionReschedule =>
+      sessions.any((s) => s.isReschedulePending);
+
+  List<BookingSessionModel> get pendingRescheduleSessions =>
+      sessions.where((s) => s.isReschedulePending).toList();
+
+  List<BookingSessionModel> get completedSessions =>
+      sessions.where((s) => s.isCompleted).toList();
+
+  int get completedSessionsCount => completedSessions.length;
+
+  double get progressRatio => sessionsCount > 0
+      ? (completedSessionsCount / sessionsCount).clamp(0.0, 1.0)
+      : 0.0;
+
+  BookingSessionModel? get nextUpcomingSession {
+    final up = sessions.where((s) => !s.isCompleted && s.status != 'cancelled').toList();
+    if (up.isEmpty) return null;
+    up.sort((a, b) {
+      final c = a.date.compareTo(b.date);
+      return c != 0 ? c : a.startTime.compareTo(b.startTime);
+    });
+    return up.first;
+  }
+
+  BookingModel proposeMonthlySessionReschedule({
+    required String sessionId,
+    required String proposedDate,
+    required String proposedStartTime,
+    required String proposedEndTime,
+    required String reason,
+    required String rescheduledBy,
+  }) {
+    final updatedSessions = sessions.map((s) {
+      if (s.id == sessionId) {
+        return s.proposeReschedule(
+          newDate: proposedDate,
+          newStartTime: proposedStartTime,
+          newEndTime: proposedEndTime,
+          reason: reason,
+          by: rescheduledBy,
+        );
+      }
+      return s;
+    }).toList();
+
+    return copyWith(
+      status: 'reschedule_pending',
+      sessions: updatedSessions,
+    );
+  }
+
+  BookingModel acceptMonthlySessionReschedule({
+    required String sessionId,
+    String? restoredStatus,
+  }) {
+    final updatedSessions = sessions.map((s) {
+      if (s.id == sessionId) return s.acceptReschedule();
+      return s;
+    }).toList();
+
+    final hasPending = updatedSessions.any((s) => s.isReschedulePending);
+    final targetStatus = hasPending
+        ? 'reschedule_pending'
+        : (restoredStatus ?? 'confirmed');
+
+    return copyWith(status: targetStatus, sessions: updatedSessions);
+  }
+
+  BookingModel declineMonthlySessionReschedule({
+    required String sessionId,
+    String? restoredStatus,
+  }) {
+    final updatedSessions = sessions.map((s) {
+      if (s.id == sessionId) return s.declineReschedule();
+      return s;
+    }).toList();
+
+    final hasPending = updatedSessions.any((s) => s.isReschedulePending);
+    final targetStatus = hasPending
+        ? 'reschedule_pending'
+        : (restoredStatus ?? 'confirmed');
+
+    return copyWith(status: targetStatus, sessions: updatedSessions);
+  }
+
+  BookingModel completeMonthlySession({
+    required String sessionId,
+  }) {
+    final updatedSessions = sessions.map((s) {
+      if (s.id == sessionId) return s.markCompleted();
+      return s;
+    }).toList();
+
+    final allDone =
+        updatedSessions.isNotEmpty &&
+        updatedSessions.every((s) => s.isCompleted || s.status == 'cancelled');
+    final targetStatus = allDone ? 'completed' : status;
+
+    return copyWith(status: targetStatus, sessions: updatedSessions);
+  }
+
   factory BookingModel.fromJson(Map<String, dynamic> json, {String? id}) =>
       BookingSerializer.fromJson(json, id: id);
 

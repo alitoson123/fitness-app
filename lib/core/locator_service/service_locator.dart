@@ -32,9 +32,13 @@ import '../../features/coach_profile_details/presentation/view_model/coach_profi
 import '../../features/coach_availability/data/data_source/coach_availability_remote_data_source.dart';
 import '../../features/coach_availability/data/repos/coach_availability_repo.dart';
 import '../../features/coach_availability/presentation/view_model/coach_availability_cubit/coach_availability_cubit.dart';
+import '../../features/booking_details/data/data_source/booking_details_remote_data_source.dart';
+import '../../features/booking_details/data/repos/booking_details_repo.dart';
+import '../../features/booking_details/presentation/view_model/booking_details_cubit/booking_details_cubit.dart';
 import '../../features/booking_request/data/data_source/booking_request_remote_data_source.dart';
 import '../../features/booking_request/data/repos/booking_request_repo.dart';
 import '../../features/booking_request/presentation/view_model/booking_request_cubit/booking_request_cubit.dart';
+import '../../features/coach_dashboard/data/data_source/coach_bookings_remote_data_source.dart';
 import '../../features/coach_dashboard/data/repos/coach_bookings_repo.dart';
 import '../../features/coach_dashboard/presentation/view_model/coach_bookings_cubit/coach_bookings_cubit.dart';
 import '../../features/trainee_bookings/data/repos/trainee_bookings_repo.dart';
@@ -265,9 +269,14 @@ Future<void> setupServiceLocator() async {
   );
 
   // 15. Coach Dashboard Bookings Dependencies
+  getIt.registerLazySingleton<CoachBookingsRemoteDataSource>(
+    () => CoachBookingsRemoteDataSource(
+      firestoreService: getIt<FirestoreService>(),
+    ),
+  );
   getIt.registerLazySingleton<CoachBookingsRepo>(
     () => CoachBookingsRepo(
-      firestoreService: getIt<FirestoreService>(),
+      remoteDataSource: getIt<CoachBookingsRemoteDataSource>(),
     ),
   );
   getIt.registerFactory<CoachBookingsCubit>(
@@ -318,6 +327,23 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory<CoachProfileCubit>(
     () => CoachProfileCubit(
       repository: getIt<CoachProfileRepo>(),
+    ),
+  );
+
+  // 19. Booking Details Dependencies
+  getIt.registerLazySingleton<BookingDetailsRemoteDataSource>(
+    () => BookingDetailsRemoteDataSource(
+      firestoreService: getIt<FirestoreService>(),
+    ),
+  );
+  getIt.registerLazySingleton<BookingDetailsRepo>(
+    () => BookingDetailsRepo(
+      remoteDataSource: getIt<BookingDetailsRemoteDataSource>(),
+    ),
+  );
+  getIt.registerFactory<BookingDetailsCubit>(
+    () => BookingDetailsCubit(
+      repository: getIt<BookingDetailsRepo>(),
     ),
   );
 }

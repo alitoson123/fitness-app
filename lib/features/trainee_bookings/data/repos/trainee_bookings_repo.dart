@@ -12,44 +12,30 @@ class TraineeBookingsRepo {
   TraineeBookingsRepo({required this.firestoreService});
 
   Stream<List<BookingModel>> getTraineeBookingsStream(String traineeUid) {
-    LoggerService.info(
-      'Listening to bookings for trainee: $traineeUid',
-      tag: 'TraineeBookingsRepo',
-    );
-
+    LoggerService.info('Listening to bookings for trainee: $traineeUid', tag: 'TraineeBookingsRepo');
     return firestoreService
         .streamCollection(
           collection: AppConstants.bookingsCollection,
           queryBuilder: (q) => q.where('traineeUid', isEqualTo: traineeUid),
         )
         .map((snapshot) {
-          final bookings = snapshot.docs.map((doc) {
-            return BookingModel.fromJson(doc.data(), id: doc.id);
-          }).toList();
-
+          final bookings = snapshot.docs
+              .map((d) => BookingModel.fromJson(d.data(), id: d.id))
+              .toList();
           bookings.sort((a, b) {
             final dateA = a.createdAt ?? DateTime.tryParse(a.date) ?? DateTime(1970);
             final dateB = b.createdAt ?? DateTime.tryParse(b.date) ?? DateTime(1970);
             return dateB.compareTo(dateA);
           });
-
           return bookings;
         });
   }
 
-  Future<Either<Failure, void>> acceptReschedule({
-    required BookingModel booking,
-  }) async {
+  Future<Either<Failure, void>> acceptReschedule({required BookingModel booking}) async {
     try {
       if (booking.proposedDate == null || booking.proposedStartTime == null) {
         return Left(ServerFailure(errorMessage: 'Invalid proposed reschedule'));
       }
-
-      LoggerService.info(
-        'Accepting reschedule for booking ${booking.id}',
-        tag: 'TraineeBookingsRepo',
-      );
-
       final data = <String, dynamic>{
         'status': 'confirmed',
         'date': booking.proposedDate,
@@ -60,28 +46,19 @@ class TraineeBookingsRepo {
         'previousEndTime': booking.endTime,
         ..._clearedProposalData(),
       };
-
       await firestoreService.updateData(
         collection: AppConstants.bookingsCollection,
         docId: booking.id,
         data: data,
       );
-
       return const Right(null);
-    } catch (e, stackTrace) {
-      LoggerService.error(
-        'Failed to accept reschedule: $e',
-        tag: 'TraineeBookingsRepo',
-        error: e,
-        stackTrace: stackTrace,
-      );
+    } catch (e, st) {
+      LoggerService.error('Failed to accept reschedule: $e', tag: 'TraineeBookingsRepo', error: e, stackTrace: st);
       return Left(ServerFailure(errorMessage: e.toString()));
     }
   }
 
-  Future<Either<Failure, void>> approveReschedule({
-    required BookingModel booking,
-  }) =>
+  Future<Either<Failure, void>> approveReschedule({required BookingModel booking}) =>
       acceptReschedule(booking: booking);
 
   Future<Either<Failure, void>> declineReschedule({
@@ -91,44 +68,145 @@ class TraineeBookingsRepo {
     try {
       final reason = (declineReason != null && declineReason.trim().isNotEmpty)
           ? declineReason.trim()
-          : 'Reschedule declined by trainee';
-
-      LoggerService.info(
-        'Declining reschedule for booking $bookingId ($reason)',
-        tag: 'TraineeBookingsRepo',
-      );
-
+          : null;
       final data = <String, dynamic>{
-        'status': 'cancelled',
-        'cancellationReason': reason,
+        'status': 'confirmed',
+        'previousDate': null,
+        'previousStartTime': null,
+        'previousEndTime': null,
+        'rescheduleDeclineReason': ?reason,
         ..._clearedProposalData(),
       };
-
       await firestoreService.updateData(
         collection: AppConstants.bookingsCollection,
         docId: bookingId,
         data: data,
       );
-
       return const Right(null);
-    } catch (e, stackTrace) {
+    } catch (e, st) {
+      LoggerService.error('Failed to decline reschedule: $e', tag: 'TraineeBookingsRepo', error: e, stackTrace: st);
+      return Left(ServerFailure(errorMessage: e.toString()));
+    }
+  }
+
+  Future<Either<Failure, void>> rejectReschedule({required String bookingId, String? declineReason}) =>
+      declineReschedule(bookingId: bookingId, declineReason: declineReason);
+
+  Future<Either<Failure, void>> requestReschedule({
+    required BookingModel booking,
+    required String proposedDate,
+    required String proposedStartTime,
+    required String proposedEndTime,
+    required String reason,
+  }) async {
+    try {
+      final data = <String, dynamic>{
+        'status': 'reschedule_pending',
+        'proposedDate': proposedDate,
+        'proposedStartTime': proposedStartTime,
+        'proposedEndTime': proposedEndTime,
+        'rescheduleReason': reason.trim(),
+        'rescheduledBy': AppConstants.roleTrainee,
+        'rescheduledAt': FieldValue.serverTimestamp(),
+        'previousDate': booking.date,
+        'previousStartTime': booking.startTime,
+        'previousEndTime': booking.endTime,
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+      await firestoreService.updateData(
+        collection: AppConstants.bookingsCollection,
+        docId: booking.id,
+        data: data,
+      );
+      return const Right(null);
+    } catch (e, st) {
+      LoggerService.error('Failed to request reschedule: $e',
+          tag: 'TraineeBookingsRepo', error: e, stackTrace: st);
+      return Left(ServerFailure(errorMessage: e.toString()));
+    }
+  }
+
+  Future<Either<Failure, void>> _updateMonthlyBooking(
+    String bookingId,
+    BookingModel Function(BookingModel current) transform,
+  ) async {
+    try {
+      final doc = await firestoreService.getDoc(
+        collection: AppConstants.bookingsCollection,
+        docId: bookingId,
+      );
+      if (!doc.exists || doc.data() == null) {
+        return Left(ServerFailure(errorMessage: 'Booking not found'));
+      }
+      final current = BookingModel.fromJson(doc.data()!, id: doc.id);
+      final updated = transform(current);
+
+      await firestoreService.updateData(
+        collection: AppConstants.bookingsCollection,
+        docId: bookingId,
+        data: {
+          'status': updated.status,
+          'sessions': updated.sessions.map((s) => s.toMap()).toList(),
+          'updatedAt': FieldValue.serverTimestamp(),
+        },
+      );
+      return const Right(null);
+    } catch (e, st) {
       LoggerService.error(
-        'Failed to decline reschedule: $e',
+        'Failed to update monthly booking session: $e',
         tag: 'TraineeBookingsRepo',
         error: e,
-        stackTrace: stackTrace,
+        stackTrace: st,
       );
       return Left(ServerFailure(errorMessage: e.toString()));
     }
   }
 
-  Future<Either<Failure, void>> rejectReschedule({
+  Future<Either<Failure, void>> requestMonthlySessionReschedule({
     required String bookingId,
-    String? declineReason,
+    required String sessionId,
+    required String proposedDate,
+    required String proposedStartTime,
+    required String proposedEndTime,
+    required String reason,
   }) =>
-      declineReschedule(
-        bookingId: bookingId,
-        declineReason: declineReason,
+      _updateMonthlyBooking(
+        bookingId,
+        (booking) => booking.proposeMonthlySessionReschedule(
+          sessionId: sessionId,
+          proposedDate: proposedDate,
+          proposedStartTime: proposedStartTime,
+          proposedEndTime: proposedEndTime,
+          reason: reason,
+          rescheduledBy: AppConstants.roleTrainee,
+        ),
+      );
+
+  Future<Either<Failure, void>> acceptMonthlySessionReschedule({
+    required String bookingId,
+    required String sessionId,
+    String? preferredRestoredStatus,
+  }) =>
+      _updateMonthlyBooking(
+        bookingId,
+        (booking) => booking.acceptMonthlySessionReschedule(
+          sessionId: sessionId,
+          restoredStatus: preferredRestoredStatus,
+        ),
+      );
+
+  Future<Either<Failure, void>> declineMonthlySessionReschedule({
+    required String bookingId,
+    required String sessionId,
+    String? declineReason,
+    String? preferredRestoredStatus,
+  }) =>
+      _updateMonthlyBooking(
+        bookingId,
+        (booking) => booking.declineMonthlySessionReschedule(
+          sessionId: sessionId,
+          restoredStatus: preferredRestoredStatus,
+        ),
       );
 
   Map<String, dynamic> _clearedProposalData() => {

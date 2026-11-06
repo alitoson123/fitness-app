@@ -41,7 +41,7 @@ class BookingStatusBadge extends StatelessWidget {
         ),
       'reschedule_pending' => (
           const Color(0xFFF59E0B),
-          s.reschedulePendingBadge,
+          s.statusReschedulePending,
           Icons.update_rounded,
         ),
       _ => (
@@ -63,12 +63,16 @@ class BookingStatusBadge extends StatelessWidget {
         children: [
           Icon(icon, size: 11.r, color: color),
           SizedBox(width: 4.w),
-          Text(
-            customLabel ?? label,
-            style: TextStyle(
-              fontSize: 10.sp,
-              fontWeight: FontWeight.w700,
-              color: color,
+          Flexible(
+            child: Text(
+              customLabel ?? label,
+              style: TextStyle(
+                fontSize: 10.sp,
+                fontWeight: FontWeight.w700,
+                color: color,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

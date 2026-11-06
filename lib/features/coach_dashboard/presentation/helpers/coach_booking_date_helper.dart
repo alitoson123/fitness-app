@@ -12,25 +12,22 @@ abstract class CoachBookingDateHelper {
 
   static BookingModel? getNearestUpcomingSession(
     List<BookingModel> confirmedBookings,
-  ) =>
-      CoachBookingGrouper.getNearestUpcomingSession(confirmedBookings);
+  ) => CoachBookingGrouper.getNearestUpcomingSession(confirmedBookings);
 
   static double calculateMonthEarnings(List<BookingModel> bookings) =>
       CoachBookingGrouper.calculateMonthEarnings(bookings);
 
   static List<({DateTime date, int count, bool isToday})> getWeekDays(
     List<BookingModel> bookings,
-  ) =>
-      CoachBookingGrouper.getWeekDays(bookings);
+  ) => CoachBookingGrouper.getWeekDays(bookings);
 
   static Map<String, List<BookingModel>> groupBookings(
     BuildContext context,
     List<BookingModel> bookings, {
     required bool isPastTab,
-  }) =>
-      CoachBookingGrouper.groupBookings(
-        context,
-        bookings,
-        isPastTab: isPastTab,
-      );
+  }) => CoachBookingGrouper.groupBookings(
+    context,
+    bookings,
+    isPastTab: isPastTab,
+  );
 }

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../booking_request/data/models/booking_model.dart';
 import '../../../coach_setup/data/models/coach_profile_model.dart';
 import 'reschedule_date_picker.dart';
+import 'reschedule_monthly_session_picker.dart';
 import 'reschedule_reason_input.dart';
 import 'reschedule_sheet_header.dart';
 import 'reschedule_submit_button.dart';
@@ -23,6 +24,8 @@ class RescheduleFormContent extends StatelessWidget {
   final ValueChanged<String> onSelectSlot;
   final ValueChanged<String> onReasonChanged;
   final VoidCallback onSubmit;
+  final String? selectedSessionId;
+  final ValueChanged<String>? onSelectSession;
 
   const RescheduleFormContent({
     super.key,
@@ -40,16 +43,28 @@ class RescheduleFormContent extends StatelessWidget {
     required this.onSelectSlot,
     required this.onReasonChanged,
     required this.onSubmit,
+    this.selectedSessionId,
+    this.onSelectSession,
   });
 
   @override
   Widget build(BuildContext context) {
+    final isMonthly = booking?.isMonthly == true && booking!.sessions.isNotEmpty;
+
     return SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           RescheduleSheetHeader(booking: booking),
+          if (isMonthly && onSelectSession != null) ...[
+            SizedBox(height: 12.h),
+            RescheduleMonthlySessionPicker(
+              sessions: booking!.sessions,
+              selectedSessionId: selectedSessionId,
+              onSelectSession: onSelectSession!,
+            ),
+          ],
           SizedBox(height: 14.h),
           if (coach != null)
             RescheduleDatePicker(
@@ -74,7 +89,8 @@ class RescheduleFormContent extends StatelessWidget {
           SizedBox(height: 16.h),
           RescheduleSubmitButton(
             isSubmitting: isSubmitting,
-            isEnabled: selectedSlot != null,
+            isEnabled: selectedSlot != null &&
+                (!isMonthly || selectedSessionId != null),
             onSubmit: onSubmit,
           ),
         ],
@@ -82,4 +98,3 @@ class RescheduleFormContent extends StatelessWidget {
     );
   }
 }
-

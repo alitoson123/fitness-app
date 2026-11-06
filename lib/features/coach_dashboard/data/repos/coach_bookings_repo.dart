@@ -1,40 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
-import '../../../../core/constant/app_constants.dart';
 import '../../../../core/errors/failure.dart';
-import '../../../../core/services/database_service/firestore_service.dart';
 import '../../../../core/services/logger_service/logger_service.dart';
 import '../../../booking_request/data/models/booking_model.dart';
+import '../data_source/coach_bookings_remote_data_source.dart';
 
 class CoachBookingsRepo {
-  final FirestoreService firestoreService;
+  final CoachBookingsRemoteDataSource remoteDataSource;
 
-  CoachBookingsRepo({required this.firestoreService});
+  CoachBookingsRepo({required this.remoteDataSource});
 
   Stream<List<BookingModel>> getCoachBookingsStream(String coachUid) {
-    LoggerService.info(
-      'Listening to bookings for coach: $coachUid',
-      tag: 'CoachBookingsRepo',
-    );
-
-    return firestoreService
-        .streamCollection(
-          collection: AppConstants.bookingsCollection,
-          queryBuilder: (query) => query.where('coachUid', isEqualTo: coachUid),
-        )
-        .map((snapshot) {
-          final bookings = snapshot.docs.map((doc) {
-            return BookingModel.fromJson(doc.data(), id: doc.id);
-          }).toList();
-
-          bookings.sort((a, b) {
-            final dateA = a.createdAt ?? DateTime.tryParse(a.date) ?? DateTime(1970);
-            final dateB = b.createdAt ?? DateTime.tryParse(b.date) ?? DateTime(1970);
-            return dateB.compareTo(dateA);
-          });
-
-          return bookings;
-        });
+    return remoteDataSource.getCoachBookingsStream(coachUid);
   }
 
   Future<Either<Failure, void>> updateBookingStatus({
@@ -43,31 +19,18 @@ class CoachBookingsRepo {
     String? rejectionReason,
   }) async {
     try {
-      LoggerService.info(
-        'Updating booking $bookingId status to $status',
-        tag: 'CoachBookingsRepo',
+      await remoteDataSource.updateBookingStatus(
+        bookingId: bookingId,
+        status: status,
+        rejectionReason: rejectionReason,
       );
-
-      final data = <String, dynamic>{
-        'status': status,
-        if (rejectionReason != null && rejectionReason.trim().isNotEmpty)
-          'rejectionReason': rejectionReason.trim(),
-        'updatedAt': FieldValue.serverTimestamp(),
-      };
-
-      await firestoreService.updateData(
-        collection: AppConstants.bookingsCollection,
-        docId: bookingId,
-        data: data,
-      );
-
       return const Right(null);
-    } catch (e, stackTrace) {
+    } catch (e, st) {
       LoggerService.error(
         'Failed to update booking status: $e',
         tag: 'CoachBookingsRepo',
         error: e,
-        stackTrace: stackTrace,
+        stackTrace: st,
       );
       return Left(ServerFailure(errorMessage: e.toString()));
     }
@@ -84,38 +47,155 @@ class CoachBookingsRepo {
     required String originalEndTime,
   }) async {
     try {
-      LoggerService.info(
-        'Requesting reschedule for booking $bookingId to $proposedDate $proposedStartTime',
-        tag: 'CoachBookingsRepo',
+      await remoteDataSource.requestReschedule(
+        bookingId: bookingId,
+        proposedDate: proposedDate,
+        proposedStartTime: proposedStartTime,
+        proposedEndTime: proposedEndTime,
+        reason: reason,
+        originalDate: originalDate,
+        originalStartTime: originalStartTime,
+        originalEndTime: originalEndTime,
       );
-
-      final data = <String, dynamic>{
-        'status': 'reschedule_pending',
-        'proposedDate': proposedDate,
-        'proposedStartTime': proposedStartTime,
-        'proposedEndTime': proposedEndTime,
-        'rescheduleReason': reason.trim(),
-        'rescheduledBy': 'coach',
-        'rescheduledAt': FieldValue.serverTimestamp(),
-        'previousDate': originalDate,
-        'previousStartTime': originalStartTime,
-        'previousEndTime': originalEndTime,
-        'updatedAt': FieldValue.serverTimestamp(),
-      };
-
-      await firestoreService.updateData(
-        collection: AppConstants.bookingsCollection,
-        docId: bookingId,
-        data: data,
-      );
-
       return const Right(null);
-    } catch (e, stackTrace) {
+    } catch (e, st) {
       LoggerService.error(
         'Failed to request reschedule: $e',
         tag: 'CoachBookingsRepo',
         error: e,
-        stackTrace: stackTrace,
+        stackTrace: st,
+      );
+      return Left(ServerFailure(errorMessage: e.toString()));
+    }
+  }
+
+  Future<Either<Failure, void>> acceptReschedule({
+    required BookingModel booking,
+  }) async {
+    try {
+      await remoteDataSource.acceptReschedule(booking: booking);
+      return const Right(null);
+    } catch (e, st) {
+      LoggerService.error(
+        'Failed to accept reschedule: $e',
+        tag: 'CoachBookingsRepo',
+        error: e,
+        stackTrace: st,
+      );
+      return Left(ServerFailure(errorMessage: e.toString()));
+    }
+  }
+
+  Future<Either<Failure, void>> declineReschedule({
+    required String bookingId,
+    String? declineReason,
+  }) async {
+    try {
+      await remoteDataSource.declineReschedule(
+        bookingId: bookingId,
+        declineReason: declineReason,
+      );
+      return const Right(null);
+    } catch (e, st) {
+      LoggerService.error(
+        'Failed to decline reschedule: $e',
+        tag: 'CoachBookingsRepo',
+        error: e,
+        stackTrace: st,
+      );
+      return Left(ServerFailure(errorMessage: e.toString()));
+    }
+  }
+
+  Future<Either<Failure, void>> requestMonthlySessionReschedule({
+    required String bookingId,
+    required String sessionId,
+    required String proposedDate,
+    required String proposedStartTime,
+    required String proposedEndTime,
+    required String reason,
+  }) async {
+    try {
+      await remoteDataSource.requestMonthlySessionReschedule(
+        bookingId: bookingId,
+        sessionId: sessionId,
+        proposedDate: proposedDate,
+        proposedStartTime: proposedStartTime,
+        proposedEndTime: proposedEndTime,
+        reason: reason,
+      );
+      return const Right(null);
+    } catch (e, st) {
+      LoggerService.error(
+        'Failed to request monthly session reschedule: $e',
+        tag: 'CoachBookingsRepo',
+        error: e,
+        stackTrace: st,
+      );
+      return Left(ServerFailure(errorMessage: e.toString()));
+    }
+  }
+
+  Future<Either<Failure, void>> acceptMonthlySessionReschedule({
+    required String bookingId,
+    required String sessionId,
+  }) async {
+    try {
+      await remoteDataSource.acceptMonthlySessionReschedule(
+        bookingId: bookingId,
+        sessionId: sessionId,
+      );
+      return const Right(null);
+    } catch (e, st) {
+      LoggerService.error(
+        'Failed to accept monthly session reschedule: $e',
+        tag: 'CoachBookingsRepo',
+        error: e,
+        stackTrace: st,
+      );
+      return Left(ServerFailure(errorMessage: e.toString()));
+    }
+  }
+
+  Future<Either<Failure, void>> declineMonthlySessionReschedule({
+    required String bookingId,
+    required String sessionId,
+    String? declineReason,
+  }) async {
+    try {
+      await remoteDataSource.declineMonthlySessionReschedule(
+        bookingId: bookingId,
+        sessionId: sessionId,
+        declineReason: declineReason,
+      );
+      return const Right(null);
+    } catch (e, st) {
+      LoggerService.error(
+        'Failed to decline monthly session reschedule: $e',
+        tag: 'CoachBookingsRepo',
+        error: e,
+        stackTrace: st,
+      );
+      return Left(ServerFailure(errorMessage: e.toString()));
+    }
+  }
+
+  Future<Either<Failure, void>> markSessionCompleted({
+    required String bookingId,
+    required String sessionId,
+  }) async {
+    try {
+      await remoteDataSource.markSessionCompleted(
+        bookingId: bookingId,
+        sessionId: sessionId,
+      );
+      return const Right(null);
+    } catch (e, st) {
+      LoggerService.error(
+        'Failed to mark session completed: $e',
+        tag: 'CoachBookingsRepo',
+        error: e,
+        stackTrace: st,
       );
       return Left(ServerFailure(errorMessage: e.toString()));
     }

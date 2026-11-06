@@ -51,7 +51,7 @@ All code created or modified in Phase 2 must adhere strictly to these architectu
 | `users` | `uid` | `uid`, `phoneNumber`, `countryCode` (`'+20'` \| `'+961'`), `name`, `role` (`'coach'` \| `'trainee'` \| `'admin'`), `status` (`'active'` \| `'suspended'`), `createdAt`, `updatedAt` | Base account profile after phone verification |
 | `coach_profiles` | `coachUid` | `uid`, `name`, `phoneNumber`, `photoUrl`, `bio`, `country`, `city`, `sports` (`List<String>`), `sportLocations` (`List<Map<String, dynamic>>`: `sport`, `isOnline`, `locations`), `specialties` (`List<String>`), `sessionPriceUSD` (`double`), `monthlyPriceUSD` (`double`), `currency` (`'USD'`), `yearsOfExperience`, `rating`, `reviewsCount`, `workingDays`, `workingHours`, `isProfileCompleted`, `updatedAt` | Public coach profile, per-sport delivery modes/locations, and marketplace pricing |
 | `trainee_profiles` | `uid` | `uid`, `name`, `phoneNumber`, `photoUrl`, `country`, `city`, `age`, `gender`, `sports` (`List<String>`), `level`, `goal`, `trainingType`, `isProfileCompleted`, `updatedAt` | Trainee profile preferences |
-| `bookings` | `bookingId` | `id`, `coachUid`, `coachName`, `coachPhotoUrl`, `traineeUid`, `traineeName`, `traineePhotoUrl`, `sport`, `trainingLocation` (`String`), `isOnline` (`bool`), `bookingType` (`'session'` \| `'monthly'`), `date`, `startTime`, `endTime`, `durationMonths` (`int?`), `monthlyScheduleNotes` (`String?`), `price` (`double`), `currency` (`'USD'`), `notes`, `status` (`'pending'` \| `'confirmed'` \| `'rejected'` \| `'reschedule_pending'`), `rejectionReason` (`String?`), `proposedDate` (`String?`), `proposedStartTime` (`String?`), `proposedEndTime` (`String?`), `rescheduleReason` (`String?`), `rescheduledBy` (`'coach'` \| `'trainee'`), `createdAt`, `updatedAt` | Training bookings supporting physical locations, online sessions, and per-session/per-month plans |
+| `bookings` | `bookingId` | `id`, `coachUid`, `coachName`, `coachPhotoUrl`, `traineeUid`, `traineeName`, `traineePhotoUrl`, `sport`, `trainingLocation` (`String`), `isOnline` (`bool`), `bookingType` (`'session'` \| `'monthly'`), `date`, `startTime`, `endTime`, `durationMonths` (`int?`), `monthlyScheduleNotes` (`String?`), `sessions` (`List<Map<String, dynamic>>`: `id`, `date`, `startTime`, `endTime`, `status`, `proposedDate`, `proposedStartTime`, `proposedEndTime`, `rescheduleReason`, `rescheduledBy`, `rescheduledAt`, `previousDate`, `previousStartTime`, `previousEndTime`), `price` (`double`), `currency` (`'USD'`), `notes`, `status` (`'pending'` \| `'confirmed'` \| `'rejected'` \| `'reschedule_pending'`), `rejectionReason` (`String?`), `proposedDate` (`String?`), `proposedStartTime` (`String?`), `proposedEndTime` (`String?`), `rescheduleReason` (`String?`), `rescheduledBy` (`'coach'` \| `'trainee'`), `createdAt`, `updatedAt` | Training bookings supporting physical locations, online sessions, and per-session/per-month plans with granular per-session lifecycle tracking |
 | `notifications` | `notificationId` | `id`, `recipientUid`, `recipientRole` (`'trainee'` \| `'coach'` \| `'admin'`), `senderUid`, `senderName`, `senderPhotoUrl`, `type`, `titleEn`, `titleAr`, `bodyEn`, `bodyAr`, `data` (`Map<String, dynamic>`), `isRead` (`bool`), `createdAt` (`DateTime`) | Global notifications store for Trainees, Coaches, and Admin |
 | `admin_notifications` | `notificationId` | `id`, `type`, `sourceUid`, `sourceName`, `title`, `message`, `data`, `isRead` (`bool`), `createdAt` (`DateTime`) | Dedicated queue for Admin Dashboard monitoring |
 | `fcm_tokens` | `uid` | `uid`, `token`, `platform` (`'android'` \| `'ios'`), `role`, `updatedAt` | Push notification device registration tokens |
@@ -86,12 +86,13 @@ graph TD
     M1 --> M6[Milestone 6: Dedicated Coach Profile]
     M6 --> M7[Milestone 7: Per-Sport Multi-Location & Online Delivery]
     M3 --> M7
-    M7 --> M8[Milestone 8: Unified Multi-Role Notifications Engine]
-    M4 --> M8
-    M8 --> M9[Milestone 9: In-App Notification Center & Badges]
-    M8 --> M10[Milestone 10: Admin Dashboard Integration]
-    M9 --> M11[Milestone 11: Localization & Release Hardening]
-    M10 --> M11
+    M5 --> M8[Milestone 8: Granular Monthly Session Rescheduling]
+    M7 --> M9[Milestone 9: Unified Multi-Role Notifications Engine]
+    M8 --> M9
+    M9 --> M10[Milestone 10: In-App Notification Center & Badges]
+    M9 --> M11[Milestone 11: Admin Dashboard Integration]
+    M10 --> M12[Milestone 12: Localization & Release Hardening]
+    M11 --> M12
 ```
 
 ---
@@ -229,7 +230,7 @@ graph TD
     - Coach selects a new proposed date from active working days.
     - Coach selects a new proposed time slot.
     - Coach inputs a mandatory explanation (e.g., "Emergency schedule change, can we do Wednesday instead?").
-    - "Submit Reschedule Proposal" button: Calls `CoachBookingsCubit.rescheduleBooking(...)`.
+    - "Submit Reschedule Proposal" button: Calls `CoachBookingsCubit.requestReschedule(...)`.
     - Updates Firestore `bookings/{id}`:
       - `status: 'reschedule_pending'`.
       - `proposedDate: newDate`.
@@ -420,11 +421,134 @@ graph TD
 
 ---
 
-### Milestone 8: Centralized Multi-Role Notification Engine (Trainee, Coach, Admin Dashboard)
+### Milestone 8: Granular Monthly Package Session-Level Rescheduling & Confirmed Lifecycle Management
+
+**Goal**: Transform monthly training plans from rigid booking blocks into dynamic, session-aware schedules. Enable coaches and trainees to reschedule specific individual sessions—both during initial pending booking requests and throughout active confirmed subscriptions—without breaking or invalidating other sessions in the package.
+
+- [x] **Step 8.1: Data Layer & Schema Evolution (`BookingSessionModel` & `BookingModel`)**
+  - Update `BookingSessionModel` (`lib/features/booking_request/data/models/booking_session_model.dart`):
+    - Expand session status lifecycle: `status` (`'scheduled'` | `'completed'` | `'reschedule_pending'` | `'rescheduled'` | `'cancelled'`).
+    - Add per-session reschedule proposal tracking fields:
+      - `proposedDate` (`String?`): Replacement date proposed for this specific session.
+      - `proposedStartTime` (`String?`): Replacement start time proposed.
+      - `proposedEndTime` (`String?`): Replacement end time calculated.
+      - `rescheduleReason` (`String?`): Explanation for modifying this session.
+      - `rescheduledBy` (`'coach'` | `'trainee'`): Originator of the reschedule request.
+      - `rescheduledAt` (`DateTime?`): Timestamp when proposal was submitted.
+      - `previousDate` (`String?`), `previousStartTime` (`String?`), `previousEndTime` (`String?`): Preserves original session slot before approval.
+    - Helper getters:
+      - `isReschedulePending`: checks if `status == 'reschedule_pending'`.
+      - `isCompleted`: checks if `status == 'completed'`.
+      - `isScheduled`: checks if `status == 'scheduled' || status == 'rescheduled'`.
+      - `canReschedule`: boolean indicating if session can be postponed (not completed or cancelled).
+    - Update `fromJson`, `toMap`, `copyWith`, and value equality methods.
+  - Update `BookingModel` (`lib/features/booking_request/data/models/booking_model.dart`):
+    - Add helper getters for monthly session lifecycle:
+      - `BookingSessionModel? getSessionById(String sessionId)`: lookup session by ID.
+      - `bool get hasPendingSessionReschedule`: returns `true` if any session in `sessions` has `status == 'reschedule_pending'`.
+      - `List<BookingSessionModel> get pendingRescheduleSessions`: filters sessions awaiting resolution.
+      - `List<BookingSessionModel> get completedSessions`: filters finished sessions.
+      - `int get completedSessionsCount`: count of sessions marked as completed.
+      - `double get progressRatio`: completion progress ratio (`completedSessionsCount / sessionsCount`).
+      - `BookingSessionModel? get nextUpcomingSession`: chronologically earliest upcoming session.
+    - Update `BookingSerializer` to ensure granular session reschedule fields serialize and deserialize smoothly with backward compatibility.
+
+- [x] **Step 8.2: Data Sources & Repositories Expansion (`CoachBookingsRepo` & `TraineeBookingsRepo`)**
+  - Update `CoachBookingsRepo` (`lib/features/coach_dashboard/data/repos/coach_bookings_repo.dart`):
+    - Implement `requestMonthlySessionReschedule`:
+      - Parameters: `bookingId`, `sessionId`, `proposedDate`, `proposedStartTime`, `proposedEndTime`, `reason`.
+      - Reads booking from Firestore, updates the target session in `sessions` array with `status: 'reschedule_pending'`, proposed values, and `rescheduledBy: 'coach'`.
+      - Updates parent booking `status: 'reschedule_pending'` and `updatedAt: serverTimestamp`.
+    - Implement `acceptMonthlySessionReschedule`:
+      - Parameters: `bookingId`, `sessionId`.
+      - Applied when trainee proposed a session reschedule and coach accepts: updates session with proposed slot, clears proposal fields, resets status to `'scheduled'`, restores booking status to `'confirmed'`.
+    - Implement `declineMonthlySessionReschedule`:
+      - Parameters: `bookingId`, `sessionId`, `declineReason`.
+      - Clears proposal fields, resets session status to `'scheduled'`, restores booking status.
+    - Implement `markSessionCompleted`:
+      - Parameters: `bookingId`, `sessionId`.
+      - Marks target session in `sessions` as `'completed'`.
+      - If all sessions in the plan are completed, automatically updates booking `status` to `'completed'`.
+  - Update `TraineeBookingsRepo` (`lib/features/trainee_bookings/data/repos/trainee_bookings_repo.dart`):
+    - Implement `requestMonthlySessionReschedule`:
+      - Trainee requests to reschedule an upcoming session in a confirmed monthly package.
+    - Implement `acceptMonthlySessionReschedule`:
+      - Trainee accepts coach-proposed reschedule for a specific session: replaces session date/time with proposed values, clears proposal fields, reverts booking status to `'pending'` (if request phase) or `'confirmed'` (if active plan).
+    - Implement `declineMonthlySessionReschedule`:
+      - Trainee declines coach's reschedule proposal for a specific session: restores original session slot and resets session status.
+
+- [x] **Step 8.3: Coach Dashboard — Pending Monthly Reschedule Flow with Session Picker**
+  - Update `RescheduleBookingSheet` (`features/coach_dashboard/presentation/widgets/reschedule_booking_sheet.dart`):
+    - Check `widget.booking.isMonthly`:
+      - For single session: display normal single date/slot selection.
+      - For monthly booking: render `RescheduleMonthlySessionPicker` (<150 lines) at the top of the sheet:
+        - Displays horizontal or vertical scrollable chips/cards of all sessions in the package:
+          - E.g., `Session 1: Sat, Oct 31 • 10:00 AM`, `Session 2: Tue, Nov 3 • 10:00 AM`, etc.
+        - Coach taps the specific session they need to change.
+        - Selected session is highlighted with badge `"Modifying Session #[N]"`.
+      - Date picker and time slots picker allow coach to choose a replacement date & time for that specific session.
+      - Reason field captures explanation.
+      - Submit button calls `cubit.requestMonthlySessionReschedule(...)`.
+
+- [x] **Step 8.4: Trainee Bookings — Pending Monthly Reschedule Resolution**
+  - Update `TraineeBookingCard` (`features/trainee_bookings/presentation/widgets/trainee_booking_card.dart`):
+    - When `booking.isMonthly && booking.hasPendingSessionReschedule`:
+      - Display `TraineeMonthlyRescheduleAlertBox` (<150 lines):
+        - Displays clear context: *"Coach proposed rescheduling Session #[N] ([Old Date]) to [New Date at New Time]. Reason: \"[Reason]\""*.
+        - Highlights only the modified session, keeping other sessions in the package visually distinct and intact.
+        - Action buttons:
+          - **Accept New Time**: Calls `traineeBookingsCubit.acceptMonthlySessionReschedule(...)`.
+          - **Decline**: Calls `traineeBookingsCubit.declineMonthlySessionReschedule(...)`.
+
+- [x] **Step 8.5: Confirmed Monthly Package — Sessions Schedule Sheet & In-Progress Rescheduling**
+  - In Coach Dashboard "Confirmed" tab and Trainee Bookings "Confirmed" tab:
+    - In `BookingCard` & `TraineeBookingCard`:
+      - When `booking.isMonthly`:
+        - Render `BookingCardMonthlyProgress` (<150 lines): displays progress bar (e.g. `3 of 8 Sessions Completed`) and `Next Session: [Date at Time]`.
+        - Action button: **View Sessions Schedule** / **عرض جدول الحصص** (`OutlinedButton.icon` with calendar icon).
+  - Create `MonthlySessionsScheduleSheet` (`features/coach_dashboard/presentation/widgets/monthly_sessions_schedule_sheet.dart`) (<150 lines):
+    - Modal bottom sheet displaying the full chronological session roster.
+    - Uses `MonthlySessionTile` (<150 lines):
+      - Session index badge (`#1`, `#2`, ...).
+      - Scheduled date & time, sport, and location.
+      - Status badge: `Completed` (green checkmark), `Upcoming` (blue clock), `Reschedule Pending` (amber warning).
+      - Action controls:
+        - For Coach: **Mark as Completed** button on past/today sessions.
+        - For Coach or Trainee: **Reschedule This Session** button on upcoming sessions.
+        - For Counterpart when a session is pending reschedule: inline **Accept** and **Decline** buttons right on that session's card.
+
+- [x] **Step 8.6: State Management & Cubits Expansion (`CoachBookingsCubit` & `TraineeBookingsCubit`)**
+  - Update `CoachBookingsCubit` (`features/coach_dashboard/presentation/view_model/coach_bookings_cubit/`):
+    - Methods:
+      - `requestMonthlySessionReschedule({required BookingModel booking, required String sessionId, required String proposedDate, required String proposedStartTime, required String proposedEndTime, required String reason})`.
+      - `acceptMonthlySessionReschedule(String bookingId, String sessionId)`.
+      - `declineMonthlySessionReschedule(String bookingId, String sessionId, {String? reason})`.
+      - `markSessionCompleted(String bookingId, String sessionId)`.
+    - Handle state transitions, loading indicators, action locks, and success feedback.
+  - Update `TraineeBookingsCubit` (`features/trainee_bookings/presentation/view_model/trainee_bookings_cubit/`):
+    - Methods:
+      - `requestMonthlySessionReschedule(...)`.
+      - `acceptMonthlySessionReschedule(String bookingId, String sessionId)`.
+      - `declineMonthlySessionReschedule(String bookingId, String sessionId, {String? reason})`.
+    - Handle state transitions, loading indicators, and success snackbars.
+
+- [x] **Step 8.7: Comprehensive ARB Localization (EN/AR) & Unit Testing**
+  - Add all new strings in `lib/l10n/intl_en.arb` and `lib/l10n/intl_ar.arb`:
+    - "Select session to reschedule", "Modifying Session {index}", "Session {number}", "View Sessions Schedule", "Sessions Schedule", "Mark as Completed", "Session Completed", "Sessions Progress: {completed} of {total} completed", "Reschedule this session", "Coach proposed rescheduling Session {index} to {date} at {time}", "Trainee proposed rescheduling Session {index} to {date} at {time}", "Accept New Time", "Decline Reschedule".
+  - Run `flutter pub run intl_utils:generate` to regenerate `S` class.
+  - Write unit tests for:
+    - `BookingSessionModel` serialization, status transitions, and proposal fields.
+    - `BookingModel` monthly helper getters (`hasPendingSessionReschedule`, `progressRatio`).
+    - `CoachBookingsCubit` monthly session reschedule, accept, and complete actions.
+    - `TraineeBookingsCubit` monthly session reschedule accept and decline actions.
+
+---
+
+### Milestone 9: Centralized Multi-Role Notification Engine (Trainee, Coach, Admin Dashboard)
 
 **Goal**: Implement a complete notification infrastructure sending in-app alerts and push notifications for all critical marketplace, booking, and administrative events.
 
-- [ ] **Step 8.1: Global Notification Model & Data Layer Architecture**
+- [ ] **Step 9.1: Global Notification Model & Data Layer Architecture**
   - Follow the mandatory pipeline: `Services -> Remote/Local Data Source -> Concrete Repository -> Cubit -> UI`.
   - Create `NotificationModel`:
     - `id`: Unique document ID.
@@ -435,7 +559,7 @@ graph TD
     - `type`: Notification type enum/string (see matrix below).
     - `titleEn`, `titleAr`: Pre-localized or template titles.
     - `bodyEn`, `bodyAr`: Pre-localized message bodies.
-    - `data`: Payload map containing `bookingId`, `priceUSD`, `date`, `reason`, `bookingType`.
+    - `data`: Payload map containing `bookingId`, `sessionId`, `priceUSD`, `date`, `reason`, `bookingType`.
     - `isRead`: Boolean flag.
     - `createdAt`: Timestamp.
   - Create `NotificationsRemoteDataSource`:
@@ -443,16 +567,20 @@ graph TD
   - Create `NotificationsRepository`:
     - Coordinates notifications data, unread counters, and persistence via `NotificationsRemoteDataSource`.
 
-- [ ] **Step 8.2: Comprehensive Notification Event Trigger Matrix**
+- [ ] **Step 9.2: Comprehensive Notification Event Trigger Matrix**
 
 | Event | Triggered By | Recipient | Type | Content / Details |
 | :--- | :--- | :--- | :--- | :--- |
 | **New Booking Request** | Trainee | Coach & Admin | `booking_new` | *"New booking request from [Trainee Name] for [Sport] ([Session/Month])"* |
 | **Booking Approved** | Coach | Trainee | `booking_approved` | *"Coach [Coach Name] approved your booking request for [Date]"* |
 | **Booking Rejected** | Coach | Trainee | `booking_rejected` | *"Coach [Coach Name] declined your request. Reason: [Rejection Reason]"* |
-| **Reschedule Proposed** | Coach | Trainee | `booking_reschedule_proposed` | *"Coach [Coach Name] proposed a new time: [Date at Time]. Reason: [Reason]"* |
-| **Reschedule Accepted** | Trainee | Coach | `booking_reschedule_accepted` | *"[Trainee Name] accepted your proposed reschedule for [Date]"* |
-| **Reschedule Declined** | Trainee | Coach | `booking_reschedule_declined` | *"[Trainee Name] declined the proposed reschedule"* |
+| **Single Session Reschedule Proposed** | Coach | Trainee | `booking_reschedule_proposed` | *"Coach [Coach Name] proposed a new time: [Date at Time]. Reason: [Reason]"* |
+| **Single Session Reschedule Accepted** | Trainee | Coach | `booking_reschedule_accepted` | *"[Trainee Name] accepted your proposed reschedule for [Date]"* |
+| **Single Session Reschedule Declined** | Trainee | Coach | `booking_reschedule_declined` | *"[Trainee Name] declined the proposed reschedule"* |
+| **Monthly Session Reschedule Proposed** | Coach / Trainee | Trainee / Coach | `booking_monthly_session_reschedule_proposed` | *"[Sender Name] proposed rescheduling Session #[N] of your monthly plan to [Date at Time]"* |
+| **Monthly Session Reschedule Accepted** | Trainee / Coach | Coach / Trainee | `booking_monthly_session_reschedule_accepted` | *"[Recipient Name] accepted the new time for Session #[N]"* |
+| **Monthly Session Reschedule Declined** | Trainee / Coach | Coach / Trainee | `booking_monthly_session_reschedule_declined` | *"[Recipient Name] declined the reschedule for Session #[N]"* |
+| **Monthly Session Marked Completed** | Coach | Trainee | `booking_monthly_session_completed` | *"Session #[N] was marked as completed. Progress: [X]/[Total] done!"* |
 | **Booking Cancelled** | Trainee | Coach & Admin | `booking_cancelled` | *"[Trainee Name] cancelled the booking for [Date]"* |
 | **Coach Verification Submitted** | Coach | Admin | `coach_verification_submitted` | *"Coach [Coach Name] submitted verification documents for approval"* |
 | **Coach Profile Approved** | Admin | Coach | `coach_profile_approved` | *"Congratulations! Your coach profile has been approved by the Admin"* |
@@ -460,7 +588,7 @@ graph TD
 | **Admin Warning Message** | Admin | Coach / Trainee | `admin_warning` | *"[Admin Warning Title]: [Warning Message Details]"* |
 | **Account Suspension** | Admin | Coach / Trainee | `account_suspended` | *"Your account has been suspended by the administrator"* |
 
-- [ ] **Step 8.3: Push Notification Service (FCM)**
+- [ ] **Step 9.3: Push Notification Service (FCM)**
   - Initialize Firebase Cloud Messaging in `lib/core/services/notification_service.dart`.
   - Request user notification permissions on Android 13+ and iOS with explanatory prompt.
   - Store FCM token in `fcm_tokens/{uid}` upon login and refresh on token updates.
@@ -469,17 +597,17 @@ graph TD
 
 ---
 
-### Milestone 9: In-App Notification Center & Real-Time Badges
+### Milestone 10: In-App Notification Center & Real-Time Badges
 
 **Goal**: Deliver a polished in-app Notification Center for Trainees and Coaches with unread counter badges and interactive item navigation.
 
-- [ ] **Step 9.1: Notifications State Management (`NotificationsCubit`)**
+- [ ] **Step 10.1: Notifications State Management (`NotificationsCubit`)**
   - Implement `NotificationsCubit`:
     - Real-time Firestore stream: `listenToNotifications(uid)`.
     - State holds `List<NotificationModel>`, `unreadCount`, filter type (`all`, `bookings`, `admin`).
     - Methods: `markAsRead(notificationId)`, `markAllAsRead()`, `deleteNotification(notificationId)`.
 
-- [ ] **Step 9.2: Notification Bell & Badge in AppBars**
+- [ ] **Step 10.2: Notification Bell & Badge in AppBars**
   - Create reusable `NotificationIconButton`:
     - Bell icon with reactive badge showing `unreadCount`.
     - Animates badge on new incoming notification.
@@ -487,7 +615,7 @@ graph TD
       - Trainee Home AppBar (`features/trainee_discovery/presentation/views/trainee_home_view.dart`).
       - Coach Dashboard AppBar (`features/coach_dashboard/presentation/views/coach_dashboard_page.dart`).
 
-- [ ] **Step 9.3: Notification Center View**
+- [ ] **Step 10.3: Notification Center View**
   - Create `lib/features/notifications/presentation/views/notifications_view.dart`:
     - Screen layout delegates strictly to widgets (<150 lines).
     - Filter tabs: **All**, **Bookings**, **System & Admin**.
@@ -502,11 +630,11 @@ graph TD
 
 ---
 
-### Milestone 10: Admin Dashboard Notification & Moderation Integration
+### Milestone 11: Admin Dashboard Notification & Moderation Integration
 
 **Goal**: Provide full backend and data contract compatibility with the Admin Dashboard for two-way communication, moderation, and alerts.
 
-- [ ] **Step 10.1: Admin Notifications Queue Contract**
+- [ ] **Step 11.1: Admin Notifications Queue Contract**
   - Standardize Firestore collection `admin_notifications` for web dashboard consumption:
     - Automatically triggered whenever:
       - A new coach finishes onboarding and submits identity documents (`coach_verification_submitted`).
@@ -514,7 +642,7 @@ graph TD
       - A dispute or booking cancellation occurs.
     - Fields: `id`, `type`, `sourceUid`, `sourceName`, `title`, `message`, `data`, `isRead`, `createdAt`.
 
-- [ ] **Step 10.2: Mobile App Receivers for Admin Actions**
+- [ ] **Step 11.2: Mobile App Receivers for Admin Actions**
   - **Coach Verification Approval/Rejection Listener**:
     - Update `CoachVerificationStatusCubit`:
       - Listens for status change (`approved` or `rejected`).
@@ -527,34 +655,35 @@ graph TD
 
 ---
 
-### Milestone 11: Localization (EN/AR), Quality Assurance, & Production Hardening
+### Milestone 12: Localization (EN/AR), Quality Assurance, & Production Hardening
 
 **Goal**: Complete 100% Arabic & English localization, verify RTL/LTR responsiveness, write unit tests for new Cubits, and prepare production builds.
 
-- [ ] **Step 11.1: Complete ARB Localization Keys**
+- [ ] **Step 12.1: Complete ARB Localization Keys**
   - Add all new Phase 2 strings to `lib/l10n/intl_en.arb` and `lib/l10n/intl_ar.arb`:
     - Phone authentication: phone label, country selection (Egypt, Lebanon), send OTP, verify OTP, invalid number, resend countdown.
     - Pricing & Booking: session price ($ USD), monthly price ($ USD), booking per session, booking per month, duration, frequency.
-    - Actions: approve booking, reject booking, rejection reason, reschedule booking, proposed time, accept new time, decline reschedule.
+    - Actions & Reschedule: approve booking, reject booking, rejection reason, reschedule booking, select session to reschedule, sessions schedule, mark completed, proposed time, accept new time, decline reschedule.
     - Coach profile: my profile, edit profile, pricing settings, certifications, statistics.
     - Notifications: notification center, mark all as read, booking alerts, admin warnings, suspension alerts.
   - Run `flutter pub run intl_utils:generate` to regenerate `S` class.
   - Verify zero hardcoded strings in the codebase.
 
-- [ ] **Step 11.2: RTL & Accessibility Verification**
+- [ ] **Step 12.2: RTL & Accessibility Verification**
   - Test all new views in Arabic RTL layout:
     - Phone number and country code directionality.
     - 3-button booking card alignment.
-    - Reschedule modal date pickers.
+    - Reschedule modal date and session pickers.
+    - Monthly sessions schedule sheet.
     - Coach profile layout and badges.
     - Notification list tiles and timestamps.
   - Verify minimum touch targets (≥48x48 dp) and WCAG contrast ratios.
 
-- [ ] **Step 11.3: Unit & Integration Testing**
+- [ ] **Step 12.3: Unit & Integration Testing**
   - Write unit tests for:
     - `PhoneAuthCubit` (phone validation, OTP dispatch, verify success/failure).
-    - `CoachBookingsCubit` (approve, reject with reason, reschedule proposal).
-    - `TraineeBookingsCubit` (accept reschedule, decline reschedule).
+    - `CoachBookingsCubit` (approve, reject with reason, single & monthly session reschedule proposals, mark completed).
+    - `TraineeBookingsCubit` (accept reschedule, decline reschedule, monthly session resolution).
     - `NotificationsCubit` (stream updates, unread count, mark as read).
   - Verify all files adhere to the strict 150-line maximum rule.
 
@@ -612,9 +741,13 @@ lib/
 │   ├── coach_dashboard/
 │   │   └── presentation/widgets/
 │   │       ├── booking_card.dart
-│   │       ├── booking_card_actions.dart          # 3 action buttons: Approve, Reject, Reschedule
-│   │       ├── reject_booking_dialog.dart         # Rejection reason modal
-│   │       └── reschedule_booking_sheet.dart      # Reschedule date & time picker
+│   │       ├── booking_card_actions.dart               # 3 action buttons: Approve, Reject, Reschedule
+│   │       ├── booking_card_monthly_progress.dart      # NEW: Progress bar and next session badge
+│   │       ├── reject_booking_dialog.dart              # Rejection reason modal
+│   │       ├── reschedule_booking_sheet.dart           # Reschedule date & time picker
+│   │       ├── reschedule_monthly_session_picker.dart  # NEW: Session selector inside reschedule sheet
+│   │       ├── monthly_sessions_schedule_sheet.dart    # NEW: Chronological session roster modal
+│   │       └── monthly_session_tile.dart               # NEW: Individual session tile with actions
 │   ├── coach_profile/                             # NEW: Dedicated Coach Profile feature
 │   │   ├── data/
 │   │   │   ├── data_source/coach_profile_remote_data_source.dart
@@ -656,8 +789,10 @@ lib/
 │   │           └── booking_summary_card.dart
 │   ├── trainee_bookings/
 │   │   └── presentation/widgets/
-│   │       ├── trainee_booking_card.dart          # Updated: Reschedule response banner
-│   │       └── trainee_reschedule_dialog.dart
+│   │       ├── trainee_booking_card.dart                  # Updated: Reschedule response banner
+│   │       ├── trainee_reschedule_dialog.dart
+│   │       ├── trainee_monthly_reschedule_alert_box.dart  # NEW: Alert for specific session proposal
+│   │       └── trainee_monthly_sessions_sheet.dart        # NEW: Trainee view of package sessions
 │   └── notifications/                             # NEW: In-App Notifications Center
 │       ├── data/
 │       │   ├── data_source/notifications_remote_data_source.dart
@@ -697,6 +832,14 @@ Before client delivery of Phase 2, verify each item:
   - Rejecting prompts for a reason and writes `rejectionReason` to Firestore.
   - Rescheduling prompts for new date, time, and reason, transitioning status to `reschedule_pending`.
   - Trainee receives the proposal with options to accept the new time or decline.
+- [ ] **Granular Monthly Package Rescheduling & Session Lifecycle**:
+  - Coach can select and modify a single specific session during pending monthly requests.
+  - Trainee receives clear proposed reschedule details identifying the exact session number and proposed replacement slot.
+  - Trainee can accept or decline session proposals without invalidating or affecting other sessions in the package.
+  - Confirmed monthly bookings display progress indicators (completed count vs. total count).
+  - Both Coach and Trainee can inspect the full session schedule from confirmed booking cards.
+  - Individual upcoming sessions within an active monthly package can be rescheduled.
+  - Coaches can mark individual sessions as completed to advance training progress.
 - [ ] **Coach Profile**:
   - Coach has a dedicated 4th profile tab in bottom navigation.
   - Coach can view and edit profile details, photo, and USD pricing.

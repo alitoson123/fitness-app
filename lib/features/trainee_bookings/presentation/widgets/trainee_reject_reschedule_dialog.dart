@@ -48,7 +48,7 @@ class _TraineeRejectRescheduleDialogState
       shape: RoundedRectangleBorder(borderRadius: AppRadius.mdAll),
       title: Row(
         children: [
-          Icon(Icons.warning_amber_rounded, color: AppColors.error, size: 22.r),
+          Icon(Icons.schedule_rounded, color: AppColors.primary, size: 22.r),
           SizedBox(width: 8.w),
           Expanded(
             child: Text(

@@ -1,8 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/constant/app_constants.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../generated/l10n.dart';
 import '../../../booking_request/data/models/booking_model.dart';
+import 'booking_card_header_badge.dart';
 import 'booking_status_badge.dart';
 
 class BookingCardHeader extends StatelessWidget {
@@ -17,6 +20,7 @@ class BookingCardHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final textSecondary =
         isDark ? AppColors.darkTextSecondary : AppColors.textSecondary;
     final badgeBg =
@@ -63,23 +67,30 @@ class BookingCardHeader extends StatelessWidget {
               SizedBox(height: 3.h),
               Row(
                 children: [
-                  _buildBadge(
-                    icon: Icons.fitness_center_rounded,
-                    label: booking.sport,
-                    iconColor: AppColors.flameRed,
-                    textColor: AppColors.flameRed,
-                    bg: badgeBg,
-                  ),
-                  if (booking.isOnline || booking.trainingLocation.isNotEmpty) ...[
-                    SizedBox(width: 4.w),
-                    _buildBadge(
-                      icon: booking.isOnline
-                          ? Icons.laptop_chromebook_rounded
-                          : Icons.location_on_rounded,
-                      label: booking.isOnline ? 'Online' : booking.trainingLocation,
-                      iconColor: textSecondary,
-                      textColor: textSecondary,
+                  Flexible(
+                    child: BookingCardHeaderBadge(
+                      icon: Icons.fitness_center_rounded,
+                      label: booking.sport,
+                      iconColor: AppColors.flameRed,
+                      textColor: AppColors.flameRed,
                       bg: badgeBg,
+                    ),
+                  ),
+                  if (booking.isOnline ||
+                      booking.trainingLocation.isNotEmpty) ...[
+                    SizedBox(width: 4.w),
+                    Flexible(
+                      child: BookingCardHeaderBadge(
+                        icon: booking.isOnline
+                            ? Icons.laptop_chromebook_rounded
+                            : Icons.location_on_rounded,
+                        label: booking.isOnline
+                            ? 'Online'
+                            : booking.trainingLocation,
+                        iconColor: textSecondary,
+                        textColor: textSecondary,
+                        bg: badgeBg,
+                      ),
                     ),
                   ],
                 ],
@@ -100,42 +111,18 @@ class BookingCardHeader extends StatelessWidget {
             ),
             if (booking.status != 'pending') ...[
               SizedBox(height: 4.h),
-              BookingStatusBadge(status: booking.status),
+              BookingStatusBadge(
+                status: booking.status,
+                customLabel: booking.isReschedulePending
+                    ? (booking.rescheduledBy == AppConstants.roleTrainee
+                        ? s.rescheduleRequestedBadge
+                        : s.reschedulePendingBadge)
+                    : null,
+              ),
             ],
           ],
         ),
       ],
-    );
-  }
-
-  Widget _buildBadge({
-    required IconData icon,
-    required String label,
-    required Color iconColor,
-    required Color textColor,
-    required Color bg,
-  }) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(6.r),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 10.r, color: iconColor),
-          SizedBox(width: 3.w),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 10.sp,
-              fontWeight: FontWeight.w600,
-              color: textColor,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

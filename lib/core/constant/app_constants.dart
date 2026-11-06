@@ -20,6 +20,11 @@ abstract class AppConstants {
   static const String bookingsCollection = 'bookings';
   static const String verificationsCollection = 'coach_verifications';
 
+  // User & Reschedule Roles
+  static const String roleCoach = 'coach';
+  static const String roleTrainee = 'trainee';
+  static const String roleAdmin = 'admin';
+
   // Supported Languages
   static const List<String> supportedLanguages = [
     'Arabic',

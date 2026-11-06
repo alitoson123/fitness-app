@@ -1,14 +1,22 @@
-import 'package:fitness_app/core/theme/app_colors.dart';
-import 'package:fitness_app/core/theme/app_radius.dart';
-import 'package:fitness_app/core/widgets/app_avatar.dart';
-import 'package:fitness_app/features/booking_request/data/models/booking_model.dart';
-import 'package:fitness_app/features/coach_dashboard/presentation/widgets/booking_status_badge.dart';
-import 'package:fitness_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/constant/app_constants.dart';
+import '../../../../core/navigator/app_routes.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_radius.dart';
+import '../../../../generated/l10n.dart';
+import '../../../booking_details/presentation/view_model/booking_details_args.dart';
+import '../../../booking_request/data/models/booking_model.dart';
+import '../../../coach_dashboard/presentation/widgets/booking_card_compact_progress.dart';
+import '../view_model/trainee_bookings_cubit/trainee_bookings_cubit.dart';
+import 'trainee_booking_card_header.dart';
 import 'trainee_cancelled_booking_section.dart';
+import 'trainee_monthly_reschedule_alert_box.dart';
 import 'trainee_rejected_booking_section.dart';
 import 'trainee_reschedule_alert_box.dart';
+import 'trainee_reschedule_pending_coach_box.dart';
 
 class TraineeBookingCard extends StatelessWidget {
   final BookingModel booking;
@@ -16,6 +24,9 @@ class TraineeBookingCard extends StatelessWidget {
   final VoidCallback onApproveReschedule;
   final VoidCallback onRejectReschedule;
   final VoidCallback onRebook;
+  final VoidCallback? onReschedule;
+  final void Function(String sessionId)? onAcceptMonthlyReschedule;
+  final void Function(String sessionId)? onDeclineMonthlyReschedule;
 
   const TraineeBookingCard({
     super.key,
@@ -24,25 +35,32 @@ class TraineeBookingCard extends StatelessWidget {
     required this.onApproveReschedule,
     required this.onRejectReschedule,
     required this.onRebook,
+    this.onReschedule,
+    this.onAcceptMonthlyReschedule,
+    this.onDeclineMonthlyReschedule,
   });
+
+  void _navigateToDetails(BuildContext context) {
+    context.push(
+      AppRoutes.bookingDetails,
+      extra: BookingDetailsArgs(booking: booking, isCoach: false),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cubit = context.read<TraineeBookingsCubit>();
     final isReschedule = booking.status == 'reschedule_pending';
     final textSecondary =
         isDark ? AppColors.darkTextSecondary : AppColors.textSecondary;
     final dateLabel = booking.isMonthly
         ? '${booking.date} (${s.monthlyPackageType}${booking.sessions.length > 1 ? ' • ${booking.sessions.length}' : ''})'
         : '${booking.date} (${booking.startTime} - ${booking.endTime})';
-    final locationLabel = booking.isOnline
-        ? s.onlineTrainingOption
-        : booking.trainingLocation;
 
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
-      padding: EdgeInsets.all(14.r),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : Colors.white,
         borderRadius: AppRadius.mdAll,
@@ -53,79 +71,111 @@ class TraineeBookingCard extends StatelessWidget {
           width: isReschedule ? 1.5 : 1.0,
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              AppAvatar(imageUrl: booking.coachPhotoUrl, name: booking.coachName, size: AppAvatarSize.md),
-              SizedBox(width: 10.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: AppRadius.mdAll,
+          onTap: () => _navigateToDetails(context),
+          child: Padding(
+            padding: EdgeInsets.all(14.r),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TraineeBookingCardHeader(booking: booking, isDark: isDark),
+                SizedBox(height: 10.h),
+                Row(
                   children: [
-                    Text(
-                      booking.coachName.isNotEmpty ? booking.coachName : s.coachNavDashboard,
-                      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700, color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary),
+                    Icon(
+                      Icons.calendar_today_rounded,
+                      size: 13.r,
+                      color: textSecondary,
                     ),
-                    SizedBox(height: 2.h),
-                    Row(
-                      children: [
-                        Text(
-                          booking.sport,
-                          style: TextStyle(fontSize: 11.sp, color: AppColors.primary, fontWeight: FontWeight.w600),
-                        ),
-                        if (locationLabel.isNotEmpty) ...[
-                          Text(' • ', style: TextStyle(fontSize: 11.sp, color: textSecondary)),
-                          Icon(
-                            booking.isOnline ? Icons.laptop_chromebook_rounded : Icons.location_on_rounded,
-                            size: 11.r,
-                            color: textSecondary,
-                          ),
-                          SizedBox(width: 2.w),
-                          Flexible(
-                            child: Text(
-                              locationLabel,
-                              style: TextStyle(fontSize: 11.sp, color: textSecondary, fontWeight: FontWeight.w500),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ],
+                    SizedBox(width: 6.w),
+                    Text(
+                      dateLabel,
+                      style: TextStyle(fontSize: 12.sp, color: textSecondary),
                     ),
                   ],
                 ),
-              ),
-              BookingStatusBadge(
-                status: booking.status,
-                customLabel: isReschedule ? s.rescheduleRequestedBadge : null,
-              ),
-            ],
-          ),
-          SizedBox(height: 10.h),
-          Row(
-            children: [
-              Icon(Icons.calendar_today_rounded, size: 13.r, color: textSecondary),
-              SizedBox(width: 6.w),
-              Text(dateLabel, style: TextStyle(fontSize: 12.sp, color: textSecondary)),
-            ],
-          ),
-          if (isReschedule) ...[
-            SizedBox(height: 12.h),
-            TraineeRescheduleAlertBox(
-              booking: booking,
-              isDark: isDark,
-              isActionInProgress: isActionInProgress,
-              onApprove: onApproveReschedule,
-              onReject: onRejectReschedule,
+                if (booking.isMonthly)
+                  BookingCardCompactProgress(
+                    booking: booking,
+                    isDark: isDark,
+                  ),
+                if (booking.isMonthly &&
+                    booking.hasPendingSessionReschedule) ...[
+                  SizedBox(height: 12.h),
+                  TraineeMonthlyRescheduleAlertBox(
+                    booking: booking,
+                    isDark: isDark,
+                    isActionInProgress: isActionInProgress,
+                    onAccept: onAcceptMonthlyReschedule ??
+                        (sid) => cubit.acceptMonthlySessionReschedule(
+                              booking.id,
+                              sid,
+                            ),
+                    onDecline: onDeclineMonthlyReschedule ??
+                        (sid) => cubit.declineMonthlySessionReschedule(
+                              booking.id,
+                              sid,
+                            ),
+                  ),
+                ] else if (isReschedule && !booking.isMonthly) ...[
+                  SizedBox(height: 12.h),
+                  if (booking.rescheduledBy == AppConstants.roleTrainee)
+                    TraineeReschedulePendingCoachBox(
+                      booking: booking,
+                      isDark: isDark,
+                    )
+                  else
+                    TraineeRescheduleAlertBox(
+                      booking: booking,
+                      isDark: isDark,
+                      isActionInProgress: isActionInProgress,
+                      onApprove: onApproveReschedule,
+                      onReject: onRejectReschedule,
+                    ),
+                ],
+                if (booking.status == 'confirmed' &&
+                    !booking.isMonthly &&
+                    onReschedule != null) ...[
+                  SizedBox(height: 10.h),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: isActionInProgress ? null : onReschedule,
+                      icon: Icon(Icons.schedule_rounded, size: 14.r),
+                      label: Text(
+                        s.rescheduleSession,
+                        style: TextStyle(fontSize: 12.sp),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.primary,
+                        side: BorderSide(
+                          color: AppColors.primary.withValues(alpha: 0.5),
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: AppRadius.smAll,
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 8.h),
+                      ),
+                    ),
+                  ),
+                ],
+                if (booking.status == 'cancelled')
+                  TraineeCancelledBookingSection(
+                    cancellationReason: booking.cancellationReason,
+                    onRebook: onRebook,
+                  ),
+                if (booking.status == 'rejected')
+                  TraineeRejectedBookingSection(
+                    rejectionReason: booking.rejectionReason,
+                    onRebook: onRebook,
+                  ),
+              ],
             ),
-          ],
-          if (booking.status == 'cancelled')
-            TraineeCancelledBookingSection(cancellationReason: booking.cancellationReason, onRebook: onRebook),
-          if (booking.status == 'rejected')
-            TraineeRejectedBookingSection(rejectionReason: booking.rejectionReason, onRebook: onRebook),
-        ],
+          ),
+        ),
       ),
     );
   }
