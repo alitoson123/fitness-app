@@ -10,24 +10,16 @@ abstract class TrainingInsightsCalculator {
     final days = <DateTime>{};
 
     for (final booking in bookings) {
-      final isBookingCompleted =
-          booking.status.trim().toLowerCase() == 'completed';
-
-      if (booking.sessions.isNotEmpty) {
-        var anySessionCompleted = false;
+      if (booking.isSession) {
+        if (booking.status.trim().toLowerCase() == 'completed') {
+          _recordDate(days, booking.date, booking);
+        }
+      } else {
         for (final session in booking.sessions) {
           if (session.status.trim().toLowerCase() == 'completed') {
-            anySessionCompleted = true;
             _recordDate(days, session.date, booking);
           }
         }
-        if (isBookingCompleted && !anySessionCompleted) {
-          for (final session in booking.sessions) {
-            _recordDate(days, session.date, booking);
-          }
-        }
-      } else if (isBookingCompleted) {
-        _recordDate(days, booking.date, booking);
       }
     }
     return days;

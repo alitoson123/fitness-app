@@ -29,12 +29,13 @@ class BookingRequestRemoteDataSource {
 
     for (final doc in singleSnapshot.docs) {
       final data = doc.data();
+      final bookingType = data['bookingType'] as String? ?? 'session';
+      if (bookingType != 'session') continue;
+
       final status = data['status'] as String? ?? '';
       if (status != 'rejected' && status != 'cancelled') {
-        if (status != 'reschedule_pending') {
-          final slot = data['startTime'] as String?;
-          if (slot != null && slot.isNotEmpty) bookedSlots.add(slot);
-        }
+        final slot = data['startTime'] as String?;
+        if (slot != null && slot.isNotEmpty) bookedSlots.add(slot);
       }
     }
 
@@ -47,6 +48,9 @@ class BookingRequestRemoteDataSource {
 
     for (final doc in proposedSnapshot.docs) {
       final data = doc.data();
+      final bookingType = data['bookingType'] as String? ?? 'session';
+      if (bookingType != 'session') continue;
+
       final status = data['status'] as String? ?? '';
       if (status == 'reschedule_pending') {
         final slot = data['proposedStartTime'] as String?;
@@ -58,7 +62,11 @@ class BookingRequestRemoteDataSource {
       collection: AppConstants.bookingsCollection,
       queryBuilder: (query) => query
           .where('coachUid', isEqualTo: coachUid)
-          .where('bookingType', isEqualTo: 'monthly'),
+          .where('bookingType', isEqualTo: 'monthly')
+          .where(
+            'status',
+            whereIn: ['pending', 'confirmed', 'reschedule_pending'],
+          ),
     );
 
     for (final doc in monthlySnapshot.docs) {
@@ -68,9 +76,21 @@ class BookingRequestRemoteDataSource {
         final sessions = data['sessions'];
         if (sessions is List) {
           for (final s in sessions) {
-            if (s is Map && s['date'] == date) {
-              final slot = s['startTime'] as String?;
-              if (slot != null && slot.isNotEmpty) bookedSlots.add(slot);
+            if (s is Map) {
+              final sessionStatus = s['status'] as String? ?? 'scheduled';
+              if (sessionStatus != 'cancelled') {
+                if (s['date'] == date) {
+                  final slot = s['startTime'] as String?;
+                  if (slot != null && slot.isNotEmpty) bookedSlots.add(slot);
+                }
+                if (sessionStatus == 'reschedule_pending' &&
+                    s['proposedDate'] == date) {
+                  final proposedSlot = s['proposedStartTime'] as String?;
+                  if (proposedSlot != null && proposedSlot.isNotEmpty) {
+                    bookedSlots.add(proposedSlot);
+                  }
+                }
+              }
             }
           }
         }

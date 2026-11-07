@@ -94,6 +94,7 @@ class CoachBookingsRemoteDataSource {
       'previousDate': booking.date,
       'previousStartTime': booking.startTime,
       'previousEndTime': booking.endTime,
+      if (!booking.isMonthly) 'sessions': FieldValue.delete(),
       ..._clearedProposalData(),
     };
     await firestoreService.updateData(

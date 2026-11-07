@@ -82,7 +82,8 @@ void main() {
       expect(booking.isSession, isTrue);
       expect(booking.durationMonths, 1);
       expect(booking.currency, 'USD');
-      expect(booking.sessions, isEmpty);
+      expect(booking.sessions.length, 1);
+      expect(booking.sessions.first.date, '2026-10-10');
     });
 
     test('toMap writes bookingType, USD currency, and sessions', () {

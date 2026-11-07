@@ -44,6 +44,7 @@ class TraineeBookingsRepo {
         'previousDate': booking.date,
         'previousStartTime': booking.startTime,
         'previousEndTime': booking.endTime,
+        if (!booking.isMonthly) 'sessions': FieldValue.delete(),
         ..._clearedProposalData(),
       };
       await firestoreService.updateData(
@@ -100,6 +101,10 @@ class TraineeBookingsRepo {
     required String reason,
   }) async {
     try {
+      if (booking.status == 'completed' || booking.status == 'cancelled') {
+        return Left(ServerFailure(
+            errorMessage: 'Cannot reschedule a completed or cancelled booking'));
+      }
       final data = <String, dynamic>{
         'status': 'reschedule_pending',
         'proposedDate': proposedDate,
@@ -111,6 +116,7 @@ class TraineeBookingsRepo {
         'previousDate': booking.date,
         'previousStartTime': booking.startTime,
         'previousEndTime': booking.endTime,
+        if (!booking.isMonthly) 'sessions': FieldValue.delete(),
         'updatedAt': FieldValue.serverTimestamp(),
       };
       await firestoreService.updateData(

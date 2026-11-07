@@ -203,6 +203,38 @@ class BookingModel {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
+    final resolvedBookingType = bookingType ?? this.bookingType;
+    final resolvedDate = date ?? this.date;
+    final resolvedStartTime = startTime ?? this.startTime;
+    final resolvedEndTime = endTime ?? this.endTime;
+    final resolvedStatus = status ?? this.status;
+
+    List<BookingSessionModel> resolvedSessions;
+    if (sessions != null) {
+      resolvedSessions = sessions;
+    } else if (resolvedBookingType != 'monthly') {
+      resolvedSessions = [
+        BookingSessionModel(
+          id: id ?? this.id,
+          date: resolvedDate,
+          startTime: resolvedStartTime,
+          endTime: resolvedEndTime,
+          status: resolvedStatus,
+          proposedDate: proposedDate ?? this.proposedDate,
+          proposedStartTime: proposedStartTime ?? this.proposedStartTime,
+          proposedEndTime: proposedEndTime ?? this.proposedEndTime,
+          rescheduleReason: rescheduleReason ?? this.rescheduleReason,
+          rescheduledBy: rescheduledBy ?? this.rescheduledBy,
+          rescheduledAt: rescheduledAt ?? this.rescheduledAt,
+          previousDate: previousDate ?? this.previousDate,
+          previousStartTime: previousStartTime ?? this.previousStartTime,
+          previousEndTime: previousEndTime ?? this.previousEndTime,
+        ),
+      ];
+    } else {
+      resolvedSessions = this.sessions;
+    }
+
     return BookingModel(
       id: id ?? this.id,
       coachUid: coachUid ?? this.coachUid,
@@ -212,18 +244,18 @@ class BookingModel {
       traineeName: traineeName ?? this.traineeName,
       traineePhotoUrl: traineePhotoUrl ?? this.traineePhotoUrl,
       sport: sport ?? this.sport,
-      bookingType: bookingType ?? this.bookingType,
+      bookingType: resolvedBookingType,
       trainingLocation: trainingLocation ?? this.trainingLocation,
       isOnline: isOnline ?? this.isOnline,
-      date: date ?? this.date,
-      startTime: startTime ?? this.startTime,
-      endTime: endTime ?? this.endTime,
+      date: resolvedDate,
+      startTime: resolvedStartTime,
+      endTime: resolvedEndTime,
       price: price ?? this.price,
       currency: currency ?? this.currency,
       durationMonths: durationMonths ?? this.durationMonths,
-      sessions: sessions ?? this.sessions,
+      sessions: resolvedSessions,
       notes: notes ?? this.notes,
-      status: status ?? this.status,
+      status: resolvedStatus,
       rejectionReason: rejectionReason ?? this.rejectionReason,
       proposedDate: proposedDate ?? this.proposedDate,
       proposedStartTime: proposedStartTime ?? this.proposedStartTime,

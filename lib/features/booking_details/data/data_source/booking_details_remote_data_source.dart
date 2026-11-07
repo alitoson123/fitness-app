@@ -58,6 +58,9 @@ class BookingDetailsRemoteDataSource {
     required String reason,
     required String rescheduledBy,
   }) async {
+    if (booking.status == 'completed' || booking.status == 'cancelled') {
+      throw Exception('Cannot reschedule a completed or cancelled booking');
+    }
     final data = <String, dynamic>{
       'status': 'reschedule_pending',
       'proposedDate': proposedDate,
@@ -69,6 +72,7 @@ class BookingDetailsRemoteDataSource {
       'previousDate': booking.date,
       'previousStartTime': booking.startTime,
       'previousEndTime': booking.endTime,
+      if (!booking.isMonthly) 'sessions': FieldValue.delete(),
       'updatedAt': FieldValue.serverTimestamp(),
     };
     await firestoreService.updateData(
@@ -100,6 +104,7 @@ class BookingDetailsRemoteDataSource {
       'previousDate': booking.date,
       'previousStartTime': booking.startTime,
       'previousEndTime': booking.endTime,
+      if (!booking.isMonthly) 'sessions': FieldValue.delete(),
       ..._clearedProposalData(),
     };
     await firestoreService.updateData(

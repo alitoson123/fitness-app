@@ -4,6 +4,35 @@ import 'booking_session_model.dart';
 
 class BookingSerializer {
   static BookingModel fromJson(Map<String, dynamic> json, {String? id}) {
+    final bookingType = json['bookingType'] as String? ?? 'session';
+    final isMonthly = bookingType == 'monthly';
+
+    final rawDate = json['date'] as String? ?? '';
+    final rawStart = json['startTime'] as String? ?? '';
+    final rawEnd = json['endTime'] as String? ?? '';
+    final rawStatus = json['status'] as String? ?? 'pending';
+
+    final sessions = isMonthly
+        ? _parseSessions(json['sessions'])
+        : [
+            BookingSessionModel(
+              id: id ?? json['id'] as String? ?? 's_1',
+              date: rawDate,
+              startTime: rawStart,
+              endTime: rawEnd,
+              status: rawStatus,
+              proposedDate: json['proposedDate'] as String?,
+              proposedStartTime: json['proposedStartTime'] as String?,
+              proposedEndTime: json['proposedEndTime'] as String?,
+              rescheduleReason: json['rescheduleReason'] as String?,
+              rescheduledBy: json['rescheduledBy'] as String?,
+              rescheduledAt: _parseDate(json['rescheduledAt']),
+              previousDate: json['previousDate'] as String?,
+              previousStartTime: json['previousStartTime'] as String?,
+              previousEndTime: json['previousEndTime'] as String?,
+            ),
+          ];
+
     return BookingModel(
       id: id ?? json['id'] as String? ?? '',
       coachUid: json['coachUid'] as String? ?? '',
@@ -13,18 +42,18 @@ class BookingSerializer {
       traineeName: json['traineeName'] as String? ?? '',
       traineePhotoUrl: json['traineePhotoUrl'] as String? ?? '',
       sport: json['sport'] as String? ?? '',
-      bookingType: json['bookingType'] as String? ?? 'session',
+      bookingType: bookingType,
       trainingLocation: json['trainingLocation'] as String? ?? '',
       isOnline: json['isOnline'] as bool? ?? false,
-      date: json['date'] as String? ?? '',
-      startTime: json['startTime'] as String? ?? '',
-      endTime: json['endTime'] as String? ?? '',
+      date: rawDate,
+      startTime: rawStart,
+      endTime: rawEnd,
       price: (json['price'] as num?)?.toDouble() ?? 0.0,
-      currency: 'USD',
+      currency: json['currency'] as String? ?? 'USD',
       durationMonths: (json['durationMonths'] as num?)?.toInt() ?? 1,
-      sessions: _parseSessions(json['sessions']),
+      sessions: sessions,
       notes: json['notes'] as String? ?? '',
-      status: json['status'] as String? ?? 'pending',
+      status: rawStatus,
       rejectionReason: json['rejectionReason'] as String?,
       proposedDate: json['proposedDate'] as String?,
       proposedStartTime: json['proposedStartTime'] as String?,
@@ -42,6 +71,8 @@ class BookingSerializer {
   }
 
   static Map<String, dynamic> toMap(BookingModel booking) {
+    final isMonthly = booking.bookingType == 'monthly';
+
     return {
       'id': booking.id,
       'coachUid': booking.coachUid,
@@ -49,7 +80,8 @@ class BookingSerializer {
       'coachPhotoUrl': booking.coachPhotoUrl,
       'traineeUid': booking.traineeUid,
       'traineeName': booking.traineeName,
-      'traineePhotoUrl': booking.traineePhotoUrl,
+      if (booking.traineePhotoUrl.isNotEmpty)
+        'traineePhotoUrl': booking.traineePhotoUrl,
       'sport': booking.sport,
       'bookingType': booking.bookingType,
       'trainingLocation': booking.trainingLocation,
@@ -58,11 +90,11 @@ class BookingSerializer {
       'startTime': booking.startTime,
       'endTime': booking.endTime,
       'price': booking.price,
-      'currency': 'USD',
-      'durationMonths': booking.durationMonths,
-      if (booking.sessions.isNotEmpty)
+      'currency': booking.currency,
+      if (isMonthly) 'durationMonths': booking.durationMonths,
+      if (isMonthly && booking.sessions.isNotEmpty)
         'sessions': booking.sessions.map((s) => s.toMap()).toList(),
-      'notes': booking.notes,
+      if (booking.notes.isNotEmpty) 'notes': booking.notes,
       'status': booking.status,
       if (booking.rejectionReason != null)
         'rejectionReason': booking.rejectionReason,

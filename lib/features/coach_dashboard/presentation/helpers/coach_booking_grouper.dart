@@ -12,7 +12,10 @@ abstract class CoachBookingGrouper {
 
     final valid = confirmedBookings
         .map((b) {
-          final dt = CoachDateFormatter.parseDateTime(b.date, b.startTime);
+          final next = b.isMonthly ? b.nextUpcomingSession : null;
+          final targetDate = next?.date ?? b.date;
+          final targetStart = next?.startTime ?? b.startTime;
+          final dt = CoachDateFormatter.parseDateTime(targetDate, targetStart);
           return (booking: b, dt: dt);
         })
         .where((item) {
@@ -80,7 +83,9 @@ abstract class CoachBookingGrouper {
     }
 
     for (final b in bookings) {
-      final bDate = DateTime.tryParse(b.date);
+      final next = b.isMonthly ? b.nextUpcomingSession : null;
+      final targetDateStr = next?.date ?? b.date;
+      final bDate = DateTime.tryParse(targetDateStr);
       if (bDate == null) {
         map.putIfAbsent(s.groupLater, () => []).add(b);
         continue;
