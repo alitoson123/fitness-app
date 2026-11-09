@@ -28,6 +28,7 @@ class BookingSessionModel {
   bool get isCompleted => status == 'completed';
   bool get isScheduled => status == 'scheduled' || status == 'rescheduled';
   bool get canReschedule => !isCompleted && status != 'cancelled';
+  int get sessionNumber => int.tryParse(id) ?? 1;
 
   BookingSessionModel proposeReschedule({
     required String newDate,

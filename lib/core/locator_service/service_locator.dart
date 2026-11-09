@@ -54,6 +54,10 @@ import '../services/database_service/firestore_service.dart';
 import '../services/media_service/media_picker_service.dart';
 import '../navigator/auth_route_resolver.dart';
 import '../services/storage_service/storage_service.dart';
+import '../services/notification_service/notification_service.dart';
+import '../../features/notifications/data/data_source/notifications_remote_data_source.dart';
+import '../../features/notifications/data/repos/notifications_repo.dart';
+import '../../features/notifications/data/helpers/notification_dispatcher.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -64,6 +68,9 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<GeneralLocalService>(() => GeneralLocalService());
   getIt.registerLazySingleton<StorageService>(() => StorageService());
   getIt.registerLazySingleton<MediaPickerService>(() => MediaPickerService());
+  getIt.registerLazySingleton<NotificationService>(
+    () => NotificationService(firestoreService: getIt<FirestoreService>()),
+  );
   getIt.registerLazySingleton<AuthRouteResolver>(
     () => AuthRouteResolver(firestoreService: getIt<FirestoreService>()),
   );
@@ -344,6 +351,23 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory<BookingDetailsCubit>(
     () => BookingDetailsCubit(
       repository: getIt<BookingDetailsRepo>(),
+    ),
+  );
+
+  // 20. Notification Dependencies
+  getIt.registerLazySingleton<NotificationsRemoteDataSource>(
+    () => NotificationsRemoteDataSource(
+      firestoreService: getIt<FirestoreService>(),
+    ),
+  );
+  getIt.registerLazySingleton<NotificationsRepository>(
+    () => NotificationsRepository(
+      remoteDataSource: getIt<NotificationsRemoteDataSource>(),
+    ),
+  );
+  getIt.registerLazySingleton<NotificationDispatcher>(
+    () => NotificationDispatcher(
+      repository: getIt<NotificationsRepository>(),
     ),
   );
 }

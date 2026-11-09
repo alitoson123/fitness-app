@@ -57,6 +57,7 @@ class BookingModel {
   bool get isMonthly => bookingType == 'monthly';
   bool get isSession => bookingType != 'monthly';
   int get sessionsCount => sessions.isNotEmpty ? sessions.length : 1;
+  double get priceUSD => price;
 
   BookingSessionModel? getSessionById(String id) =>
       sessions.where((s) => s.id == id).firstOrNull;

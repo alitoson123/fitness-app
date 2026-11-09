@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/locator_service/service_locator.dart';
 import '../../../../core/navigator/app_routes.dart';
 import '../../../../core/navigator/auth_route_resolver.dart';
+import '../../../../core/services/notification_service/notification_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../generated/l10n.dart';
@@ -31,6 +32,7 @@ class _SplashViewState extends State<SplashView> {
     final currentUser = await authLocalDataSource.getUser();
 
     if (currentUser != null && mounted) {
+      getIt<NotificationService>().syncFcmToken(currentUser.uid);
       final routeResolver = getIt<AuthRouteResolver>();
       final targetRoute = await routeResolver.resolveTargetRoute(
         uid: currentUser.uid,

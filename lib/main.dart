@@ -8,6 +8,7 @@ import 'core/app_settings/presentation/view_model/app_settings_cubit/app_setting
 import 'core/locator_service/service_locator.dart';
 import 'core/navigator/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'core/services/notification_service/notification_service.dart';
 import 'generated/l10n.dart';
 import 'firebase_options.dart';
 
@@ -17,6 +18,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await setupServiceLocator();
+  await getIt<NotificationService>().initialize();
   runApp(const CoachHubApp());
 }
 

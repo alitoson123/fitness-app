@@ -126,7 +126,7 @@ class CoachBookingsRemoteDataSource {
     );
   }
 
-  Future<BookingModel> _getBooking(String bookingId) async {
+  Future<BookingModel> getBooking(String bookingId) async {
     final doc = await firestoreService.getDoc(
       collection: AppConstants.bookingsCollection,
       docId: bookingId,
@@ -160,7 +160,7 @@ class CoachBookingsRemoteDataSource {
     required String proposedEndTime,
     required String reason,
   }) async {
-    final booking = await _getBooking(bookingId);
+    final booking = await getBooking(bookingId);
     final updated = booking.proposeMonthlySessionReschedule(
       sessionId: sessionId,
       proposedDate: proposedDate,
@@ -176,7 +176,7 @@ class CoachBookingsRemoteDataSource {
     required String bookingId,
     required String sessionId,
   }) async {
-    final booking = await _getBooking(bookingId);
+    final booking = await getBooking(bookingId);
     final updated = booking.acceptMonthlySessionReschedule(
       sessionId: sessionId,
       restoredStatus: 'confirmed',
@@ -189,7 +189,7 @@ class CoachBookingsRemoteDataSource {
     required String sessionId,
     String? declineReason,
   }) async {
-    final booking = await _getBooking(bookingId);
+    final booking = await getBooking(bookingId);
     final updated = booking.declineMonthlySessionReschedule(
       sessionId: sessionId,
       restoredStatus: 'confirmed',
@@ -201,7 +201,7 @@ class CoachBookingsRemoteDataSource {
     required String bookingId,
     required String sessionId,
   }) async {
-    final booking = await _getBooking(bookingId);
+    final booking = await getBooking(bookingId);
     final updated = booking.completeMonthlySession(sessionId: sessionId);
     await _updateBookingSessions(bookingId, updated);
   }

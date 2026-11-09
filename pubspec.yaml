@@ -59,6 +59,11 @@ dependencies:
   file_picker: ^13.1.0
   pinput: ^6.0.2
   intl: ^0.20.3
+  firebase_messaging: ^16.7.1
+  flutter_local_notifications: 21.0.0
+
+dependency_overrides:
+  dbus: ^0.8.0
 
 dev_dependencies:
   flutter_test:

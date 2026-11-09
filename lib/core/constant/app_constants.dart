@@ -19,6 +19,9 @@ abstract class AppConstants {
   static const String traineeProfilesCollection = 'trainee_profiles';
   static const String bookingsCollection = 'bookings';
   static const String verificationsCollection = 'coach_verifications';
+  static const String notificationsCollection = 'notifications';
+  static const String adminNotificationsCollection = 'admin_notifications';
+  static const String fcmTokensCollection = 'fcm_tokens';
 
   // User & Reschedule Roles
   static const String roleCoach = 'coach';

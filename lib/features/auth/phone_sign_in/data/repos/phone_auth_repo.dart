@@ -2,6 +2,8 @@ import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/navigator/auth_route_resolver.dart';
+import '../../../../../core/locator_service/service_locator.dart';
+import '../../../../../core/services/notification_service/notification_service.dart';
 import '../../../../../core/services/logger_service/logger_service.dart';
 import '../../../core/data/data_source/auth_local_data_source.dart';
 import '../../../core/data/models/user_model.dart';
@@ -110,6 +112,7 @@ class PhoneAuthRepo {
     }
 
     await _authLocalDataSource.saveUser(user: userModel);
+    getIt<NotificationService>().syncFcmToken(userModel.uid);
     final targetRoute = await _authRouteResolver.resolveTargetRoute(
       uid: userModel.uid,
       role: userModel.role,

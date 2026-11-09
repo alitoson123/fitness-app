@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:fitness_app/core/errors/failure.dart';
 import 'package:fitness_app/core/services/auth_service/auth_service.dart';
+import 'package:fitness_app/features/notifications/data/helpers/notification_safe_dispatcher.dart';
 import 'package:fitness_app/features/auth/core/data/data_source/auth_local_data_source.dart';
 import '../data_source/coach_setup_local_data_source.dart';
 import '../data_source/coach_setup_remote_data_source.dart';
@@ -55,6 +56,15 @@ class CoachSetupRepoImpl implements CoachSetupRepo {
       if (cachedUser != null) {
         await authLocalDataSource.saveUser(user: cachedUser.copyWith(role: 'coach'));
       }
+
+      NotificationSafeDispatcher.dispatch(
+        (d) => d.dispatchCoachVerificationSubmitted(
+          coachUid: uid,
+          coachName: resolvedProfile.name.isNotEmpty
+              ? resolvedProfile.name
+              : (cachedUser?.phoneNumber ?? 'Coach'),
+        ),
+      );
 
       return const Right(null);
     } catch (e) {

@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/services/auth_service/auth_service.dart';
 import '../../../../core/services/logger_service/logger_service.dart';
+import '../../../notifications/data/helpers/notification_safe_dispatcher.dart';
 import '../../../trainee_setup/data/models/trainee_profile_model.dart';
 import '../../../trainee_setup/data/repos/trainee_setup_repo.dart';
 import '../data_source/booking_request_remote_data_source.dart';
@@ -63,6 +64,16 @@ class BookingRequestRepo {
       );
 
       final bookingId = await remoteDataSource.createBooking(booking);
+      final trainee = await getCurrentTrainee();
+      final traineeName = (trainee != null && trainee.name.isNotEmpty)
+          ? trainee.name
+          : (booking.traineeName.isNotEmpty ? booking.traineeName : 'Trainee');
+      NotificationSafeDispatcher.dispatch(
+        (d) => d.dispatchNewBooking(
+          booking: booking.copyWith(id: bookingId),
+          traineeName: traineeName,
+        ),
+      );
 
       return Right(bookingId);
     } catch (e, stackTrace) {

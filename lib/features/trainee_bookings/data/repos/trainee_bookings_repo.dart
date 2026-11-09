@@ -5,6 +5,7 @@ import '../../../../core/errors/failure.dart';
 import '../../../../core/services/database_service/firestore_service.dart';
 import '../../../../core/services/logger_service/logger_service.dart';
 import '../../../booking_request/data/models/booking_model.dart';
+import '../../../notifications/data/helpers/notification_safe_dispatcher.dart';
 
 class TraineeBookingsRepo {
   final FirestoreService firestoreService;
@@ -52,6 +53,16 @@ class TraineeBookingsRepo {
         docId: booking.id,
         data: data,
       );
+      NotificationSafeDispatcher.dispatch((d) async {
+        await d.dispatchSingleRescheduleAccepted(
+          booking: booking,
+          senderUid: booking.traineeUid,
+          senderName: booking.traineeName.isNotEmpty ? booking.traineeName : 'Trainee',
+          recipientUid: booking.coachUid,
+          recipientRole: AppConstants.roleCoach,
+          date: booking.proposedDate ?? booking.date,
+        );
+      });
       return const Right(null);
     } catch (e, st) {
       LoggerService.error('Failed to accept reschedule: $e', tag: 'TraineeBookingsRepo', error: e, stackTrace: st);
@@ -83,6 +94,22 @@ class TraineeBookingsRepo {
         docId: bookingId,
         data: data,
       );
+      NotificationSafeDispatcher.dispatch((d) async {
+        final doc = await firestoreService.getDoc(
+          collection: AppConstants.bookingsCollection,
+          docId: bookingId,
+        );
+        if (doc.exists && doc.data() != null) {
+          final booking = BookingModel.fromJson(doc.data()!, id: doc.id);
+          await d.dispatchSingleRescheduleDeclined(
+            booking: booking,
+            senderUid: booking.traineeUid,
+            senderName: booking.traineeName.isNotEmpty ? booking.traineeName : 'Trainee',
+            recipientUid: booking.coachUid,
+            recipientRole: AppConstants.roleCoach,
+          );
+        }
+      });
       return const Right(null);
     } catch (e, st) {
       LoggerService.error('Failed to decline reschedule: $e', tag: 'TraineeBookingsRepo', error: e, stackTrace: st);
@@ -124,6 +151,18 @@ class TraineeBookingsRepo {
         docId: booking.id,
         data: data,
       );
+      NotificationSafeDispatcher.dispatch((d) async {
+        await d.dispatchSingleRescheduleProposed(
+          booking: booking,
+          senderUid: booking.traineeUid,
+          senderName: booking.traineeName.isNotEmpty ? booking.traineeName : 'Trainee',
+          recipientUid: booking.coachUid,
+          recipientRole: AppConstants.roleCoach,
+          proposedDate: proposedDate,
+          proposedTime: proposedStartTime,
+          reason: reason,
+        );
+      });
       return const Right(null);
     } catch (e, st) {
       LoggerService.error('Failed to request reschedule: $e',
@@ -132,7 +171,7 @@ class TraineeBookingsRepo {
     }
   }
 
-  Future<Either<Failure, void>> _updateMonthlyBooking(
+  Future<Either<Failure, BookingModel>> _updateMonthlyBooking(
     String bookingId,
     BookingModel Function(BookingModel current) transform,
   ) async {
@@ -156,7 +195,7 @@ class TraineeBookingsRepo {
           'updatedAt': FieldValue.serverTimestamp(),
         },
       );
-      return const Right(null);
+      return Right(updated);
     } catch (e, st) {
       LoggerService.error(
         'Failed to update monthly booking session: $e',
@@ -175,45 +214,129 @@ class TraineeBookingsRepo {
     required String proposedStartTime,
     required String proposedEndTime,
     required String reason,
-  }) =>
-      _updateMonthlyBooking(
-        bookingId,
-        (booking) => booking.proposeMonthlySessionReschedule(
+  }) async {
+    final result = await _updateMonthlyBooking(
+      bookingId,
+      (booking) => booking.proposeMonthlySessionReschedule(
+        sessionId: sessionId,
+        proposedDate: proposedDate,
+        proposedStartTime: proposedStartTime,
+        proposedEndTime: proposedEndTime,
+        reason: reason,
+        rescheduledBy: AppConstants.roleTrainee,
+      ),
+    );
+    return result.map((booking) {
+      NotificationSafeDispatcher.dispatch((d) async {
+        final session = booking.sessions.firstWhere(
+          (s) => s.id == sessionId,
+          orElse: () => booking.sessions.first,
+        );
+        await d.dispatchMonthlyRescheduleProposed(
+          booking: booking,
+          sessionNumber: session.sessionNumber,
           sessionId: sessionId,
+          senderUid: booking.traineeUid,
+          senderName: booking.traineeName.isNotEmpty ? booking.traineeName : 'Trainee',
+          recipientUid: booking.coachUid,
+          recipientRole: AppConstants.roleCoach,
           proposedDate: proposedDate,
-          proposedStartTime: proposedStartTime,
-          proposedEndTime: proposedEndTime,
-          reason: reason,
-          rescheduledBy: AppConstants.roleTrainee,
-        ),
-      );
+          proposedTime: proposedStartTime,
+        );
+      });
+    });
+  }
 
   Future<Either<Failure, void>> acceptMonthlySessionReschedule({
     required String bookingId,
     required String sessionId,
     String? preferredRestoredStatus,
-  }) =>
-      _updateMonthlyBooking(
-        bookingId,
-        (booking) => booking.acceptMonthlySessionReschedule(
+  }) async {
+    final result = await _updateMonthlyBooking(
+      bookingId,
+      (booking) => booking.acceptMonthlySessionReschedule(
+        sessionId: sessionId,
+        restoredStatus: preferredRestoredStatus,
+      ),
+    );
+    return result.map((booking) {
+      NotificationSafeDispatcher.dispatch((d) async {
+        final session = booking.sessions.firstWhere(
+          (s) => s.id == sessionId,
+          orElse: () => booking.sessions.first,
+        );
+        await d.dispatchMonthlyRescheduleAccepted(
+          booking: booking,
+          sessionNumber: session.sessionNumber,
           sessionId: sessionId,
-          restoredStatus: preferredRestoredStatus,
-        ),
-      );
+          senderUid: booking.traineeUid,
+          senderName: booking.traineeName.isNotEmpty ? booking.traineeName : 'Trainee',
+          recipientUid: booking.coachUid,
+          recipientRole: AppConstants.roleCoach,
+        );
+      });
+    });
+  }
 
   Future<Either<Failure, void>> declineMonthlySessionReschedule({
     required String bookingId,
     required String sessionId,
     String? declineReason,
     String? preferredRestoredStatus,
-  }) =>
-      _updateMonthlyBooking(
-        bookingId,
-        (booking) => booking.declineMonthlySessionReschedule(
+  }) async {
+    final result = await _updateMonthlyBooking(
+      bookingId,
+      (booking) => booking.declineMonthlySessionReschedule(
+        sessionId: sessionId,
+        restoredStatus: preferredRestoredStatus,
+      ),
+    );
+    return result.map((booking) {
+      NotificationSafeDispatcher.dispatch((d) async {
+        final session = booking.sessions.firstWhere(
+          (s) => s.id == sessionId,
+          orElse: () => booking.sessions.first,
+        );
+        await d.dispatchMonthlyRescheduleDeclined(
+          booking: booking,
+          sessionNumber: session.sessionNumber,
           sessionId: sessionId,
-          restoredStatus: preferredRestoredStatus,
-        ),
+          senderUid: booking.traineeUid,
+          senderName: booking.traineeName.isNotEmpty ? booking.traineeName : 'Trainee',
+          recipientUid: booking.coachUid,
+          recipientRole: AppConstants.roleCoach,
+        );
+      });
+    });
+  }
+
+  Future<Either<Failure, void>> cancelBooking({
+    required BookingModel booking,
+    String? cancellationReason,
+  }) async {
+    try {
+      await firestoreService.updateData(
+        collection: AppConstants.bookingsCollection,
+        docId: booking.id,
+        data: {
+          'status': 'cancelled',
+          'cancellationReason': ?cancellationReason,
+          'updatedAt': FieldValue.serverTimestamp(),
+        },
       );
+      NotificationSafeDispatcher.dispatch((d) async {
+        await d.dispatchBookingCancelled(
+          booking: booking,
+          traineeName: booking.traineeName.isNotEmpty ? booking.traineeName : 'Trainee',
+        );
+      });
+      return const Right(null);
+    } catch (e, st) {
+      LoggerService.error('Failed to cancel booking: $e',
+          tag: 'TraineeBookingsRepo', error: e, stackTrace: st);
+      return Left(ServerFailure(errorMessage: e.toString()));
+    }
+  }
 
   Map<String, dynamic> _clearedProposalData() => {
         'proposedDate': null,

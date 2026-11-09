@@ -1,7 +1,9 @@
 import 'package:dartz/dartz.dart';
+import '../../../../core/constant/app_constants.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/services/logger_service/logger_service.dart';
 import '../../../booking_request/data/models/booking_model.dart';
+import '../../../notifications/data/helpers/notification_safe_dispatcher.dart';
 import '../data_source/coach_bookings_remote_data_source.dart';
 
 class CoachBookingsRepo {
@@ -24,6 +26,21 @@ class CoachBookingsRepo {
         status: status,
         rejectionReason: rejectionReason,
       );
+      NotificationSafeDispatcher.dispatch((d) async {
+        final booking = await remoteDataSource.getBooking(bookingId);
+        if (status == 'confirmed') {
+          await d.dispatchBookingApproved(
+            booking: booking,
+            coachName: booking.coachName.isNotEmpty ? booking.coachName : 'Coach',
+          );
+        } else if (status == 'rejected') {
+          await d.dispatchBookingRejected(
+            booking: booking,
+            coachName: booking.coachName.isNotEmpty ? booking.coachName : 'Coach',
+            reason: rejectionReason ?? 'Unavailable',
+          );
+        }
+      });
       return const Right(null);
     } catch (e, st) {
       LoggerService.error(
@@ -57,6 +74,19 @@ class CoachBookingsRepo {
         originalStartTime: originalStartTime,
         originalEndTime: originalEndTime,
       );
+      NotificationSafeDispatcher.dispatch((d) async {
+        final booking = await remoteDataSource.getBooking(bookingId);
+        await d.dispatchSingleRescheduleProposed(
+          booking: booking,
+          senderUid: booking.coachUid,
+          senderName: booking.coachName.isNotEmpty ? booking.coachName : 'Coach',
+          recipientUid: booking.traineeUid,
+          recipientRole: AppConstants.roleTrainee,
+          proposedDate: proposedDate,
+          proposedTime: proposedStartTime,
+          reason: reason,
+        );
+      });
       return const Right(null);
     } catch (e, st) {
       LoggerService.error(
@@ -74,6 +104,16 @@ class CoachBookingsRepo {
   }) async {
     try {
       await remoteDataSource.acceptReschedule(booking: booking);
+      NotificationSafeDispatcher.dispatch((d) async {
+        await d.dispatchSingleRescheduleAccepted(
+          booking: booking,
+          senderUid: booking.coachUid,
+          senderName: booking.coachName.isNotEmpty ? booking.coachName : 'Coach',
+          recipientUid: booking.traineeUid,
+          recipientRole: AppConstants.roleTrainee,
+          date: booking.proposedDate ?? booking.date,
+        );
+      });
       return const Right(null);
     } catch (e, st) {
       LoggerService.error(
@@ -95,6 +135,16 @@ class CoachBookingsRepo {
         bookingId: bookingId,
         declineReason: declineReason,
       );
+      NotificationSafeDispatcher.dispatch((d) async {
+        final booking = await remoteDataSource.getBooking(bookingId);
+        await d.dispatchSingleRescheduleDeclined(
+          booking: booking,
+          senderUid: booking.coachUid,
+          senderName: booking.coachName.isNotEmpty ? booking.coachName : 'Coach',
+          recipientUid: booking.traineeUid,
+          recipientRole: AppConstants.roleTrainee,
+        );
+      });
       return const Right(null);
     } catch (e, st) {
       LoggerService.error(
@@ -124,6 +174,24 @@ class CoachBookingsRepo {
         proposedEndTime: proposedEndTime,
         reason: reason,
       );
+      NotificationSafeDispatcher.dispatch((d) async {
+        final booking = await remoteDataSource.getBooking(bookingId);
+        final session = booking.sessions.firstWhere(
+          (s) => s.id == sessionId,
+          orElse: () => booking.sessions.first,
+        );
+        await d.dispatchMonthlyRescheduleProposed(
+          booking: booking,
+          sessionNumber: session.sessionNumber,
+          sessionId: sessionId,
+          senderUid: booking.coachUid,
+          senderName: booking.coachName.isNotEmpty ? booking.coachName : 'Coach',
+          recipientUid: booking.traineeUid,
+          recipientRole: AppConstants.roleTrainee,
+          proposedDate: proposedDate,
+          proposedTime: proposedStartTime,
+        );
+      });
       return const Right(null);
     } catch (e, st) {
       LoggerService.error(
@@ -145,6 +213,22 @@ class CoachBookingsRepo {
         bookingId: bookingId,
         sessionId: sessionId,
       );
+      NotificationSafeDispatcher.dispatch((d) async {
+        final booking = await remoteDataSource.getBooking(bookingId);
+        final session = booking.sessions.firstWhere(
+          (s) => s.id == sessionId,
+          orElse: () => booking.sessions.first,
+        );
+        await d.dispatchMonthlyRescheduleAccepted(
+          booking: booking,
+          sessionNumber: session.sessionNumber,
+          sessionId: sessionId,
+          senderUid: booking.coachUid,
+          senderName: booking.coachName.isNotEmpty ? booking.coachName : 'Coach',
+          recipientUid: booking.traineeUid,
+          recipientRole: AppConstants.roleTrainee,
+        );
+      });
       return const Right(null);
     } catch (e, st) {
       LoggerService.error(
@@ -168,6 +252,22 @@ class CoachBookingsRepo {
         sessionId: sessionId,
         declineReason: declineReason,
       );
+      NotificationSafeDispatcher.dispatch((d) async {
+        final booking = await remoteDataSource.getBooking(bookingId);
+        final session = booking.sessions.firstWhere(
+          (s) => s.id == sessionId,
+          orElse: () => booking.sessions.first,
+        );
+        await d.dispatchMonthlyRescheduleDeclined(
+          booking: booking,
+          sessionNumber: session.sessionNumber,
+          sessionId: sessionId,
+          senderUid: booking.coachUid,
+          senderName: booking.coachName.isNotEmpty ? booking.coachName : 'Coach',
+          recipientUid: booking.traineeUid,
+          recipientRole: AppConstants.roleTrainee,
+        );
+      });
       return const Right(null);
     } catch (e, st) {
       LoggerService.error(
@@ -189,6 +289,20 @@ class CoachBookingsRepo {
         bookingId: bookingId,
         sessionId: sessionId,
       );
+      NotificationSafeDispatcher.dispatch((d) async {
+        final booking = await remoteDataSource.getBooking(bookingId);
+        final session = booking.sessions.firstWhere(
+          (s) => s.id == sessionId,
+          orElse: () => booking.sessions.first,
+        );
+        await d.dispatchMonthlySessionCompleted(
+          booking: booking,
+          sessionNumber: session.sessionNumber,
+          sessionId: sessionId,
+          completedCount: booking.completedSessionsCount + 1,
+          totalCount: booking.sessions.length,
+        );
+      });
       return const Right(null);
     } catch (e, st) {
       LoggerService.error(
