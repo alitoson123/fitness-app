@@ -24,4 +24,7 @@ abstract class AppRoutes {
 
   // Shared booking details route
   static const String bookingDetails = '/booking-details';
+
+  // Notifications
+  static const String notifications = '/notifications';
 }

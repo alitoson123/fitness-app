@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../generated/l10n.dart';
-//import '../widgets/coach_dashboard_app_bar_actions.dart';
+import '../../../notifications/presentation/widgets/notification_icon_button.dart';
+import '../widgets/coach_dashboard_app_bar_actions.dart';
 import '../widgets/coach_dashboard_body.dart';
 
 class CoachDashboardPage extends StatelessWidget {
@@ -17,11 +18,12 @@ class CoachDashboardPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(S.of(context).coachDashboard),
         centerTitle: true,
-      /*  actions: [
+        actions: [
+          const NotificationIconButton(),
           CoachDashboardAppBarActions(
             onNavigateToTab: onNavigateToTab,
           ),
-        ],*/
+        ],
       ),
       body: CoachDashboardBody(
         onNavigateToTab: onNavigateToTab,

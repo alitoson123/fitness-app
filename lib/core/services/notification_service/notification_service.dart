@@ -16,27 +16,19 @@ class NotificationService {
 
   static const String channelId = 'coachhub_high_importance';
   static const String channelName = 'CoachHub Alerts';
-  static const String channelDescription =
-      'High priority alerts for bookings and moderation.';
+  static const String channelDescription = 'High priority alerts.';
 
   NotificationService({
     FirebaseMessaging? messaging,
     FlutterLocalNotificationsPlugin? localNotifications,
     required FirestoreService firestoreService,
   }) : _messaging = messaging ?? FirebaseMessaging.instance,
-       _localNotifications =
-           localNotifications ?? FlutterLocalNotificationsPlugin(),
+       _localNotifications = localNotifications ?? FlutterLocalNotificationsPlugin(),
        _firestoreService = firestoreService;
 
   Future<void> initialize() async {
     try {
-      final settings = await _messaging.requestPermission(
-        alert: true,
-        badge: true,
-        sound: true,
-        provisional: false,
-      );
-      LoggerService.info('FCM auth: ${settings.authorizationStatus}');
+      await _messaging.requestPermission(alert: true, badge: true, sound: true);
 
       const initSettings = InitializationSettings(
         android: AndroidInitializationSettings('@mipmap/ic_launcher'),
@@ -49,8 +41,7 @@ class NotificationService {
         onDidReceiveNotificationResponse: (response) {
           if (response.payload != null) {
             try {
-              final data =
-                  jsonDecode(response.payload!) as Map<String, dynamic>;
+              final data = jsonDecode(response.payload!) as Map<String, dynamic>;
               NotificationDeepLinkHandler.handlePayload(data);
             } catch (e) {
               LoggerService.error('Error parsing tap payload: $e');
@@ -59,7 +50,7 @@ class NotificationService {
         },
       );
 
-      final androidChannel = const AndroidNotificationChannel(
+      const androidChannel = AndroidNotificationChannel(
         channelId,
         channelName,
         description: channelDescription,
@@ -69,9 +60,7 @@ class NotificationService {
       );
 
       final androidPlugin = _localNotifications
-          .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin
-          >();
+          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
       await androidPlugin?.createNotificationChannel(androidChannel);
 
       FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
@@ -92,11 +81,12 @@ class NotificationService {
     }
   }
 
-  Future<void> _showForegroundNotification(RemoteMessage message) async {
-    final notification = message.notification;
-    final title = notification?.title ?? message.data['title'] ?? 'CoachHub';
-    final body = notification?.body ?? message.data['body'] ?? '';
-
+  Future<void> showNotification({
+    required int id,
+    required String title,
+    required String body,
+    Map<String, dynamic>? payload,
+  }) async {
     const androidDetails = AndroidNotificationDetails(
       channelId,
       channelName,
@@ -112,29 +102,33 @@ class NotificationService {
     );
 
     await _localNotifications.show(
-      id: message.hashCode,
+      id: id,
       title: title,
       body: body,
       notificationDetails: details,
-      payload: jsonEncode(message.data),
+      payload: payload != null ? jsonEncode(payload) : null,
+    );
+  }
+
+  Future<void> _showForegroundNotification(RemoteMessage message) async {
+    final notification = message.notification;
+    final title = notification?.title ?? message.data['title'] ?? 'CoachHub';
+    final body = notification?.body ?? message.data['body'] ?? '';
+    await showNotification(
+      id: message.hashCode,
+      title: title,
+      body: body,
+      payload: message.data,
     );
   }
 
   Future<void> syncFcmToken(String uid) async {
     try {
       final token = await _messaging.getToken();
-      if (token != null) {
-        await _saveTokenToFirestore(uid, token);
-      }
-      _messaging.onTokenRefresh.listen((newToken) {
-        _saveTokenToFirestore(uid, newToken);
-      });
+      if (token != null) await _saveTokenToFirestore(uid, token);
+      _messaging.onTokenRefresh.listen((t) => _saveTokenToFirestore(uid, t));
     } catch (e, st) {
-      LoggerService.error(
-        'Error syncing FCM token: $e',
-        error: e,
-        stackTrace: st,
-      );
+      LoggerService.error('Error syncing FCM token: $e', error: e, stackTrace: st);
     }
   }
 

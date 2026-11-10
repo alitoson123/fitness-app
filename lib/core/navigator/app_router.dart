@@ -10,6 +10,7 @@ import '../../features/coach_setup/data/models/coach_application_model.dart';
 import '../../features/coach_setup/data/models/coach_profile_model.dart';
 import '../../features/coach_setup/presentation/views/coach_registration_view.dart';
 import '../../features/coach_setup/presentation/views/coach_verification_pending_view.dart';
+import '../../features/notifications/presentation/views/notifications_view.dart';
 import '../../features/onboarding/presentation/views/onboarding_view.dart';
 import '../../features/splash/presentation/views/splash_view.dart';
 import '../../features/trainee_discovery/presentation/views/trainee_home_view.dart';
@@ -136,6 +137,10 @@ abstract class AppRouter {
           }
           return const SplashView();
         },
+      ),
+      GoRoute(
+        path: AppRoutes.notifications,
+        builder: (context, state) => const NotificationsView(),
       ),
     ],
   );

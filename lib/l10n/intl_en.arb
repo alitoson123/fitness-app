@@ -728,5 +728,21 @@
   "traineeProposedNewTime": "Trainee requested a new session time",
   "traineeReasonLabel": "Trainee's Note",
   "reschedulePendingCoachBadge": "Reschedule Awaiting Coach",
-  "rescheduleRequestedCoachSuccess": "Reschedule request sent to coach"
+  "rescheduleRequestedCoachSuccess": "Reschedule request sent to coach",
+  "notificationCenter": "Notification Center",
+  "markAllAsRead": "Mark all as read",
+  "allNotificationsMarkedRead": "All notifications marked as read",
+  "notificationDeleted": "Notification deleted",
+  "filterAll": "All",
+  "filterBookings": "Bookings",
+  "filterAdmin": "System & Admin",
+  "emptyNotificationsTitle": "No notifications yet",
+  "emptyNotificationsDesc": "You're all caught up! Updates about your bookings and account will appear here.",
+  "emptyFilterNotificationsDesc": "No notifications match the selected filter.",
+  "timeJustNow": "Just now",
+  "timeMinutesAgo": "{minutes}m ago",
+  "timeHoursAgo": "{hours}h ago",
+  "timeDaysAgo": "{days}d ago",
+  "notificationsTooltip": "Notifications",
+  "viewBookingAction": "View Booking"
 }

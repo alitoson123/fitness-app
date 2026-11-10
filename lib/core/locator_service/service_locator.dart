@@ -58,6 +58,7 @@ import '../services/notification_service/notification_service.dart';
 import '../../features/notifications/data/data_source/notifications_remote_data_source.dart';
 import '../../features/notifications/data/repos/notifications_repo.dart';
 import '../../features/notifications/data/helpers/notification_dispatcher.dart';
+import '../../features/notifications/presentation/view_model/notifications_cubit/notifications_cubit.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -368,6 +369,12 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<NotificationDispatcher>(
     () => NotificationDispatcher(
       repository: getIt<NotificationsRepository>(),
+    ),
+  );
+  getIt.registerFactory<NotificationsCubit>(
+    () => NotificationsCubit(
+      repository: getIt<NotificationsRepository>(),
+      notificationService: getIt<NotificationService>(),
     ),
   );
 }

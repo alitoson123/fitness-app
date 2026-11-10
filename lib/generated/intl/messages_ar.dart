@@ -132,20 +132,26 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m48(count) =>
       "${Intl.plural(count, one: 'طلب معلق واحد', two: 'طلبان معلقان', few: '${count} طلبات معلقة', many: '${count} طلباً معلقاً', other: '${count} طلب معلق')}";
 
-  static String m49(hours) => "${hours} ساعة عمل";
+  static String m49(days) => "منذ ${days} ي";
 
-  static String m50(index, date, time) =>
+  static String m50(hours) => "منذ ${hours} س";
+
+  static String m51(minutes) => "منذ ${minutes} د";
+
+  static String m52(hours) => "${hours} ساعة عمل";
+
+  static String m53(index, date, time) =>
       "اقترح المتدرب إعادة جدولة الحصة #${index} إلى ${date} الساعة ${time}";
 
-  static String m51(count) =>
+  static String m54(count) =>
       "${Intl.plural(count, zero: '0 يوم تدريب', one: 'يوم تدريب واحد', two: 'يوما تدريب', few: '${count} أيام تدريب', many: '${count} يوم تدريب', other: '${count} يوم تدريب')}";
 
-  static String m52(count) =>
+  static String m55(count) =>
       "${Intl.plural(count, zero: 'يوم تدريب', one: 'يوم تدريب', two: 'يوما تدريب', few: 'أيام تدريب', many: 'يوم تدريب', other: 'يوم تدريب')}";
 
-  static String m53(name) => "مرحباً بعودتك، ${name}!";
+  static String m56(name) => "مرحباً بعودتك، ${name}!";
 
-  static String m54(years) => "خبرة ${years} سنوات";
+  static String m57(years) => "خبرة ${years} سنوات";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -181,6 +187,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "age": MessageLookupByLibrary.simpleMessage("العمر"),
         "ageHint": MessageLookupByLibrary.simpleMessage("مثال: 28"),
         "allGenders": MessageLookupByLibrary.simpleMessage("الكل"),
+        "allNotificationsMarkedRead": MessageLookupByLibrary.simpleMessage(
+            "تم تحديد جميع الإشعارات كمقروءة"),
         "allSetSubtitle": MessageLookupByLibrary.simpleMessage(
             "ملفك الشخصي كمتدرب جاهز. ابدأ الآن في استكشاف أفضل المدربين المتوافقين مع رياضاتك وأهدافك."),
         "allSetTitle": MessageLookupByLibrary.simpleMessage("أنت جاهز تماماً!"),
@@ -524,6 +532,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "يرجى تأكيد بريدك الإلكتروني للمتابعة."),
         "emailVerificationRequired": MessageLookupByLibrary.simpleMessage(
             "تأكيد البريد الإلكتروني مطلوب"),
+        "emptyFilterNotificationsDesc": MessageLookupByLibrary.simpleMessage(
+            "لا توجد إشعارات تطابق التصفية المحددة."),
+        "emptyNotificationsDesc": MessageLookupByLibrary.simpleMessage(
+            "أنت على اطلاع بكل جديد! ستظهر هنا التحديثات الخاصة بحجوزاتك وحسابك."),
+        "emptyNotificationsTitle":
+            MessageLookupByLibrary.simpleMessage("لا توجد إشعارات حتى الآن"),
         "endTime": MessageLookupByLibrary.simpleMessage("وقت الانتهاء"),
         "englishLanguage": MessageLookupByLibrary.simpleMessage("الإنجليزية"),
         "enterLocationHint": MessageLookupByLibrary.simpleMessage(
@@ -559,6 +573,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "fileUploaded":
             MessageLookupByLibrary.simpleMessage("تم اختيار المستند"),
         "filter": MessageLookupByLibrary.simpleMessage("تصفية"),
+        "filterAdmin": MessageLookupByLibrary.simpleMessage("النظام والإدارة"),
+        "filterAll": MessageLookupByLibrary.simpleMessage("الكل"),
+        "filterBookings": MessageLookupByLibrary.simpleMessage("الحجوزات"),
         "filters": MessageLookupByLibrary.simpleMessage("الفلاتر"),
         "fitnessGoal": MessageLookupByLibrary.simpleMessage("هدف التدريب"),
         "fitnessLevel": MessageLookupByLibrary.simpleMessage("مستوى اللياقة"),
@@ -637,6 +654,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("أوقات العمل والتوفر"),
         "manageWorkingHours":
             MessageLookupByLibrary.simpleMessage("إدارة أوقات العمل"),
+        "markAllAsRead":
+            MessageLookupByLibrary.simpleMessage("تحديد الكل كمقروء"),
         "markAsCompleted":
             MessageLookupByLibrary.simpleMessage("تحديد كمكتملة"),
         "minExperienceYears": MessageLookupByLibrary.simpleMessage("الخبرة"),
@@ -723,6 +742,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "noUpcomingSessionsTitle":
             MessageLookupByLibrary.simpleMessage("لا توجد جلسات قادمة"),
         "notSpecified": MessageLookupByLibrary.simpleMessage("غير محدد"),
+        "notificationCenter":
+            MessageLookupByLibrary.simpleMessage("مركز الإشعارات"),
+        "notificationDeleted":
+            MessageLookupByLibrary.simpleMessage("تم حذف الإشعار"),
+        "notificationsTooltip":
+            MessageLookupByLibrary.simpleMessage("الإشعارات"),
         "ok": MessageLookupByLibrary.simpleMessage("موافق"),
         "onboardingBadge1":
             MessageLookupByLibrary.simpleMessage("مدربون معتمدون"),
@@ -1143,9 +1168,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("أرباح هذا الشهر"),
         "thisWeekSchedule":
             MessageLookupByLibrary.simpleMessage("جدول هذا الأسبوع"),
+        "timeDaysAgo": m49,
+        "timeHoursAgo": m50,
+        "timeJustNow": MessageLookupByLibrary.simpleMessage("الآن"),
+        "timeMinutesAgo": m51,
         "timeSlots": MessageLookupByLibrary.simpleMessage("ساعات العمل"),
         "toTime": MessageLookupByLibrary.simpleMessage("إلى"),
-        "totalDurationLabel": m49,
+        "totalDurationLabel": m52,
         "totalMonthlyPrice":
             MessageLookupByLibrary.simpleMessage("سعر الباقة الشهرية"),
         "totalSessionPrice": MessageLookupByLibrary.simpleMessage("سعر الجلسة"),
@@ -1164,7 +1193,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "traineeNotes": MessageLookupByLibrary.simpleMessage("ملاحظات المتدرب"),
         "traineeProfileTitle":
             MessageLookupByLibrary.simpleMessage("ملفي الشخصي"),
-        "traineeProposedMonthlyReschedule": m50,
+        "traineeProposedMonthlyReschedule": m53,
         "traineeProposedNewTime": MessageLookupByLibrary.simpleMessage(
             "طلب المتدرب موعداً جديداً للجلسة"),
         "traineeReasonLabel":
@@ -1174,8 +1203,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "أنشئ ملفك الشخصي للمتدرب وابدأ رحلتك الرياضية"),
         "trainingActivityTitle":
             MessageLookupByLibrary.simpleMessage("النشاط التدريبي"),
-        "trainingDaysCount": m51,
-        "trainingDaysUnit": m52,
+        "trainingDaysCount": m54,
+        "trainingDaysUnit": m55,
         "trainingInsightsEmpty": MessageLookupByLibrary.simpleMessage(
             "لا توجد جلسات تدريب مكتملة في هذه الفترة"),
         "trainingInsightsEmptySubtitle": MessageLookupByLibrary.simpleMessage(
@@ -1250,6 +1279,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "verifyAndContinue":
             MessageLookupByLibrary.simpleMessage("تحقق ومتابعة"),
         "viewAll": MessageLookupByLibrary.simpleMessage("عرض الكل"),
+        "viewBookingAction": MessageLookupByLibrary.simpleMessage("عرض الحجز"),
         "viewCertificate": MessageLookupByLibrary.simpleMessage("عرض الشهادة"),
         "viewDetails": MessageLookupByLibrary.simpleMessage("عرض التفاصيل"),
         "viewProfile": MessageLookupByLibrary.simpleMessage("عرض الملف الشخصي"),
@@ -1262,13 +1292,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("عدد التدريبات الأسبوعية"),
         "weightLoss": MessageLookupByLibrary.simpleMessage("خسارة الوزن"),
         "welcomeBack": MessageLookupByLibrary.simpleMessage("مرحباً بعودتك"),
-        "welcomeBackUser": m53,
+        "welcomeBackUser": m56,
         "whatsIncluded":
             MessageLookupByLibrary.simpleMessage("ما تشمله الجلسة"),
         "workingDays": MessageLookupByLibrary.simpleMessage("أيام العمل"),
         "workingHoursDescription": MessageLookupByLibrary.simpleMessage(
             "تحديد أوقات وأيام التدريب الأسبوعية"),
-        "yearsExperienceFormat": m54,
+        "yearsExperienceFormat": m57,
         "yearsOfExperience":
             MessageLookupByLibrary.simpleMessage("سنوات الخبرة في التدريب"),
         "yearsOfExperienceLabel":

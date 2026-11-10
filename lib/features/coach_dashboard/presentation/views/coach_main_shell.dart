@@ -12,6 +12,7 @@ import '../../../coach_availability/presentation/views/coach_availability_view.d
 import '../../../coach_profile/presentation/views/coach_profile_view.dart';
 import '../../../coach_setup/presentation/view_model/coach_status_cubit/coach_status_cubit.dart';
 import '../../../coach_setup/presentation/view_model/coach_status_cubit/coach_status_states.dart';
+import '../../../notifications/presentation/view_model/notifications_cubit/notifications_cubit.dart';
 import '../view_model/coach_bookings_cubit/coach_bookings_cubit.dart';
 import '../view_model/coach_bookings_cubit/coach_bookings_states.dart';
 import '../widgets/coach_bottom_nav_bar.dart';
@@ -57,6 +58,10 @@ class _CoachMainShellState extends State<CoachMainShell> {
         BlocProvider(
           create: (_) => getIt<CoachBookingsCubit>()..listenToBookings(uid),
         ),
+        BlocProvider(
+          create: (_) =>
+              getIt<NotificationsCubit>()..listenToNotifications(uid),
+        ),
       ],
       child: PopScope(
         canPop: _currentIndex == 0,
@@ -92,38 +97,22 @@ class _CoachMainShellState extends State<CoachMainShell> {
             ),
             BlocListener<CoachBookingsCubit, CoachBookingsState>(
               listener: (context, state) {
-                if (state.successMessage == 'accepted') {
-                  Message.showSuccess(
-                    context,
-                    S.of(context).requestAcceptedSuccess,
-                  );
-                  context.read<CoachBookingsCubit>().clearMessages();
-                } else if (state.successMessage == 'rejected') {
-                  Message.showSuccess(
-                    context,
-                    S.of(context).requestRejectedSuccess,
-                  );
-                  context.read<CoachBookingsCubit>().clearMessages();
-                } else if (state.successMessage == 'rescheduled') {
-                  Message.showSuccess(
-                    context,
-                    S.of(context).rescheduleRequestedSuccess,
-                  );
-                  context.read<CoachBookingsCubit>().clearMessages();
-                } else if (state.successMessage == 'reschedule_accepted') {
-                  Message.showSuccess(
-                    context,
-                    S.of(context).rescheduleAcceptedSuccess,
-                  );
-                  context.read<CoachBookingsCubit>().clearMessages();
-                } else if (state.successMessage == 'reschedule_declined') {
-                  Message.showSuccess(
-                    context,
-                    S.of(context).rescheduleDeclinedMessage,
-                  );
-                  context.read<CoachBookingsCubit>().clearMessages();
-                } else if (state.errorMessage != null) {
+                if (state.errorMessage != null) {
                   Message.showError(context, state.errorMessage!);
+                  context.read<CoachBookingsCubit>().clearMessages();
+                  return;
+                }
+                final s = S.of(context);
+                final message = switch (state.successMessage) {
+                  'accepted' => s.requestAcceptedSuccess,
+                  'rejected' => s.requestRejectedSuccess,
+                  'rescheduled' => s.rescheduleRequestedSuccess,
+                  'reschedule_accepted' => s.rescheduleAcceptedSuccess,
+                  'reschedule_declined' => s.rescheduleDeclinedMessage,
+                  _ => null,
+                };
+                if (message != null) {
+                  Message.showSuccess(context, message);
                   context.read<CoachBookingsCubit>().clearMessages();
                 }
               },

@@ -7369,6 +7369,166 @@ class S {
       args: [],
     );
   }
+
+  /// `Notification Center`
+  String get notificationCenter {
+    return Intl.message(
+      'Notification Center',
+      name: 'notificationCenter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mark all as read`
+  String get markAllAsRead {
+    return Intl.message(
+      'Mark all as read',
+      name: 'markAllAsRead',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All notifications marked as read`
+  String get allNotificationsMarkedRead {
+    return Intl.message(
+      'All notifications marked as read',
+      name: 'allNotificationsMarkedRead',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notification deleted`
+  String get notificationDeleted {
+    return Intl.message(
+      'Notification deleted',
+      name: 'notificationDeleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All`
+  String get filterAll {
+    return Intl.message(
+      'All',
+      name: 'filterAll',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bookings`
+  String get filterBookings {
+    return Intl.message(
+      'Bookings',
+      name: 'filterBookings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `System & Admin`
+  String get filterAdmin {
+    return Intl.message(
+      'System & Admin',
+      name: 'filterAdmin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No notifications yet`
+  String get emptyNotificationsTitle {
+    return Intl.message(
+      'No notifications yet',
+      name: 'emptyNotificationsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You're all caught up! Updates about your bookings and account will appear here.`
+  String get emptyNotificationsDesc {
+    return Intl.message(
+      'You\'re all caught up! Updates about your bookings and account will appear here.',
+      name: 'emptyNotificationsDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No notifications match the selected filter.`
+  String get emptyFilterNotificationsDesc {
+    return Intl.message(
+      'No notifications match the selected filter.',
+      name: 'emptyFilterNotificationsDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Just now`
+  String get timeJustNow {
+    return Intl.message(
+      'Just now',
+      name: 'timeJustNow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{minutes}m ago`
+  String timeMinutesAgo(Object minutes) {
+    return Intl.message(
+      '${minutes}m ago',
+      name: 'timeMinutesAgo',
+      desc: '',
+      args: [minutes],
+    );
+  }
+
+  /// `{hours}h ago`
+  String timeHoursAgo(Object hours) {
+    return Intl.message(
+      '${hours}h ago',
+      name: 'timeHoursAgo',
+      desc: '',
+      args: [hours],
+    );
+  }
+
+  /// `{days}d ago`
+  String timeDaysAgo(Object days) {
+    return Intl.message(
+      '${days}d ago',
+      name: 'timeDaysAgo',
+      desc: '',
+      args: [days],
+    );
+  }
+
+  /// `Notifications`
+  String get notificationsTooltip {
+    return Intl.message(
+      'Notifications',
+      name: 'notificationsTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View Booking`
+  String get viewBookingAction {
+    return Intl.message(
+      'View Booking',
+      name: 'viewBookingAction',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

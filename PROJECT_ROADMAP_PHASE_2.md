@@ -610,13 +610,13 @@ graph TD
 
 **Goal**: Deliver a polished in-app Notification Center for Trainees and Coaches with unread counter badges and interactive item navigation.
 
-- [ ] **Step 10.1: Notifications State Management (`NotificationsCubit`)**
+- [x] **Step 10.1: Notifications State Management (`NotificationsCubit`)**
   - Implement `NotificationsCubit`:
     - Real-time Firestore stream: `listenToNotifications(uid)`.
     - State holds `List<NotificationModel>`, `unreadCount`, filter type (`all`, `bookings`, `admin`).
     - Methods: `markAsRead(notificationId)`, `markAllAsRead()`, `deleteNotification(notificationId)`.
 
-- [ ] **Step 10.2: Notification Bell & Badge in AppBars**
+- [x] **Step 10.2: Notification Bell & Badge in AppBars**
   - Create reusable `NotificationIconButton`:
     - Bell icon with reactive badge showing `unreadCount`.
     - Animates badge on new incoming notification.
@@ -624,7 +624,7 @@ graph TD
       - Trainee Home AppBar (`features/trainee_discovery/presentation/views/trainee_home_view.dart`).
       - Coach Dashboard AppBar (`features/coach_dashboard/presentation/views/coach_dashboard_page.dart`).
 
-- [ ] **Step 10.3: Notification Center View**
+- [x] **Step 10.3: Notification Center View**
   - Create `lib/features/notifications/presentation/views/notifications_view.dart`:
     - Screen layout delegates strictly to widgets (<150 lines).
     - Filter tabs: **All**, **Bookings**, **System & Admin**.

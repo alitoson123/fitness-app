@@ -133,20 +133,26 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m48(count) =>
       "${Intl.plural(count, one: '1 pending request', other: '${count} pending requests')}";
 
-  static String m49(hours) => "${hours} hrs available";
+  static String m49(days) => "${days}d ago";
 
-  static String m50(index, date, time) =>
+  static String m50(hours) => "${hours}h ago";
+
+  static String m51(minutes) => "${minutes}m ago";
+
+  static String m52(hours) => "${hours} hrs available";
+
+  static String m53(index, date, time) =>
       "Trainee proposed rescheduling Session #${index} to ${date} at ${time}";
 
-  static String m51(count) =>
+  static String m54(count) =>
       "${Intl.plural(count, one: '1 training day', other: '${count} training days')}";
 
-  static String m52(count) =>
+  static String m55(count) =>
       "${Intl.plural(count, one: 'training day', other: 'training days')}";
 
-  static String m53(name) => "Welcome back, ${name}!";
+  static String m56(name) => "Welcome back, ${name}!";
 
-  static String m54(years) => "${years} Years Experience";
+  static String m57(years) => "${years} Years Experience";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -182,6 +188,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "age": MessageLookupByLibrary.simpleMessage("Age"),
         "ageHint": MessageLookupByLibrary.simpleMessage("e.g. 28"),
         "allGenders": MessageLookupByLibrary.simpleMessage("All"),
+        "allNotificationsMarkedRead": MessageLookupByLibrary.simpleMessage(
+            "All notifications marked as read"),
         "allSetSubtitle": MessageLookupByLibrary.simpleMessage(
             "Your trainee profile is ready. Start discovering coaches who match your sport and goals."),
         "allSetTitle": MessageLookupByLibrary.simpleMessage("You\'re all set!"),
@@ -521,6 +529,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "Please verify your email address to continue."),
         "emailVerificationRequired":
             MessageLookupByLibrary.simpleMessage("Email Verification Required"),
+        "emptyFilterNotificationsDesc": MessageLookupByLibrary.simpleMessage(
+            "No notifications match the selected filter."),
+        "emptyNotificationsDesc": MessageLookupByLibrary.simpleMessage(
+            "You\'re all caught up! Updates about your bookings and account will appear here."),
+        "emptyNotificationsTitle":
+            MessageLookupByLibrary.simpleMessage("No notifications yet"),
         "endTime": MessageLookupByLibrary.simpleMessage("End Time"),
         "englishLanguage": MessageLookupByLibrary.simpleMessage("English"),
         "enterLocationHint": MessageLookupByLibrary.simpleMessage(
@@ -556,6 +570,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "fileUploaded":
             MessageLookupByLibrary.simpleMessage("Document Selected"),
         "filter": MessageLookupByLibrary.simpleMessage("Filter"),
+        "filterAdmin": MessageLookupByLibrary.simpleMessage("System & Admin"),
+        "filterAll": MessageLookupByLibrary.simpleMessage("All"),
+        "filterBookings": MessageLookupByLibrary.simpleMessage("Bookings"),
         "filters": MessageLookupByLibrary.simpleMessage("Filters"),
         "fitnessGoal": MessageLookupByLibrary.simpleMessage("Fitness Goal"),
         "fitnessLevel": MessageLookupByLibrary.simpleMessage("Fitness Level"),
@@ -633,6 +650,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Availability & Working Hours"),
         "manageWorkingHours":
             MessageLookupByLibrary.simpleMessage("Manage Availability"),
+        "markAllAsRead":
+            MessageLookupByLibrary.simpleMessage("Mark all as read"),
         "markAsCompleted":
             MessageLookupByLibrary.simpleMessage("Mark as Completed"),
         "minExperienceYears":
@@ -717,6 +736,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "noUpcomingSessionsTitle":
             MessageLookupByLibrary.simpleMessage("No upcoming sessions"),
         "notSpecified": MessageLookupByLibrary.simpleMessage("Not specified"),
+        "notificationCenter":
+            MessageLookupByLibrary.simpleMessage("Notification Center"),
+        "notificationDeleted":
+            MessageLookupByLibrary.simpleMessage("Notification deleted"),
+        "notificationsTooltip":
+            MessageLookupByLibrary.simpleMessage("Notifications"),
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
         "onboardingBadge1":
             MessageLookupByLibrary.simpleMessage("Certified Coaches"),
@@ -1154,9 +1179,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("This Month\'s Earnings"),
         "thisWeekSchedule":
             MessageLookupByLibrary.simpleMessage("This Week\'s Schedule"),
+        "timeDaysAgo": m49,
+        "timeHoursAgo": m50,
+        "timeJustNow": MessageLookupByLibrary.simpleMessage("Just now"),
+        "timeMinutesAgo": m51,
         "timeSlots": MessageLookupByLibrary.simpleMessage("Working Hours"),
         "toTime": MessageLookupByLibrary.simpleMessage("To"),
-        "totalDurationLabel": m49,
+        "totalDurationLabel": m52,
         "totalMonthlyPrice":
             MessageLookupByLibrary.simpleMessage("Monthly Price"),
         "totalSessionPrice":
@@ -1176,7 +1205,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "traineeNotes": MessageLookupByLibrary.simpleMessage("Trainee Notes"),
         "traineeProfileTitle":
             MessageLookupByLibrary.simpleMessage("My Profile"),
-        "traineeProposedMonthlyReschedule": m50,
+        "traineeProposedMonthlyReschedule": m53,
         "traineeProposedNewTime": MessageLookupByLibrary.simpleMessage(
             "Trainee requested a new session time"),
         "traineeReasonLabel":
@@ -1186,8 +1215,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Create your trainee profile and start your fitness journey"),
         "trainingActivityTitle":
             MessageLookupByLibrary.simpleMessage("Training Activity"),
-        "trainingDaysCount": m51,
-        "trainingDaysUnit": m52,
+        "trainingDaysCount": m54,
+        "trainingDaysUnit": m55,
         "trainingInsightsEmpty": MessageLookupByLibrary.simpleMessage(
             "No completed training sessions for this period"),
         "trainingInsightsEmptySubtitle": MessageLookupByLibrary.simpleMessage(
@@ -1264,6 +1293,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "verifyAndContinue":
             MessageLookupByLibrary.simpleMessage("Verify & Continue"),
         "viewAll": MessageLookupByLibrary.simpleMessage("View all"),
+        "viewBookingAction":
+            MessageLookupByLibrary.simpleMessage("View Booking"),
         "viewCertificate":
             MessageLookupByLibrary.simpleMessage("View Certificate"),
         "viewDetails": MessageLookupByLibrary.simpleMessage("View Details"),
@@ -1277,13 +1308,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Weekly Training Frequency"),
         "weightLoss": MessageLookupByLibrary.simpleMessage("Weight Loss"),
         "welcomeBack": MessageLookupByLibrary.simpleMessage("Welcome Back"),
-        "welcomeBackUser": m53,
+        "welcomeBackUser": m56,
         "whatsIncluded":
             MessageLookupByLibrary.simpleMessage("What\'s Included"),
         "workingDays": MessageLookupByLibrary.simpleMessage("Working Days"),
         "workingHoursDescription": MessageLookupByLibrary.simpleMessage(
             "Configure weekly working days and hours"),
-        "yearsExperienceFormat": m54,
+        "yearsExperienceFormat": m57,
         "yearsOfExperience": MessageLookupByLibrary.simpleMessage(
             "Years of Coaching Experience"),
         "yearsOfExperienceLabel":

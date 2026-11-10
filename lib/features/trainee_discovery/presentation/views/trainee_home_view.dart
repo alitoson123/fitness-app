@@ -8,6 +8,7 @@ import '../../../../core/services/auth_service/auth_service.dart';
 import '../../../../generated/l10n.dart';
 import '../../../auth/core/presentation/view_model/auth_session_cubit/auth_session_cubit.dart';
 import '../../../auth/core/presentation/view_model/auth_session_cubit/auth_session_states.dart';
+import '../../../notifications/presentation/view_model/notifications_cubit/notifications_cubit.dart';
 import '../../../trainee_bookings/presentation/view_model/trainee_bookings_cubit/trainee_bookings_cubit.dart';
 import '../../../trainee_bookings/presentation/views/trainee_bookings_page.dart';
 import '../../../trainee_profile/presentation/views/trainee_profile_page.dart';
@@ -54,6 +55,10 @@ class _TraineeHomeViewState extends State<TraineeHomeView> {
         BlocProvider(create: (_) => getIt<AuthSessionCubit>()),
         BlocProvider(
           create: (_) => getIt<TraineeBookingsCubit>()..listenToBookings(currentUid),
+        ),
+        BlocProvider(
+          create: (_) =>
+              getIt<NotificationsCubit>()..listenToNotifications(currentUid),
         ),
       ],
       child: PopScope(

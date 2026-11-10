@@ -728,5 +728,21 @@
   "traineeProposedNewTime": "طلب المتدرب موعداً جديداً للجلسة",
   "traineeReasonLabel": "ملاحظة المتدرب",
   "reschedulePendingCoachBadge": "طلب التعديل بانتظار المدرب",
-  "rescheduleRequestedCoachSuccess": "تم إرسال طلب إعادة الجدولة للمدرب"
+  "rescheduleRequestedCoachSuccess": "تم إرسال طلب إعادة الجدولة للمدرب",
+  "notificationCenter": "مركز الإشعارات",
+  "markAllAsRead": "تحديد الكل كمقروء",
+  "allNotificationsMarkedRead": "تم تحديد جميع الإشعارات كمقروءة",
+  "notificationDeleted": "تم حذف الإشعار",
+  "filterAll": "الكل",
+  "filterBookings": "الحجوزات",
+  "filterAdmin": "النظام والإدارة",
+  "emptyNotificationsTitle": "لا توجد إشعارات حتى الآن",
+  "emptyNotificationsDesc": "أنت على اطلاع بكل جديد! ستظهر هنا التحديثات الخاصة بحجوزاتك وحسابك.",
+  "emptyFilterNotificationsDesc": "لا توجد إشعارات تطابق التصفية المحددة.",
+  "timeJustNow": "الآن",
+  "timeMinutesAgo": "منذ {minutes} د",
+  "timeHoursAgo": "منذ {hours} س",
+  "timeDaysAgo": "منذ {days} ي",
+  "notificationsTooltip": "الإشعارات",
+  "viewBookingAction": "عرض الحجز"
 }
