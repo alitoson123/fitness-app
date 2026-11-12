@@ -1,0 +1,101 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.admin == true ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+      );
+    }
+
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow create: if isOwner(uid) &&
+        request.resource.data.role != 'admin' &&
+        request.resource.data.status != 'suspended';
+      allow update: if isAdmin() || (
+        isOwner(uid) &&
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['status']) &&
+        (request.resource.data.role != 'admin' || resource.data.role == 'admin')
+      );
+      allow delete: if isOwner(uid) || isAdmin();
+    }
+
+    match /coach_profiles/{coachUid} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isOwner(coachUid) || isAdmin();
+    }
+
+    match /trainee_profiles/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow create, update, delete: if isOwner(uid) || isAdmin();
+    }
+
+    match /coach_verifications/{coachUid} {
+      allow read: if isSignedIn();
+      allow create: if isOwner(coachUid) &&
+        request.resource.data.status == 'pending';
+      allow update: if isAdmin() || (
+        isOwner(coachUid) &&
+        request.resource.data.status == 'pending'
+      );
+      allow delete: if isOwner(coachUid) || isAdmin();
+    }
+
+    match /bookings/{bookingId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() &&
+        request.resource.data.traineeUid == request.auth.uid;
+      allow update: if isAdmin() || (
+        isSignedIn() &&
+        (resource.data.coachUid == request.auth.uid ||
+         resource.data.traineeUid == request.auth.uid)
+      );
+      allow delete: if isAdmin();
+    }
+
+    match /notifications/{notificationId} {
+      allow read, delete: if isAdmin() || (
+        isSignedIn() &&
+        resource.data.recipientUid == request.auth.uid
+      );
+      allow create: if isAdmin() || (
+        isSignedIn() &&
+        request.resource.data.senderUid == request.auth.uid
+      );
+      allow update: if isAdmin() || (
+        isSignedIn() &&
+        resource.data.recipientUid == request.auth.uid &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isRead', 'updatedAt'])
+      );
+    }
+
+    match /admin_notifications/{notificationId} {
+      allow read, update, delete: if isAdmin();
+      allow create: if isAdmin() || (
+        isSignedIn() &&
+        (request.resource.data.senderUid == request.auth.uid ||
+         request.resource.data.sourceUid == request.auth.uid)
+      );
+    }
+
+    match /fcm_tokens/{uid} {
+      allow read, write: if isOwner(uid) || isAdmin();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+

@@ -59,7 +59,8 @@ static const FirebaseOptions web = FirebaseOptions(
 | `coach_profiles` | `coachUid` | `uid`, `name`, `phoneNumber`, `photoUrl`, `bio`, `country`, `city`, `sports` (`List<String>`), `specialties` (`List<String>`), `sessionPriceUSD` (`double`), `monthlyPriceUSD` (`double`), `currency` (`'USD'`), `yearsOfExperience`, `rating`, `workingDays`, `workingHours`, `isProfileCompleted`, `updatedAt` | Public coach profile and Phase 2 dual USD pricing |
 | `trainee_profiles` | `uid` | `uid`, `name`, `phoneNumber`, `photoUrl`, `country`, `city`, `age`, `gender`, `sports` (`List<String>`), `level`, `goal`, `trainingType`, `isProfileCompleted`, `updatedAt` | Trainee fitness dossier & preferences |
 | `bookings` | `bookingId` | `id`, `coachUid`, `coachName`, `traineeUid`, `traineeName`, `sport`, `bookingType` (`'session'` \| `'monthly'`), `date`, `startTime`, `endTime`, `durationMonths`, `monthlyScheduleNotes`, `price` (`double`), `currency` (`'USD'`), `status` (`'pending'` \| `'confirmed'` \| `'rejected'` \| `'completed'` \| `'cancelled'` \| `'reschedule_pending'`), `rejectionReason`, `proposedDate`, `proposedStartTime`, `proposedEndTime`, `rescheduleReason`, `rescheduledBy`, `createdAt`, `updatedAt` | Training session bookings & monthly packages with reschedule flow |
-| `admin_notifications` | `notificationId` | `id`, `type`, `sourceUid`, `sourceName`, `title`, `message`, `data`, `isRead` (`bool`), `createdAt` (`DateTime`) | Dedicated queue for Admin Dashboard alerts & moderation |
+| `admin_notifications` | `notificationId` | `id`, `recipientUid` (`'admin'`), `recipientRole` (`'admin'`), `senderUid`, `senderName`, `type` (`'coach_verification_submitted'` \| `'booking_new'` \| `'booking_cancelled'`), `titleEn`, `titleAr`, `bodyEn`, `bodyAr`, `data`, `isRead` (`bool`), `pushStatus`, `createdAt` (`Timestamp`) | Mobile-to-Admin queue read directly via Firestore real-time stream (no Cloud Function push needed) |
+| `notifications` | `notificationId` | `id`, `recipientUid`, `recipientRole` (`'coach'` \| `'trainee'`), `senderUid` (`'admin'`), `senderName` (`'CoachHub Admin'`), `type` (`'coach_profile_approved'` \| `'coach_profile_rejected'` \| `'admin_warning'` \| `'account_suspended'`), `titleEn`, `titleAr`, `bodyEn`, `bodyAr`, `data`, `isRead` (`bool`), `pushStatus` (`'pending'`), `createdAt` (`Timestamp`) | Admin-to-User outbound notifications; triggers `onNotificationCreated` Cloud Function for mobile FCM push + in-app center |
 
 ---
 
@@ -136,9 +137,59 @@ static const FirebaseOptions web = FirebaseOptions(
   - `BookingDataTable`: Columns for Booking ID, Coach Name, Trainee Name, Type (`Session` / `Monthly`), Sport, Date & Time / Duration, Price ($ USD), Status badge.
   - `BookingDetailsDialog`: Shows session details, notes, reschedule proposals, and timeline.
 
-### Milestone 9: Admin Moderation & Notifications Integration
-- [ ] Connect `admin_notifications` collection for real-time alerts.
-- [ ] Admin warning/broadcast triggers to coaches and trainees.
+### Milestone 9: Admin Notifications Center (Firestore Stream) & Admin-to-User Push Dispatch
+> **Architecture Alignment with Mobile (`fitness_app`)**:
+> - **Mobile → Admin Dashboard**: Mobile writes alerts (`coach_verification_submitted`, `booking_new`, `booking_cancelled`) to `admin_notifications`. The Admin Dashboard consumes them directly via a **Firestore real-time stream** (no Web FCM / no `onAdminNotificationCreated` Cloud Function).
+> - **Admin Dashboard → Mobile (Coach & Trainee)**: Dashboard writes bilingual docs (`coach_profile_approved`, `coach_profile_rejected`, `account_suspended`, `admin_warning`) to `notifications`. The existing `onNotificationCreated` Cloud Function automatically sends FCM Push Notifications (Foreground / Background / Killed) and Mobile's `NotificationsView` displays them in real time.
+
+- [ ] **Task 9.1: Core Constants, Navigation & Sidebar Integration**
+  - Add notification type constants to `lib/core/constant/app_constants.dart` matching Mobile `NotificationType` (`coach_verification_submitted`, `booking_new`, `booking_cancelled`, `coach_profile_approved`, `coach_profile_rejected`, `admin_warning`, `account_suspended`).
+  - Add `AppRoutes.notifications = '/notifications'` in `lib/core/navigator/app_routes.dart`.
+  - Register `GoRoute(path: AppRoutes.notifications)` inside `ShellRoute` in `lib/core/navigator/app_router.dart`.
+  - Update `AdminBreadcrumbs` (`lib/core/widgets/header/admin_breadcrumbs.dart`) and `AdminSidebar` (`lib/core/widgets/sidebar/admin_sidebar.dart`) with a **Notifications** item (with live unread count badge).
+- [ ] **Task 9.2: Data Layer (`lib/features/notifications/data/`)**
+  - Create `models/admin_notification_model.dart` (<150 lines):
+    - Fields: `id`, `recipientUid`, `recipientRole`, `senderUid`, `senderName`, `type`, `titleEn`, `titleAr`, `bodyEn`, `bodyAr`, `data`, `isRead`, `pushStatus`, `createdAt`.
+    - Defensive `fromMap` supporting `titleEn`/`titleAr`/`bodyEn`/`bodyAr` (with fallback to `title`/`message`) and `senderUid`/`senderName` (with fallback to `sourceUid`/`sourceName`).
+    - Helpers: `localizedTitle(lang)`, `localizedBody(lang)`, `isBookingRelated`, `isVerificationRelated`, `copyWith`, `toMap`.
+  - Create `helpers/admin_notification_templates.dart` (<150 lines):
+    - Bilingual EN/AR templates matching Mobile `NotificationBannerDetail` & `NotificationDeepLinkHandler`:
+      - `coachProfileApproved()` -> `type: 'coach_profile_approved'`, `data: {'status': 'approved'}`
+      - `coachProfileRejected(reason)` -> `type: 'coach_profile_rejected'`, `data: {'status': 'rejected', 'reason': reason, 'rejectionReason': reason}`
+      - `accountSuspended({reason})` -> `type: 'account_suspended'`, `data: {'status': 'suspended', 'reason': reason, 'adminMessage': reason}`
+      - `adminWarning({titleEn, titleAr, bodyEn, bodyAr})` -> `type: 'admin_warning'`, `data: {'title': titleEn, 'details': bodyEn, 'adminMessage': bodyEn}`
+  - Create `datasources/notifications_remote_data_source.dart` (<150 lines):
+    - `streamAdminNotifications()`: `FirestoreService.streamCollection` on `FirestoreCollections.adminNotifications` ordered by `createdAt` descending.
+    - `markAsRead(id)`, `markAllAsRead()` (batched updates), `deleteNotification(id)` on `admin_notifications`.
+    - `sendNotificationToUser(...)`: creates doc in `FirestoreCollections.notifications` with `senderUid: 'admin'`, `senderName: 'CoachHub Admin'`, `isRead: false`, `pushStatus: 'pending'`, `createdAt: FieldValue.serverTimestamp()`.
+    - `sendBroadcastNotification(...)`: batched writes (chunks of <=500) to `notifications` for target role (`coach` | `trainee` | `all`).
+  - Create `repositories/notifications_repository.dart` (<150 lines): concrete repository returning `Either<Failure, ...>`.
+  - Register `NotificationsRemoteDataSource`, `NotificationsRepository`, and `AdminNotificationsCubit` (as `registerLazySingleton` so header badge stays live across routes) in `lib/core/services/service_locator.dart`, and provide `AdminNotificationsCubit` at root in `lib/main.dart` (start stream after admin auth succeeds, cancel on sign-out).
+- [ ] **Task 9.3: State Management (`lib/features/notifications/presentation/cubit/`)**
+  - Create `notification_filter.dart` (`all`, `bookings`, `verifications`) and `admin_notifications_state.dart`.
+  - Create `admin_notifications_cubit.dart` (<150 lines):
+    - Real-time subscription `startListening()` / `stopListening()`, computing `unreadCount`, `bookingsCount`, `verificationsCount`, `filteredNotifications`.
+    - Actions: `setFilter`, `setSearchQuery`, `markAsRead`, `markAllAsRead`, `deleteNotification`, `sendWarningToUser`, `sendBroadcastNotification`.
+- [ ] **Task 9.4: UI — Header Bell & Dedicated Notifications Page (`lib/features/notifications/presentation/`)**
+  - Create `widgets/admin_notification_bell.dart` (<150 lines) and mount in `AdminHeaderActions` (`lib/core/widgets/header/admin_header_actions.dart`) with live unread badge (`99+` cap) navigating to `AppRoutes.notifications` (or quick preview dropdown + "View All").
+  - Create `views/admin_notifications_view.dart` (<150 lines, layout only) and modular widgets (<150 lines each):
+    - `widgets/notifications_filter_bar.dart` (`All`, `Bookings`, `Verifications` chips with counts + Refresh + Mark All as Read + Send Notification CTA).
+    - `widgets/notification_item_card.dart` & `widgets/notification_avatar.dart` & `widgets/notification_detail_chips.dart`: unread dot, localized EN/AR copy, relative timestamp, metadata badges (`priceUSD`, `bookingType`, `date`, `coachUid`), mark read, delete, and click-to-navigate (`coach_verification_submitted` -> `/coaches`, `booking_new`/`booking_cancelled` -> `/bookings`).
+    - `widgets/empty_notifications_view.dart`.
+    - `widgets/send_admin_notification_dialog.dart`: modal for sending `admin_warning` / custom bilingual notification to a specific user (pre-filled from Coach/Trainee modals) or broadcast to All Coaches / All Trainees / All Users.
+- [ ] **Task 9.5: Hook Auto-Dispatch into Existing Moderation Flows**
+  - **Coaches (`CoachesRepository` / `AdminCoachesCubit` / `CoachVerificationDetailModal`)**:
+    - On `approveVerification(coachUid)` -> auto-dispatch `coach_profile_approved` notification to `notifications`.
+    - On `rejectVerification(coachUid, reason)` -> auto-dispatch `coach_profile_rejected` notification with `reason`.
+    - Update `SuspendConfirmDialog` (`lib/features/coaches/presentation/widgets/suspend_confirm_dialog.dart`) to include an optional suspension `reason` `TextFormField` when `isSuspending == true` (returning `({bool confirmed, String? reason})?` or equivalent record), and pass `reason` into `toggleAccountStatus(uid, currentStatus, reason: reason)` -> auto-dispatch `account_suspended` notification with `reason`.
+    - Add **"Send Warning / Notification"** button in `CoachModalActions` opening `SendAdminNotificationDialog` pre-targeted to the coach.
+  - **Trainees (`TraineesRepository` / `AdminTraineesCubit` / `TraineeDetailModal`)**:
+    - Update `SuspendTraineeDialog` (`lib/features/trainees/presentation/widgets/suspend_trainee_dialog.dart`) to include an optional suspension `reason` `TextFormField` when `isSuspending == true`, and pass `reason` into `toggleAccountStatus(uid, currentStatus, reason: reason)` -> auto-dispatch `account_suspended` notification with `reason`.
+    - Add **"Send Warning / Notification"** button in `TraineeModalActions` opening `SendAdminNotificationDialog` pre-targeted to the trainee.
+- [ ] **Task 9.6: Localization (EN/AR) & Verification**
+  - Add all new notification strings to both `lib/l10n/intl_en.arb` and `lib/l10n/intl_ar.arb`, then run `flutter pub run intl_utils:generate`.
+  - Write unit tests for `AdminNotificationModel`, `NotificationsRepository`, `AdminNotificationsCubit`, and verify `AdminCoachesCubit` / `AdminTraineesCubit` dispatch outbound notifications on approve/reject/suspend.
+  - Verify cross-app integration: Mobile -> `admin_notifications` -> Dashboard Stream, and Dashboard -> `notifications` -> `onNotificationCreated` -> Mobile Push & In-App Center.
 
 ### Milestone 10: Localization, Testing & Deployment
 - [ ] Maintain 100% Arabic & English coverage in ARB files.

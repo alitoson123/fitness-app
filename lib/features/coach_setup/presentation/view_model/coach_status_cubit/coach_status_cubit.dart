@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:fitness_app/core/services/auth_service/auth_service.dart';
+import 'package:fitness_app/core/services/notification_service/notification_service.dart';
 import 'package:fitness_app/features/coach_setup/data/models/coach_application_model.dart';
 import 'package:fitness_app/features/coach_setup/domain/repo/coach_setup_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,11 +10,13 @@ class CoachVerificationStatusCubit
     extends Cubit<CoachVerificationStatusState> {
   final CoachSetupRepo repository;
   final AuthService authService;
+  final NotificationService? notificationService;
   StreamSubscription<CoachApplicationModel?>? _subscription;
 
   CoachVerificationStatusCubit({
     required this.repository,
     required this.authService,
+    this.notificationService,
   }) : super(const CoachVerificationStatusInitialState());
 
   void listenToVerificationStatus() {
@@ -88,6 +91,12 @@ class CoachVerificationStatusCubit
   }
 
   Future<void> signOut() async {
+    if (notificationService != null) {
+      final uid = authService.currentUser?.uid;
+      if (uid != null && uid.isNotEmpty) {
+        await notificationService!.detachFcmToken(uid);
+      }
+    }
     await authService.signOut();
     emit(const CoachVerificationStatusSignedOutState());
   }

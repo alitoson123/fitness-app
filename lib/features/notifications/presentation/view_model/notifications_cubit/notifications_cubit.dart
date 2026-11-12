@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/services/notification_service/notification_service.dart';
+import '../../../data/models/notification_model.dart';
 import '../../../data/repos/notifications_repo.dart';
 import 'notifications_state.dart';
 
@@ -26,19 +27,7 @@ class NotificationsCubit extends Cubit<NotificationsState> {
     _subscription = repository.streamNotifications(uid).listen(
       (items) {
         if (!_isInitialLoad && notificationService != null) {
-          for (final item in items) {
-            if (!_knownIds.contains(item.id) && !item.isRead) {
-              final payload = Map<String, dynamic>.from(item.data);
-              payload['type'] = item.type;
-              payload['recipientRole'] = item.recipientRole;
-              notificationService!.showNotification(
-                id: item.id.hashCode,
-                title: item.titleAr.isNotEmpty ? item.titleAr : item.titleEn,
-                body: item.bodyAr.isNotEmpty ? item.bodyAr : item.bodyEn,
-                payload: payload,
-              );
-            }
-          }
+          _dispatchForegroundFallback(items);
         }
         _knownIds = items.map((n) => n.id).toSet();
         _isInitialLoad = false;
@@ -51,24 +40,51 @@ class NotificationsCubit extends Cubit<NotificationsState> {
         ));
       },
       onError: (e) {
-        emit(state.copyWith(
-          isLoading: false,
-          errorMessage: e.toString(),
-        ));
+        emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
       },
     );
   }
 
-  void setFilter(NotificationFilter filter) {
-    emit(state.copyWith(filter: filter));
+  void _dispatchForegroundFallback(List<NotificationModel> items) {
+    final service = notificationService;
+    if (service == null || !service.notificationsEnabled) return;
+
+    for (final item in items) {
+      final isNew = !_knownIds.contains(item.id) && !item.isRead;
+      final alreadyHandledByCloud =
+          item.pushStatus == 'sent' ||
+          item.data['pushStatus'] == 'sent' ||
+          service.hasDelivered(item.id);
+      if (!isNew || alreadyHandledByCloud) continue;
+
+      final lang = service.languageCode;
+      final title = item.localizedTitle(lang).isNotEmpty
+          ? item.localizedTitle(lang)
+          : item.titleEn;
+      final body = item.localizedBody(lang).isNotEmpty
+          ? item.localizedBody(lang)
+          : item.bodyEn;
+      final payload = Map<String, dynamic>.from(item.data)
+        ..['notificationId'] = item.id
+        ..['type'] = item.type
+        ..['recipientRole'] = item.recipientRole;
+
+      service.showNotification(
+        id: item.id.hashCode,
+        notificationId: item.id,
+        title: title,
+        body: body,
+        payload: payload,
+      );
+    }
   }
+
+  void setFilter(NotificationFilter filter) =>
+      emit(state.copyWith(filter: filter));
 
   Future<void> markAsRead(String notificationId) async {
     final res = await repository.markAsRead(notificationId);
-    res.fold(
-      (f) => emit(state.copyWith(errorMessage: f.errorMessage)),
-      (_) {},
-    );
+    res.fold((f) => emit(state.copyWith(errorMessage: f.errorMessage)), (_) {});
   }
 
   Future<void> markAllAsRead(String uid) async {
@@ -76,9 +92,7 @@ class NotificationsCubit extends Cubit<NotificationsState> {
     final res = await repository.markAllAsRead(uid);
     res.fold(
       (f) => emit(state.copyWith(errorMessage: f.errorMessage)),
-      (_) {
-        emit(state.copyWith(successMessage: 'all_read'));
-      },
+      (_) => emit(state.copyWith(successMessage: 'all_read')),
     );
   }
 
@@ -86,15 +100,11 @@ class NotificationsCubit extends Cubit<NotificationsState> {
     final res = await repository.deleteNotification(notificationId);
     res.fold(
       (f) => emit(state.copyWith(errorMessage: f.errorMessage)),
-      (_) {
-        emit(state.copyWith(successMessage: 'deleted'));
-      },
+      (_) => emit(state.copyWith(successMessage: 'deleted')),
     );
   }
 
-  void clearMessages() {
-    emit(state.copyWith(clearMessages: true));
-  }
+  void clearMessages() => emit(state.copyWith(clearMessages: true));
 
   @override
   Future<void> close() {

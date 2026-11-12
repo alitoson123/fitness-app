@@ -5,6 +5,7 @@ import '../../../../../core/errors/failure.dart';
 import '../../../../../core/services/auth_service/auth_service.dart';
 import '../../../../../core/services/database_service/firestore_service.dart';
 import '../../../../../core/services/logger_service/logger_service.dart';
+import '../../../../../core/services/notification_service/notification_service.dart';
 import '../../domain/repo/auth_session_repo.dart';
 import '../data_source/auth_local_data_source.dart';
 
@@ -12,22 +13,26 @@ class AuthSessionRepoImpl implements AuthSessionRepo {
   final AuthService authService;
   final FirestoreService firestoreService;
   final AuthLocalDataSource authLocalDataSource;
+  final NotificationService? notificationService;
 
   AuthSessionRepoImpl({
     required this.authService,
     required this.firestoreService,
     required this.authLocalDataSource,
+    this.notificationService,
   });
 
   @override
-  String? getCurrentUserPhoneNumber() {
-    return authService.currentUser?.phoneNumber;
-  }
+  String? getCurrentUserPhoneNumber() => authService.currentUser?.phoneNumber;
 
   @override
   Future<Either<Failure, void>> signOut() async {
     try {
+      final uid = authService.currentUser?.uid;
       LoggerService.info('Initiating sign out', tag: 'AuthSessionRepo');
+      if (uid != null && uid.isNotEmpty) {
+        await notificationService?.detachFcmToken(uid);
+      }
       await authService.signOut();
       await authLocalDataSource.deleteUser(AppConstants.userBox);
       return right(null);
@@ -48,34 +53,31 @@ class AuthSessionRepoImpl implements AuthSessionRepo {
       );
 
       if (uid != null) {
-        // Clean up Firestore documents associated with user
-        await firestoreService.deleteDoc(
-          collection: AppConstants.usersCollection,
-          docId: uid,
-        );
-
-        await firestoreService.deleteDoc(
-          collection: AppConstants.coachProfilesCollection,
-          docId: uid,
-        );
-        await firestoreService.deleteDoc(
-          collection: AppConstants.traineeProfilesCollection,
-          docId: uid,
-        );
-        await firestoreService.deleteDoc(
-          collection: AppConstants.verificationsCollection,
-          docId: uid,
-        );
+        await notificationService?.deleteFcmTokenDoc(uid);
+        await Future.wait([
+          firestoreService.deleteDoc(
+            collection: AppConstants.usersCollection,
+            docId: uid,
+          ),
+          firestoreService.deleteDoc(
+            collection: AppConstants.coachProfilesCollection,
+            docId: uid,
+          ),
+          firestoreService.deleteDoc(
+            collection: AppConstants.traineeProfilesCollection,
+            docId: uid,
+          ),
+          firestoreService.deleteDoc(
+            collection: AppConstants.verificationsCollection,
+            docId: uid,
+          ),
+        ]);
       }
 
-      // Delete user authentication in Firebase
       await authService.deleteAccount();
-
-      // Clean local storage caches
       await authLocalDataSource.deleteUser(AppConstants.userBox);
       await authLocalDataSource.deleteUser(AppConstants.traineeProfileBox);
       await authLocalDataSource.deleteUser(AppConstants.coachProfileBox);
-
       return right(null);
     } on FirebaseAuthException catch (e) {
       return left(ServerFailure.fromFirebaseAuthError(e));

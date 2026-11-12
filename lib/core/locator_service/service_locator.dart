@@ -107,6 +107,7 @@ Future<void> setupServiceLocator() async {
       firestoreService: getIt<FirestoreService>(),
       authLocalDataSource: getIt<AuthLocalDataSource>(),
       authService: getIt<AuthService>(),
+      notificationService: getIt<NotificationService>(),
     ),
   );
 
@@ -195,9 +196,9 @@ Future<void> setupServiceLocator() async {
     () => CoachVerificationStatusCubit(
       repository: getIt<CoachSetupRepo>(),
       authService: getIt<AuthService>(),
+      notificationService: getIt<NotificationService>(),
     ),
   );
-
 
   // 10. Auth Session Dependencies
   getIt.registerLazySingleton<AuthSessionRepo>(
@@ -205,6 +206,7 @@ Future<void> setupServiceLocator() async {
       authService: getIt<AuthService>(),
       firestoreService: getIt<FirestoreService>(),
       authLocalDataSource: getIt<AuthLocalDataSource>(),
+      notificationService: getIt<NotificationService>(),
     ),
   );
   getIt.registerFactory<AuthSessionCubit>(
@@ -314,6 +316,8 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<AppSettingsCubit>(
     () => AppSettingsCubit(
       repository: getIt<AppSettingsRepo>(),
+      notificationService: getIt<NotificationService>(),
+      authService: getIt<AuthService>(),
     ),
   );
 

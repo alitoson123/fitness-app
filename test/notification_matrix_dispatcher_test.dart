@@ -132,31 +132,27 @@ void main() {
     );
 
     test(
-      'Admin moderation events trigger verification, warning & suspension',
+      'Mobile-originated admin alerts queue verification and cancellation events',
       () async {
         await dispatcher.dispatchCoachVerificationSubmitted(
           coachUid: 'coach_9',
           coachName: 'Alex',
         );
-        await dispatcher.dispatchAdminWarning(
-          recipientUid: 'coach_9',
-          recipientRole: 'coach',
-          warningTitle: 'Late Response',
-          warningDetails: 'Please reply to bookings in 24h',
-        );
-        await dispatcher.dispatchAccountSuspended(
-          recipientUid: 'coach_9',
-          recipientRole: 'coach',
-          reason: 'Violation of conduct',
+        await dispatcher.dispatchBookingCancelled(
+          booking: sampleBooking,
+          traineeName: 'Jane Doe',
         );
 
+        expect(fakeRepo.sent.length, 3);
         expect(
           fakeRepo.sent[0].type,
           NotificationType.coachVerificationSubmitted,
         );
         expect(fakeRepo.sent[0].recipientRole, 'admin');
-        expect(fakeRepo.sent[1].type, NotificationType.adminWarning);
-        expect(fakeRepo.sent[2].type, NotificationType.accountSuspended);
+        expect(fakeRepo.sent[1].type, NotificationType.bookingCancelled);
+        expect(fakeRepo.sent[1].recipientRole, 'coach');
+        expect(fakeRepo.sent[2].type, NotificationType.bookingCancelled);
+        expect(fakeRepo.sent[2].recipientRole, 'admin');
       },
     );
   });

@@ -52,9 +52,9 @@ All code created or modified in Phase 2 must adhere strictly to these architectu
 | `coach_profiles` | `coachUid` | `uid`, `name`, `phoneNumber`, `photoUrl`, `bio`, `country`, `city`, `sports` (`List<String>`), `sportLocations` (`List<Map<String, dynamic>>`: `sport`, `isOnline`, `locations`), `specialties` (`List<String>`), `sessionPriceUSD` (`double`), `monthlyPriceUSD` (`double`), `currency` (`'USD'`), `yearsOfExperience`, `rating`, `reviewsCount`, `workingDays`, `workingHours`, `isProfileCompleted`, `updatedAt` | Public coach profile, per-sport delivery modes/locations, and marketplace pricing |
 | `trainee_profiles` | `uid` | `uid`, `name`, `phoneNumber`, `photoUrl`, `country`, `city`, `age`, `gender`, `sports` (`List<String>`), `level`, `goal`, `trainingType`, `isProfileCompleted`, `updatedAt` | Trainee profile preferences |
 | `bookings` | `bookingId` | `id`, `coachUid`, `coachName`, `coachPhotoUrl`, `traineeUid`, `traineeName`, `traineePhotoUrl`, `sport`, `trainingLocation` (`String`), `isOnline` (`bool`), `bookingType` (`'session'` \| `'monthly'`), `date`, `startTime`, `endTime`, `durationMonths` (`int?`), `monthlyScheduleNotes` (`String?`), `sessions` (`List<Map<String, dynamic>>`: `id`, `date`, `startTime`, `endTime`, `status`, `proposedDate`, `proposedStartTime`, `proposedEndTime`, `rescheduleReason`, `rescheduledBy`, `rescheduledAt`, `previousDate`, `previousStartTime`, `previousEndTime`), `price` (`double`), `currency` (`'USD'`), `notes`, `status` (`'pending'` \| `'confirmed'` \| `'rejected'` \| `'reschedule_pending'`), `rejectionReason` (`String?`), `proposedDate` (`String?`), `proposedStartTime` (`String?`), `proposedEndTime` (`String?`), `rescheduleReason` (`String?`), `rescheduledBy` (`'coach'` \| `'trainee'`), `createdAt`, `updatedAt` | Training bookings supporting physical locations, online sessions, and per-session/per-month plans with granular per-session lifecycle tracking |
-| `notifications` | `notificationId` | `id`, `recipientUid`, `recipientRole` (`'trainee'` \| `'coach'` \| `'admin'`), `senderUid`, `senderName`, `senderPhotoUrl`, `type`, `titleEn`, `titleAr`, `bodyEn`, `bodyAr`, `data` (`Map<String, dynamic>`), `isRead` (`bool`), `createdAt` (`DateTime`) | Global notifications store for Trainees, Coaches, and Admin |
+| `notifications` | `notificationId` | `id`, `recipientUid`, `recipientRole` (`'trainee'` \| `'coach'` \| `'admin'`), `senderUid`, `senderName`, `senderPhotoUrl`, `type`, `titleEn`, `titleAr`, `bodyEn`, `bodyAr`, `data` (`Map<String, dynamic>`), `isRead` (`bool`), `pushStatus` (`'pending'` \| `'sent'` \| `'skipped'` \| `'failed'`), `pushSentAt` (`DateTime?`), `createdAt` (`DateTime`) | Global notifications store for Trainees, Coaches, and Admin with Cloud Function delivery status |
 | `admin_notifications` | `notificationId` | `id`, `type`, `sourceUid`, `sourceName`, `title`, `message`, `data`, `isRead` (`bool`), `createdAt` (`DateTime`) | Dedicated queue for Admin Dashboard monitoring |
-| `fcm_tokens` | `uid` | `uid`, `token`, `platform` (`'android'` \| `'ios'`), `role`, `updatedAt` | Push notification device registration tokens |
+| `fcm_tokens` | `uid` | `uid`, `tokens` (`List<String>`), `devices` (`Map<String, Map<String, dynamic>>`: `platform`, `updatedAt`), `languageCode` (`'en'` \| `'ar'`), `notificationsEnabled` (`bool`), `role`, `updatedAt` | Multi-device FCM token registry with user locale & notification preferences |
 
 ---
 
@@ -90,9 +90,11 @@ graph TD
     M7 --> M9[Milestone 9: Unified Multi-Role Notifications Engine]
     M8 --> M9
     M9 --> M10[Milestone 10: In-App Notification Center & Badges]
-    M9 --> M11[Milestone 11: Admin Dashboard Integration]
-    M10 --> M12[Milestone 12: Localization & Release Hardening]
+    M10 --> M11[Milestone 11: Production Cloud Push Backend & All-State Delivery]
+    M9 --> M12[Milestone 12: Admin Dashboard Integration]
     M11 --> M12
+    M11 --> M13[Milestone 13: Localization & Release Hardening]
+    M12 --> M13
 ```
 
 ---
@@ -581,12 +583,12 @@ graph TD
 | **Monthly Session Reschedule Accepted** | Trainee / Coach | Coach / Trainee | `booking_monthly_session_reschedule_accepted` | *"[Recipient Name] accepted the new time for Session #[N]"* |
 | **Monthly Session Reschedule Declined** | Trainee / Coach | Coach / Trainee | `booking_monthly_session_reschedule_declined` | *"[Recipient Name] declined the reschedule for Session #[N]"* |
 | **Monthly Session Marked Completed** | Coach | Trainee | `booking_monthly_session_completed` | *"Session #[N] was marked as completed. Progress: [X]/[Total] done!"* |
-| **Booking Cancelled** | Trainee | Coach & Admin | `booking_cancelled` | *"[Trainee Name] cancelled the booking for [Date]"* |
-| **Coach Verification Submitted** | Coach | Admin | `coach_verification_submitted` | *"Coach [Coach Name] submitted verification documents for approval"* |
-| **Coach Profile Approved** | Admin | Coach | `coach_profile_approved` | *"Congratulations! Your coach profile has been approved by the Admin"* |
-| **Coach Profile Rejected** | Admin | Coach | `coach_profile_rejected` | *"Your verification was rejected. Reason: [Admin Reason]"* |
-| **Admin Warning Message** | Admin | Coach / Trainee | `admin_warning` | *"[Admin Warning Title]: [Warning Message Details]"* |
-| **Account Suspension** | Admin | Coach / Trainee | `account_suspended` | *"Your account has been suspended by the administrator"* |
+| **Booking Cancelled** | Trainee (`fitness_app`) | Coach & Admin | `booking_cancelled` | *"[Trainee Name] cancelled the booking for [Date]"* |
+| **Coach Verification Submitted** | Coach (`fitness_app`) | Admin | `coach_verification_submitted` | *"Coach [Coach Name] submitted verification documents for approval"* |
+| **Coach Profile Approved** | Admin (`fitness_app_dashboard`) | Coach | `coach_profile_approved` | *"Congratulations! Your coach profile has been approved by the Admin"* |
+| **Coach Profile Rejected** | Admin (`fitness_app_dashboard`) | Coach | `coach_profile_rejected` | *"Your verification was rejected. Reason: [Admin Reason]"* |
+| **Admin Warning Message** | Admin (`fitness_app_dashboard`) | Coach / Trainee | `admin_warning` | *"[Admin Warning Title]: [Warning Message Details]"* |
+| **Account Suspension** | Admin (`fitness_app_dashboard`) | Coach / Trainee | `account_suspended` | *"Your account has been suspended by the administrator"* |
 
 - [x] **Step 9.3: Push Notification Service (FCM)**
   - Initialize Firebase Cloud Messaging in `lib/core/services/notification_service.dart`.
@@ -598,7 +600,8 @@ graph TD
 - **Implementation Highlights (Milestone 9 Completed)**:
   - `NotificationModel` with bilingual template support (`localizedTitle`, `localizedBody`), payload mapping, and Firestore timestamp serialization.
   - `NotificationsRemoteDataSource` and `NotificationsRepository` providing sound clean data pipeline for notifications, unread counters, and persistence.
-  - `NotificationDispatcher` and `NotificationSafeDispatcher` managing the complete 16-event matrix across Coach, Trainee, and Admin Dashboard.
+  - `NotificationDispatcher` and `NotificationSafeDispatcher` managing mobile-originated events (Coach <-> Trainee in `notifications` and Mobile -> Admin alerts in `admin_notifications`).
+  - Mobile receiving/rendering (`NotificationsView`, `NotificationAvatar`, `NotificationBannerDetail`, `NotificationDeepLinkHandler`) handles both Coach <-> Trainee notifications and incoming Admin moderation notifications sent from `fitness_app_dashboard`.
   - Native permissions configured in `AndroidManifest.xml` (`POST_NOTIFICATIONS`, `VIBRATE`).
   - `NotificationService` with high-importance Android channel, sound, vibration, foreground local heads-up banners, background handler, and automated FCM token synchronization on sign-in and splash launch.
   - `NotificationDeepLinkHandler` supporting payload extraction, booking lookup, and direct route navigation.
@@ -639,19 +642,106 @@ graph TD
 
 ---
 
-### Milestone 11: Admin Dashboard Notification & Moderation Integration
+### Milestone 11: Production Cloud Push Notifications (WhatsApp/Uber-Grade All-State Delivery)
+
+**Goal**: Upgrade the notification pipeline to full production reliability so push notifications arrive instantly with sound, vibration, badges, and deep-linking across **all three app lifecycle states (Foreground, Background, and Killed/Terminated)** — matching WhatsApp and Uber standards prior to client handover.
+
+> [!IMPORTANT]
+> **Production Deployment Requirement**: Deploying Firebase Cloud Functions (`functions/`) to live Firebase project `coach-hub-app-522cd` requires upgrading the Firebase project to the **Blaze (Pay-as-you-go)** plan (includes 2,000,000 free invocations/month). During local development, all triggers can be verified free of charge using the **Firebase Local Emulator Suite**.
+
+- [x] **Step 11.1: Native Android & iOS Push Configuration (Killed-State Heads-Up Support)**
+  - **Android Native Configuration (`android/app/src/main/AndroidManifest.xml`, `res/values/colors.xml`)**:
+    - Add `<meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="coachhub_high_importance" />` so OS-delivered pushes in **Background & Killed** states automatically render on the `Importance.max` heads-up channel instead of Android's silent fallback channel.
+    - Add `<meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@mipmap/ic_launcher" />` and `<meta-data android:name="com.google.firebase.messaging.default_notification_color" android:resource="@color/notification_accent" />` (Flame Red `#FF3D00`).
+    - Verify `FLUTTER_NOTIFICATION_CLICK` action support, `POST_NOTIFICATIONS`, and `VIBRATE` permissions.
+  - **iOS Native Configuration (`ios/Runner/Info.plist`, `ios/Runner/AppDelegate.swift`)**:
+    - Enable `UIBackgroundModes` with `<string>remote-notification</string>` in `Info.plist`.
+    - Register `UNUserNotificationCenter.current().delegate = self` in `AppDelegate.swift` so foreground banners and background/killed notification taps work properly on iOS 10+.
+    - Call `FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true)` in `NotificationService.initialize()`.
+    - Prepare client checklist step for uploading Apple Push Notification service (APNs `.p8`) key in Firebase Console -> Project Settings -> Cloud Messaging.
+
+- [x] **Step 11.2: Multi-Device FCM Token Lifecycle, Sign-Out Detachment & Settings Sync**
+  - **Multi-Device Token Registry (`lib/core/services/notification_service/notification_service.dart`)**:
+    - Upgrade `fcm_tokens/{uid}` document structure to support multiple active devices per user using `FieldValue.arrayUnion([token])` in `tokens` plus per-token metadata in `devices[tokenHash]` (`platform`, `updatedAt`), along with `languageCode`, `notificationsEnabled`, and `role`.
+    - Persist user language (`en` / `ar`) and notification preference (`notificationsEnabled`) alongside token sync.
+  - **Token Detachment on Sign-Out & Cleanup on Account Deletion (`lib/features/auth/core/data/repo_impl/auth_session_repo_impl.dart`)**:
+    - Add `detachFcmToken(uid)` to `NotificationService`: removes *only the current device's token* via `FieldValue.arrayRemove([currentToken])` during `signOut()` so a logged-out device never receives private alerts for the previous user (matching WhatsApp/Uber multi-account safety).
+    - On `deleteAccount()`: delete the `fcm_tokens/{uid}` document completely alongside profile and verification records.
+  - **Real-Time Settings Synchronization (`lib/core/app_settings/presentation/view_model/app_settings_cubit/app_settings_cubit.dart`)**:
+    - When user switches app language (`setLanguage(code)`), immediately sync `languageCode` to `fcm_tokens/{uid}` so Cloud Functions dispatch future pushes in the user's chosen language (English or Arabic).
+    - When user toggles Push Notifications (`toggleNotifications(enabled)`), immediately sync `notificationsEnabled` to `fcm_tokens/{uid}` so muted users do not receive OS push alerts while still keeping their in-app Notification Center history.
+
+- [x] **Step 11.3: Firebase Cloud Functions Backend (`functions/`) — Server-Side FCM Dispatch**
+  - **Initialize Cloud Functions Workspace (`firebase.json`, `functions/`)**:
+    - Set up Node.js 22 + TypeScript (`firebase-functions` v2 + `firebase-admin`) inside `functions/`.
+    - Configure `firebase.json` with `"functions": { "source": "functions" }` and `"firestore": { "rules": "firestore.rules" }`.
+  - **Firestore Trigger `onNotificationCreated` (`functions/src/triggers/on_notification_created.ts`)**:
+    - Triggers on document creation in `notifications/{notificationId}`.
+    - Fetches recipient document `fcm_tokens/{recipientUid}`:
+      - If `notificationsEnabled === false` or `tokens` is empty, updates notification `pushStatus = 'skipped'` and exits cleanly.
+      - Queries unread notification count for `recipientUid` to attach accurate iOS/Android app icon badge count.
+      - Selects localized copy based on `languageCode === 'ar'` (`titleAr` / `bodyAr`) vs English (`titleEn` / `bodyEn`).
+    - Dispatches multicast push via `admin.messaging().sendEachForMulticast(...)` containing:
+      - `notification`: `{ title, body }` (ensures instant OS heads-up banner in **Background & Killed** states without needing Flutter Engine).
+      - `data`: stringified `{ notificationId, type, bookingId, sessionId, recipientRole, click_action: 'FLUTTER_NOTIFICATION_CLICK' }`.
+      - `android`: `{ priority: 'high', notification: { channelId: 'coachhub_high_importance', sound: 'default', tag: notificationId } }`.
+      - `apns`: `{ payload: { aps: { sound: 'default', badge: unreadCount, 'content-available': 1 } } }`.
+    - **Dead/Stale Token Auto-Cleanup**: Scans multicast responses for `messaging/registration-token-not-registered` and `messaging/invalid-registration-token` errors and removes stale tokens automatically via `FieldValue.arrayRemove`.
+    - **Audit Telemetry**: Updates notification doc with `pushStatus` (`'sent'` | `'failed'`), `pushSentAt`, and `pushSuccessCount`.
+  - **Admin Notifications Delivery**:
+    - Mobile events write to `admin_notifications/{notificationId}`, which the Admin Web Dashboard consumes directly via a Firestore real-time stream (no Cloud Function FCM push needed for admin web).
+    - Admin-to-Coach/Trainee notifications write to `notifications/{notificationId}`, automatically triggering `onNotificationCreated` for mobile push delivery.
+
+- [x] **Step 11.4: Zero-Duplicate Foreground Handling & Cold-Start Deep-Link Coordination**
+  - **Foreground Deduplication (`NotificationService` + `NotificationsCubit`)**:
+    - Maintain a bounded `Set<String> _deliveredNotificationIds` in `NotificationService` keyed by `notificationId` (and deterministic notification ID `notificationId.hashCode` + Android `tag: notificationId`).
+    - When FCM `onMessage` receives a foreground push, mark `notificationId` as delivered and display the single heads-up banner.
+    - In `NotificationsCubit`: skip triggering `showNotification()` if `notificationId` was already delivered by FCM or `item.data['pushStatus'] == 'sent'` — guaranteeing **zero duplicate banners** in production while preserving local heads-up fallback if Cloud Functions are not deployed locally.
+    - Respect `AppSettingsCubit` `notificationsEnabled` flag before showing local foreground banners.
+  - **Cold-Start (Killed State) Deep-Link Queue (`NotificationService` + `SplashView`)**:
+    - Eliminate the cold-start race condition where `SplashView` (`context.go(targetRoute)`) overwrites `getInitialMessage()` / launch-notification navigation:
+      - Store cold-start payload in `NotificationService._pendingInitialPayload` instead of navigating before `AppRouter` & auth session resolve.
+      - Update `SplashView._navigateToNext()` to check and consume `NotificationService.consumePendingDeepLink()` *immediately after* `context.go(targetRoute)` completes — pushing `BookingDetailsView` or `CoachVerificationPendingView` cleanly on top of the authenticated dashboard stack so pressing Back returns naturally to Home/Dashboard.
+
+- [x] **Step 11.5: Firestore Security Rules (`firestore.rules`) Hardening**
+  - Create production `firestore.rules` aligned with all Phase 1 & Phase 2 collections (`users`, `coach_profiles`, `trainee_profiles`, `coach_verifications`, `bookings`, `notifications`, `admin_notifications`, `fcm_tokens`):
+    - Users can read/write only their own `fcm_tokens/{uid}` document.
+    - Users can read, delete, and update (`isRead` field only) their own `notifications` where `recipientUid == request.auth.uid`.
+    - Authenticated users can create notification documents with valid sender UID (`senderUid == request.auth.uid`).
+    - Admin-only read/write guards on `admin_notifications` and verification approval transitions.
+
+- [ ] **Step 11.6: Automated Tests, Emulator Verification & Client Handover Checklist**
+  - **Cloud Functions Unit Tests (`functions/test/`)**:
+    - Verify EN/AR localization selection based on recipient `languageCode`.
+    - Verify skipped dispatch when `notificationsEnabled === false`.
+    - Verify dead-token cleanup on `registration-token-not-registered` errors.
+  - **Flutter Unit Tests (`test/`)**:
+    - `NotificationService` foreground deduplication (`notificationId` tracked so only 1 heads-up alert renders).
+    - Cold-start `_pendingInitialPayload` queue and consumption after splash route resolution.
+    - `AuthSessionRepoImpl` token detachment on `signOut` and doc removal on `deleteAccount`.
+    - `AppSettingsCubit` syncing `languageCode` and `notificationsEnabled` to `NotificationService`.
+  - **Real-Device & Emulator 3-State Verification Matrix**:
+    - Verify **Foreground**, **Background**, and **Killed (Swiped away)** push delivery between two physical/emulator devices (Trainee <-> Coach).
+    - Verify tap-to-open deep-link works from **Killed** state straight to `BookingDetailsView` and Back returns to Dashboard.
+    - Verify Arabic RTL push body renders cleanly when device/app language is set to Arabic.
+    - Deploy to Firebase (`firebase deploy --only functions,firestore:rules`) and verify live end-to-end flow before sending to client.
+
+---
+
+### Milestone 12: Admin Dashboard Notification & Moderation Integration
 
 **Goal**: Provide full backend and data contract compatibility with the Admin Dashboard for two-way communication, moderation, and alerts.
 
-- [ ] **Step 11.1: Admin Notifications Queue Contract**
-  - Standardize Firestore collection `admin_notifications` for web dashboard consumption:
+- [x] **Step 12.1: Admin Notifications Queue Contract**
+  - Standardize Firestore collection `admin_notifications` written by Mobile (`fitness_app`) and consumed directly by Admin Web Dashboard (`fitness_app_dashboard`) via Firestore real-time stream (no Cloud Function push trigger on `admin_notifications`):
     - Automatically triggered whenever:
-      - A new coach finishes onboarding and submits identity documents (`coach_verification_submitted`).
-      - A high-value or monthly booking is made.
-      - A dispute or booking cancellation occurs.
-    - Fields: `id`, `type`, `sourceUid`, `sourceName`, `title`, `message`, `data`, `isRead`, `createdAt`.
+      - A coach submits onboarding & identity documents (`coach_verification_submitted`).
+      - A trainee creates a new booking (`booking_new`).
+      - A trainee cancels a booking (`booking_cancelled`).
+    - Exact fields written by `NotificationModel.toMap()`: `id`, `recipientUid` (`'admin'`), `recipientRole` (`'admin'`), `senderUid`, `senderName`, `type`, `titleEn`, `titleAr`, `bodyEn`, `bodyAr`, `data`, `isRead`, `pushStatus`, `createdAt`.
+  - Admin-to-User notifications (`coach_profile_approved`, `coach_profile_rejected`, `admin_warning`, `account_suspended`) are written by `fitness_app_dashboard` into `notifications/{notificationId}`, which triggers `onNotificationCreated` for mobile FCM push delivery and displays in Mobile `NotificationsView`.
 
-- [ ] **Step 11.2: Mobile App Receivers for Admin Actions**
+- [ ] **Step 12.2: Mobile App Receivers for Admin Actions**
   - **Coach Verification Approval/Rejection Listener**:
     - Update `CoachVerificationStatusCubit`:
       - Listens for status change (`approved` or `rejected`).
@@ -664,11 +754,11 @@ graph TD
 
 ---
 
-### Milestone 12: Localization (EN/AR), Quality Assurance, & Production Hardening
+### Milestone 13: Localization (EN/AR), Quality Assurance, & Production Hardening
 
 **Goal**: Complete 100% Arabic & English localization, verify RTL/LTR responsiveness, write unit tests for new Cubits, and prepare production builds.
 
-- [ ] **Step 12.1: Complete ARB Localization Keys**
+- [ ] **Step 13.1: Complete ARB Localization Keys**
   - Add all new Phase 2 strings to `lib/l10n/intl_en.arb` and `lib/l10n/intl_ar.arb`:
     - Phone authentication: phone label, country selection (Egypt, Lebanon), send OTP, verify OTP, invalid number, resend countdown.
     - Pricing & Booking: session price ($ USD), monthly price ($ USD), booking per session, booking per month, duration, frequency.
@@ -678,7 +768,7 @@ graph TD
   - Run `flutter pub run intl_utils:generate` to regenerate `S` class.
   - Verify zero hardcoded strings in the codebase.
 
-- [ ] **Step 12.2: RTL & Accessibility Verification**
+- [ ] **Step 13.2: RTL & Accessibility Verification**
   - Test all new views in Arabic RTL layout:
     - Phone number and country code directionality.
     - 3-button booking card alignment.
@@ -688,7 +778,7 @@ graph TD
     - Notification list tiles and timestamps.
   - Verify minimum touch targets (≥48x48 dp) and WCAG contrast ratios.
 
-- [ ] **Step 12.3: Unit & Integration Testing**
+- [ ] **Step 13.3: Unit & Integration Testing**
   - Write unit tests for:
     - `PhoneAuthCubit` (phone validation, OTP dispatch, verify success/failure).
     - `CoachBookingsCubit` (approve, reject with reason, single & monthly session reschedule proposals, mark completed).
@@ -720,7 +810,10 @@ lib/
 │   │   ├── auth_service/
 │   │   │   └── auth_service.dart
 │   │   ├── firestore_service.dart
-│   │   ├── notification_service.dart
+│   │   ├── notification_service/
+│   │   │   ├── notification_service.dart                  # Updated: multi-device token, deduplication, cold-start queue
+│   │   │   ├── notification_background_handler.dart
+│   │   │   └── notification_deep_link_handler.dart
 │   │   └── storage_service.dart
 │   └── theme/
 ├── features/
@@ -812,12 +905,30 @@ lib/
 │           ├── views/notifications_view.dart
 │           └── widgets/
 │               ├── notification_icon_button.dart  # Bell with unread badge count
+│               ├── notifications_filter_bar.dart
 │               ├── notification_item_card.dart
+│               ├── notification_banner_detail.dart
+│               ├── notification_avatar.dart
+│               ├── notifications_list_body.dart
 │               └── empty_notifications_view.dart
 ├── l10n/
 │   ├── intl_ar.arb
 │   └── intl_en.arb
 └── main.dart
+
+functions/                                         # NEW: Firebase Cloud Functions Backend
+├── package.json
+├── tsconfig.json
+├── src/
+│   ├── index.ts
+│   ├── triggers/
+│   │   └── on_notification_created.ts             # Multicast FCM dispatch + dead-token cleanup
+│   └── utils/
+│       └── fcm_payload_builder.ts                 # Localized EN/AR payload + Android/APNs formatting
+└── test/
+    └── notification_triggers.test.ts
+
+firestore.rules                                    # NEW: Production Firestore security rules
 ```
 
 ---
@@ -860,12 +971,16 @@ Before client delivery of Phase 2, verify each item:
   - Coach profile and Coach details screens display each sport's physical locations and/or Online badge.
   - Trainees can choose between the coach's available locations or Online when requesting a booking.
   - Booking records and booking cards (Coach Dashboard & Trainee Bookings) display the selected location or Online status.
-- [ ] **Notifications Engine**:
+- [ ] **Notifications Engine (WhatsApp/Uber All-State Reliability)**:
   - Trainee receives instant notifications on booking approved, rejected (with reason), and rescheduled.
   - Coach receives instant notifications on new bookings and reschedule responses.
   - Admin receives alerts for new coach submissions, cancellations, and key transactions.
   - Admin warnings and suspension notices trigger immediately on the target user's device.
   - Notification bell updates badge counter in real time.
+  - Push notifications drop down cleanly with sound/vibration in **Foreground**, **Background**, AND **Killed (Terminated)** app states (via deployed Firebase Cloud Functions).
+  - Zero duplicate heads-up banners appear when the app is in Foreground.
+  - Tapping a notification while the app is **Killed** launches Splash -> Dashboard -> target Booking Details cleanly, with Back returning to Dashboard.
+  - Push title/body respects user's active language (`EN` / `AR`), respects Push Notification mute toggle, supports multi-device delivery, and detaches device token upon Sign-Out.
 - [ ] **Quality & Clean Code**:
   - Every file is under 150 lines.
   - Zero hardcoded text strings in widgets (100% ARB localized in EN & AR).

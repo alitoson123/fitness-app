@@ -112,7 +112,10 @@ class PhoneAuthRepo {
     }
 
     await _authLocalDataSource.saveUser(user: userModel);
-    getIt<NotificationService>().syncFcmToken(userModel.uid);
+    getIt<NotificationService>().syncFcmToken(
+      userModel.uid,
+      role: userModel.role,
+    );
     final targetRoute = await _authRouteResolver.resolveTargetRoute(
       uid: userModel.uid,
       role: userModel.role,

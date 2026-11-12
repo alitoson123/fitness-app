@@ -32,18 +32,30 @@ class _SplashViewState extends State<SplashView> {
     final currentUser = await authLocalDataSource.getUser();
 
     if (currentUser != null && mounted) {
-      getIt<NotificationService>().syncFcmToken(currentUser.uid);
+      final notificationService = getIt<NotificationService>();
+      notificationService.syncFcmToken(
+        currentUser.uid,
+        role: currentUser.role,
+      );
       final routeResolver = getIt<AuthRouteResolver>();
       final targetRoute = await routeResolver.resolveTargetRoute(
         uid: currentUser.uid,
         role: currentUser.role,
       );
-      if (mounted) context.go(targetRoute);
+      if (mounted) {
+        context.go(targetRoute);
+        if (targetRoute != AppRoutes.signIn) {
+          await notificationService.consumePendingDeepLink();
+        } else {
+          notificationService.clearPendingDeepLink();
+        }
+      }
       return;
     }
 
     if (mounted) {
       context.go(AppRoutes.signIn);
+      getIt<NotificationService>().clearPendingDeepLink();
     }
   }
 

@@ -174,45 +174,12 @@ class NotificationDispatcher {
         totalCount: totalCount,
       );
 
-  // 3. Admin & Verification
+  // 3. Admin Dashboard Queue Alerts (Mobile -> admin_notifications)
   Future<void> dispatchCoachVerificationSubmitted({
     required String coachUid,
     required String coachName,
   }) => adminDispatcher.dispatchCoachVerificationSubmitted(
         coachUid: coachUid,
         coachName: coachName,
-      );
-
-  Future<void> dispatchCoachProfileApproved({required String coachUid}) =>
-      adminDispatcher.dispatchCoachProfileApproved(coachUid: coachUid);
-
-  Future<void> dispatchCoachProfileRejected({
-    required String coachUid,
-    required String reason,
-  }) => adminDispatcher.dispatchCoachProfileRejected(
-        coachUid: coachUid,
-        reason: reason,
-      );
-
-  Future<void> dispatchAdminWarning({
-    required String recipientUid,
-    required String recipientRole,
-    required String warningTitle,
-    required String warningDetails,
-  }) => adminDispatcher.dispatchAdminWarning(
-        recipientUid: recipientUid,
-        recipientRole: recipientRole,
-        warningTitle: warningTitle,
-        warningDetails: warningDetails,
-      );
-
-  Future<void> dispatchAccountSuspended({
-    required String recipientUid,
-    required String recipientRole,
-    String? reason,
-  }) => adminDispatcher.dispatchAccountSuspended(
-        recipientUid: recipientUid,
-        recipientRole: recipientRole,
-        reason: reason,
       );
 }

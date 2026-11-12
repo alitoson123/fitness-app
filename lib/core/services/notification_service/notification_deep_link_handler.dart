@@ -1,18 +1,50 @@
+import 'package:dartz/dartz.dart';
+import '../../../features/booking_details/data/repos/booking_details_repo.dart';
+import '../../../features/booking_details/presentation/view_model/booking_details_args.dart';
+import '../../../features/booking_request/data/models/booking_model.dart';
+import '../../../features/notifications/data/models/notification_type.dart';
+import '../../errors/failure.dart';
 import '../../locator_service/service_locator.dart';
 import '../../navigator/app_router.dart';
 import '../../navigator/app_routes.dart';
 import '../../services/auth_service/auth_service.dart';
 import '../../services/logger_service/logger_service.dart';
-import '../../../features/booking_details/data/repos/booking_details_repo.dart';
-import '../../../features/booking_details/presentation/view_model/booking_details_args.dart';
-import '../../../features/notifications/data/models/notification_type.dart';
+
+typedef BookingFetcher =
+    Future<Either<Failure, BookingModel>> Function(String bookingId);
 
 class NotificationDeepLinkHandler {
-  static Future<void> handlePayload(Map<String, dynamic> data) async {
+  static Future<void> handlePayload(Map<String, dynamic> data) {
+    return handlePayloadWith(
+      data: data,
+      currentUid: getIt<AuthService>().currentUser?.uid,
+      fetchBooking: getIt<BookingDetailsRepo>().getBooking,
+      pushRoute: (route, {extra}) => AppRouter.router.push(route, extra: extra),
+      goRoute: (route) => AppRouter.router.go(route),
+      currentLocation: () =>
+          AppRouter.router.routeInformationProvider.value.uri.path,
+    );
+  }
+
+  static Future<void> handlePayloadWith({
+    required Map<String, dynamic> data,
+    required String? currentUid,
+    required BookingFetcher fetchBooking,
+    required void Function(String route, {Object? extra}) pushRoute,
+    required void Function(String route) goRoute,
+    String Function()? currentLocation,
+  }) async {
     try {
-      final bookingId = data['bookingId'] as String?;
-      final type = data['type'] as String? ?? '';
-      final currentUid = getIt<AuthService>().currentUser?.uid;
+      if (currentUid == null || currentUid.isEmpty) {
+        LoggerService.info(
+          'Ignoring notification deep link while signed out',
+          tag: 'NotificationDeepLinkHandler',
+        );
+        return;
+      }
+
+      final bookingId = data['bookingId']?.toString();
+      final type = data['type']?.toString() ?? '';
 
       LoggerService.info(
         'Handling notification tap payload: $data',
@@ -20,18 +52,18 @@ class NotificationDeepLinkHandler {
       );
 
       if (bookingId != null && bookingId.isNotEmpty) {
-        final result = await getIt<BookingDetailsRepo>().getBooking(bookingId);
+        final result = await fetchBooking(bookingId);
         result.fold(
           (failure) {
             LoggerService.warning(
               'Could not load booking for deep link: ${failure.errorMessage}',
               tag: 'NotificationDeepLinkHandler',
             );
-            _fallbackRoute(data);
+            _fallbackRoute(data, goRoute);
           },
           (booking) {
             final isCoach = currentUid == booking.coachUid;
-            AppRouter.router.push(
+            pushRoute(
               AppRoutes.bookingDetails,
               extra: BookingDetailsArgs(booking: booking, isCoach: isCoach),
             );
@@ -42,16 +74,26 @@ class NotificationDeepLinkHandler {
 
       if (type == NotificationType.coachVerificationSubmitted ||
           type == NotificationType.coachProfileRejected) {
-        AppRouter.router.push(AppRoutes.coachVerificationPending);
+        if (currentLocation?.call() != AppRoutes.coachVerificationPending) {
+          pushRoute(AppRoutes.coachVerificationPending);
+        }
         return;
       }
 
       if (type == NotificationType.coachProfileApproved) {
-        AppRouter.router.go(AppRoutes.coachDashboard);
+        goRoute(AppRoutes.coachDashboard);
         return;
       }
 
-      _fallbackRoute(data);
+      if (type == NotificationType.adminWarning ||
+          type == NotificationType.accountSuspended) {
+        if (currentLocation?.call() != AppRoutes.notifications) {
+          pushRoute(AppRoutes.notifications);
+        }
+        return;
+      }
+
+      _fallbackRoute(data, goRoute);
     } catch (e, st) {
       LoggerService.error(
         'Deep link dispatch failed: $e',
@@ -62,12 +104,15 @@ class NotificationDeepLinkHandler {
     }
   }
 
-  static void _fallbackRoute(Map<String, dynamic> data) {
-    final role = data['recipientRole'] as String?;
+  static void _fallbackRoute(
+    Map<String, dynamic> data,
+    void Function(String route) goRoute,
+  ) {
+    final role = data['recipientRole']?.toString();
     if (role == 'coach') {
-      AppRouter.router.go(AppRoutes.coachDashboard);
+      goRoute(AppRoutes.coachDashboard);
     } else {
-      AppRouter.router.go(AppRoutes.traineeHome);
+      goRoute(AppRoutes.traineeHome);
     }
   }
 }
