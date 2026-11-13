@@ -755,5 +755,16 @@
   "confirmDeletionTitle": "تأكيد هويتك",
   "confirmDeletionMessage": "لحماية حسابك، أدخل الرمز المكوّن من 6 أرقام الذي أرسلناه إلى {phone} لحذف حسابك.",
   "sendingCode": "جارٍ إرسال الرمز...",
-  "cancelledAccountDeletedReason": "أُلغي تلقائيًا لأن الحساب الآخر تم حذفه."
+  "cancelledAccountDeletedReason": "أُلغي تلقائيًا لأن الحساب الآخر تم حذفه.",
+  "bookingActionNotAllowed": "هذا الإجراء لم يعد متاحًا لهذا الحجز. ربما تم تغييره للتو.",
+  "bookingNotFoundMessage": "هذا الحجز لم يعد موجودًا.",
+  "sessionNotStartedYet": "يمكنك تحديدها كمكتملة بعد بدء وقت الجلسة.",
+  "bookingMarkedCompleted": "تم تحديد الجلسة كمكتملة",
+  "cancelBookingAction": "إلغاء الحجز",
+  "cancelBookingTitle": "إلغاء هذا الحجز؟",
+  "cancelBookingMessage": "سيتم إشعار المدرب وسيصبح الموعد متاحًا للآخرين. لا يمكن التراجع عن ذلك.",
+  "cancelBookingReasonHint": "السبب (اختياري)",
+  "keepBooking": "الإبقاء على الحجز",
+  "bookingCancelledSuccess": "تم إلغاء الحجز",
+  "bookingAlreadyStarted": "بدأ هذا الحجز بالفعل، لذا لا يمكن إلغاؤه."
 }

@@ -28,18 +28,24 @@ class FakeCoachBookingsRepo implements CoachBookingsRepo {
   Stream<List<BookingModel>> getCoachBookingsStream(String coachUid) =>
       Stream.value([]);
 
-  @override
-  Future<Either<Failure, void>> updateBookingStatus({
-    required String bookingId,
-    required String status,
-    String? rejectionReason,
-  }) async {
+  Future<Either<Failure, void>> _status(String bookingId, String status, [String? reason]) async {
     updateBookingStatusCalled = true;
     lastBookingId = bookingId;
     lastStatus = status;
-    lastReason = rejectionReason;
+    lastReason = reason;
     return const Right(null);
   }
+
+  @override
+  Future<Either<Failure, void>> approve(String bookingId) => _status(bookingId, 'confirmed');
+
+  @override
+  Future<Either<Failure, void>> reject(String bookingId, {String? reason}) =>
+      _status(bookingId, 'rejected', reason);
+
+  @override
+  Future<Either<Failure, void>> completeBooking(String bookingId) =>
+      _status(bookingId, 'completed');
 
   @override
   Future<Either<Failure, void>> requestReschedule({
@@ -48,9 +54,6 @@ class FakeCoachBookingsRepo implements CoachBookingsRepo {
     required String proposedStartTime,
     required String proposedEndTime,
     required String reason,
-    required String originalDate,
-    required String originalStartTime,
-    required String originalEndTime,
   }) async {
     requestRescheduleCalled = true;
     lastBookingId = bookingId;
@@ -60,17 +63,15 @@ class FakeCoachBookingsRepo implements CoachBookingsRepo {
   }
 
   @override
-  Future<Either<Failure, void>> acceptReschedule({
-    required BookingModel booking,
-  }) async {
+  Future<Either<Failure, void>> acceptReschedule(String bookingId) async {
     acceptRescheduleCalled = true;
-    lastBookingId = booking.id;
+    lastBookingId = bookingId;
     return const Right(null);
   }
 
   @override
-  Future<Either<Failure, void>> declineReschedule({
-    required String bookingId,
+  Future<Either<Failure, void>> declineReschedule(
+    String bookingId, {
     String? declineReason,
   }) async {
     declineRescheduleCalled = true;
@@ -111,12 +112,10 @@ class FakeCoachBookingsRepo implements CoachBookingsRepo {
   Future<Either<Failure, void>> declineMonthlySessionReschedule({
     required String bookingId,
     required String sessionId,
-    String? declineReason,
   }) async {
     declineMonthlyCalled = true;
     lastBookingId = bookingId;
     lastSessionId = sessionId;
-    lastReason = declineReason;
     return const Right(null);
   }
 
@@ -215,17 +214,20 @@ void main() {
     });
 
     test('declineMonthlySessionReschedule calls repo and emits reschedule_declined', () async {
-      await cubit.declineMonthlySessionReschedule(
-        'book-monthly-1',
-        'sess-1',
-        reason: 'Cannot attend that hour',
-      );
+      await cubit.declineMonthlySessionReschedule('book-monthly-1', 'sess-1');
 
       expect(fakeRepo.declineMonthlyCalled, isTrue);
       expect(fakeRepo.lastBookingId, 'book-monthly-1');
       expect(fakeRepo.lastSessionId, 'sess-1');
-      expect(fakeRepo.lastReason, 'Cannot attend that hour');
       expect(cubit.state.successMessage, 'reschedule_declined');
+    });
+
+    test('completeBooking calls repo and emits booking_completed', () async {
+      await cubit.completeBooking('book-1');
+
+      expect(fakeRepo.lastStatus, 'completed');
+      expect(fakeRepo.lastBookingId, 'book-1');
+      expect(cubit.state.successMessage, 'booking_completed');
     });
 
     test('markSessionCompleted calls repo and emits session_completed', () async {

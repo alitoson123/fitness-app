@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/constant/app_constants.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../generated/l10n.dart';
 import '../../../booking_request/data/models/booking_model.dart';
+import '../../../booking_request/data/repos/booking_actions/booking_transitions.dart';
 import '../../../coach_dashboard/presentation/widgets/monthly_session_tile.dart';
 import '../../../coach_dashboard/presentation/widgets/reschedule_booking_sheet.dart';
 import '../view_model/booking_details_cubit/booking_details_cubit.dart';
@@ -36,8 +36,6 @@ class BookingDetailsSessionsSection extends StatelessWidget {
           proposedStartTime: start,
           proposedEndTime: end,
           reason: reason,
-          rescheduledBy:
-              isCoach ? AppConstants.roleCoach : AppConstants.roleTrainee,
         );
       },
     );
@@ -50,6 +48,9 @@ class BookingDetailsSessionsSection extends StatelessWidget {
     final s = S.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cubit = context.read<BookingDetailsCubit>();
+    final now = DateTime.now();
+    // No session actions on cancelled / rejected / finished packages.
+    final canAct = BookingTransitions.canActOnSessions(booking);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,12 +104,19 @@ class BookingDetailsSessionsSection extends StatelessWidget {
             isOnline: booking.isOnline,
             isCoach: isCoach,
             isActionInProgress: isTileBusy,
-            onMarkCompleted: () => cubit.markSessionCompleted(session.id),
-            onReschedule: () => _onRescheduleSession(context, session.id),
-            onAcceptReschedule:
-                () => cubit.acceptMonthlySessionReschedule(session.id),
-            onDeclineReschedule:
-                () => cubit.declineMonthlySessionReschedule(session.id),
+            onMarkCompleted: isCoach &&
+                    BookingTransitions.canCompleteSession(booking, session, now)
+                ? () => cubit.markSessionCompleted(session.id)
+                : null,
+            onReschedule: canAct && !session.isReschedulePending
+                ? () => _onRescheduleSession(context, session.id)
+                : null,
+            onAcceptReschedule: canAct
+                ? () => cubit.acceptMonthlySessionReschedule(session.id)
+                : null,
+            onDeclineReschedule: canAct
+                ? () => cubit.declineMonthlySessionReschedule(session.id)
+                : null,
           );
         }),
       ],

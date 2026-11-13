@@ -28,10 +28,7 @@ class CoachBookingsCubit extends Cubit<CoachBookingsState> {
 
   Future<void> acceptBooking(String bookingId) async {
     emit(state.copyWith(actionInProgressBookingId: bookingId));
-    final result = await repository.updateBookingStatus(
-      bookingId: bookingId,
-      status: 'confirmed',
-    );
+    final result = await repository.approve(bookingId);
     result.fold(
       (failure) => emit(state.copyWith(
         clearActionId: true,
@@ -46,11 +43,7 @@ class CoachBookingsCubit extends Cubit<CoachBookingsState> {
 
   Future<void> rejectBooking(String bookingId, {String? reason}) async {
     emit(state.copyWith(actionInProgressBookingId: bookingId));
-    final result = await repository.updateBookingStatus(
-      bookingId: bookingId,
-      status: 'rejected',
-      rejectionReason: reason,
-    );
+    final result = await repository.reject(bookingId, reason: reason);
     result.fold(
       (failure) => emit(state.copyWith(
         clearActionId: true,
@@ -77,9 +70,6 @@ class CoachBookingsCubit extends Cubit<CoachBookingsState> {
       proposedStartTime: proposedStartTime,
       proposedEndTime: proposedEndTime,
       reason: reason,
-      originalDate: booking.date,
-      originalStartTime: booking.startTime,
-      originalEndTime: booking.endTime,
     );
     result.fold(
       (failure) => emit(state.copyWith(
@@ -95,7 +85,7 @@ class CoachBookingsCubit extends Cubit<CoachBookingsState> {
 
   Future<void> acceptReschedule(BookingModel booking) async {
     emit(state.copyWith(actionInProgressBookingId: booking.id));
-    final result = await repository.acceptReschedule(booking: booking);
+    final result = await repository.acceptReschedule(booking.id);
     result.fold(
       (failure) => emit(state.copyWith(
         clearActionId: true,
@@ -114,7 +104,7 @@ class CoachBookingsCubit extends Cubit<CoachBookingsState> {
   }) async {
     emit(state.copyWith(actionInProgressBookingId: bookingId));
     final result = await repository.declineReschedule(
-      bookingId: bookingId,
+      bookingId,
       declineReason: reason,
     );
     result.fold(
@@ -181,14 +171,12 @@ class CoachBookingsCubit extends Cubit<CoachBookingsState> {
 
   Future<void> declineMonthlySessionReschedule(
     String bookingId,
-    String sessionId, {
-    String? reason,
-  }) async {
+    String sessionId,
+  ) async {
     emit(state.copyWith(actionInProgressBookingId: bookingId));
     final result = await repository.declineMonthlySessionReschedule(
       bookingId: bookingId,
       sessionId: sessionId,
-      declineReason: reason,
     );
     result.fold(
       (failure) => emit(state.copyWith(
@@ -198,6 +186,22 @@ class CoachBookingsCubit extends Cubit<CoachBookingsState> {
       (_) => emit(state.copyWith(
         clearActionId: true,
         successMessage: 'reschedule_declined',
+      )),
+    );
+  }
+
+  /// Single-session booking took place.
+  Future<void> completeBooking(String bookingId) async {
+    emit(state.copyWith(actionInProgressBookingId: bookingId));
+    final result = await repository.completeBooking(bookingId);
+    result.fold(
+      (failure) => emit(state.copyWith(
+        clearActionId: true,
+        errorMessage: failure.errorMessage,
+      )),
+      (_) => emit(state.copyWith(
+        clearActionId: true,
+        successMessage: 'booking_completed',
       )),
     );
   }

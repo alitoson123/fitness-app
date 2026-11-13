@@ -29,7 +29,9 @@ class MonthlySessionTileActions extends StatelessWidget {
         ((isCoach && session.rescheduledBy == AppConstants.roleTrainee) ||
             (!isCoach && session.rescheduledBy == AppConstants.roleCoach));
 
-    if (canRespondToReschedule) {
+    if (canRespondToReschedule &&
+        onAcceptReschedule != null &&
+        onDeclineReschedule != null) {
       return Row(
         children: [
           Expanded(
@@ -73,7 +75,11 @@ class MonthlySessionTileActions extends StatelessWidget {
               ),
             ),
           ),
-        if (isCoach && !session.isCompleted && onMarkCompleted != null && session.canReschedule)
+        if (isCoach &&
+            !session.isCompleted &&
+            onMarkCompleted != null &&
+            session.canReschedule &&
+            onReschedule != null)
           SizedBox(width: 6.w),
         if (session.canReschedule && onReschedule != null)
           Expanded(

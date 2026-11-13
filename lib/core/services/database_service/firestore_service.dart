@@ -40,6 +40,31 @@ class FirestoreService {
     });
   }
 
+  /// Reads a document and writes an update based on it atomically, so two
+  /// people editing the same document can't overwrite each other's change.
+  /// [buildUpdate] receives the current data (null when the doc is missing)
+  /// and returns the fields to update; it may throw to abort. Returns the
+  /// data as it was before the update.
+  Future<Map<String, dynamic>?> transactUpdate({
+    required String collection,
+    required String docId,
+    required Map<String, dynamic> Function(Map<String, dynamic>? current)
+        buildUpdate,
+  }) async {
+    LoggerService.debug(
+      'Transactional update of $collection/$docId',
+      tag: 'FirestoreService',
+    );
+    final ref = _firestore.collection(collection).doc(docId);
+    return _firestore.runTransaction((tx) async {
+      final snap = await tx.get(ref);
+      final current = snap.data();
+      final update = buildUpdate(current);
+      tx.update(ref, {...update, 'updatedAt': FieldValue.serverTimestamp()});
+      return current;
+    });
+  }
+
   Future<void> deleteDoc({
     required String collection,
     required String docId,

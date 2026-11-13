@@ -12,6 +12,7 @@ import '../view_model/trainee_bookings_cubit/trainee_bookings_cubit.dart';
 import '../view_model/trainee_bookings_cubit/trainee_bookings_states.dart';
 import 'trainee_booking_card.dart';
 import 'trainee_bookings_tab_bar.dart';
+import 'trainee_cancel_booking_dialog.dart';
 import 'trainee_reject_reschedule_dialog.dart';
 
 class TraineeBookingsBody extends StatelessWidget {
@@ -77,6 +78,15 @@ class TraineeBookingsBody extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(s.rescheduleDeclinedMessage),
+              backgroundColor: AppColors.primary,
+            ),
+          );
+          cubit.clearMessages();
+        }
+        if (state.successMessage == 'booking_cancelled') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(s.bookingCancelledSuccess),
               backgroundColor: AppColors.primary,
             ),
           );
@@ -156,6 +166,11 @@ class TraineeBookingsBody extends StatelessWidget {
                         extra: b.coachUid,
                       ),
                       onReschedule: () => _handleReschedule(context, b, cubit),
+                      onCancel: () => TraineeCancelBookingDialog.show(
+                        context: context,
+                        onConfirm: (reason) =>
+                            cubit.cancelBooking(b.id, reason: reason),
+                      ),
                     ),
                   ),
                 SizedBox(height: 24.h),

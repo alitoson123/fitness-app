@@ -1,3 +1,4 @@
+import '../../features/booking_request/data/repos/booking_actions/booking_actions_repo.dart';
 import 'package:get_it/get_it.dart';
 import '../../features/auth/core/data/data_source/auth_local_data_source.dart';
 import '../../features/auth/choose_role/presentation/view_model/choose_role_cubit/choose_role_cubit.dart';
@@ -277,6 +278,13 @@ Future<void> setupServiceLocator() async {
   );
 
   // 15. Coach Dashboard Bookings Dependencies
+  // Shared booking actions (every screen that changes a booking uses it).
+  getIt.registerLazySingleton<BookingActionsRepo>(
+    () => BookingActionsRepo(
+      firestoreService: getIt<FirestoreService>(),
+      currentUid: () => getIt<AuthService>().currentUser?.uid,
+    ),
+  );
   getIt.registerLazySingleton<CoachBookingsRemoteDataSource>(
     () => CoachBookingsRemoteDataSource(
       firestoreService: getIt<FirestoreService>(),
@@ -285,6 +293,7 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<CoachBookingsRepo>(
     () => CoachBookingsRepo(
       remoteDataSource: getIt<CoachBookingsRemoteDataSource>(),
+      actions: getIt<BookingActionsRepo>(),
     ),
   );
   getIt.registerFactory<CoachBookingsCubit>(
@@ -297,6 +306,7 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<TraineeBookingsRepo>(
     () => TraineeBookingsRepo(
       firestoreService: getIt<FirestoreService>(),
+      actions: getIt<BookingActionsRepo>(),
     ),
   );
   getIt.registerFactory<TraineeBookingsCubit>(
@@ -349,6 +359,7 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<BookingDetailsRepo>(
     () => BookingDetailsRepo(
       remoteDataSource: getIt<BookingDetailsRemoteDataSource>(),
+      actions: getIt<BookingActionsRepo>(),
     ),
   );
   getIt.registerFactory<BookingDetailsCubit>(

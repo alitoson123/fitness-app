@@ -65,6 +65,7 @@ class BookingSerializer {
       previousStartTime: json['previousStartTime'] as String?,
       previousEndTime: json['previousEndTime'] as String?,
       cancellationReason: json['cancellationReason'] as String?,
+      statusBeforeReschedule: json['statusBeforeReschedule'] as String?,
       createdAt: _parseDate(json['createdAt']),
       updatedAt: _parseDate(json['updatedAt']),
     );
@@ -118,6 +119,8 @@ class BookingSerializer {
         'previousEndTime': booking.previousEndTime,
       if (booking.cancellationReason != null)
         'cancellationReason': booking.cancellationReason,
+      if (booking.statusBeforeReschedule != null)
+        'statusBeforeReschedule': booking.statusBeforeReschedule,
       'createdAt': booking.createdAt != null
           ? Timestamp.fromDate(booking.createdAt!)
           : FieldValue.serverTimestamp(),

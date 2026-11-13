@@ -25,6 +25,11 @@ class BookingModel {
   final String? rejectionReason, proposedDate, proposedStartTime, proposedEndTime;
   final String? rescheduleReason, rescheduledBy, previousDate, previousStartTime;
   final String? previousEndTime, cancellationReason;
+
+  /// Status the booking had before it entered `reschedule_pending`
+  /// (`pending` or `confirmed`). A declined reschedule returns to it, so a
+  /// request the coach never approved can't become `confirmed` by a decline.
+  final String? statusBeforeReschedule;
   final DateTime? rescheduledAt, createdAt, updatedAt;
 
   const BookingModel({
@@ -59,6 +64,7 @@ class BookingModel {
     this.previousStartTime,
     this.previousEndTime,
     this.cancellationReason,
+    this.statusBeforeReschedule,
     this.createdAt,
     this.updatedAt,
   });
@@ -68,6 +74,21 @@ class BookingModel {
   bool get isSession => bookingType != 'monthly';
   int get sessionsCount => sessions.isNotEmpty ? sessions.length : 1;
   double get priceUSD => price;
+
+  /// Status to return to when a reschedule ends without moving the session.
+  /// Bookings written before this field existed were always `confirmed`.
+  String get restorableStatus =>
+      statusBeforeReschedule == 'pending' ? 'pending' : 'confirmed';
+
+  /// Whether the booking itself counts as approved by the coach, including
+  /// while a reschedule is being negotiated.
+  bool get isApproved =>
+      status == 'confirmed' ||
+      (status == 'reschedule_pending' && restorableStatus == 'confirmed');
+
+  /// Start of a single-session booking, in the device's local time.
+  DateTime? get startDateTime =>
+      BookingSessionModel.parseStart(date, startTime);
 
   BookingSessionModel? getSessionById(String id) =>
       sessions.where((s) => s.id == id).firstOrNull;
@@ -120,6 +141,7 @@ class BookingModel {
 
     return copyWith(
       status: 'reschedule_pending',
+      statusBeforeReschedule: isReschedulePending ? null : status,
       sessions: updatedSessions,
     );
   }
@@ -136,7 +158,7 @@ class BookingModel {
     final hasPending = updatedSessions.any((s) => s.isReschedulePending);
     final targetStatus = hasPending
         ? 'reschedule_pending'
-        : (restoredStatus ?? 'confirmed');
+        : (restoredStatus ?? restorableStatus);
 
     return copyWith(status: targetStatus, sessions: updatedSessions);
   }
@@ -153,7 +175,7 @@ class BookingModel {
     final hasPending = updatedSessions.any((s) => s.isReschedulePending);
     final targetStatus = hasPending
         ? 'reschedule_pending'
-        : (restoredStatus ?? 'confirmed');
+        : (restoredStatus ?? restorableStatus);
 
     return copyWith(status: targetStatus, sessions: updatedSessions);
   }
@@ -179,6 +201,8 @@ class BookingModel {
 
   Map<String, dynamic> toMap() => BookingSerializer.toMap(this);
 
+  /// Note: a `null` argument means "keep the current value". Use
+  /// [clearRescheduleProposal] to drop the proposal fields.
   BookingModel copyWith({
     String? id,
     String? coachUid,
@@ -211,9 +235,12 @@ class BookingModel {
     String? previousStartTime,
     String? previousEndTime,
     String? cancellationReason,
+    String? statusBeforeReschedule,
     DateTime? createdAt,
     DateTime? updatedAt,
+    bool clearRescheduleProposal = false,
   }) {
+    final keepProposal = !clearRescheduleProposal;
     final resolvedBookingType = bookingType ?? this.bookingType;
     final resolvedDate = date ?? this.date;
     final resolvedStartTime = startTime ?? this.startTime;
@@ -231,12 +258,17 @@ class BookingModel {
           startTime: resolvedStartTime,
           endTime: resolvedEndTime,
           status: resolvedStatus,
-          proposedDate: proposedDate ?? this.proposedDate,
-          proposedStartTime: proposedStartTime ?? this.proposedStartTime,
-          proposedEndTime: proposedEndTime ?? this.proposedEndTime,
-          rescheduleReason: rescheduleReason ?? this.rescheduleReason,
-          rescheduledBy: rescheduledBy ?? this.rescheduledBy,
-          rescheduledAt: rescheduledAt ?? this.rescheduledAt,
+          proposedDate: proposedDate ?? (keepProposal ? this.proposedDate : null),
+          proposedStartTime: proposedStartTime ??
+              (keepProposal ? this.proposedStartTime : null),
+          proposedEndTime:
+              proposedEndTime ?? (keepProposal ? this.proposedEndTime : null),
+          rescheduleReason:
+              rescheduleReason ?? (keepProposal ? this.rescheduleReason : null),
+          rescheduledBy:
+              rescheduledBy ?? (keepProposal ? this.rescheduledBy : null),
+          rescheduledAt:
+              rescheduledAt ?? (keepProposal ? this.rescheduledAt : null),
           previousDate: previousDate ?? this.previousDate,
           previousStartTime: previousStartTime ?? this.previousStartTime,
           previousEndTime: previousEndTime ?? this.previousEndTime,
@@ -268,16 +300,21 @@ class BookingModel {
       notes: notes ?? this.notes,
       status: resolvedStatus,
       rejectionReason: rejectionReason ?? this.rejectionReason,
-      proposedDate: proposedDate ?? this.proposedDate,
-      proposedStartTime: proposedStartTime ?? this.proposedStartTime,
-      proposedEndTime: proposedEndTime ?? this.proposedEndTime,
-      rescheduleReason: rescheduleReason ?? this.rescheduleReason,
-      rescheduledBy: rescheduledBy ?? this.rescheduledBy,
-      rescheduledAt: rescheduledAt ?? this.rescheduledAt,
+      proposedDate: proposedDate ?? (keepProposal ? this.proposedDate : null),
+      proposedStartTime:
+          proposedStartTime ?? (keepProposal ? this.proposedStartTime : null),
+      proposedEndTime:
+          proposedEndTime ?? (keepProposal ? this.proposedEndTime : null),
+      rescheduleReason:
+          rescheduleReason ?? (keepProposal ? this.rescheduleReason : null),
+      rescheduledBy: rescheduledBy ?? (keepProposal ? this.rescheduledBy : null),
+      rescheduledAt: rescheduledAt ?? (keepProposal ? this.rescheduledAt : null),
       previousDate: previousDate ?? this.previousDate,
       previousStartTime: previousStartTime ?? this.previousStartTime,
       previousEndTime: previousEndTime ?? this.previousEndTime,
       cancellationReason: cancellationReason ?? this.cancellationReason,
+      statusBeforeReschedule:
+          statusBeforeReschedule ?? this.statusBeforeReschedule,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

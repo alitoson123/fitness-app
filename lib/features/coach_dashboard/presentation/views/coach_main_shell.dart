@@ -112,6 +112,8 @@ class _CoachMainShellState extends State<CoachMainShell> {
                   'rescheduled' => s.rescheduleRequestedSuccess,
                   'reschedule_accepted' => s.rescheduleAcceptedSuccess,
                   'reschedule_declined' => s.rescheduleDeclinedMessage,
+                  'session_completed' => s.sessionCompleted,
+                  'booking_completed' => s.bookingMarkedCompleted,
                   _ => null,
                 };
                 if (message != null) {

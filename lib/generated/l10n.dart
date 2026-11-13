@@ -7639,6 +7639,116 @@ class S {
       args: [],
     );
   }
+
+  /// `This action isn't available for this booking anymore. It may have just been changed.`
+  String get bookingActionNotAllowed {
+    return Intl.message(
+      'This action isn\'t available for this booking anymore. It may have just been changed.',
+      name: 'bookingActionNotAllowed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This booking no longer exists.`
+  String get bookingNotFoundMessage {
+    return Intl.message(
+      'This booking no longer exists.',
+      name: 'bookingNotFoundMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You can mark it as completed once the session time has started.`
+  String get sessionNotStartedYet {
+    return Intl.message(
+      'You can mark it as completed once the session time has started.',
+      name: 'sessionNotStartedYet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Session marked as completed`
+  String get bookingMarkedCompleted {
+    return Intl.message(
+      'Session marked as completed',
+      name: 'bookingMarkedCompleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel booking`
+  String get cancelBookingAction {
+    return Intl.message(
+      'Cancel booking',
+      name: 'cancelBookingAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel this booking?`
+  String get cancelBookingTitle {
+    return Intl.message(
+      'Cancel this booking?',
+      name: 'cancelBookingTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your coach will be notified and the time will be freed for others. This can't be undone.`
+  String get cancelBookingMessage {
+    return Intl.message(
+      'Your coach will be notified and the time will be freed for others. This can\'t be undone.',
+      name: 'cancelBookingMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reason (optional)`
+  String get cancelBookingReasonHint {
+    return Intl.message(
+      'Reason (optional)',
+      name: 'cancelBookingReasonHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Keep booking`
+  String get keepBooking {
+    return Intl.message(
+      'Keep booking',
+      name: 'keepBooking',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Booking cancelled`
+  String get bookingCancelledSuccess {
+    return Intl.message(
+      'Booking cancelled',
+      name: 'bookingCancelledSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This booking has already started, so it can't be cancelled.`
+  String get bookingAlreadyStarted {
+    return Intl.message(
+      'This booking has already started, so it can\'t be cancelled.',
+      name: 'bookingAlreadyStarted',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

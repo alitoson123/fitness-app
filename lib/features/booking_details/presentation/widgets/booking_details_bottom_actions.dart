@@ -6,9 +6,11 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../generated/l10n.dart';
 import '../../../booking_request/data/models/booking_model.dart';
+import '../../../booking_request/data/repos/booking_actions/booking_transitions.dart';
 import '../../../coach_dashboard/presentation/widgets/booking_card_actions.dart';
 import '../../../coach_dashboard/presentation/widgets/reject_booking_dialog.dart';
 import '../../../coach_dashboard/presentation/widgets/reschedule_booking_sheet.dart';
+import '../../../trainee_bookings/presentation/widgets/trainee_cancel_booking_dialog.dart';
 import '../view_model/booking_details_cubit/booking_details_cubit.dart';
 
 class BookingDetailsBottomActions extends StatelessWidget {
@@ -43,11 +45,30 @@ class BookingDetailsBottomActions extends StatelessWidget {
         proposedStartTime: start,
         proposedEndTime: end,
         reason: reason,
-        rescheduledBy:
-            isCoach ? AppConstants.roleCoach : AppConstants.roleTrainee,
       ),
     );
   }
+
+  void _onCancel(BuildContext context) {
+    final cubit = context.read<BookingDetailsCubit>();
+    TraineeCancelBookingDialog.show(
+      context: context,
+      onConfirm: (reason) => cubit.cancelBooking(reason: reason),
+    );
+  }
+
+  Widget _buildCancelButton(BuildContext context, S s) => SizedBox(
+        width: double.infinity,
+        child: TextButton.icon(
+          onPressed: isActionInProgress ? null : () => _onCancel(context),
+          icon: Icon(Icons.close_rounded, size: 16.r),
+          label: Text(s.cancelBookingAction, style: TextStyle(fontSize: 13.sp)),
+          style: TextButton.styleFrom(
+            foregroundColor: AppColors.error,
+            padding: EdgeInsets.symmetric(vertical: 8.h),
+          ),
+        ),
+      );
 
   Widget _buildReschedulePendingActions(BuildContext context, S s) {
     final cubit = context.read<BookingDetailsCubit>();
@@ -139,6 +160,27 @@ class BookingDetailsBottomActions extends StatelessWidget {
       );
     } else if (booking.status == 'reschedule_pending' && !booking.isMonthly) {
       child = _buildReschedulePendingActions(context, s);
+    } else if (booking.status == 'confirmed' &&
+        !booking.isMonthly &&
+        BookingTransitions.canCompleteBooking(booking, DateTime.now())) {
+      // The session time has come: the coach records it; rescheduling a
+      // session that already started makes no sense, so it's not offered.
+      child = isCoach
+          ? SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed:
+                    isActionInProgress ? null : () => cubit.completeBooking(),
+                icon: Icon(Icons.check_rounded, size: 16.r),
+                label: Text(s.markAsCompleted, style: TextStyle(fontSize: 13.sp)),
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppColors.success,
+                  shape: RoundedRectangleBorder(borderRadius: AppRadius.smAll),
+                  padding: EdgeInsets.symmetric(vertical: 10.h),
+                ),
+              ),
+            )
+          : null;
     } else if (booking.status == 'confirmed' && !booking.isMonthly) {
       child = SizedBox(
         width: double.infinity,
@@ -154,6 +196,17 @@ class BookingDetailsBottomActions extends StatelessWidget {
           ),
         ),
       );
+    }
+
+    // Trainee: cancel (or withdraw a request) until the booking starts.
+    if (!isCoach && BookingTransitions.canCancel(booking, DateTime.now())) {
+      final cancel = _buildCancelButton(context, s);
+      child = child == null
+          ? cancel
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [child, SizedBox(height: 4.h), cancel],
+            );
     }
 
     if (child == null) return const SizedBox.shrink();

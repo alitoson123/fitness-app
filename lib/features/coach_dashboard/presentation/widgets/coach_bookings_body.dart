@@ -129,6 +129,7 @@ class CoachBookingsBody extends StatelessWidget {
                             onReschedule: () => _handleReschedule(context, b, cubit),
                             onAcceptReschedule: () => cubit.acceptReschedule(b),
                             onDeclineReschedule: () => cubit.declineReschedule(b.id),
+                            onComplete: () => cubit.completeBooking(b.id),
                           ),
                         ),
                       ),

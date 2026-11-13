@@ -61,6 +61,8 @@ class _BookingDetailsScaffold extends StatelessWidget {
             'reschedule_accepted' => s.rescheduleAcceptedSuccess,
             'reschedule_declined' => s.rescheduleDeclinedMessage,
             'session_completed' => s.sessionCompleted,
+            'booking_completed' => s.bookingMarkedCompleted,
+            'booking_cancelled' => s.bookingCancelledSuccess,
             _ => state.successMessage!,
           };
           ScaffoldMessenger.of(context).showSnackBar(

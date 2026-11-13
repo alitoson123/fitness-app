@@ -1,30 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:fitness_app/core/errors/failure.dart';
-import 'package:fitness_app/core/services/database_service/firestore_service.dart';
+import 'package:fitness_app/generated/l10n.dart';
+import 'package:flutter/widgets.dart';
 import 'package:fitness_app/features/booking_request/data/models/booking_model.dart';
 import 'package:fitness_app/features/trainee_bookings/data/repos/trainee_bookings_repo.dart';
 import 'package:fitness_app/features/trainee_bookings/presentation/view_model/trainee_bookings_cubit/trainee_bookings_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-class _FakeFirestoreService implements FirestoreService {
-  String? lastCollection;
-  String? lastDocId;
-  Map<String, dynamic>? lastData;
-
-  @override
-  Future<void> updateData({
-    required String collection,
-    required String docId,
-    required Map<String, dynamic> data,
-  }) async {
-    lastCollection = collection;
-    lastDocId = docId;
-    lastData = data;
-  }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-}
+import 'helpers/fake_booking_store.dart';
 
 class FakeTraineeBookingsRepo implements TraineeBookingsRepo {
   bool requestRescheduleCalled = false;
@@ -114,7 +96,6 @@ class FakeTraineeBookingsRepo implements TraineeBookingsRepo {
   Future<Either<Failure, void>> acceptMonthlySessionReschedule({
     required String bookingId,
     required String sessionId,
-    String? preferredRestoredStatus,
   }) async {
     acceptMonthlyCalled = true;
     lastBookingId = bookingId;
@@ -126,18 +107,17 @@ class FakeTraineeBookingsRepo implements TraineeBookingsRepo {
   Future<Either<Failure, void>> declineMonthlySessionReschedule({
     required String bookingId,
     required String sessionId,
-    String? declineReason,
-    String? preferredRestoredStatus,
   }) async {
     declineMonthlyCalled = true;
     lastBookingId = bookingId;
     lastSessionId = sessionId;
-    lastReason = declineReason;
     return const Right(null);
   }
 }
 
 void main() {
+  setUpAll(() => S.load(const Locale('en')));
+
   group('TraineeBookingsCubit Reschedule & Monthly Tests', () {
     late FakeTraineeBookingsRepo fakeRepo;
     late TraineeBookingsCubit cubit;
@@ -243,19 +223,32 @@ void main() {
       await cubit.declineMonthlySessionReschedule(
         'book-monthly-trainee',
         'sess-trainee-1',
-        reason: 'Coach proposed slot is inconvenient',
       );
 
       expect(fakeRepo.declineMonthlyCalled, isTrue);
       expect(fakeRepo.lastBookingId, 'book-monthly-trainee');
       expect(fakeRepo.lastSessionId, 'sess-trainee-1');
-      expect(fakeRepo.lastReason, 'Coach proposed slot is inconvenient');
       expect(cubit.state.successMessage, 'reschedule_rejected');
     });
 
     test('TraineeBookingsRepo.declineReschedule restores confirmed status without cancelling', () async {
-      final fakeFs = _FakeFirestoreService();
-      final repo = TraineeBookingsRepo(firestoreService: fakeFs);
+      final store = FakeBookingStore()
+        ..put(const BookingModel(
+          id: 'booking-single-1',
+          coachUid: 'coach-1',
+          traineeUid: 'trainee-1',
+          sport: 'football',
+          date: '2030-01-10',
+          startTime: '10:00',
+          endTime: '11:00',
+          status: 'reschedule_pending',
+          rescheduledBy: 'coach',
+          proposedDate: '2030-01-12',
+          proposedStartTime: '12:00',
+          proposedEndTime: '13:00',
+        ));
+      final actions = makeActionsRepo(store, uid: () => 'trainee-1').repo;
+      final repo = TraineeBookingsRepo(firestoreService: store, actions: actions);
 
       final result = await repo.declineReschedule(
         bookingId: 'booking-single-1',
@@ -263,12 +256,11 @@ void main() {
       );
 
       expect(result.isRight(), isTrue);
-      expect(fakeFs.lastDocId, 'booking-single-1');
-      expect(fakeFs.lastData!['status'], 'confirmed');
-      expect(fakeFs.lastData!['status'], isNot('cancelled'));
-      expect(fakeFs.lastData!['previousDate'], isNull);
-      expect(fakeFs.lastData!['proposedDate'], isNull);
-      expect(fakeFs.lastData!['rescheduleDeclineReason'], 'Coach proposed time does not fit my schedule');
+      final data = store.docs['booking-single-1']!;
+      expect(data['status'], 'confirmed');
+      expect(data['previousDate'], isNull);
+      expect(data['proposedDate'], isNull);
+      expect(data['rescheduleDeclineReason'], 'Coach proposed time does not fit my schedule');
     });
   });
 }

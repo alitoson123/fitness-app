@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:fitness_app/features/booking_details/data/repos/booking_details_repo.dart';
 import 'package:fitness_app/features/booking_request/data/models/booking_model.dart';
+import 'package:fitness_app/generated/l10n.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'booking_details_state.dart';
 
@@ -20,7 +21,9 @@ class BookingDetailsCubit extends Cubit<BookingDetailsState> {
     _subscription?.cancel();
     _subscription = repository.streamBooking(bookingId).listen(
       (updated) => emit(state.copyWith(booking: updated)),
-      onError: (e) => emit(state.copyWith(errorMessage: e.toString())),
+      onError: (_) => emit(
+        state.copyWith(errorMessage: S.current.unexpectedErrorMessage),
+      ),
     );
   }
 
@@ -28,10 +31,7 @@ class BookingDetailsCubit extends Cubit<BookingDetailsState> {
     final b = state.booking;
     if (b == null) return;
     emit(state.copyWith(isActionInProgress: true, clearMessages: true));
-    final res = await repository.updateBookingStatus(
-      bookingId: b.id,
-      status: 'confirmed',
-    );
+    final res = await repository.approve(b.id);
     res.fold(
       (f) => emit(state.copyWith(
         clearAction: true,
@@ -48,11 +48,7 @@ class BookingDetailsCubit extends Cubit<BookingDetailsState> {
     final b = state.booking;
     if (b == null) return;
     emit(state.copyWith(isActionInProgress: true, clearMessages: true));
-    final res = await repository.updateBookingStatus(
-      bookingId: b.id,
-      status: 'rejected',
-      rejectionReason: reason,
-    );
+    final res = await repository.reject(b.id, reason: reason);
     res.fold(
       (f) => emit(state.copyWith(
         clearAction: true,
@@ -70,18 +66,16 @@ class BookingDetailsCubit extends Cubit<BookingDetailsState> {
     required String proposedStartTime,
     required String proposedEndTime,
     required String reason,
-    required String rescheduledBy,
   }) async {
     final b = state.booking;
     if (b == null) return;
     emit(state.copyWith(isActionInProgress: true, clearMessages: true));
     final res = await repository.requestReschedule(
-      booking: b,
+      bookingId: b.id,
       proposedDate: proposedDate,
       proposedStartTime: proposedStartTime,
       proposedEndTime: proposedEndTime,
       reason: reason,
-      rescheduledBy: rescheduledBy,
     );
     res.fold(
       (f) => emit(state.copyWith(
@@ -99,7 +93,7 @@ class BookingDetailsCubit extends Cubit<BookingDetailsState> {
     final b = state.booking;
     if (b == null) return;
     emit(state.copyWith(isActionInProgress: true, clearMessages: true));
-    final res = await repository.acceptReschedule(booking: b);
+    final res = await repository.acceptReschedule(b.id);
     res.fold(
       (f) => emit(state.copyWith(
         clearAction: true,
@@ -117,7 +111,7 @@ class BookingDetailsCubit extends Cubit<BookingDetailsState> {
     if (b == null) return;
     emit(state.copyWith(isActionInProgress: true, clearMessages: true));
     final res = await repository.declineReschedule(
-      bookingId: b.id,
+      b.id,
       declineReason: reason,
     );
     res.fold(
@@ -128,6 +122,42 @@ class BookingDetailsCubit extends Cubit<BookingDetailsState> {
       (_) => emit(state.copyWith(
         clearAction: true,
         successMessage: 'reschedule_declined',
+      )),
+    );
+  }
+
+  /// Trainee: cancel the booking (or withdraw a request).
+  Future<void> cancelBooking({String? reason}) async {
+    final b = state.booking;
+    if (b == null) return;
+    emit(state.copyWith(isActionInProgress: true, clearMessages: true));
+    final res = await repository.cancel(b.id, reason: reason);
+    res.fold(
+      (f) => emit(state.copyWith(
+        clearAction: true,
+        errorMessage: f.errorMessage,
+      )),
+      (_) => emit(state.copyWith(
+        clearAction: true,
+        successMessage: 'booking_cancelled',
+      )),
+    );
+  }
+
+  /// Coach: single-session booking took place.
+  Future<void> completeBooking() async {
+    final b = state.booking;
+    if (b == null) return;
+    emit(state.copyWith(isActionInProgress: true, clearMessages: true));
+    final res = await repository.completeBooking(b.id);
+    res.fold(
+      (f) => emit(state.copyWith(
+        clearAction: true,
+        errorMessage: f.errorMessage,
+      )),
+      (_) => emit(state.copyWith(
+        clearAction: true,
+        successMessage: 'booking_completed',
       )),
     );
   }
@@ -162,7 +192,6 @@ class BookingDetailsCubit extends Cubit<BookingDetailsState> {
     required String proposedStartTime,
     required String proposedEndTime,
     required String reason,
-    required String rescheduledBy,
   }) async {
     final b = state.booking;
     if (b == null) return;
@@ -178,7 +207,6 @@ class BookingDetailsCubit extends Cubit<BookingDetailsState> {
       proposedStartTime: proposedStartTime,
       proposedEndTime: proposedEndTime,
       reason: reason,
-      rescheduledBy: rescheduledBy,
     );
     res.fold(
       (f) => emit(state.copyWith(
@@ -216,10 +244,7 @@ class BookingDetailsCubit extends Cubit<BookingDetailsState> {
     );
   }
 
-  Future<void> declineMonthlySessionReschedule(
-    String sessionId, {
-    String? reason,
-  }) async {
+  Future<void> declineMonthlySessionReschedule(String sessionId) async {
     final b = state.booking;
     if (b == null) return;
     emit(state.copyWith(
@@ -230,7 +255,6 @@ class BookingDetailsCubit extends Cubit<BookingDetailsState> {
     final res = await repository.declineMonthlySessionReschedule(
       bookingId: b.id,
       sessionId: sessionId,
-      declineReason: reason,
     );
     res.fold(
       (f) => emit(state.copyWith(

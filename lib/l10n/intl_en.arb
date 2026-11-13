@@ -755,5 +755,16 @@
   "confirmDeletionTitle": "Confirm it's you",
   "confirmDeletionMessage": "For your security, enter the 6-digit code we sent to {phone} to delete your account.",
   "sendingCode": "Sending code...",
-  "cancelledAccountDeletedReason": "Cancelled automatically because the other account was deleted."
+  "cancelledAccountDeletedReason": "Cancelled automatically because the other account was deleted.",
+  "bookingActionNotAllowed": "This action isn't available for this booking anymore. It may have just been changed.",
+  "bookingNotFoundMessage": "This booking no longer exists.",
+  "sessionNotStartedYet": "You can mark it as completed once the session time has started.",
+  "bookingMarkedCompleted": "Session marked as completed",
+  "cancelBookingAction": "Cancel booking",
+  "cancelBookingTitle": "Cancel this booking?",
+  "cancelBookingMessage": "Your coach will be notified and the time will be freed for others. This can't be undone.",
+  "cancelBookingReasonHint": "Reason (optional)",
+  "keepBooking": "Keep booking",
+  "bookingCancelledSuccess": "Booking cancelled",
+  "bookingAlreadyStarted": "This booking has already started, so it can't be cancelled."
 }

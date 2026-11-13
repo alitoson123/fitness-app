@@ -8,6 +8,7 @@ import '../../../../core/theme/app_radius.dart';
 import '../../../../generated/l10n.dart';
 import '../../../booking_details/presentation/view_model/booking_details_args.dart';
 import '../../../booking_request/data/models/booking_model.dart';
+import '../../../booking_request/data/repos/booking_actions/booking_transitions.dart';
 import '../helpers/coach_booking_date_helper.dart';
 import 'booking_card_actions.dart';
 import 'booking_card_compact_progress.dart';
@@ -22,6 +23,7 @@ class BookingCard extends StatelessWidget {
   final bool isActionInProgress;
   final VoidCallback? onAccept, onReject, onReschedule;
   final VoidCallback? onAcceptReschedule, onDeclineReschedule;
+  final VoidCallback? onComplete;
 
   const BookingCard({
     super.key,
@@ -32,6 +34,7 @@ class BookingCard extends StatelessWidget {
     this.onReschedule,
     this.onAcceptReschedule,
     this.onDeclineReschedule,
+    this.onComplete,
   });
 
   void _navigateToDetails(BuildContext context) {
@@ -129,7 +132,37 @@ class BookingCard extends StatelessWidget {
                   ],
                   if (booking.status == 'confirmed' &&
                       !booking.isMonthly &&
-                      onReschedule != null) ...[
+                      onComplete != null &&
+                      BookingTransitions.canCompleteBooking(
+                        booking,
+                        DateTime.now(),
+                      )) ...[
+                    SizedBox(height: 10.h),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton.icon(
+                        onPressed: isActionInProgress ? null : onComplete,
+                        icon: Icon(Icons.check_rounded, size: 14.r),
+                        label: Text(
+                          s.markAsCompleted,
+                          style: TextStyle(fontSize: 12.sp),
+                        ),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: AppColors.success,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: AppRadius.smAll,
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 8.h),
+                        ),
+                      ),
+                    ),
+                  ] else if (booking.status == 'confirmed' &&
+                      !booking.isMonthly &&
+                      onReschedule != null &&
+                      !BookingTransitions.canCompleteBooking(
+                        booking,
+                        DateTime.now(),
+                      )) ...[
                     SizedBox(height: 10.h),
                     SizedBox(
                       width: double.infinity,

@@ -9,6 +9,7 @@ import '../../../../core/theme/app_radius.dart';
 import '../../../../generated/l10n.dart';
 import '../../../booking_details/presentation/view_model/booking_details_args.dart';
 import '../../../booking_request/data/models/booking_model.dart';
+import '../../../booking_request/data/repos/booking_actions/booking_transitions.dart';
 import '../../../coach_dashboard/presentation/widgets/booking_card_compact_progress.dart';
 import '../view_model/trainee_bookings_cubit/trainee_bookings_cubit.dart';
 import 'trainee_booking_card_header.dart';
@@ -25,6 +26,7 @@ class TraineeBookingCard extends StatelessWidget {
   final VoidCallback onRejectReschedule;
   final VoidCallback onRebook;
   final VoidCallback? onReschedule;
+  final VoidCallback? onCancel;
   final void Function(String sessionId)? onAcceptMonthlyReschedule;
   final void Function(String sessionId)? onDeclineMonthlyReschedule;
 
@@ -36,6 +38,7 @@ class TraineeBookingCard extends StatelessWidget {
     required this.onRejectReschedule,
     required this.onRebook,
     this.onReschedule,
+    this.onCancel,
     this.onAcceptMonthlyReschedule,
     this.onDeclineMonthlyReschedule,
   });
@@ -136,9 +139,14 @@ class TraineeBookingCard extends StatelessWidget {
                       onReject: onRejectReschedule,
                     ),
                 ],
+                // No rescheduling once the session time has started.
                 if (booking.status == 'confirmed' &&
                     !booking.isMonthly &&
-                    onReschedule != null) ...[
+                    onReschedule != null &&
+                    !BookingTransitions.canCompleteBooking(
+                      booking,
+                      DateTime.now(),
+                    )) ...[
                   SizedBox(height: 10.h),
                   SizedBox(
                     width: double.infinity,
@@ -158,6 +166,25 @@ class TraineeBookingCard extends StatelessWidget {
                           borderRadius: AppRadius.smAll,
                         ),
                         padding: EdgeInsets.symmetric(vertical: 8.h),
+                      ),
+                    ),
+                  ),
+                ],
+                if (onCancel != null &&
+                    BookingTransitions.canCancel(booking, DateTime.now())) ...[
+                  SizedBox(height: 4.h),
+                  Align(
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: TextButton.icon(
+                      onPressed: isActionInProgress ? null : onCancel,
+                      icon: Icon(Icons.close_rounded, size: 14.r),
+                      label: Text(
+                        s.cancelBookingAction,
+                        style: TextStyle(fontSize: 12.sp),
+                      ),
+                      style: TextButton.styleFrom(
+                        foregroundColor: AppColors.error,
+                        visualDensity: VisualDensity.compact,
                       ),
                     ),
                   ),

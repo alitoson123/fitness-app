@@ -4,11 +4,13 @@ import 'package:fitness_app/features/booking_details/data/repos/booking_details_
 import 'package:fitness_app/features/booking_details/presentation/view_model/booking_details_cubit/booking_details_cubit.dart';
 import 'package:fitness_app/features/booking_request/data/models/booking_model.dart';
 import 'package:fitness_app/features/booking_request/data/models/booking_session_model.dart';
+import 'package:fitness_app/generated/l10n.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'helpers/fake_booking_store.dart';
 
 class _FakeRemoteDataSource implements BookingDetailsRemoteDataSource {
   final _controller = StreamController<BookingModel>.broadcast();
-  BookingModel? currentBooking;
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
@@ -16,81 +18,19 @@ class _FakeRemoteDataSource implements BookingDetailsRemoteDataSource {
   @override
   Stream<BookingModel> streamBooking(String bookingId) => _controller.stream;
 
-  @override
-  Future<void> updateBookingStatus({
-    required String bookingId,
-    required String status,
-    String? rejectionReason,
-  }) async {
-    currentBooking = currentBooking?.copyWith(
-      status: status,
-      rejectionReason: rejectionReason,
-    );
-  }
-
-  @override
-  Future<void> markSessionCompleted({
-    required String bookingId,
-    required String sessionId,
-  }) async {
-    final sessions = currentBooking?.sessions.map((s) {
-      if (s.id == sessionId) return s.copyWith(status: 'completed');
-      return s;
-    }).toList();
-    if (sessions != null) {
-      currentBooking = currentBooking?.copyWith(sessions: sessions);
-    }
-  }
-
-  @override
-  Future<void> requestReschedule({
-    required BookingModel booking,
-    required String proposedDate,
-    required String proposedStartTime,
-    required String proposedEndTime,
-    required String reason,
-    required String rescheduledBy,
-  }) async {
-    currentBooking = currentBooking?.copyWith(
-      status: 'reschedule_pending',
-      proposedDate: proposedDate,
-      proposedStartTime: proposedStartTime,
-      proposedEndTime: proposedEndTime,
-      rescheduleReason: reason,
-      rescheduledBy: rescheduledBy,
-    );
-  }
-
-  @override
-  Future<void> acceptReschedule({required BookingModel booking}) async {
-    currentBooking = currentBooking?.copyWith(
-      status: 'confirmed',
-      date: booking.proposedDate,
-      startTime: booking.proposedStartTime,
-      endTime: booking.proposedEndTime,
-    );
-  }
-
-  @override
-  Future<void> declineReschedule({
-    required String bookingId,
-    String? declineReason,
-  }) async {
-    currentBooking = currentBooking?.copyWith(
-      status: 'confirmed',
-      rejectionReason: declineReason,
-    );
-  }
-
   void dispose() => _controller.close();
 }
 
 void main() {
-  late _FakeRemoteDataSource fakeRemote;
-  late BookingDetailsRepo repo;
-  late BookingDetailsCubit cubit;
+  setUpAll(() => S.load(const Locale('en')));
 
-  final sampleBooking = BookingModel(
+  late FakeBookingStore store;
+  late _FakeRemoteDataSource fakeRemote;
+  late BookingDetailsCubit cubit;
+  // Who is using the screen in a test.
+  late String actingUid;
+
+  const monthlyBooking = BookingModel(
     id: 'b_1',
     coachUid: 'coach_1',
     coachName: 'Coach John',
@@ -103,7 +43,8 @@ void main() {
     endTime: '11:00',
     price: 300.0,
     currency: 'USD',
-    sessions: const [
+    status: 'pending',
+    sessions: [
       BookingSessionModel(
         id: 's_1',
         date: '2026-11-01',
@@ -121,10 +62,25 @@ void main() {
     ],
   );
 
+  const singleBooking = BookingModel(
+    id: 'b_2',
+    coachUid: 'coach_1',
+    traineeUid: 'trainee_1',
+    sport: 'Football',
+    date: '2030-11-01',
+    startTime: '10:00',
+    endTime: '11:00',
+    status: 'confirmed',
+  );
+
   setUp(() {
-    fakeRemote = _FakeRemoteDataSource()..currentBooking = sampleBooking;
-    repo = BookingDetailsRepo(remoteDataSource: fakeRemote);
-    cubit = BookingDetailsCubit(repository: repo);
+    actingUid = 'coach_1';
+    store = FakeBookingStore();
+    fakeRemote = _FakeRemoteDataSource();
+    final actions = makeActionsRepo(store, uid: () => actingUid).repo;
+    cubit = BookingDetailsCubit(
+      repository: BookingDetailsRepo(remoteDataSource: fakeRemote, actions: actions),
+    );
   });
 
   tearDown(() {
@@ -133,73 +89,105 @@ void main() {
   });
 
   test('init sets initial booking and listens to updates', () async {
-    cubit.init(sampleBooking);
+    cubit.init(monthlyBooking);
     expect(cubit.state.booking?.id, 'b_1');
     expect(cubit.state.booking?.traineeName, 'Ali Trainee');
   });
 
   test('acceptBooking triggers update and sets successMessage', () async {
-    cubit.init(sampleBooking);
+    store.put(monthlyBooking);
+    cubit.init(monthlyBooking);
     await cubit.acceptBooking();
 
     expect(cubit.state.successMessage, 'accepted');
     expect(cubit.state.isActionInProgress, false);
-    expect(fakeRemote.currentBooking?.status, 'confirmed');
+    expect(store.booking('b_1').status, 'confirmed');
   });
 
   test('rejectBooking updates status to rejected with reason', () async {
-    cubit.init(sampleBooking);
+    store.put(monthlyBooking);
+    cubit.init(monthlyBooking);
     await cubit.rejectBooking(reason: 'Fully booked');
 
     expect(cubit.state.successMessage, 'rejected');
-    expect(fakeRemote.currentBooking?.status, 'rejected');
-    expect(fakeRemote.currentBooking?.rejectionReason, 'Fully booked');
+    expect(store.booking('b_1').status, 'rejected');
+    expect(store.booking('b_1').rejectionReason, 'Fully booked');
   });
 
-  test('markSessionCompleted updates session status', () async {
-    cubit.init(sampleBooking);
+  test('markSessionCompleted updates session status on an approved package', () async {
+    final approved = monthlyBooking.copyWith(status: 'confirmed');
+    store.put(approved);
+    cubit.init(approved);
     await cubit.markSessionCompleted('s_1');
 
     expect(cubit.state.successMessage, 'session_completed');
-    expect(fakeRemote.currentBooking?.sessions.first.isCompleted, true);
+    expect(store.booking('b_1').sessions.first.isCompleted, true);
+  });
+
+  test('markSessionCompleted is refused on a package not approved yet', () async {
+    store.put(monthlyBooking);
+    cubit.init(monthlyBooking);
+    await cubit.markSessionCompleted('s_1');
+
+    expect(cubit.state.errorMessage, S.current.bookingActionNotAllowed);
+    expect(store.booking('b_1').sessions.first.isCompleted, false);
   });
 
   test('requestReschedule updates booking with proposed time', () async {
-    cubit.init(sampleBooking);
+    store.put(singleBooking);
+    cubit.init(singleBooking);
     await cubit.requestReschedule(
-      proposedDate: '2026-11-05',
+      proposedDate: '2030-11-05',
       proposedStartTime: '14:00',
       proposedEndTime: '15:00',
       reason: 'Schedule conflict',
-      rescheduledBy: 'coach',
     );
 
     expect(cubit.state.successMessage, 'rescheduled');
-    expect(fakeRemote.currentBooking?.status, 'reschedule_pending');
+    expect(store.booking('b_2').status, 'reschedule_pending');
+    expect(store.booking('b_2').rescheduledBy, 'coach');
   });
 
   test('acceptReschedule confirms proposed time', () async {
-    final rescheduleBooking = sampleBooking.copyWith(
+    final proposed = singleBooking.copyWith(
       status: 'reschedule_pending',
-      proposedDate: '2026-11-05',
+      rescheduledBy: 'trainee',
+      proposedDate: '2030-11-05',
       proposedStartTime: '14:00',
       proposedEndTime: '15:00',
     );
-    cubit.init(rescheduleBooking);
+    store.put(proposed);
+    cubit.init(proposed);
     await cubit.acceptReschedule();
 
     expect(cubit.state.successMessage, 'reschedule_accepted');
-    expect(fakeRemote.currentBooking?.status, 'confirmed');
+    expect(store.booking('b_2').status, 'confirmed');
+    expect(store.booking('b_2').date, '2030-11-05');
   });
 
   test('declineReschedule declines with reason', () async {
-    final rescheduleBooking = sampleBooking.copyWith(
+    final proposed = singleBooking.copyWith(
       status: 'reschedule_pending',
+      rescheduledBy: 'coach',
+      proposedDate: '2030-11-05',
+      proposedStartTime: '14:00',
     );
-    cubit.init(rescheduleBooking);
+    actingUid = 'trainee_1';
+    store.put(proposed);
+    cubit.init(proposed);
     await cubit.declineReschedule(reason: 'Cannot attend');
 
     expect(cubit.state.successMessage, 'reschedule_declined');
+    expect(store.booking('b_2').status, 'confirmed');
+  });
+
+  test('completeBooking marks a past single session completed', () async {
+    final past = singleBooking.copyWith(date: '2020-01-01');
+    store.put(past);
+    cubit.init(past);
+    await cubit.completeBooking();
+
+    expect(cubit.state.successMessage, 'booking_completed');
+    expect(store.booking('b_2').status, 'completed');
   });
 }
-

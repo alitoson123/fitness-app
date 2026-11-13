@@ -148,6 +148,56 @@ service cloud.firestore {
           priceMatchesCoach(b, coach);
       }
 
+      function myRole() {
+        return isCoachOfBooking() ? 'coach' : 'trainee';
+      }
+
+      function changed(key) {
+        return request.resource.data.diff(resource.data).affectedKeys().hasAny([key]);
+      }
+
+      // Status the booking had before the current reschedule. Bookings from
+      // before this field existed were always 'confirmed'.
+      function prevStatus() {
+        return resource.data.get('statusBeforeReschedule', 'confirmed') == 'pending'
+          ? 'pending' : 'confirmed';
+      }
+
+      function entersReschedule() {
+        return resource.data.status != 'reschedule_pending' &&
+          request.resource.data.status == 'reschedule_pending';
+      }
+
+      // Starting a reschedule records the earlier status and (for single
+      // sessions) the REAL proposer; neither can be edited afterwards, so a
+      // trainee can't pose as the coach and approve their own request.
+      function rescheduleMetaValid() {
+        let d = request.resource.data;
+        return entersReschedule()
+          ? d.get('statusBeforeReschedule', '') == resource.data.status &&
+            (d.bookingType == 'monthly' || d.get('rescheduledBy', '') == myRole())
+          : !changed('statusBeforeReschedule') &&
+            (!changed('rescheduledBy') || d.get('rescheduledBy', null) == null);
+      }
+
+      function movesToProposal() {
+        let d = request.resource.data;
+        return d.date == resource.data.get('proposedDate', null) &&
+          d.startTime == resource.data.get('proposedStartTime', null);
+      }
+
+      // The booked time only moves by accepting the pending proposal.
+      function timeChangeValid() {
+        let d = request.resource.data;
+        return !(changed('date') || changed('startTime') || changed('endTime')) || (
+          resource.data.status == 'reschedule_pending' &&
+          d.status == 'confirmed' &&
+          d.date == resource.data.get('proposedDate', null) &&
+          d.startTime == resource.data.get('proposedStartTime', null) &&
+          d.endTime == resource.data.get('proposedEndTime', resource.data.endTime)
+        );
+      }
+
       function isValidStatusChange() {
         let before = resource.data.status;
         let after = request.resource.data.status;
@@ -156,13 +206,24 @@ service cloud.firestore {
             (isCoachOfBooking() && (
               before == 'pending' ||
               (before == 'reschedule_pending' && proposer() != 'coach'))) ||
-            (isTraineeOfBooking() &&
-              before == 'reschedule_pending' && proposer() != 'trainee'))) ||
+            // Trainee: accept the coach's proposal (moves to the new time),
+            // or decline it on an already-approved booking. Declining the
+            // coach's counter-offer to a request never approved returns it
+            // to 'pending' instead (below).
+            (isTraineeOfBooking() && before == 'reschedule_pending' && (
+              (resource.data.bookingType != 'monthly' && proposer() == 'coach' &&
+                (prevStatus() == 'confirmed' || movesToProposal())) ||
+              (resource.data.bookingType == 'monthly' && prevStatus() == 'confirmed'))))) ||
+          // A declined/answered reschedule of a never-approved request goes
+          // back to 'pending' (it must not become 'confirmed').
+          (after == 'pending' && before == 'reschedule_pending' &&
+            prevStatus() == 'pending') ||
           (after == 'reschedule_pending' && before in ['pending', 'confirmed']) ||
           (after == 'rejected' && isCoachOfBooking() &&
             before in ['pending', 'reschedule_pending']) ||
-          (after == 'completed' && isCoachOfBooking() &&
-            before in ['confirmed', 'reschedule_pending']) ||
+          (after == 'completed' && isCoachOfBooking() && (
+            before == 'confirmed' ||
+            (before == 'reschedule_pending' && prevStatus() == 'confirmed'))) ||
           (after == 'cancelled' && isTraineeOfBooking() &&
             before in ['pending', 'confirmed', 'reschedule_pending']);
       }
@@ -182,7 +243,9 @@ service cloud.firestore {
         isActive() &&
         !(resource.data.status in ['rejected', 'cancelled', 'completed']) &&
         !request.resource.data.diff(resource.data).affectedKeys().hasAny(lockedKeys()) &&
-        isValidStatusChange()
+        isValidStatusChange() &&
+        rescheduleMetaValid() &&
+        timeChangeValid()
       );
       allow delete: if isAdmin();
     }

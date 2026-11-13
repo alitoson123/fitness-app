@@ -268,10 +268,20 @@ class MessageLookup extends MessageLookupByLibrary {
             "Bio must be at least 30 characters"),
         "bookNewSession":
             MessageLookupByLibrary.simpleMessage("Book New Session"),
+        "bookingActionNotAllowed": MessageLookupByLibrary.simpleMessage(
+            "This action isn\'t available for this booking anymore. It may have just been changed."),
+        "bookingAlreadyStarted": MessageLookupByLibrary.simpleMessage(
+            "This booking has already started, so it can\'t be cancelled."),
+        "bookingCancelledSuccess":
+            MessageLookupByLibrary.simpleMessage("Booking cancelled"),
         "bookingDetailsTitle":
             MessageLookupByLibrary.simpleMessage("Booking Details"),
         "bookingFeatureComingSoon": MessageLookupByLibrary.simpleMessage(
             "Booking request flow opens next!"),
+        "bookingMarkedCompleted":
+            MessageLookupByLibrary.simpleMessage("Session marked as completed"),
+        "bookingNotFoundMessage": MessageLookupByLibrary.simpleMessage(
+            "This booking no longer exists."),
         "bookingNotesPlaceholder": MessageLookupByLibrary.simpleMessage(
             "Describe your fitness goals, past injuries, or requests..."),
         "bookingOverview":
@@ -288,6 +298,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "callClient": MessageLookupByLibrary.simpleMessage("Call"),
         "camera": MessageLookupByLibrary.simpleMessage("Camera"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "cancelBookingAction":
+            MessageLookupByLibrary.simpleMessage("Cancel booking"),
+        "cancelBookingMessage": MessageLookupByLibrary.simpleMessage(
+            "Your coach will be notified and the time will be freed for others. This can\'t be undone."),
+        "cancelBookingReasonHint":
+            MessageLookupByLibrary.simpleMessage("Reason (optional)"),
+        "cancelBookingTitle":
+            MessageLookupByLibrary.simpleMessage("Cancel this booking?"),
         "cancellationReasonTitle":
             MessageLookupByLibrary.simpleMessage("Cancellation Reason"),
         "cancelledAccountDeletedReason": MessageLookupByLibrary.simpleMessage(
@@ -644,6 +662,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Please enter a valid 6-digit code"),
         "invalidPhoneFormat": MessageLookupByLibrary.simpleMessage(
             "Please enter a valid phone number for the selected country"),
+        "keepBooking": MessageLookupByLibrary.simpleMessage("Keep booking"),
         "langArabic": MessageLookupByLibrary.simpleMessage("Arabic"),
         "langEnglish": MessageLookupByLibrary.simpleMessage("English"),
         "langFrench": MessageLookupByLibrary.simpleMessage("French"),
@@ -1051,6 +1070,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "sessionHistory":
             MessageLookupByLibrary.simpleMessage("Session History"),
         "sessionIndex": m39,
+        "sessionNotStartedYet": MessageLookupByLibrary.simpleMessage(
+            "You can mark it as completed once the session time has started."),
         "sessionNumberLabel": m40,
         "sessionPassed": MessageLookupByLibrary.simpleMessage("Passed"),
         "sessionPriceChip": m41,

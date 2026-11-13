@@ -114,17 +114,24 @@ class TraineeBookingsCubit extends Cubit<TraineeBookingsState> {
 
   Future<void> declineMonthlySessionReschedule(
     String bookingId,
-    String sessionId, {
-    String? reason,
-  }) =>
+    String sessionId,
+  ) =>
       _runAction(
         bookingId,
         () => repository.declineMonthlySessionReschedule(
           bookingId: bookingId,
           sessionId: sessionId,
-          declineReason: reason,
         ),
         'reschedule_rejected',
+      );
+
+  Future<void> cancelBooking(String bookingId, {String? reason}) => _runAction(
+        bookingId,
+        () => repository.cancelBooking(
+          bookingId: bookingId,
+          cancellationReason: reason,
+        ),
+        'booking_cancelled',
       );
 
   void clearMessages() => emit(state.copyWith(clearMessages: true));

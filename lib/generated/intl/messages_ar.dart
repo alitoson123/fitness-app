@@ -268,10 +268,20 @@ class MessageLookup extends MessageLookupByLibrary {
             "يجب أن تكون النبذة 30 حرفاً على الأقل"),
         "bookNewSession":
             MessageLookupByLibrary.simpleMessage("حجز جلسة جديدة"),
+        "bookingActionNotAllowed": MessageLookupByLibrary.simpleMessage(
+            "هذا الإجراء لم يعد متاحًا لهذا الحجز. ربما تم تغييره للتو."),
+        "bookingAlreadyStarted": MessageLookupByLibrary.simpleMessage(
+            "بدأ هذا الحجز بالفعل، لذا لا يمكن إلغاؤه."),
+        "bookingCancelledSuccess":
+            MessageLookupByLibrary.simpleMessage("تم إلغاء الحجز"),
         "bookingDetailsTitle":
             MessageLookupByLibrary.simpleMessage("تفاصيل الحجز"),
         "bookingFeatureComingSoon": MessageLookupByLibrary.simpleMessage(
             "سيتم فتح طلب الحجز في الخطوة التالية!"),
+        "bookingMarkedCompleted":
+            MessageLookupByLibrary.simpleMessage("تم تحديد الجلسة كمكتملة"),
+        "bookingNotFoundMessage":
+            MessageLookupByLibrary.simpleMessage("هذا الحجز لم يعد موجودًا."),
         "bookingNotesPlaceholder": MessageLookupByLibrary.simpleMessage(
             "اذكر أهدافك التدريبية أو أي إصابات سابقة أو متطلبات..."),
         "bookingOverview":
@@ -287,6 +297,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "callClient": MessageLookupByLibrary.simpleMessage("اتصال"),
         "camera": MessageLookupByLibrary.simpleMessage("الكاميرا"),
         "cancel": MessageLookupByLibrary.simpleMessage("إلغاء"),
+        "cancelBookingAction":
+            MessageLookupByLibrary.simpleMessage("إلغاء الحجز"),
+        "cancelBookingMessage": MessageLookupByLibrary.simpleMessage(
+            "سيتم إشعار المدرب وسيصبح الموعد متاحًا للآخرين. لا يمكن التراجع عن ذلك."),
+        "cancelBookingReasonHint":
+            MessageLookupByLibrary.simpleMessage("السبب (اختياري)"),
+        "cancelBookingTitle":
+            MessageLookupByLibrary.simpleMessage("إلغاء هذا الحجز؟"),
         "cancellationReasonTitle":
             MessageLookupByLibrary.simpleMessage("سبب الإلغاء"),
         "cancelledAccountDeletedReason": MessageLookupByLibrary.simpleMessage(
@@ -647,6 +665,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "يرجى إدخال رمز مكون من 6 أرقام صحيح"),
         "invalidPhoneFormat": MessageLookupByLibrary.simpleMessage(
             "يرجى إدخال رقم هاتف صحيح للدولة المحددة"),
+        "keepBooking":
+            MessageLookupByLibrary.simpleMessage("الإبقاء على الحجز"),
         "langArabic": MessageLookupByLibrary.simpleMessage("العربية"),
         "langEnglish": MessageLookupByLibrary.simpleMessage("الإنجليزية"),
         "langFrench": MessageLookupByLibrary.simpleMessage("الفرنسية"),
@@ -1049,6 +1069,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "sessionDuration": MessageLookupByLibrary.simpleMessage("مدة الجلسة"),
         "sessionHistory": MessageLookupByLibrary.simpleMessage("سجل الجلسات"),
         "sessionIndex": m39,
+        "sessionNotStartedYet": MessageLookupByLibrary.simpleMessage(
+            "يمكنك تحديدها كمكتملة بعد بدء وقت الجلسة."),
         "sessionNumberLabel": m40,
         "sessionPassed": MessageLookupByLibrary.simpleMessage("انتهت"),
         "sessionPriceChip": m41,

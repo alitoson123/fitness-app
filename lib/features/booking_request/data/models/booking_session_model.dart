@@ -30,6 +30,26 @@ class BookingSessionModel {
   bool get canReschedule => !isCompleted && status != 'cancelled';
   int get sessionNumber => int.tryParse(id) ?? 1;
 
+  /// Start of this session in the device's local time.
+  DateTime? get startDateTime => parseStart(date, startTime);
+
+  /// Parses `YYYY-MM-DD` + `HH:mm` as local time; null when malformed.
+  static DateTime? parseStart(String date, String startTime) {
+    final d = DateTime.tryParse(date.trim());
+    if (d == null) return null;
+    final parts = startTime.trim().split(':');
+    final h = parts.isNotEmpty ? int.tryParse(parts[0]) : null;
+    final m = parts.length > 1 ? int.tryParse(parts[1]) : 0;
+    if (h == null || m == null) return DateTime(d.year, d.month, d.day);
+    return DateTime(d.year, d.month, d.day, h, m);
+  }
+
+  /// The session time has started (or passed), so it can be marked done.
+  bool hasStarted(DateTime now) {
+    final start = startDateTime;
+    return start != null && !start.isAfter(now);
+  }
+
   BookingSessionModel proposeReschedule({
     required String newDate,
     required String newStartTime,
