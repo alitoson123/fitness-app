@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:dartz/dartz.dart';
+import '../../../../core/errors/app_error_messages.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/services/auth_service/auth_service.dart';
 import '../../../../core/services/logger_service/logger_service.dart';
+import '../../../../generated/l10n.dart';
 import '../../../auth/core/data/data_source/auth_local_data_source.dart';
 import '../../../booking_request/data/models/booking_model.dart';
 import '../../../trainee_setup/data/data_source/trainee_setup_local_data_source.dart';
@@ -27,18 +29,16 @@ class TraineeProfileRepo {
         (await authLocalDataSource.getUser())?.uid;
   }
 
-  Future<Either<Failure, TraineeProfileModel>> getTraineeProfile({
-    bool forceRefresh = false,
-  }) async {
+  /// The server copy first; this user's copy on the phone only when the
+  /// server can't be reached.
+  Future<Either<Failure, TraineeProfileModel>> getTraineeProfile() async {
+    String? uid;
     try {
-      final uid = await _resolveUid();
+      uid = await _resolveUid();
       if (uid == null) {
-        return Left(ServerFailure(errorMessage: 'Authentication required.'));
-      }
-
-      if (!forceRefresh) {
-        final cached = await localDataSource.getCachedProfile();
-        if (cached != null) return Right(cached);
+        return Left(
+          ServerFailure(errorMessage: S.current.sessionNotFoundMessage),
+        );
       }
 
       final profile = await remoteDataSource.getTraineeProfile(uid);
@@ -46,7 +46,7 @@ class TraineeProfileRepo {
         await localDataSource.saveCachedProfile(profile);
         return Right(profile);
       }
-      return Left(ServerFailure(errorMessage: 'Trainee profile not found.'));
+      return Left(ServerFailure(errorMessage: S.current.loadProfileError));
     } catch (e, st) {
       LoggerService.error(
         'Error getting trainee profile: $e',
@@ -54,7 +54,19 @@ class TraineeProfileRepo {
         error: e,
         stackTrace: st,
       );
-      return Left(ServerFailure(errorMessage: e.toString()));
+      final cached = await _cachedProfileFor(uid);
+      if (cached != null) return Right(cached);
+      return Left(ServerFailure(errorMessage: AppErrorMessages.from(e)));
+    }
+  }
+
+  Future<TraineeProfileModel?> _cachedProfileFor(String? uid) async {
+    if (uid == null) return null;
+    try {
+      final cached = await localDataSource.getCachedProfile();
+      return cached?.uid == uid ? cached : null;
+    } catch (_) {
+      return null;
     }
   }
 
@@ -88,7 +100,7 @@ class TraineeProfileRepo {
         error: e,
         stackTrace: st,
       );
-      return Left(ServerFailure(errorMessage: e.toString()));
+      return Left(ServerFailure(errorMessage: AppErrorMessages.from(e)));
     }
   }
 
@@ -109,7 +121,7 @@ class TraineeProfileRepo {
         error: e,
         stackTrace: st,
       );
-      return Left(ServerFailure(errorMessage: e.toString()));
+      return Left(ServerFailure(errorMessage: AppErrorMessages.from(e)));
     }
   }
 
@@ -117,7 +129,9 @@ class TraineeProfileRepo {
     try {
       final uid = await _resolveUid();
       if (uid == null) {
-        return Left(ServerFailure(errorMessage: 'Authentication required.'));
+        return Left(
+          ServerFailure(errorMessage: S.current.sessionNotFoundMessage),
+        );
       }
       final bookings = await remoteDataSource.getTraineeBookings(uid);
       return Right(bookings);
@@ -128,7 +142,7 @@ class TraineeProfileRepo {
         error: e,
         stackTrace: st,
       );
-      return Left(ServerFailure(errorMessage: e.toString()));
+      return Left(ServerFailure(errorMessage: AppErrorMessages.from(e)));
     }
   }
 }

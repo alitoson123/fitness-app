@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/helpers/message.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../coach_setup/data/models/coach_profile_model.dart';
+import '../../../coach_setup/presentation/helpers/coach_setup_localization_helper.dart';
+import '../../../coach_setup/presentation/view_model/coach_setup_cubit/coach_setup_validator.dart';
 import '../../../coach_setup/data/models/sport_location_model.dart';
 import '../view_model/coach_profile_cubit/coach_profile_cubit.dart';
 import 'edit_profile_form_body.dart';
@@ -80,6 +83,19 @@ class _EditCoachProfileSheetState extends State<EditCoachProfileSheet> {
 
   void _submit() {
     if (!(_formKey.currentState?.validate() ?? false)) return;
+    // Every sport must be bookable (same rule as setup).
+    final sportsError =
+        CoachSetupValidator.sportsError(_selectedSports, _sportLocations);
+    if (sportsError != null) {
+      Message.showError(
+        context,
+        CoachSetupLocalizationHelper.getLocalizedValidationError(
+          context,
+          sportsError,
+        ),
+      );
+      return;
+    }
 
     final specs = _specialtiesController.text
         .split(',')

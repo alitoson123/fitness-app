@@ -7749,6 +7749,216 @@ class S {
       args: [],
     );
   }
+
+  /// `Couldn't load the available times.`
+  String get slotsLoadFailed {
+    return Intl.message(
+      'Couldn\'t load the available times.',
+      name: 'slotsLoadFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sorry, this time was just booked by someone else. Please pick another time.`
+  String get bookingSlotTaken {
+    return Intl.message(
+      'Sorry, this time was just booked by someone else. Please pick another time.',
+      name: 'bookingSlotTaken',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sorry, your session on {date} at {time} was just booked by someone else. Please pick another time for it.`
+  String bookingSlotTakenMonthly(Object date, Object time) {
+    return Intl.message(
+      'Sorry, your session on $date at $time was just booked by someone else. Please pick another time for it.',
+      name: 'bookingSlotTakenMonthly',
+      desc: '',
+      args: [date, time],
+    );
+  }
+
+  /// `This time is outside the coach's working hours. Please pick another time.`
+  String get bookingOutsideHours {
+    return Intl.message(
+      'This time is outside the coach\'s working hours. Please pick another time.',
+      name: 'bookingOutsideHours',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This time has already passed. Please pick another time.`
+  String get bookingTimeInPast {
+    return Intl.message(
+      'This time has already passed. Please pick another time.',
+      name: 'bookingTimeInPast',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You can only book up to a month ahead.`
+  String get bookingTooFarAhead {
+    return Intl.message(
+      'You can only book up to a month ahead.',
+      name: 'bookingTooFarAhead',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You already have {count} requests waiting for this coach. Wait for an answer, or cancel one first.`
+  String bookingTooManyRequests(Object count) {
+    return Intl.message(
+      'You already have $count requests waiting for this coach. Wait for an answer, or cancel one first.',
+      name: 'bookingTooManyRequests',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `This coach isn't taking bookings right now.`
+  String get bookingCoachUnavailable {
+    return Intl.message(
+      'This coach isn\'t taking bookings right now.',
+      name: 'bookingCoachUnavailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Only trainee accounts can book sessions.`
+  String get bookingNotAllowedForAccount {
+    return Intl.message(
+      'Only trainee accounts can book sessions.',
+      name: 'bookingNotAllowedForAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This coach doesn't offer monthly packages.`
+  String get bookingMonthlyNotOffered {
+    return Intl.message(
+      'This coach doesn\'t offer monthly packages.',
+      name: 'bookingMonthlyNotOffered',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This coach no longer offers this sport.`
+  String get bookingSportNotOffered {
+    return Intl.message(
+      'This coach no longer offers this sport.',
+      name: 'bookingSportNotOffered',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This coach no longer trains at this place. Please choose another option.`
+  String get bookingLocationNotOffered {
+    return Intl.message(
+      'This coach no longer trains at this place. Please choose another option.',
+      name: 'bookingLocationNotOffered',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Something in this request isn't valid. Please check it and try again.`
+  String get bookingInvalidRequest {
+    return Intl.message(
+      'Something in this request isn\'t valid. Please check it and try again.',
+      name: 'bookingInvalidRequest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Not offered`
+  String get notOffered {
+    return Intl.message(
+      'Not offered',
+      name: 'notOffered',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Expired`
+  String get statusExpired {
+    return Intl.message(
+      'Expired',
+      name: 'statusExpired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This request expired: its time passed before the coach answered.`
+  String get requestExpiredMessage {
+    return Intl.message(
+      'This request expired: its time passed before the coach answered.',
+      name: 'requestExpiredMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please check your hours: each working day must end after it starts, with room for at least one session.`
+  String get validationAvailabilityHours {
+    return Intl.message(
+      'Please check your hours: each working day must end after it starts, with room for at least one session.',
+      name: 'validationAvailabilityHours',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We couldn't find your coach application.`
+  String get applicationNotFoundMessage {
+    return Intl.message(
+      'We couldn\'t find your coach application.',
+      name: 'applicationNotFoundMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your application needs some changes. Please review it and submit again.`
+  String get rejectionReasonFallback {
+    return Intl.message(
+      'Your application needs some changes. Please review it and submit again.',
+      name: 'rejectionReasonFallback',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This coach is no longer available.`
+  String get coachNoLongerAvailable {
+    return Intl.message(
+      'This coach is no longer available.',
+      name: 'coachNoLongerAvailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your session has ended. Please sign in again.`
+  String get sessionNotFoundMessage {
+    return Intl.message(
+      'Your session has ended. Please sign in again.',
+      name: 'sessionNotFoundMessage',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

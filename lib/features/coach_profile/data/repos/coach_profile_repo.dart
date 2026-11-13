@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dartz/dartz.dart';
+import '../../../../core/errors/app_error_messages.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/services/auth_service/auth_service.dart';
 import '../../../../core/services/logger_service/logger_service.dart';
@@ -26,30 +27,26 @@ class CoachProfileRepo {
         (await authLocalDataSource.getUser())?.uid;
   }
 
-  Future<Either<Failure, CoachProfileModel>> getCoachProfile({
-    bool forceRefresh = false,
-  }) async {
+  /// The server copy first (it may have been changed on another phone or
+  /// by an admin); the copy saved on this phone only when offline.
+  Future<Either<Failure, CoachProfileModel>> getCoachProfile() async {
+    final uid = await _resolveUid();
+    if (uid == null) {
+      return Left(ServerFailure(errorMessage: AppErrorMessages.unexpected));
+    }
     try {
-      final uid = await _resolveUid();
-      if (uid == null) {
-        return Left(ServerFailure(errorMessage: 'Authentication required.'));
-      }
-
-      if (!forceRefresh) {
-        final cached = await localDataSource.getCachedProfile();
-        if (cached != null) return Right(cached);
-      }
-
       final profile = await remoteDataSource.getCoachProfile(uid);
       if (profile != null) {
         await localDataSource.saveCachedProfile(profile);
         return Right(profile);
       }
-      return Left(ServerFailure(errorMessage: 'Coach profile not found.'));
+      return Left(ServerFailure(errorMessage: AppErrorMessages.unexpected));
     } catch (e, st) {
       LoggerService.error('Error getting coach profile: $e',
           tag: 'CoachProfileRepo', error: e, stackTrace: st);
-      return Left(ServerFailure(errorMessage: e.toString()));
+      final cached = await localDataSource.getCachedProfile();
+      if (cached != null && cached.uid == uid) return Right(cached);
+      return Left(ServerFailure(errorMessage: AppErrorMessages.from(e)));
     }
   }
 
@@ -79,7 +76,7 @@ class CoachProfileRepo {
     } catch (e, st) {
       LoggerService.error('Error updating coach profile: $e',
           tag: 'CoachProfileRepo', error: e, stackTrace: st);
-      return Left(ServerFailure(errorMessage: e.toString()));
+      return Left(ServerFailure(errorMessage: AppErrorMessages.from(e)));
     }
   }
 
@@ -106,7 +103,7 @@ class CoachProfileRepo {
     } catch (e, st) {
       LoggerService.error('Error updating pricing: $e',
           tag: 'CoachProfileRepo', error: e, stackTrace: st);
-      return Left(ServerFailure(errorMessage: e.toString()));
+      return Left(ServerFailure(errorMessage: AppErrorMessages.from(e)));
     }
   }
 
@@ -123,7 +120,7 @@ class CoachProfileRepo {
     } catch (e, st) {
       LoggerService.error('Error uploading avatar: $e',
           tag: 'CoachProfileRepo', error: e, stackTrace: st);
-      return Left(ServerFailure(errorMessage: e.toString()));
+      return Left(ServerFailure(errorMessage: AppErrorMessages.from(e)));
     }
   }
 }

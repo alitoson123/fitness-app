@@ -74,9 +74,7 @@ class _TraineeProfileContent extends StatelessWidget {
           return RefreshIndicator(
             onRefresh: () async {
               await Future.wait([
-                context
-                    .read<TraineeProfileCubit>()
-                    .loadProfile(forceRefresh: true),
+                context.read<TraineeProfileCubit>().loadProfile(),
                 context
                     .read<TrainingInsightsCubit>()
                     .loadInsights(),
@@ -121,9 +119,8 @@ class _TraineeProfileContent extends StatelessWidget {
           AppButton(
             label: s.tryAgain,
             size: AppButtonSize.sm,
-            onPressed: () => context
-                .read<TraineeProfileCubit>()
-                .loadProfile(forceRefresh: true),
+            onPressed: () =>
+                context.read<TraineeProfileCubit>().loadProfile(),
           ),
         ],
       ),

@@ -30,6 +30,9 @@ class CoachProfileRemoteDataSource {
     return null;
   }
 
+  /// Writes only what Edit Profile and the photo change can edit. Hours,
+  /// session length and admin fields are left alone, so saving a name can't
+  /// put back old values from an out-of-date copy.
   Future<void> updateCoachProfile(CoachProfileModel profile) async {
     LoggerService.info(
       'Updating coach profile in Firestore for ${profile.uid}',
@@ -38,7 +41,18 @@ class CoachProfileRemoteDataSource {
     await firestoreService.setData(
       collection: AppConstants.coachProfilesCollection,
       docId: profile.uid,
-      data: profile.toFirestoreMap(),
+      data: {
+        'name': profile.name,
+        'photoUrl': profile.photoUrl,
+        'bio': profile.bio,
+        'yearsOfExperience': profile.yearsOfExperience,
+        'specialties': profile.specialties,
+        'sports': profile.sports,
+        'sportLocations': profile.sportLocations.map((e) => e.toMap()).toList(),
+        'sessionPriceUSD': profile.sessionPriceUSD,
+        'monthlyPriceUSD': profile.monthlyPriceUSD,
+        'updatedAt': DateTime.now().toIso8601String(),
+      },
       merge: true,
     );
   }

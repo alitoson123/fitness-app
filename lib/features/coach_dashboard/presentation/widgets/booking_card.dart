@@ -48,12 +48,18 @@ class BookingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = S.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final isPending = booking.status == 'pending';
-    final isHistory = booking.status == 'completed' ||
+    // A request the coach never answered before its time is just history.
+    final isExpired = BookingTransitions.isExpired(booking, DateTime.now());
+    final isPending = booking.status == 'pending' && !isExpired;
+    final isHistory =
+        isExpired ||
+        booking.status == 'completed' ||
         booking.status == 'rejected' ||
         booking.status == 'cancelled';
-    final dateFormatted =
-        CoachBookingDateHelper.formatHumanDate(context, booking.date);
+    final dateFormatted = CoachBookingDateHelper.formatHumanDate(
+      context,
+      booking.date,
+    );
 
     return Opacity(
       opacity: isHistory ? 0.90 : 1.0,
@@ -98,7 +104,9 @@ class BookingCard extends StatelessWidget {
                       isDark: isDark,
                     ),
                   ],
-                  if (booking.isReschedulePending && !booking.isMonthly) ...[
+                  if (booking.isReschedulePending &&
+                      !booking.isMonthly &&
+                      !isExpired) ...[
                     SizedBox(height: 10.h),
                     if (booking.rescheduledBy == AppConstants.roleTrainee &&
                         onAcceptReschedule != null &&

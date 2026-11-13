@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import '../../../../core/errors/app_error_messages.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/models/day_availability.dart';
 import '../../../../core/services/logger_service/logger_service.dart';
@@ -36,11 +37,7 @@ class CoachAvailabilityRepo {
         return Right(cached);
       }
 
-      return Left(
-        ServerFailure(
-          errorMessage: 'Coach profile not found for ID: $coachUid',
-        ),
-      );
+      return Left(ServerFailure(errorMessage: AppErrorMessages.unexpected));
     } catch (e, stackTrace) {
       LoggerService.error(
         'Failed to fetch coach profile: $e',
@@ -48,7 +45,7 @@ class CoachAvailabilityRepo {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure(errorMessage: e.toString()));
+      return Left(ServerFailure(errorMessage: AppErrorMessages.from(e)));
     }
   }
 
@@ -105,7 +102,7 @@ class CoachAvailabilityRepo {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure(errorMessage: e.toString()));
+      return Left(ServerFailure(errorMessage: AppErrorMessages.from(e)));
     }
   }
 }

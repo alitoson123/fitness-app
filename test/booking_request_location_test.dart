@@ -1,3 +1,4 @@
+import 'package:fitness_app/features/booking_request/data/models/busy_range.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app/core/errors/failure.dart';
@@ -25,9 +26,10 @@ class _FakeRepo implements BookingRequestRepo {
   @override
   AuthService get authService => _FakeAuth();
   @override
-  Future<Either<Failure, List<String>>> getBookedSlots({
+  Future<Either<Failure, List<BusyRange>>> getBusyRanges({
     required String coachUid,
     required String date,
+    int sessionDurationMinutes = 60,
   }) async => const Right([]);
   @override
   Future<TraineeProfileModel?> getCurrentTrainee() async =>

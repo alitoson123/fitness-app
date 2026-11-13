@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import '../../../../core/errors/app_error_messages.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/services/logger_service/logger_service.dart';
 import '../../../coach_setup/data/models/coach_profile_model.dart';
@@ -20,7 +21,7 @@ class DiscoveryRepo {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure(errorMessage: e.toString()));
+      return Left(ServerFailure(errorMessage: AppErrorMessages.from(e)));
     }
   }
 }

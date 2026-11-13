@@ -1,3 +1,4 @@
+import 'package:fitness_app/features/booking_request/data/repos/booking_actions/booking_transitions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,11 +21,17 @@ class BookingCardHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final shownStatus = BookingTransitions.displayStatus(
+      booking,
+      DateTime.now(),
+    );
     final s = S.of(context);
-    final textSecondary =
-        isDark ? AppColors.darkTextSecondary : AppColors.textSecondary;
-    final badgeBg =
-        isDark ? AppColors.darkBackground : AppColors.backgroundSecondary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.textSecondary;
+    final badgeBg = isDark
+        ? AppColors.darkBackground
+        : AppColors.backgroundSecondary;
 
     return Row(
       children: [
@@ -109,14 +116,14 @@ class BookingCardHeader extends StatelessWidget {
                 color: isDark ? Colors.white : AppColors.textPrimary,
               ),
             ),
-            if (booking.status != 'pending') ...[
+            if (shownStatus != 'pending') ...[
               SizedBox(height: 4.h),
               BookingStatusBadge(
-                status: booking.status,
-                customLabel: booking.isReschedulePending
+                status: shownStatus,
+                customLabel: shownStatus == 'reschedule_pending'
                     ? (booking.rescheduledBy == AppConstants.roleTrainee
-                        ? s.rescheduleRequestedBadge
-                        : s.reschedulePendingBadge)
+                          ? s.rescheduleRequestedBadge
+                          : s.reschedulePendingBadge)
                     : null,
               ),
             ],

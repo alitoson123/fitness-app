@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:fitness_app/core/errors/app_error_messages.dart';
 import 'package:fitness_app/features/auth/core/domain/repo/auth_session_repo.dart';
+import 'package:fitness_app/generated/l10n.dart';
 import 'package:fitness_app/features/coach_setup/data/models/coach_application_model.dart';
 import 'package:fitness_app/features/coach_setup/domain/repo/coach_setup_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,7 +27,9 @@ class CoachVerificationStatusCubit
       },
       onError: (error) {
         emit(
-          CoachVerificationStatusErrorState(errorMessage: error.toString()),
+          CoachVerificationStatusErrorState(
+            errorMessage: AppErrorMessages.from(error as Object),
+          ),
         );
       },
     );
@@ -50,8 +54,8 @@ class CoachVerificationStatusCubit
   ) async {
     if (application == null) {
       emit(
-        const CoachVerificationStatusErrorState(
-          errorMessage: 'No active application found.',
+        CoachVerificationStatusErrorState(
+          errorMessage: S.current.applicationNotFoundMessage,
         ),
       );
       return;
@@ -74,7 +78,7 @@ class CoachVerificationStatusCubit
           profile: profile,
           rejectionReason:
               application.rejectionReason ??
-              'Application requires review adjustments.',
+              S.current.rejectionReasonFallback,
         ),
       );
     } else {

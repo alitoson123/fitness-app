@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../core/constant/app_constants.dart';
 import '../../../../core/services/database_service/firestore_service.dart';
 import '../../../../core/services/logger_service/logger_service.dart';
@@ -30,6 +31,8 @@ class TraineeProfileRemoteDataSource {
     return null;
   }
 
+  /// Writes only what the trainee edits (form fields and photo), so an older
+  /// copy on this phone can't overwrite anything else.
   Future<void> updateTraineeProfile(TraineeProfileModel profile) async {
     LoggerService.info(
       'Updating trainee profile in Firestore for ${profile.uid}',
@@ -38,7 +41,19 @@ class TraineeProfileRemoteDataSource {
     await firestoreService.setData(
       collection: AppConstants.traineeProfilesCollection,
       docId: profile.uid,
-      data: profile.toMap(),
+      data: {
+        'name': profile.name,
+        'country': profile.country,
+        'city': profile.city,
+        'age': profile.age,
+        'gender': profile.gender,
+        'sports': profile.sports,
+        'level': profile.level,
+        'goal': profile.goal,
+        if (profile.photoUrl != null && profile.photoUrl!.isNotEmpty)
+          'photoUrl': profile.photoUrl,
+        'updatedAt': FieldValue.serverTimestamp(),
+      },
       merge: true,
     );
   }
@@ -84,4 +99,3 @@ class TraineeProfileRemoteDataSource {
         .toList();
   }
 }
-

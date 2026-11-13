@@ -9,7 +9,7 @@ class BookingTypeCard extends StatelessWidget {
   final String subtitle;
   final IconData icon;
   final bool isSelected;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const BookingTypeCard({
     super.key,
@@ -25,10 +25,12 @@ class BookingTypeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primary = isDark ? AppColors.flameRed : AppColors.primary;
-    final textPrimary =
-        isDark ? AppColors.darkTextPrimary : AppColors.textPrimary;
-    final textSecondary =
-        isDark ? AppColors.darkTextSecondary : AppColors.textSecondary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.textPrimary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.textSecondary;
 
     final bg = isSelected
         ? primary.withValues(alpha: isDark ? 0.2 : 0.08)
@@ -53,7 +55,11 @@ class BookingTypeCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(icon, size: 18.r, color: isSelected ? primary : textSecondary),
+                Icon(
+                  icon,
+                  size: 18.r,
+                  color: isSelected ? primary : textSecondary,
+                ),
                 const Spacer(),
                 if (isSelected)
                   Icon(Icons.check_circle_rounded, size: 18.r, color: primary),
@@ -97,4 +103,3 @@ class BookingTypeCard extends StatelessWidget {
     );
   }
 }
-

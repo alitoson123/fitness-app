@@ -61,6 +61,7 @@ dependencies:
   intl: ^0.20.3
   firebase_messaging: ^16.7.1
   flutter_local_notifications: 21.0.0
+  cloud_functions: ^6.5.1
 
 dependency_overrides:
   dbus: ^0.8.0

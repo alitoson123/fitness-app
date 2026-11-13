@@ -21,8 +21,10 @@ class BookingTypeSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = S.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textPrimary =
-        isDark ? AppColors.darkTextPrimary : AppColors.textPrimary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.textPrimary;
+    final offersMonthly = coach.monthlyPriceUSD > 0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,13 +52,19 @@ class BookingTypeSelector extends StatelessWidget {
             ),
             SizedBox(width: 12.w),
             Expanded(
-              child: BookingTypeCard(
-                title: s.monthlyPackageType,
-                priceText: '\$${coach.monthlyPriceUSD.toStringAsFixed(0)}',
-                subtitle: s.perMonthUnit,
-                icon: Icons.calendar_month_rounded,
-                isSelected: selectedType == 'monthly',
-                onTap: () => onTypeSelected('monthly'),
+              // A coach without a monthly price doesn't offer packages.
+              child: Opacity(
+                opacity: offersMonthly ? 1 : 0.45,
+                child: BookingTypeCard(
+                  title: s.monthlyPackageType,
+                  priceText: offersMonthly
+                      ? '\$${coach.monthlyPriceUSD.toStringAsFixed(0)}'
+                      : s.notOffered,
+                  subtitle: offersMonthly ? s.perMonthUnit : '',
+                  icon: Icons.calendar_month_rounded,
+                  isSelected: selectedType == 'monthly',
+                  onTap: offersMonthly ? () => onTypeSelected('monthly') : null,
+                ),
               ),
             ),
           ],

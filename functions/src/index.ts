@@ -7,4 +7,5 @@ if (admin.apps.length === 0) {
 export { onNotificationCreated } from './triggers/on_notification_created';
 export { onBookingWritten } from './triggers/busy_slots_sync';
 export { onAuthUserDeleted } from './triggers/on_auth_user_deleted';
+export { createBooking } from './callables/create_booking';
 

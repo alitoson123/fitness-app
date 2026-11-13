@@ -1,3 +1,4 @@
+import 'package:fitness_app/features/booking_request/data/repos/booking_actions/booking_transitions.dart';
 import 'package:fitness_app/features/booking_request/data/models/booking_model.dart';
 
 enum TraineeBookingTab { active, history }
@@ -19,22 +20,35 @@ class TraineeBookingsState {
     this.successMessage,
   });
 
+  // Requests the coach never answered before their time are "expired":
+  // they move to History.
+  static bool _expired(BookingModel b) =>
+      BookingTransitions.isExpired(b, DateTime.now());
+
   List<BookingModel> get activeBookings => allBookings
-      .where((b) =>
-          b.status == 'confirmed' ||
-          b.status == 'pending' ||
-          b.status == 'reschedule_pending')
+      .where(
+        (b) =>
+            (b.status == 'confirmed' ||
+                b.status == 'pending' ||
+                b.status == 'reschedule_pending') &&
+            !_expired(b),
+      )
       .toList();
 
   List<BookingModel> get historyBookings => allBookings
-      .where((b) =>
-          b.status == 'completed' ||
-          b.status == 'rejected' ||
-          b.status == 'cancelled')
+      .where(
+        (b) =>
+            b.status == 'completed' ||
+            b.status == 'rejected' ||
+            b.status == 'cancelled' ||
+            _expired(b),
+      )
       .toList();
 
   List<BookingModel> get currentTabBookings =>
-      selectedTab == TraineeBookingTab.active ? activeBookings : historyBookings;
+      selectedTab == TraineeBookingTab.active
+      ? activeBookings
+      : historyBookings;
 
   int get activeCount => activeBookings.length;
   int get historyCount => historyBookings.length;
@@ -57,7 +71,9 @@ class TraineeBookingsState {
           ? null
           : (actionInProgressBookingId ?? this.actionInProgressBookingId),
       errorMessage: clearMessages ? null : (errorMessage ?? this.errorMessage),
-      successMessage: clearMessages ? null : (successMessage ?? this.successMessage),
+      successMessage: clearMessages
+          ? null
+          : (successMessage ?? this.successMessage),
     );
   }
 }

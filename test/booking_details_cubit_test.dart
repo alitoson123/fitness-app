@@ -38,7 +38,7 @@ void main() {
     traineeName: 'Ali Trainee',
     sport: 'Football',
     bookingType: 'monthly',
-    date: '2026-11-01',
+    date: '2029-12-31',
     startTime: '10:00',
     endTime: '11:00',
     price: 300.0,
@@ -47,14 +47,14 @@ void main() {
     sessions: [
       BookingSessionModel(
         id: 's_1',
-        date: '2026-11-01',
+        date: '2029-12-31',
         startTime: '10:00',
         endTime: '11:00',
         status: 'scheduled',
       ),
       BookingSessionModel(
         id: 's_2',
-        date: '2026-11-08',
+        date: '2030-02-01',
         startTime: '10:00',
         endTime: '11:00',
         status: 'scheduled',

@@ -1,5 +1,11 @@
 import { FieldValue, type Firestore } from 'firebase-admin/firestore';
-import { busySlotsMinDate, computeBusySlots } from './busy_slots';
+import {
+  busyRangesFromIntervals,
+  busySlotsFromIntervals,
+  busySlotsMinDate,
+  collectBusyIntervals,
+  type BusyInterval,
+} from './busy_slots';
 
 export const BUSY_SLOTS_COLLECTION = 'coach_busy_slots';
 
@@ -13,13 +19,21 @@ export async function rebuildCoachBusySlots(db: Firestore, coachUid: string): Pr
   const minDate = busySlotsMinDate();
   await db.runTransaction(async (tx) => {
     const snap = await tx.get(db.collection('bookings').where('coachUid', '==', coachUid));
-    const slots = computeBusySlots(snap.docs.map((d) => d.data()), minDate);
-    tx.set(db.collection(BUSY_SLOTS_COLLECTION).doc(coachUid), {
-      coachUid,
-      slots,
-      updatedAt: FieldValue.serverTimestamp(),
-    });
+    const intervals = collectBusyIntervals(snap.docs.map((d) => d.data()), minDate);
+    tx.set(db.collection(BUSY_SLOTS_COLLECTION).doc(coachUid), busySlotsDoc(coachUid, intervals));
   });
+}
+
+/** The public `coach_busy_slots/{coachUid}` document for [intervals]. */
+export function busySlotsDoc(coachUid: string, intervals: BusyInterval[]): Record<string, unknown> {
+  return {
+    coachUid,
+    // Start times only: read by older app versions.
+    slots: busySlotsFromIntervals(intervals),
+    // Start-end ranges: lets the app hide every time that overlaps.
+    ranges: busyRangesFromIntervals(intervals),
+    updatedAt: FieldValue.serverTimestamp(),
+  };
 }
 
 /** Rebuilds the busy-slot document of every coach that has bookings. */

@@ -1,4 +1,5 @@
 import 'package:fitness_app/core/models/day_availability.dart';
+import 'package:fitness_app/core/widgets/availability_selector/availability_helper.dart';
 import 'package:fitness_app/features/coach_setup/data/models/coach_application_model.dart';
 import 'package:fitness_app/features/coach_setup/data/models/coach_profile_model.dart';
 import 'package:fitness_app/features/coach_setup/data/models/sport_location_model.dart';
@@ -20,8 +21,13 @@ class CoachSetupCubit extends Cubit<CoachSetupState> {
   List<SportLocationModel> sportLocations = [];
   double sessionPriceUSD = 0.0, monthlyPriceUSD = 0.0;
   String currency = 'USD';
-  String availabilitySummary = 'Mon, Tue, Wed, Thu, Fri (05:00 PM - 09:00 PM)';
   List<DayAvailability> weeklyAvailability = DayAvailability.defaultSchedule();
+  // Matches the schedule above (it used to say "Mon-Fri" regardless).
+  String availabilitySummary = AvailabilityHelper.buildRawSummaryString(
+    DayAvailability.defaultSchedule(),
+  );
+  // Not chosen during setup, but kept when re-applying so it isn't reset.
+  int sessionDurationMinutes = 60;
   String identityDocumentUrl = '';
   List<String> certificateUrls = [];
 

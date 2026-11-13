@@ -117,33 +117,8 @@ class CoachAvailabilityCubit extends Cubit<CoachAvailabilityState> {
   AvailabilityValidationError? validateSchedule(
     List<DayAvailability> schedule,
     int durationMinutes,
-  ) {
-    final activeDays = schedule.where((d) => d.isAvailable).toList();
-    if (activeDays.isEmpty) {
-      return const AvailabilityValidationError(
-        type: AvailabilityErrorType.noActiveDays,
-      );
-    }
-
-    for (final day in activeDays) {
-      final startMin = day.fromTime.hour * 60 + day.fromTime.minute;
-      final endMin = day.toTime.hour * 60 + day.toTime.minute;
-      if (endMin <= startMin) {
-        return AvailabilityValidationError(
-          type: AvailabilityErrorType.invalidTimeRange,
-          day: day.day,
-        );
-      }
-      if ((endMin - startMin) < durationMinutes) {
-        return AvailabilityValidationError(
-          type: AvailabilityErrorType.windowTooShort,
-          day: day.day,
-          requiredDurationMinutes: durationMinutes,
-        );
-      }
-    }
-    return null;
-  }
+  ) =>
+      AvailabilityValidationError.check(schedule, durationMinutes);
 
   Future<void> saveAvailability(String coachUid) async {
     if (state is! CoachAvailabilityLoaded) return;

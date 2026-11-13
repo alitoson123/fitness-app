@@ -37,7 +37,7 @@ class FilterPriceSlider extends StatelessWidget {
               ),
             ),
             Text(
-              '${range.start.round()} - ${range.end.round()} SAR',
+              '${range.start.round()} - ${range.end.round()}${range.end >= 1000 ? '+' : ''} SAR',
               style: TextStyle(
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w600,

@@ -10,11 +10,9 @@ class TraineeProfileCubit extends Cubit<TraineeProfileState> {
   TraineeProfileCubit({required this.repository})
       : super(const TraineeProfileState());
 
-  Future<void> loadProfile({bool forceRefresh = false}) async {
+  Future<void> loadProfile() async {
     emit(state.copyWith(isLoading: true, errorMessage: null));
-    final result = await repository.getTraineeProfile(
-      forceRefresh: forceRefresh,
-    );
+    final result = await repository.getTraineeProfile();
     result.fold(
       (failure) => emit(state.copyWith(
         isLoading: false,

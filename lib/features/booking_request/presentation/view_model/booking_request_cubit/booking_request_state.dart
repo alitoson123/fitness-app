@@ -27,6 +27,10 @@ class BookingRequestState {
   final String notes;
   final String? errorMessage;
 
+  /// Loading the free times failed (shown with a Retry button, so it isn't
+  /// mistaken for "the coach is fully booked").
+  final bool slotsLoadFailed;
+
   const BookingRequestState({
     this.status = BookingRequestStatus.initial,
     this.coach,
@@ -43,9 +47,11 @@ class BookingRequestState {
     this.durationMonths = 1,
     this.notes = '',
     this.errorMessage,
+    this.slotsLoadFailed = false,
   });
 
   bool get isMonthly => bookingType == 'monthly';
+  bool get offersMonthly => (coach?.monthlyPriceUSD ?? 0) > 0;
   bool get isSession => bookingType != 'monthly';
   bool get isMonthlyComplete =>
       selectedMonthlySessions.length >= requiredMonthlySessions;
@@ -97,6 +103,7 @@ class BookingRequestState {
     int? durationMonths,
     String? notes,
     String? errorMessage,
+    bool? slotsLoadFailed,
   }) {
     return BookingRequestState(
       status: status ?? this.status,
@@ -105,8 +112,9 @@ class BookingRequestState {
       availableDates: availableDates ?? this.availableDates,
       selectedDate: selectedDate ?? this.selectedDate,
       availableSlots: availableSlots ?? this.availableSlots,
-      selectedSlot:
-          clearSelectedSlot ? null : (selectedSlot ?? this.selectedSlot),
+      selectedSlot: clearSelectedSlot
+          ? null
+          : (selectedSlot ?? this.selectedSlot),
       selectedSport: selectedSport ?? this.selectedSport,
       selectedLocation: clearSelectedLocation
           ? null
@@ -119,6 +127,7 @@ class BookingRequestState {
       durationMonths: durationMonths ?? this.durationMonths,
       notes: notes ?? this.notes,
       errorMessage: errorMessage,
+      slotsLoadFailed: slotsLoadFailed ?? this.slotsLoadFailed,
     );
   }
 }

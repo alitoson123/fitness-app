@@ -55,9 +55,11 @@ class TraineeBookingCard extends StatelessWidget {
     final s = S.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cubit = context.read<TraineeBookingsCubit>();
-    final isReschedule = booking.status == 'reschedule_pending';
-    final textSecondary =
-        isDark ? AppColors.darkTextSecondary : AppColors.textSecondary;
+    final isExpired = BookingTransitions.isExpired(booking, DateTime.now());
+    final isReschedule = booking.status == 'reschedule_pending' && !isExpired;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.textSecondary;
     final dateLabel = booking.isMonthly
         ? '${booking.date} (${s.monthlyPackageType}${booking.sessions.length > 1 ? ' • ${booking.sessions.length}' : ''})'
         : '${booking.date} (${booking.startTime} - ${booking.endTime})';
@@ -101,27 +103,27 @@ class TraineeBookingCard extends StatelessWidget {
                   ],
                 ),
                 if (booking.isMonthly)
-                  BookingCardCompactProgress(
-                    booking: booking,
-                    isDark: isDark,
-                  ),
+                  BookingCardCompactProgress(booking: booking, isDark: isDark),
                 if (booking.isMonthly &&
-                    booking.hasPendingSessionReschedule) ...[
+                    booking.hasPendingSessionReschedule &&
+                    !isExpired) ...[
                   SizedBox(height: 12.h),
                   TraineeMonthlyRescheduleAlertBox(
                     booking: booking,
                     isDark: isDark,
                     isActionInProgress: isActionInProgress,
-                    onAccept: onAcceptMonthlyReschedule ??
+                    onAccept:
+                        onAcceptMonthlyReschedule ??
                         (sid) => cubit.acceptMonthlySessionReschedule(
-                              booking.id,
-                              sid,
-                            ),
-                    onDecline: onDeclineMonthlyReschedule ??
+                          booking.id,
+                          sid,
+                        ),
+                    onDecline:
+                        onDeclineMonthlyReschedule ??
                         (sid) => cubit.declineMonthlySessionReschedule(
-                              booking.id,
-                              sid,
-                            ),
+                          booking.id,
+                          sid,
+                        ),
                   ),
                 ] else if (isReschedule && !booking.isMonthly) ...[
                   SizedBox(height: 12.h),

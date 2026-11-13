@@ -41,11 +41,11 @@ class BookingDetailsBottomActions extends StatelessWidget {
       booking: booking,
       onConfirm: (date, start, end, reason, {sessionId}) =>
           cubit.requestReschedule(
-        proposedDate: date,
-        proposedStartTime: start,
-        proposedEndTime: end,
-        reason: reason,
-      ),
+            proposedDate: date,
+            proposedStartTime: start,
+            proposedEndTime: end,
+            reason: reason,
+          ),
     );
   }
 
@@ -58,31 +58,32 @@ class BookingDetailsBottomActions extends StatelessWidget {
   }
 
   Widget _buildCancelButton(BuildContext context, S s) => SizedBox(
-        width: double.infinity,
-        child: TextButton.icon(
-          onPressed: isActionInProgress ? null : () => _onCancel(context),
-          icon: Icon(Icons.close_rounded, size: 16.r),
-          label: Text(s.cancelBookingAction, style: TextStyle(fontSize: 13.sp)),
-          style: TextButton.styleFrom(
-            foregroundColor: AppColors.error,
-            padding: EdgeInsets.symmetric(vertical: 8.h),
-          ),
-        ),
-      );
+    width: double.infinity,
+    child: TextButton.icon(
+      onPressed: isActionInProgress ? null : () => _onCancel(context),
+      icon: Icon(Icons.close_rounded, size: 16.r),
+      label: Text(s.cancelBookingAction, style: TextStyle(fontSize: 13.sp)),
+      style: TextButton.styleFrom(
+        foregroundColor: AppColors.error,
+        padding: EdgeInsets.symmetric(vertical: 8.h),
+      ),
+    ),
+  );
 
   Widget _buildReschedulePendingActions(BuildContext context, S s) {
     final cubit = context.read<BookingDetailsCubit>();
     final canRespond =
         (isCoach && booking.rescheduledBy == AppConstants.roleTrainee) ||
-            (!isCoach && booking.rescheduledBy == AppConstants.roleCoach);
+        (!isCoach && booking.rescheduledBy == AppConstants.roleCoach);
 
     if (canRespond) {
       return Row(
         children: [
           Expanded(
             child: OutlinedButton(
-              onPressed:
-                  isActionInProgress ? null : () => cubit.declineReschedule(),
+              onPressed: isActionInProgress
+                  ? null
+                  : () => cubit.declineReschedule(),
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.error,
                 side: const BorderSide(color: AppColors.error),
@@ -98,17 +99,15 @@ class BookingDetailsBottomActions extends StatelessWidget {
           SizedBox(width: 8.w),
           Expanded(
             child: FilledButton(
-              onPressed:
-                  isActionInProgress ? null : () => cubit.acceptReschedule(),
+              onPressed: isActionInProgress
+                  ? null
+                  : () => cubit.acceptReschedule(),
               style: FilledButton.styleFrom(
                 backgroundColor: AppColors.success,
                 padding: EdgeInsets.symmetric(vertical: 10.h),
                 shape: RoundedRectangleBorder(borderRadius: AppRadius.smAll),
               ),
-              child: Text(
-                s.acceptNewTime,
-                style: TextStyle(fontSize: 12.sp),
-              ),
+              child: Text(s.acceptNewTime, style: TextStyle(fontSize: 12.sp)),
             ),
           ),
         ],
@@ -151,7 +150,32 @@ class BookingDetailsBottomActions extends StatelessWidget {
     final cubit = context.read<BookingDetailsCubit>();
 
     Widget? child;
-    if (booking.status == 'pending' && isCoach) {
+    if (BookingTransitions.isExpired(booking, DateTime.now())) {
+      // Nobody can act on it any more; say why.
+      child = Row(
+        children: [
+          Icon(
+            Icons.timer_off_rounded,
+            size: 16.r,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.textSecondary,
+          ),
+          SizedBox(width: 8.w),
+          Expanded(
+            child: Text(
+              s.requestExpiredMessage,
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.textSecondary,
+              ),
+            ),
+          ),
+        ],
+      );
+    } else if (booking.status == 'pending' && isCoach) {
       child = BookingCardActions(
         isActionInProgress: isActionInProgress,
         onAccept: () => cubit.acceptBooking(),
@@ -169,10 +193,14 @@ class BookingDetailsBottomActions extends StatelessWidget {
           ? SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
-                onPressed:
-                    isActionInProgress ? null : () => cubit.completeBooking(),
+                onPressed: isActionInProgress
+                    ? null
+                    : () => cubit.completeBooking(),
                 icon: Icon(Icons.check_rounded, size: 16.r),
-                label: Text(s.markAsCompleted, style: TextStyle(fontSize: 13.sp)),
+                label: Text(
+                  s.markAsCompleted,
+                  style: TextStyle(fontSize: 13.sp),
+                ),
                 style: FilledButton.styleFrom(
                   backgroundColor: AppColors.success,
                   shape: RoundedRectangleBorder(borderRadius: AppRadius.smAll),
@@ -205,7 +233,11 @@ class BookingDetailsBottomActions extends StatelessWidget {
           ? cancel
           : Column(
               mainAxisSize: MainAxisSize.min,
-              children: [child, SizedBox(height: 4.h), cancel],
+              children: [
+                child,
+                SizedBox(height: 4.h),
+                cancel,
+              ],
             );
     }
 

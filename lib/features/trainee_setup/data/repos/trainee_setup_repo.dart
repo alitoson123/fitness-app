@@ -1,4 +1,6 @@
 import 'package:dartz/dartz.dart';
+import '../../../../core/errors/app_error_messages.dart';
+import '../../../../generated/l10n.dart';
 import '../../../../core/services/auth_service/auth_service.dart';
 import '../../../auth/core/data/data_source/auth_local_data_source.dart';
 import '../data_source/trainee_setup_local_data_source.dart';
@@ -27,7 +29,7 @@ class TraineeSetupRepo {
       final uid = firebaseUser ?? cachedUser?.uid;
 
       if (uid == null) {
-        return const Left('User session not found. Please log in again.');
+        return Left(S.current.sessionNotFoundMessage);
       }
 
       final resolvedName = profile.name.trim().isNotEmpty
@@ -71,7 +73,7 @@ class TraineeSetupRepo {
 
       return const Right(null);
     } catch (e) {
-      return Left(e.toString());
+      return Left(AppErrorMessages.from(e));
     }
   }
 

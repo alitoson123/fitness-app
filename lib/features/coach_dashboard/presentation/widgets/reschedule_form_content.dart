@@ -17,6 +17,8 @@ class RescheduleFormContent extends StatelessWidget {
   final String? selectedSlot;
   final List<String> availableSlots;
   final bool isLoadingSlots;
+  final bool slotsLoadFailed;
+  final VoidCallback? onRetry;
   final bool isSubmitting;
   final TextEditingController reasonController;
   final String? reasonError;
@@ -36,6 +38,8 @@ class RescheduleFormContent extends StatelessWidget {
     required this.selectedSlot,
     required this.availableSlots,
     required this.isLoadingSlots,
+    this.slotsLoadFailed = false,
+    this.onRetry,
     required this.isSubmitting,
     required this.reasonController,
     required this.reasonError,
@@ -49,7 +53,8 @@ class RescheduleFormContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMonthly = booking?.isMonthly == true && booking!.sessions.isNotEmpty;
+    final isMonthly =
+        booking?.isMonthly == true && booking!.sessions.isNotEmpty;
 
     return SingleChildScrollView(
       child: Column(
@@ -79,6 +84,8 @@ class RescheduleFormContent extends StatelessWidget {
             selectedSlot: selectedSlot,
             isLoading: isLoadingSlots,
             onSelectSlot: onSelectSlot,
+            hasError: slotsLoadFailed,
+            onRetry: onRetry,
           ),
           SizedBox(height: 14.h),
           RescheduleReasonInput(
@@ -89,7 +96,8 @@ class RescheduleFormContent extends StatelessWidget {
           SizedBox(height: 16.h),
           RescheduleSubmitButton(
             isSubmitting: isSubmitting,
-            isEnabled: selectedSlot != null &&
+            isEnabled:
+                selectedSlot != null &&
                 (!isMonthly || selectedSessionId != null),
             onSubmit: onSubmit,
           ),

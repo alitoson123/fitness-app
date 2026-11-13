@@ -1,4 +1,5 @@
 import 'package:fitness_app/core/models/day_availability.dart';
+import 'package:fitness_app/features/booking_request/data/models/busy_range.dart';
 import 'package:fitness_app/features/coach_setup/data/models/coach_profile_model.dart';
 
 class BookingSlotCalculator {
@@ -41,7 +42,8 @@ class BookingSlotCalculator {
   static List<String> generateDaySlots({
     required CoachProfileModel coach,
     required DateTime date,
-    required List<String> bookedSlots,
+    required List<BusyRange> busyRanges,
+    DateTime? now,
   }) {
     final dayOfWeek = getDayOfWeek(date);
     int fromHour = 17;
@@ -69,10 +71,12 @@ class BookingSlotCalculator {
     final endMinutes = toHour * 60 + toMinute;
 
     final slots = <String>[];
-    final now = DateTime.now();
+    final clock = now ?? DateTime.now();
     final isToday =
-        date.year == now.year && date.month == now.month && date.day == now.day;
-    final currentDayMinutes = now.hour * 60 + now.minute;
+        date.year == clock.year &&
+        date.month == clock.month &&
+        date.day == clock.day;
+    final currentDayMinutes = clock.hour * 60 + clock.minute;
 
     while (currentMinutes + durationMin <= endMinutes) {
       final slotStartHour = currentMinutes ~/ 60;
@@ -80,10 +84,14 @@ class BookingSlotCalculator {
       final slotStr =
           '${slotStartHour.toString().padLeft(2, '0')}:${slotStartMin.toString().padLeft(2, '0')}';
 
-      // Check if not booked and if today, is in future
+      // Free only if it overlaps no busy period (a coach may have changed
+      // the session length since, so equal start times aren't enough),
+      // and, today, if it starts more than 15 minutes from now.
       final isSlotInPast =
           isToday && (currentMinutes <= currentDayMinutes + 15);
-      if (!bookedSlots.contains(slotStr) && !isSlotInPast) {
+      final slotEnd = currentMinutes + durationMin;
+      final isBusy = busyRanges.any((r) => r.overlaps(currentMinutes, slotEnd));
+      if (!isBusy && !isSlotInPast) {
         slots.add(slotStr);
       }
       currentMinutes += durationMin;

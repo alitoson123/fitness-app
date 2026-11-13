@@ -52,7 +52,10 @@ class DiscoveryFilterModel {
       if (!hasSport) return false;
     }
 
-    if (coach.sessionPriceUSD < minPrice || coach.sessionPriceUSD > maxPrice) {
+    // The slider's top end means "no limit" (shown as "1000+").
+    final hasMaxLimit = maxPrice < defaultMaxPrice;
+    if (coach.sessionPriceUSD < minPrice ||
+        (hasMaxLimit && coach.sessionPriceUSD > maxPrice)) {
       return false;
     }
 

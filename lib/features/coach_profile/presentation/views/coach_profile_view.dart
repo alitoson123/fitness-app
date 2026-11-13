@@ -71,7 +71,7 @@ class _CoachProfileContent extends StatelessWidget {
           return RefreshIndicator(
             onRefresh: () => context
                 .read<CoachProfileCubit>()
-                .loadProfile(forceRefresh: true),
+                .loadProfile(),
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
@@ -118,7 +118,7 @@ class _CoachProfileContent extends StatelessWidget {
             size: AppButtonSize.sm,
             onPressed: () => context
                 .read<CoachProfileCubit>()
-                .loadProfile(forceRefresh: true),
+                .loadProfile(),
           ),
         ],
       ),

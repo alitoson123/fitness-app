@@ -78,6 +78,10 @@ abstract class CoachSetupLocalizationHelper {
         return s.validationMonthlyPriceRequired;
       case 'availability_required':
         return s.validationAvailabilityRequired;
+      case 'availability_no_days':
+        return s.errorNoWorkingDays;
+      case 'availability_invalid_hours':
+        return s.validationAvailabilityHours;
       case 'age_required':
         return s.validationAgeRequired;
       case 'gender_required':

@@ -1,3 +1,4 @@
+import 'package:fitness_app/features/booking_request/data/repos/booking_actions/booking_transitions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -6,13 +7,11 @@ import '../../../../generated/l10n.dart';
 import '../../../booking_request/data/models/booking_model.dart';
 import '../../../coach_dashboard/presentation/widgets/booking_status_badge.dart';
 
-class BookingDetailsAppBar extends StatelessWidget implements PreferredSizeWidget {
+class BookingDetailsAppBar extends StatelessWidget
+    implements PreferredSizeWidget {
   final BookingModel booking;
 
-  const BookingDetailsAppBar({
-    super.key,
-    required this.booking,
-  });
+  const BookingDetailsAppBar({super.key, required this.booking});
 
   @override
   Size get preferredSize => Size.fromHeight(56.h);
@@ -46,11 +45,12 @@ class BookingDetailsAppBar extends StatelessWidget implements PreferredSizeWidge
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 14.w),
           child: Center(
-            child: BookingStatusBadge(status: booking.status),
+            child: BookingStatusBadge(
+              status: BookingTransitions.displayStatus(booking, DateTime.now()),
+            ),
           ),
         ),
       ],
     );
   }
 }
-

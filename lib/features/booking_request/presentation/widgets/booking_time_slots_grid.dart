@@ -10,20 +10,31 @@ class BookingTimeSlotsGrid extends StatelessWidget {
   final bool isLoading;
   final ValueChanged<String> onSelectSlot;
 
+  /// Loading failed: show Retry (not "no times", which looks like the coach
+  /// is fully booked).
+  final bool hasError;
+  final VoidCallback? onRetry;
+
   const BookingTimeSlotsGrid({
     super.key,
     required this.slots,
     required this.selectedSlot,
     required this.isLoading,
     required this.onSelectSlot,
+    this.hasError = false,
+    this.onRetry,
   });
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primary = isDark ? AppColors.flameRed : AppColors.primary;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.textPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.textSecondary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.textPrimary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.textSecondary;
     final unselectedBg = isDark ? AppColors.darkSurface : AppColors.neutral100;
     final border = isDark ? AppColors.darkBorder : AppColors.border;
 
@@ -53,6 +64,32 @@ class BookingTimeSlotsGrid extends StatelessWidget {
               ),
             ),
           )
+        else if (hasError)
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+            decoration: BoxDecoration(
+              color: unselectedBg,
+              borderRadius: AppRadius.mdAll,
+              border: Border.all(color: AppColors.error.withValues(alpha: 0.4)),
+            ),
+            child: Column(
+              children: [
+                Text(
+                  S.of(context).slotsLoadFailed,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 13.sp, color: textSecondary),
+                ),
+                if (onRetry != null)
+                  TextButton.icon(
+                    onPressed: onRetry,
+                    icon: Icon(Icons.refresh_rounded, size: 16.r),
+                    label: Text(S.of(context).retry),
+                    style: TextButton.styleFrom(foregroundColor: primary),
+                  ),
+              ],
+            ),
+          )
         else if (slots.isEmpty)
           Container(
             width: double.infinity,
@@ -80,7 +117,10 @@ class BookingTimeSlotsGrid extends StatelessWidget {
                 onTap: () => onSelectSlot(slot),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 10.h,
+                  ),
                   decoration: BoxDecoration(
                     color: isSelected ? primary : unselectedBg,
                     borderRadius: AppRadius.smAll,
@@ -102,7 +142,9 @@ class BookingTimeSlotsGrid extends StatelessWidget {
                         slot,
                         style: TextStyle(
                           fontSize: 13.sp,
-                          fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+                          fontWeight: isSelected
+                              ? FontWeight.w700
+                              : FontWeight.w600,
                           color: isSelected ? Colors.white : textPrimary,
                         ),
                       ),

@@ -21,6 +21,16 @@ Server-side Firebase Cloud Functions (Node.js 22, TypeScript, `firebase-function
   - Notifications addressed to the deleted user are removed.
   - The app deletes the Auth login first and relies on this function for the data, so it must be deployed before shipping the new app build.
 
+## Callable
+
+- **`createBooking`** (callable, `src/callables/create_booking.ts`):
+  - The only way to create a booking: the security rules refuse direct `bookings` creates.
+  - The app sends only the trainee's choices (coach, sport, place, notes, requested times, device UTC offset). The server sets price, names, end times and status from the coach's profile (prices stored as text are understood).
+  - Checks (`src/utils/booking_request.ts`): signed-in active trainee; approved, active coach; sport and place offered; monthly price set for packages; exactly 8 sessions on different days for a monthly package; times in the future, at most a month ahead, within the coach's weekly hours; no overlap with the coach's active bookings or open reschedule proposals; at most 3 unanswered requests per trainee per coach.
+  - Runs in one transaction that also rewrites `coach_busy_slots/{coachUid}`. Every request for the same coach reads and writes that document, so concurrent requests are serialised and two trainees can never get the same time.
+  - Refusals are `HttpsError`s with `details.reason` (`slot_taken`, `outside_hours`, `in_past`, ...) and, for times, `details.conflict`; the app turns these into translated messages.
+  - `coach_busy_slots` now also holds `ranges` (`HH:mm-HH:mm`) next to the old `slots` (start times), so the app can hide every time that overlaps a booking.
+
 ## One-time busy-slots backfill
 
 Bookings created before `onBookingWritten` was first deployed have no `coach_busy_slots` document yet. Run this **once**, right after the first deploy of `onBookingWritten` and **before** deploying the participant-only `bookings` rules:
@@ -57,9 +67,10 @@ firebase emulators:start --only functions,firestore
    ```bash
    cd functions && npm run build && cd ..
    firebase deploy --only functions
-   cd functions && npm run backfill:busy-slots && cd ..   # first time only
+   cd functions && npm run backfill:busy-slots && cd ..   # adds the new `ranges` too
    firebase deploy --only firestore:rules,storage
    ```
+   Deploy the rules together with the app build that uses `createBooking`: from then on, older app versions can no longer create bookings.
 3. **iOS APNs Setup** (for Apple Push delivery in Background & Killed states):
    - In Apple Developer Portal -> **Certificates, Identifiers & Profiles -> Keys**, generate an **Apple Push Notifications service (APNs)** `.p8` key and note the **Key ID** and **Team ID**.
    - In **Firebase Console -> Project Settings -> Cloud Messaging -> Apple app configuration**, upload the `.p8` file with Key ID and Team ID.

@@ -37,24 +37,41 @@ class RequestTrainingButton extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () => _handleRequest(context),
-                icon: const Icon(Icons.calendar_month_rounded, color: Colors.white),
-                label: Text(
-                  S.of(context).requestTraining,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: primary,
-                  padding: EdgeInsets.symmetric(vertical: 14.h),
-                  shape: RoundedRectangleBorder(borderRadius: AppRadius.mdAll),
-                  elevation: 2,
-                ),
-              ),
+              child: coach.verificationStatus != 'approved'
+                  ? Text(
+                      S.of(context).coachNoLongerAvailable,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.textSecondary,
+                      ),
+                    )
+                  : ElevatedButton.icon(
+                      onPressed: () => _handleRequest(context),
+                      icon: const Icon(
+                        Icons.calendar_month_rounded,
+                        color: Colors.white,
+                      ),
+                      label: Text(
+                        S.of(context).requestTraining,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primary,
+                        padding: EdgeInsets.symmetric(vertical: 14.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: AppRadius.mdAll,
+                        ),
+                        elevation: 2,
+                      ),
+                    ),
             ),
           ],
         ),

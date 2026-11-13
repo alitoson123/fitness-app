@@ -122,32 +122,6 @@ service cloud.firestore {
         return resource.data.get('rescheduledBy', '');
       }
 
-      function priceMatchesCoach(b, coach) {
-        return (
-          b.bookingType == 'session' &&
-          (!(coach.get('sessionPriceUSD', null) is number) ||
-           b.price == coach.sessionPriceUSD)
-        ) || (
-          b.bookingType == 'monthly' &&
-          b.durationMonths is int &&
-          b.durationMonths >= 1 && b.durationMonths <= 12 &&
-          (!(coach.get('monthlyPriceUSD', null) is number) ||
-           b.price == coach.monthlyPriceUSD * b.durationMonths)
-        );
-      }
-
-      function isValidNewBooking() {
-        let b = request.resource.data;
-        let coach = get(/databases/$(database)/documents/coach_profiles/$(b.coachUid)).data;
-        return b.traineeUid == request.auth.uid &&
-          b.coachUid != request.auth.uid &&
-          b.status == 'pending' &&
-          b.bookingType in ['session', 'monthly'] &&
-          b.price is number && b.price >= 0 &&
-          coach.get('verificationStatus', '') == 'approved' &&
-          priceMatchesCoach(b, coach);
-      }
-
       function myRole() {
         return isCoachOfBooking() ? 'coach' : 'trainee';
       }
@@ -236,7 +210,9 @@ service cloud.firestore {
         resource.data.traineeUid == request.auth.uid ||
         isAdmin()
       );
-      allow create: if isSignedIn() && isActive() && isValidNewBooking();
+      // Bookings are created only by the `createBooking` Cloud Function,
+      // which checks the times, the coach's hours, overlaps and the price.
+      allow create: if false;
       allow update: if isAdmin() || (
         isSignedIn() &&
         (isCoachOfBooking() || isTraineeOfBooking()) &&

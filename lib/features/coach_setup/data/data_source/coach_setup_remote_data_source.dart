@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fitness_app/core/constant/app_constants.dart';
 import 'package:fitness_app/core/services/database_service/firestore_service.dart';
 import 'package:fitness_app/core/services/logger_service/logger_service.dart';
@@ -22,7 +23,12 @@ class CoachSetupRemoteDataSource {
     );
   }
 
-  Future<void> submitApplication(CoachApplicationModel application) async {
+  /// On a resubmission the previous review (reason, review date) is
+  /// cleared, so it can't be mistaken for feedback on the new application.
+  Future<void> submitApplication(
+    CoachApplicationModel application, {
+    bool isResubmission = false,
+  }) async {
     LoggerService.info(
       'Submitting application for ${application.coachUid}',
       tag: 'CoachSetup',
@@ -30,7 +36,11 @@ class CoachSetupRemoteDataSource {
     await firestoreService.setData(
       collection: AppConstants.verificationsCollection,
       docId: application.coachUid,
-      data: application.toMap(),
+      data: {
+        ...application.toMap(),
+        if (isResubmission) 'rejectionReason': FieldValue.delete(),
+        if (isResubmission) 'reviewedAt': FieldValue.delete(),
+      },
       merge: true,
     );
   }

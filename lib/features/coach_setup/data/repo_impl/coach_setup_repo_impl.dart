@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:fitness_app/core/errors/app_error_messages.dart';
 import 'package:fitness_app/core/errors/failure.dart';
 import 'package:fitness_app/core/services/auth_service/auth_service.dart';
 import 'package:fitness_app/features/notifications/data/helpers/notification_safe_dispatcher.dart';
@@ -32,7 +33,7 @@ class CoachSetupRepoImpl implements CoachSetupRepo {
       final cachedUser = await authLocalDataSource.getUser();
       final uid = user?.uid ?? cachedUser?.uid;
       if (uid == null) {
-        return Left(ServerFailure(errorMessage: 'Authentication required.'));
+        return Left(ServerFailure(errorMessage: AppErrorMessages.unexpected));
       }
 
       final phoneNumber = profile.phoneNumber.trim().isNotEmpty
@@ -43,13 +44,22 @@ class CoachSetupRepoImpl implements CoachSetupRepo {
         uid: uid,
         phoneNumber: phoneNumber,
       );
+      // Re-applying after a rejection: keep the first submission date and
+      // record when it was sent again.
+      final previous = await remoteDataSource.getCoachApplication(uid);
+      final isResubmission = previous != null;
       final resolvedApplication = application.copyWith(
         coachUid: uid,
         status: 'pending',
+        submittedAt: previous?.submittedAt,
+        resubmittedAt: isResubmission ? DateTime.now() : null,
       );
 
       await remoteDataSource.saveCoachProfile(resolvedProfile);
-      await remoteDataSource.submitApplication(resolvedApplication);
+      await remoteDataSource.submitApplication(
+        resolvedApplication,
+        isResubmission: isResubmission,
+      );
       await localDataSource.saveCachedProfile(resolvedProfile);
       await localDataSource.clearDraft();
 
@@ -68,7 +78,7 @@ class CoachSetupRepoImpl implements CoachSetupRepo {
 
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure(errorMessage: e.toString()));
+      return Left(ServerFailure(errorMessage: AppErrorMessages.from(e)));
     }
   }
 
@@ -77,12 +87,12 @@ class CoachSetupRepoImpl implements CoachSetupRepo {
     try {
       final uid = authService.currentUser?.uid ?? (await authLocalDataSource.getUser())?.uid;
       if (uid == null) {
-        return Left(ServerFailure(errorMessage: 'Authentication required.'));
+        return Left(ServerFailure(errorMessage: AppErrorMessages.unexpected));
       }
       final app = await remoteDataSource.getCoachApplication(uid);
       return Right(app);
     } catch (e) {
-      return Left(ServerFailure(errorMessage: e.toString()));
+      return Left(ServerFailure(errorMessage: AppErrorMessages.from(e)));
     }
   }
 
@@ -100,7 +110,7 @@ class CoachSetupRepoImpl implements CoachSetupRepo {
     try {
       final uid = authService.currentUser?.uid ?? (await authLocalDataSource.getUser())?.uid;
       if (uid == null) {
-        return Left(ServerFailure(errorMessage: 'Authentication required.'));
+        return Left(ServerFailure(errorMessage: AppErrorMessages.unexpected));
       }
       final cached = await localDataSource.getCachedProfile();
       if (cached != null) return Right(cached);
@@ -109,7 +119,7 @@ class CoachSetupRepoImpl implements CoachSetupRepo {
       if (remote != null) await localDataSource.saveCachedProfile(remote);
       return Right(remote);
     } catch (e) {
-      return Left(ServerFailure(errorMessage: e.toString()));
+      return Left(ServerFailure(errorMessage: AppErrorMessages.from(e)));
     }
   }
 
@@ -119,7 +129,7 @@ class CoachSetupRepoImpl implements CoachSetupRepo {
       await localDataSource.saveDraft(draftData);
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure(errorMessage: e.toString()));
+      return Left(ServerFailure(errorMessage: AppErrorMessages.from(e)));
     }
   }
 
@@ -129,7 +139,7 @@ class CoachSetupRepoImpl implements CoachSetupRepo {
       final draft = await localDataSource.getDraft();
       return Right(draft);
     } catch (e) {
-      return Left(ServerFailure(errorMessage: e.toString()));
+      return Left(ServerFailure(errorMessage: AppErrorMessages.from(e)));
     }
   }
 

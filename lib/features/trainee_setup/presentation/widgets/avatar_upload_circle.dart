@@ -188,6 +188,10 @@ class _AvatarUploadCircleState extends State<AvatarUploadCircle> {
       _isUploading = true;
     });
 
+    // Keep the callback: the trainee may move to the next step (closing
+    // this widget) before the upload finishes, and the photo must still be
+    // saved to the form.
+    final onPhotoSelected = widget.onPhotoSelected;
     try {
       final authService = getIt<AuthService>();
       final storageService = getIt<StorageService>();
@@ -202,8 +206,8 @@ class _AvatarUploadCircleState extends State<AvatarUploadCircle> {
         contentType: 'image/jpeg',
       );
 
+      onPhotoSelected(downloadUrl);
       if (mounted) {
-        widget.onPhotoSelected(downloadUrl);
         Message.showSuccess(context, S.of(context).photoUploadedSuccess);
       }
     } catch (e) {

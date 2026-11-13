@@ -102,6 +102,12 @@ class ServerFailure extends Failure {
   }
 }
 
+/// The coach's profile is gone or no longer approved, so they can't be
+/// booked.
+class CoachUnavailableFailure extends Failure {
+  CoachUnavailableFailure({required super.errorMessage});
+}
+
 class CancelFailure extends Failure {
   CancelFailure({super.errorMessage = 'Operation cancelled'});
 }

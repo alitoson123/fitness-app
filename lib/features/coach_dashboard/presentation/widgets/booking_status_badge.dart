@@ -8,11 +8,7 @@ class BookingStatusBadge extends StatelessWidget {
   final String status;
   final String? customLabel;
 
-  const BookingStatusBadge({
-    super.key,
-    required this.status,
-    this.customLabel,
-  });
+  const BookingStatusBadge({super.key, required this.status, this.customLabel});
 
   @override
   Widget build(BuildContext context) {
@@ -20,35 +16,32 @@ class BookingStatusBadge extends StatelessWidget {
 
     final (color, label, icon) = switch (status) {
       'confirmed' => (
-          AppColors.success,
-          s.statusConfirmed,
-          Icons.check_circle_rounded,
-        ),
+        AppColors.success,
+        s.statusConfirmed,
+        Icons.check_circle_rounded,
+      ),
       'completed' => (
-          AppColors.secondary,
-          s.statusCompleted,
-          Icons.task_alt_rounded,
-        ),
-      'rejected' => (
-          AppColors.error,
-          s.statusDeclined,
-          Icons.cancel_rounded,
-        ),
+        AppColors.secondary,
+        s.statusCompleted,
+        Icons.task_alt_rounded,
+      ),
+      'rejected' => (AppColors.error, s.statusDeclined, Icons.cancel_rounded),
       'cancelled' => (
-          AppColors.darkTextTertiary,
-          s.statusCancelled,
-          Icons.block_rounded,
-        ),
+        AppColors.darkTextTertiary,
+        s.statusCancelled,
+        Icons.block_rounded,
+      ),
       'reschedule_pending' => (
-          const Color(0xFFF59E0B),
-          s.statusReschedulePending,
-          Icons.update_rounded,
-        ),
-      _ => (
-          AppColors.flameRed,
-          s.statPending,
-          Icons.hourglass_top_rounded,
-        ),
+        const Color(0xFFF59E0B),
+        s.statusReschedulePending,
+        Icons.update_rounded,
+      ),
+      'expired' => (
+        AppColors.darkTextTertiary,
+        s.statusExpired,
+        Icons.timer_off_rounded,
+      ),
+      _ => (AppColors.flameRed, s.statPending, Icons.hourglass_top_rounded),
     };
 
     return Container(

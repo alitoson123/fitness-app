@@ -10,9 +10,10 @@ import '../../../../notifications/data/helpers/notification_safe_dispatcher.dart
 import '../../models/booking_model.dart';
 import 'booking_transitions.dart';
 
-typedef NotificationSender = void Function(
-  Future<void> Function(NotificationDispatcher dispatcher) action,
-);
+typedef NotificationSender =
+    void Function(
+      Future<void> Function(NotificationDispatcher dispatcher) action,
+    );
 
 /// The one place that changes existing bookings. The coach dashboard, the
 /// trainee bookings tab and the shared Booking Details screen all use it,
@@ -36,31 +37,35 @@ class BookingActionsRepo {
     required this.currentUid,
     DateTime Function()? clock,
     NotificationSender? notify,
-  })  : _now = clock ?? DateTime.now,
-        _notify = notify ?? NotificationSafeDispatcher.dispatch;
+  }) : _now = clock ?? DateTime.now,
+       _notify = notify ?? NotificationSafeDispatcher.dispatch;
 
   // ----------------------------------------------------------- whole booking
 
   Future<Either<Failure, void>> approve(String bookingId) => _run(
-        bookingId,
-        BookingTransitions.approve,
-        (before, _) => _notify((d) => d.dispatchBookingApproved(
-              booking: before,
-              coachName: _coachName(before),
-            )),
-      );
+    bookingId,
+    (b, actor) => BookingTransitions.approve(b, actor, now: _now()),
+    (before, _) => _notify(
+      (d) => d.dispatchBookingApproved(
+        booking: before,
+        coachName: _coachName(before),
+      ),
+    ),
+  );
 
   Future<Either<Failure, void>> reject(String bookingId, {String? reason}) =>
       _run(
         bookingId,
         (b, actor) => BookingTransitions.reject(b, actor, reason: reason),
-        (before, _) => _notify((d) => d.dispatchBookingRejected(
-              booking: before,
-              coachName: _coachName(before),
-              reason: (reason?.trim().isNotEmpty ?? false)
-                  ? reason!.trim()
-                  : 'Unavailable',
-            )),
+        (before, _) => _notify(
+          (d) => d.dispatchBookingRejected(
+            booking: before,
+            coachName: _coachName(before),
+            reason: (reason?.trim().isNotEmpty ?? false)
+                ? reason!.trim()
+                : 'Unavailable',
+          ),
+        ),
       );
 
   Future<Either<Failure, void>> cancel(String bookingId, {String? reason}) =>
@@ -68,18 +73,19 @@ class BookingActionsRepo {
         bookingId,
         (b, actor) =>
             BookingTransitions.cancel(b, actor, reason: reason, now: _now()),
-        (before, _) => _notify((d) => d.dispatchBookingCancelled(
-              booking: before,
-              traineeName: _traineeName(before),
-            )),
+        (before, _) => _notify(
+          (d) => d.dispatchBookingCancelled(
+            booking: before,
+            traineeName: _traineeName(before),
+          ),
+        ),
       );
 
   Future<Either<Failure, void>> completeBooking(String bookingId) => _run(
-        bookingId,
-        (b, actor) =>
-            BookingTransitions.completeBooking(b, actor, now: _now()),
-        null,
-      );
+    bookingId,
+    (b, actor) => BookingTransitions.completeBooking(b, actor, now: _now()),
+    null,
+  );
 
   // ------------------------------------------------- single-session reschedule
 
@@ -89,67 +95,72 @@ class BookingActionsRepo {
     required String startTime,
     required String endTime,
     required String reason,
-  }) =>
-      _run(
-        bookingId,
-        (b, actor) => BookingTransitions.proposeReschedule(
-          b,
-          actor,
-          date: date,
-          startTime: startTime,
-          endTime: endTime,
+  }) => _run(
+    bookingId,
+    (b, actor) => BookingTransitions.proposeReschedule(
+      b,
+      actor,
+      date: date,
+      startTime: startTime,
+      endTime: endTime,
+      reason: reason,
+      now: _now(),
+    ),
+    (before, actor) {
+      final p = _parties(before, actor);
+      _notify(
+        (d) => d.dispatchSingleRescheduleProposed(
+          booking: before,
+          senderUid: p.senderUid,
+          senderName: p.senderName,
+          recipientUid: p.recipientUid,
+          recipientRole: p.recipientRole,
+          proposedDate: date,
+          proposedTime: startTime,
           reason: reason,
         ),
-        (before, actor) {
-          final p = _parties(before, actor);
-          _notify((d) => d.dispatchSingleRescheduleProposed(
-                booking: before,
-                senderUid: p.senderUid,
-                senderName: p.senderName,
-                recipientUid: p.recipientUid,
-                recipientRole: p.recipientRole,
-                proposedDate: date,
-                proposedTime: startTime,
-                reason: reason,
-              ));
-        },
       );
+    },
+  );
 
   Future<Either<Failure, void>> acceptReschedule(String bookingId) => _run(
-        bookingId,
-        BookingTransitions.acceptReschedule,
-        (before, actor) {
-          final p = _parties(before, actor);
-          _notify((d) => d.dispatchSingleRescheduleAccepted(
-                booking: before,
-                senderUid: p.senderUid,
-                senderName: p.senderName,
-                recipientUid: p.recipientUid,
-                recipientRole: p.recipientRole,
-                date: before.proposedDate ?? before.date,
-              ));
-        },
+    bookingId,
+    (b, actor) => BookingTransitions.acceptReschedule(b, actor, now: _now()),
+    (before, actor) {
+      final p = _parties(before, actor);
+      _notify(
+        (d) => d.dispatchSingleRescheduleAccepted(
+          booking: before,
+          senderUid: p.senderUid,
+          senderName: p.senderName,
+          recipientUid: p.recipientUid,
+          recipientRole: p.recipientRole,
+          date: before.proposedDate ?? before.date,
+        ),
       );
+    },
+  );
 
   Future<Either<Failure, void>> declineReschedule(
     String bookingId, {
     String? reason,
-  }) =>
-      _run(
-        bookingId,
-        (b, actor) =>
-            BookingTransitions.declineReschedule(b, actor, reason: reason),
-        (before, actor) {
-          final p = _parties(before, actor);
-          _notify((d) => d.dispatchSingleRescheduleDeclined(
-                booking: before,
-                senderUid: p.senderUid,
-                senderName: p.senderName,
-                recipientUid: p.recipientUid,
-                recipientRole: p.recipientRole,
-              ));
-        },
+  }) => _run(
+    bookingId,
+    (b, actor) =>
+        BookingTransitions.declineReschedule(b, actor, reason: reason),
+    (before, actor) {
+      final p = _parties(before, actor);
+      _notify(
+        (d) => d.dispatchSingleRescheduleDeclined(
+          booking: before,
+          senderUid: p.senderUid,
+          senderName: p.senderName,
+          recipientUid: p.recipientUid,
+          recipientRole: p.recipientRole,
+        ),
       );
+    },
+  );
 
   // -------------------------------------------------------- monthly sessions
 
@@ -160,105 +171,111 @@ class BookingActionsRepo {
     required String startTime,
     required String endTime,
     required String reason,
-  }) =>
-      _run(
-        bookingId,
-        (b, actor) => BookingTransitions.proposeSessionReschedule(
-          b,
-          actor,
+  }) => _run(
+    bookingId,
+    (b, actor) => BookingTransitions.proposeSessionReschedule(
+      b,
+      actor,
+      sessionId: sessionId,
+      date: date,
+      startTime: startTime,
+      endTime: endTime,
+      reason: reason,
+      now: _now(),
+    ),
+    (before, actor) {
+      final p = _parties(before, actor);
+      _notify(
+        (d) => d.dispatchMonthlyRescheduleProposed(
+          booking: before,
+          sessionNumber: _sessionNumber(before, sessionId),
           sessionId: sessionId,
-          date: date,
-          startTime: startTime,
-          endTime: endTime,
-          reason: reason,
+          senderUid: p.senderUid,
+          senderName: p.senderName,
+          recipientUid: p.recipientUid,
+          recipientRole: p.recipientRole,
+          proposedDate: date,
+          proposedTime: startTime,
         ),
-        (before, actor) {
-          final p = _parties(before, actor);
-          _notify((d) => d.dispatchMonthlyRescheduleProposed(
-                booking: before,
-                sessionNumber: _sessionNumber(before, sessionId),
-                sessionId: sessionId,
-                senderUid: p.senderUid,
-                senderName: p.senderName,
-                recipientUid: p.recipientUid,
-                recipientRole: p.recipientRole,
-                proposedDate: date,
-                proposedTime: startTime,
-              ));
-        },
       );
+    },
+  );
 
   Future<Either<Failure, void>> acceptSessionReschedule({
     required String bookingId,
     required String sessionId,
-  }) =>
-      _run(
-        bookingId,
-        (b, actor) => BookingTransitions.acceptSessionReschedule(
-          b,
-          actor,
+  }) => _run(
+    bookingId,
+    (b, actor) => BookingTransitions.acceptSessionReschedule(
+      b,
+      actor,
+      sessionId: sessionId,
+      now: _now(),
+    ),
+    (before, actor) {
+      final p = _parties(before, actor);
+      _notify(
+        (d) => d.dispatchMonthlyRescheduleAccepted(
+          booking: before,
+          sessionNumber: _sessionNumber(before, sessionId),
           sessionId: sessionId,
+          senderUid: p.senderUid,
+          senderName: p.senderName,
+          recipientUid: p.recipientUid,
+          recipientRole: p.recipientRole,
         ),
-        (before, actor) {
-          final p = _parties(before, actor);
-          _notify((d) => d.dispatchMonthlyRescheduleAccepted(
-                booking: before,
-                sessionNumber: _sessionNumber(before, sessionId),
-                sessionId: sessionId,
-                senderUid: p.senderUid,
-                senderName: p.senderName,
-                recipientUid: p.recipientUid,
-                recipientRole: p.recipientRole,
-              ));
-        },
       );
+    },
+  );
 
   Future<Either<Failure, void>> declineSessionReschedule({
     required String bookingId,
     required String sessionId,
-  }) =>
-      _run(
-        bookingId,
-        (b, actor) => BookingTransitions.declineSessionReschedule(
-          b,
-          actor,
+  }) => _run(
+    bookingId,
+    (b, actor) => BookingTransitions.declineSessionReschedule(
+      b,
+      actor,
+      sessionId: sessionId,
+    ),
+    (before, actor) {
+      final p = _parties(before, actor);
+      _notify(
+        (d) => d.dispatchMonthlyRescheduleDeclined(
+          booking: before,
+          sessionNumber: _sessionNumber(before, sessionId),
           sessionId: sessionId,
+          senderUid: p.senderUid,
+          senderName: p.senderName,
+          recipientUid: p.recipientUid,
+          recipientRole: p.recipientRole,
         ),
-        (before, actor) {
-          final p = _parties(before, actor);
-          _notify((d) => d.dispatchMonthlyRescheduleDeclined(
-                booking: before,
-                sessionNumber: _sessionNumber(before, sessionId),
-                sessionId: sessionId,
-                senderUid: p.senderUid,
-                senderName: p.senderName,
-                recipientUid: p.recipientUid,
-                recipientRole: p.recipientRole,
-              ));
-        },
       );
+    },
+  );
 
   Future<Either<Failure, void>> completeSession({
     required String bookingId,
     required String sessionId,
-  }) =>
-      _run(
-        bookingId,
-        (b, actor) => BookingTransitions.completeSession(
-          b,
-          actor,
-          sessionId: sessionId,
-          now: _now(),
-        ),
-        (before, _) => _notify((d) => d.dispatchMonthlySessionCompleted(
-              booking: before,
-              sessionNumber: _sessionNumber(before, sessionId),
-              sessionId: sessionId,
-              // `before` doesn't include this session yet, hence + 1.
-              completedCount: before.completedSessionsCount + 1,
-              totalCount: before.sessions.length,
-            )),
-      );
+  }) => _run(
+    bookingId,
+    (b, actor) => BookingTransitions.completeSession(
+      b,
+      actor,
+      sessionId: sessionId,
+      now: _now(),
+    ),
+    (before, _) => _notify(
+      (d) => d.dispatchMonthlySessionCompleted(
+        booking: before,
+        sessionNumber: _sessionNumber(before, sessionId),
+        sessionId: sessionId,
+        // `before` doesn't include this session yet, hence + 1.
+        completedCount: before.completedSessionsCount + 1,
+        totalCount: before.sessions.length,
+      ),
+    ),
+  );
 
   // ------------------------------------------------------------------ engine
 
@@ -282,10 +299,10 @@ class BookingActionsRepo {
           final role = uid == null
               ? null
               : b.coachUid == uid
-                  ? AppConstants.roleCoach
-                  : b.traineeUid == uid
-                      ? AppConstants.roleTrainee
-                      : null;
+              ? AppConstants.roleCoach
+              : b.traineeUid == uid
+              ? AppConstants.roleTrainee
+              : null;
           if (role == null) {
             throw const BookingActionException(BookingActionError.notAllowed);
           }
@@ -295,17 +312,28 @@ class BookingActionsRepo {
         },
       );
     } on BookingActionException catch (e) {
-      LoggerService.warning('Booking action refused: ${e.error}',
-          tag: 'BookingActionsRepo');
+      LoggerService.warning(
+        'Booking action refused: ${e.error}',
+        tag: 'BookingActionsRepo',
+      );
       return Left(ServerFailure(errorMessage: messageFor(e.error)));
     } on FirebaseException catch (e) {
-      LoggerService.error('Booking action failed: ${e.code}',
-          tag: 'BookingActionsRepo', error: e);
+      LoggerService.error(
+        'Booking action failed: ${e.code}',
+        tag: 'BookingActionsRepo',
+        error: e,
+      );
       return Left(ServerFailure(errorMessage: _firebaseMessage(e)));
     } catch (e, st) {
-      LoggerService.error('Booking action failed: $e',
-          tag: 'BookingActionsRepo', error: e, stackTrace: st);
-      return Left(ServerFailure(errorMessage: S.current.unexpectedErrorMessage));
+      LoggerService.error(
+        'Booking action failed: $e',
+        tag: 'BookingActionsRepo',
+        error: e,
+        stackTrace: st,
+      );
+      return Left(
+        ServerFailure(errorMessage: S.current.unexpectedErrorMessage),
+      );
     }
 
     onSuccess?.call(before!, actor!);
@@ -323,6 +351,10 @@ class BookingActionsRepo {
         return s.sessionNotStartedYet;
       case BookingActionError.alreadyStarted:
         return s.bookingAlreadyStarted;
+      case BookingActionError.expired:
+        return s.requestExpiredMessage;
+      case BookingActionError.timeInPast:
+        return s.bookingTimeInPast;
     }
   }
 
@@ -362,13 +394,16 @@ class BookingActionsRepo {
     String senderName,
     String recipientUid,
     String recipientRole,
-  }) _parties(BookingModel b, String actor) {
+  })
+  _parties(BookingModel b, String actor) {
     final isCoach = actor == AppConstants.roleCoach;
     return (
       senderUid: isCoach ? b.coachUid : b.traineeUid,
       senderName: isCoach ? _coachName(b) : _traineeName(b),
       recipientUid: isCoach ? b.traineeUid : b.coachUid,
-      recipientRole: isCoach ? AppConstants.roleTrainee : AppConstants.roleCoach,
+      recipientRole: isCoach
+          ? AppConstants.roleTrainee
+          : AppConstants.roleCoach,
     );
   }
 }

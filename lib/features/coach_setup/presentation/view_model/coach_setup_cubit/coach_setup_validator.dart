@@ -1,3 +1,5 @@
+import 'package:fitness_app/core/models/day_availability.dart';
+import 'package:fitness_app/features/coach_availability/presentation/view_model/coach_availability_cubit/availability_validation_error.dart';
 import 'package:fitness_app/features/coach_setup/data/models/sport_location_model.dart';
 import 'coach_setup_cubit.dart';
 
@@ -17,6 +19,8 @@ class CoachSetupValidator {
         sessionPriceUSD: c.sessionPriceUSD,
         monthlyPriceUSD: c.monthlyPriceUSD,
         availabilitySummary: c.availabilitySummary,
+        weeklyAvailability: c.weeklyAvailability,
+        sessionDurationMinutes: c.sessionDurationMinutes,
         identityDocumentUrl: c.identityDocumentUrl,
         certificateUrls: c.certificateUrls,
       );
@@ -36,6 +40,8 @@ class CoachSetupValidator {
     double sessionPriceUSD = 0.0,
     double monthlyPriceUSD = 0.0,
     required String availabilitySummary,
+    List<DayAvailability> weeklyAvailability = const [],
+    int sessionDurationMinutes = 60,
     required String identityDocumentUrl,
     required List<String> certificateUrls,
   }) {
@@ -49,28 +55,50 @@ class CoachSetupValidator {
       if (bio.trim().length < 30) return 'bio_min_length';
       if (selectedLanguages.isEmpty) return 'language_required';
     } else if (step == 1) {
-      if (selectedSports.isEmpty) return 'sport_required';
-      for (final sport in selectedSports) {
-        final target = sport.toLowerCase().replaceAll(' ', '_').trim();
-        final config = sportLocations.cast<SportLocationModel?>().firstWhere(
-              (loc) =>
-                  loc?.sport.toLowerCase().replaceAll(' ', '_').trim() ==
-                  target,
-              orElse: () => null,
-            );
-        if (config == null || !config.isValid) {
-          return 'sport_locations_required';
-        }
-      }
+      return sportsError(selectedSports, sportLocations);
     } else if (step == 2) {
       if (sessionPriceUSD <= 0) return 'session_rate_required';
       if (monthlyPriceUSD <= 0) return 'monthly_rate_required';
     } else if (step == 3) {
-      if (availabilitySummary.trim().isEmpty) return 'availability_required';
+      if (weeklyAvailability.isEmpty) {
+        if (availabilitySummary.trim().isEmpty) return 'availability_required';
+      } else {
+        // Same check as the Availability screen.
+        final err = AvailabilityValidationError.check(
+          weeklyAvailability,
+          sessionDurationMinutes,
+        );
+        if (err != null) {
+          return err.type == AvailabilityErrorType.noActiveDays
+              ? 'availability_no_days'
+              : 'availability_invalid_hours';
+        }
+      }
     } else if (step == 4) {
       if (identityDocumentUrl.isEmpty) return 'id_required';
       if (certificateUrls.where((u) => u.isNotEmpty).isEmpty) {
         return 'cert_required';
+      }
+    }
+    return null;
+  }
+
+  /// At least one sport, and every sport can be booked: online and/or at
+  /// one place or more. Used by setup and by Edit Profile.
+  static String? sportsError(
+    List<String> selectedSports,
+    List<SportLocationModel> sportLocations,
+  ) {
+    if (selectedSports.isEmpty) return 'sport_required';
+    for (final sport in selectedSports) {
+      final target = sport.toLowerCase().replaceAll(' ', '_').trim();
+      final config = sportLocations.cast<SportLocationModel?>().firstWhere(
+            (loc) =>
+                loc?.sport.toLowerCase().replaceAll(' ', '_').trim() == target,
+            orElse: () => null,
+          );
+      if (config == null || !config.isValid) {
+        return 'sport_locations_required';
       }
     }
     return null;

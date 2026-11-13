@@ -8,13 +8,14 @@ import '../../../coach_setup/data/models/coach_profile_model.dart';
 import '../helpers/reschedule_slot_loader.dart';
 import 'reschedule_form_content.dart';
 
-typedef RescheduleConfirmCallback = Future<void> Function(
-  String date,
-  String startTime,
-  String endTime,
-  String reason, {
-  String? sessionId,
-});
+typedef RescheduleConfirmCallback =
+    Future<void> Function(
+      String date,
+      String startTime,
+      String endTime,
+      String reason, {
+      String? sessionId,
+    });
 
 class RescheduleBookingSheet extends StatefulWidget {
   final BookingModel booking;
@@ -33,13 +34,16 @@ class RescheduleBookingSheet extends StatefulWidget {
     required BookingModel booking,
     String? initialSessionId,
     required RescheduleConfirmCallback onConfirm,
-  }) =>
-      showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        builder: (_) => RescheduleBookingSheet(booking: booking, initialSessionId: initialSessionId, onConfirm: onConfirm),
-      );
+  }) => showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (_) => RescheduleBookingSheet(
+      booking: booking,
+      initialSessionId: initialSessionId,
+      onConfirm: onConfirm,
+    ),
+  );
 
   @override
   State<RescheduleBookingSheet> createState() => _RescheduleBookingSheetState();
@@ -51,13 +55,14 @@ class _RescheduleBookingSheetState extends State<RescheduleBookingSheet> {
   DateTime? _selectedDate;
   String? _selectedSlot, _selectedSessionId, _reasonError;
   List<String> _availableSlots = [];
-  bool _isLoadingSlots = false, _isSubmitting = false;
+  bool _isLoadingSlots = false, _isSubmitting = false, _loadFailed = false;
 
   @override
   void initState() {
     super.initState();
     if (widget.booking.isMonthly && widget.booking.sessions.isNotEmpty) {
-      _selectedSessionId = widget.initialSessionId ??
+      _selectedSessionId =
+          widget.initialSessionId ??
           widget.booking.nextUpcomingSession?.id ??
           widget.booking.sessions.first.id;
     }
@@ -71,24 +76,56 @@ class _RescheduleBookingSheetState extends State<RescheduleBookingSheet> {
   }
 
   Future<void> _loadCoachAndInitialSlots() async {
+    setState(() {
+      _isLoadingSlots = true;
+      _loadFailed = false;
+    });
     final coach = await RescheduleSlotLoader.loadCoach(widget.booking.coachUid);
     if (!mounted) return;
+    if (coach == null) {
+      setState(() {
+        _isLoadingSlots = false;
+        _loadFailed = true;
+      });
+      return;
+    }
     setState(() => _coach = coach);
-    _onDateSelected(RescheduleSlotLoader.findInitialDate(RescheduleSlotLoader.generateNext14Days(), coach));
+    _onDateSelected(
+      RescheduleSlotLoader.findInitialDate(
+        RescheduleSlotLoader.generateNext14Days(),
+        coach,
+      ),
+    );
   }
 
   Future<void> _onDateSelected(DateTime date) async {
+    final coach = _coach;
+    if (coach == null) return;
     setState(() {
       _selectedDate = date;
       _selectedSlot = null;
       _isLoadingSlots = true;
+      _loadFailed = false;
     });
-    final slots = await RescheduleSlotLoader.loadSlots(coachUid: widget.booking.coachUid, date: date, coach: _coach);
-    if (!mounted) return;
+    final slots = await RescheduleSlotLoader.loadSlots(
+      coach: coach,
+      date: date,
+    );
+    // Ignore an older answer if another day was tapped meanwhile.
+    if (!mounted || _selectedDate != date) return;
     setState(() {
-      _availableSlots = slots;
+      _availableSlots = slots ?? const [];
+      _loadFailed = slots == null;
       _isLoadingSlots = false;
     });
+  }
+
+  void _retry() {
+    if (_coach == null) {
+      _loadCoachAndInitialSlots();
+    } else if (_selectedDate != null) {
+      _onDateSelected(_selectedDate!);
+    }
   }
 
   Future<void> _submit() async {
@@ -101,8 +138,17 @@ class _RescheduleBookingSheetState extends State<RescheduleBookingSheet> {
     if (widget.booking.isMonthly && _selectedSessionId == null) return;
     setState(() => _isSubmitting = true);
     final dateStr = RescheduleSlotLoader.formatDate(_selectedDate!);
-    final endTime = BookingSlotCalculator.computeEndTime(_selectedSlot!, _coach?.sessionDurationMinutes ?? 60);
-    await widget.onConfirm(dateStr, _selectedSlot!, endTime, reason, sessionId: widget.booking.isMonthly ? _selectedSessionId : null);
+    final endTime = BookingSlotCalculator.computeEndTime(
+      _selectedSlot!,
+      _coach?.sessionDurationMinutes ?? 60,
+    );
+    await widget.onConfirm(
+      dateStr,
+      _selectedSlot!,
+      endTime,
+      reason,
+      sessionId: widget.booking.isMonthly ? _selectedSessionId : null,
+    );
     if (mounted) Navigator.pop(context);
   }
 
@@ -125,6 +171,8 @@ class _RescheduleBookingSheetState extends State<RescheduleBookingSheet> {
         selectedSlot: _selectedSlot,
         availableSlots: _availableSlots,
         isLoadingSlots: _isLoadingSlots,
+        slotsLoadFailed: _loadFailed,
+        onRetry: _retry,
         isSubmitting: _isSubmitting,
         reasonController: _reasonController,
         reasonError: _reasonError,

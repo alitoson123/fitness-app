@@ -1,3 +1,4 @@
+import 'package:fitness_app/features/booking_request/data/repos/booking_actions/booking_transitions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -19,11 +20,17 @@ class TraineeBookingCardHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    final isReschedule = booking.status == 'reschedule_pending';
-    final textSecondary =
-        isDark ? AppColors.darkTextSecondary : AppColors.textSecondary;
-    final locationLabel =
-        booking.isOnline ? s.onlineTrainingOption : booking.trainingLocation;
+    final shownStatus = BookingTransitions.displayStatus(
+      booking,
+      DateTime.now(),
+    );
+    final isReschedule = shownStatus == 'reschedule_pending';
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.textSecondary;
+    final locationLabel = booking.isOnline
+        ? s.onlineTrainingOption
+        : booking.trainingLocation;
 
     return Row(
       children: [
@@ -44,7 +51,9 @@ class TraineeBookingCardHeader extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w700,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.textPrimary,
                 ),
               ),
               SizedBox(height: 2.h),
@@ -59,7 +68,10 @@ class TraineeBookingCardHeader extends StatelessWidget {
                     ),
                   ),
                   if (locationLabel.isNotEmpty) ...[
-                    Text(' • ', style: TextStyle(fontSize: 11.sp, color: textSecondary)),
+                    Text(
+                      ' • ',
+                      style: TextStyle(fontSize: 11.sp, color: textSecondary),
+                    ),
                     Icon(
                       booking.isOnline
                           ? Icons.laptop_chromebook_rounded
@@ -87,11 +99,10 @@ class TraineeBookingCardHeader extends StatelessWidget {
           ),
         ),
         BookingStatusBadge(
-          status: booking.status,
+          status: shownStatus,
           customLabel: isReschedule ? s.rescheduleRequestedBadge : null,
         ),
       ],
     );
   }
 }
-

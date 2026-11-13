@@ -1,4 +1,5 @@
 import 'package:fitness_app/core/models/day_availability.dart';
+import 'package:fitness_app/core/widgets/availability_selector/availability_helper.dart';
 import 'package:fitness_app/features/coach_setup/data/models/coach_application_model.dart';
 import 'package:fitness_app/features/coach_setup/data/models/coach_profile_model.dart';
 import 'package:fitness_app/features/coach_setup/data/models/sport_location_model.dart';
@@ -27,6 +28,7 @@ class CoachSetupDraftHelper {
       'availabilitySummary': cubit.availabilitySummary,
       'weeklyAvailability':
           cubit.weeklyAvailability.map((e) => e.toMap()).toList(),
+      'sessionDurationMinutes': cubit.sessionDurationMinutes,
       'identityDocumentUrl': cubit.identityDocumentUrl,
       'certificateUrls': cubit.certificateUrls,
     };
@@ -50,8 +52,11 @@ class CoachSetupDraftHelper {
       sessionPriceUSD: cubit.sessionPriceUSD,
       monthlyPriceUSD: cubit.monthlyPriceUSD,
       currency: 'USD',
-      availabilitySummary: cubit.availabilitySummary.trim(),
+      // Built from the real schedule, the same way the Availability screen does.
+      availabilitySummary:
+          AvailabilityHelper.buildRawSummaryString(cubit.weeklyAvailability),
       weeklyAvailability: cubit.weeklyAvailability,
+      sessionDurationMinutes: cubit.sessionDurationMinutes,
       certificateUrls:
           cubit.certificateUrls.where((u) => u.isNotEmpty).toList(),
     );
@@ -91,6 +96,14 @@ class CoachSetupDraftHelper {
     c.monthlyPriceUSD = profile.monthlyPriceUSD;
     c.currency = 'USD';
     c.availabilitySummary = profile.availabilitySummary;
+    // Re-applying must keep the coach's real hours and session length
+    // (they used to be reset to the defaults on resubmission).
+    if (profile.weeklyAvailability.isNotEmpty) {
+      c.weeklyAvailability = List.from(profile.weeklyAvailability);
+    }
+    c.sessionDurationMinutes = profile.sessionDurationMinutes > 0
+        ? profile.sessionDurationMinutes
+        : 60;
     if (app != null) {
       c.identityDocumentUrl = app.identityDocumentUrl;
       c.certificateUrls = app.certificateUrls;
@@ -140,6 +153,7 @@ class CoachSetupDraftHelper {
               DayAvailability.fromMap(Map<String, dynamic>.from(e as Map)))
           .toList();
     }
+    c.sessionDurationMinutes = data['sessionDurationMinutes'] as int? ?? 60;
     c.identityDocumentUrl = data['identityDocumentUrl'] as String? ?? '';
     c.certificateUrls = (data['certificateUrls'] as List<dynamic>?)
             ?.map((e) => e.toString())

@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/errors/failure.dart';
 import 'package:fitness_app/core/services/logger_service/logger_service.dart';
 import 'package:fitness_app/features/coach_profile_details/data/repos/coach_profile_details_repo.dart';
 import 'package:fitness_app/features/coach_setup/data/models/coach_profile_model.dart';
@@ -31,14 +32,14 @@ class CoachProfileDetailsCubit extends Cubit<CoachProfileDetailsState> {
       emit(const CoachProfileDetailsLoading());
     }
 
-    final result = await repository.getCoachDetails(
-      coachUid: coachUid,
-      initialCoach: initialCoach,
-    );
+    final result = await repository.getCoachDetails(coachUid: coachUid);
 
     result.fold(
       (failure) {
-        if (state is! CoachProfileDetailsLoaded) {
+        // A coach who is gone replaces the old copy; a network problem
+        // keeps showing it.
+        if (state is! CoachProfileDetailsLoaded ||
+            failure is CoachUnavailableFailure) {
           emit(CoachProfileDetailsError(errorMessage: failure.errorMessage));
         } else {
           LoggerService.warning(

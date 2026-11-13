@@ -17,6 +17,12 @@ enum BookingActionError {
 
   /// Cancelling an approved booking whose (first) session already started.
   alreadyStarted,
+
+  /// The coach never answered and the request's time has passed.
+  expired,
+
+  /// Moving a booking to a time that has already passed.
+  timeInPast,
 }
 
 class BookingActionException implements Exception {
@@ -50,18 +56,23 @@ abstract class BookingTransitions {
   }
 
   static Map<String, dynamic> _clearedProposal() => {
-        'proposedDate': null,
-        'proposedStartTime': null,
-        'proposedEndTime': null,
-        'rescheduleReason': null,
-        'rescheduledBy': null,
-        'rescheduledAt': null,
-      };
+    'proposedDate': null,
+    'proposedStartTime': null,
+    'proposedEndTime': null,
+    'rescheduleReason': null,
+    'rescheduledBy': null,
+    'rescheduledAt': null,
+  };
 
   // ----------------------------------------------------------- whole booking
 
-  static Map<String, dynamic> approve(BookingModel b, String actor) {
+  static Map<String, dynamic> approve(
+    BookingModel b,
+    String actor, {
+    required DateTime now,
+  }) {
     _require(actor == coach && b.status == 'pending');
+    _requireNotExpired(b, now);
     return {'status': 'confirmed'};
   }
 
@@ -70,12 +81,11 @@ abstract class BookingTransitions {
     String actor, {
     String? reason,
   }) {
-    _require(actor == coach &&
-        (b.status == 'pending' || b.status == 'reschedule_pending'));
-    return {
-      'status': 'rejected',
-      'rejectionReason': ?_clean(reason),
-    };
+    _require(
+      actor == coach &&
+          (b.status == 'pending' || b.status == 'reschedule_pending'),
+    );
+    return {'status': 'rejected', 'rejectionReason': ?_clean(reason)};
   }
 
   /// Trainee cancels. A request the coach never approved can always be
@@ -90,10 +100,7 @@ abstract class BookingTransitions {
     if (_hasStartedApproved(b, now)) {
       throw const BookingActionException(BookingActionError.alreadyStarted);
     }
-    return {
-      'status': 'cancelled',
-      'cancellationReason': ?_clean(reason),
-    };
+    return {'status': 'cancelled', 'cancellationReason': ?_clean(reason)};
   }
 
   /// Coach marks a single-session booking as done once its time has come.
@@ -119,10 +126,15 @@ abstract class BookingTransitions {
     required String startTime,
     required String endTime,
     required String reason,
+    required DateTime now,
   }) {
-    _require(b.isSession &&
-        (b.status == 'pending' || b.status == 'confirmed') &&
-        (actor == coach || actor == trainee));
+    _require(
+      b.isSession &&
+          (b.status == 'pending' || b.status == 'confirmed') &&
+          (actor == coach || actor == trainee),
+    );
+    _requireNotExpired(b, now);
+    _requireFuture(date, startTime, now);
     return {
       'status': 'reschedule_pending',
       'statusBeforeReschedule': b.status,
@@ -141,12 +153,19 @@ abstract class BookingTransitions {
 
   /// The other side agrees: the booking moves to the new time and is
   /// confirmed (both people have now agreed on a time).
-  static Map<String, dynamic> acceptReschedule(BookingModel b, String actor) {
-    _require(b.isSession &&
-        b.status == 'reschedule_pending' &&
-        _isOtherSidesProposal(b.rescheduledBy, actor) &&
-        b.proposedDate != null &&
-        b.proposedStartTime != null);
+  static Map<String, dynamic> acceptReschedule(
+    BookingModel b,
+    String actor, {
+    required DateTime now,
+  }) {
+    _require(
+      b.isSession &&
+          b.status == 'reschedule_pending' &&
+          _isOtherSidesProposal(b.rescheduledBy, actor) &&
+          b.proposedDate != null &&
+          b.proposedStartTime != null,
+    );
+    _requireFuture(b.proposedDate!, b.proposedStartTime!, now);
     return {
       'status': 'confirmed',
       'date': b.proposedDate,
@@ -167,9 +186,11 @@ abstract class BookingTransitions {
     String actor, {
     String? reason,
   }) {
-    _require(b.isSession &&
-        b.status == 'reschedule_pending' &&
-        _isOtherSidesProposal(b.rescheduledBy, actor));
+    _require(
+      b.isSession &&
+          b.status == 'reschedule_pending' &&
+          _isOtherSidesProposal(b.rescheduledBy, actor),
+    );
     return {
       'status': b.restorableStatus,
       'previousDate': null,
@@ -191,13 +212,12 @@ abstract class BookingTransitions {
   static Map<String, dynamic> _sessionsUpdate(
     BookingModel before,
     BookingModel after,
-  ) =>
-      {
-        'status': after.status,
-        if (after.statusBeforeReschedule != before.statusBeforeReschedule)
-          'statusBeforeReschedule': after.statusBeforeReschedule,
-        'sessions': after.sessions.map((s) => s.toMap()).toList(),
-      };
+  ) => {
+    'status': after.status,
+    if (after.statusBeforeReschedule != before.statusBeforeReschedule)
+      'statusBeforeReschedule': after.statusBeforeReschedule,
+    'sessions': after.sessions.map((s) => s.toMap()).toList(),
+  };
 
   static Map<String, dynamic> proposeSessionReschedule(
     BookingModel b,
@@ -207,12 +227,17 @@ abstract class BookingTransitions {
     required String startTime,
     required String endTime,
     required String reason,
+    required DateTime now,
   }) {
-    _require(b.isMonthly &&
-        _active.contains(b.status) &&
-        (actor == coach || actor == trainee));
+    _require(
+      b.isMonthly &&
+          _active.contains(b.status) &&
+          (actor == coach || actor == trainee),
+    );
+    _requireNotExpired(b, now);
     final s = _session(b, sessionId);
     _require(s.canReschedule && !s.isReschedulePending);
+    _requireFuture(date, startTime, now);
     final updated = b.proposeMonthlySessionReschedule(
       sessionId: sessionId,
       proposedDate: date,
@@ -230,11 +255,17 @@ abstract class BookingTransitions {
     BookingModel b,
     String actor, {
     required String sessionId,
+    required DateTime now,
   }) {
     _require(b.isMonthly && b.status == 'reschedule_pending');
     final s = _session(b, sessionId);
-    _require(s.isReschedulePending &&
-        _isOtherSidesProposal(s.rescheduledBy, actor));
+    _require(
+      s.isReschedulePending &&
+          _isOtherSidesProposal(s.rescheduledBy, actor) &&
+          s.proposedDate != null &&
+          s.proposedStartTime != null,
+    );
+    _requireFuture(s.proposedDate!, s.proposedStartTime!, now);
     return _sessionsUpdate(
       b,
       b.acceptMonthlySessionReschedule(sessionId: sessionId),
@@ -248,8 +279,9 @@ abstract class BookingTransitions {
   }) {
     _require(b.isMonthly && b.status == 'reschedule_pending');
     final s = _session(b, sessionId);
-    _require(s.isReschedulePending &&
-        _isOtherSidesProposal(s.rescheduledBy, actor));
+    _require(
+      s.isReschedulePending && _isOtherSidesProposal(s.rescheduledBy, actor),
+    );
     return _sessionsUpdate(
       b,
       b.declineMonthlySessionReschedule(sessionId: sessionId),
@@ -265,7 +297,9 @@ abstract class BookingTransitions {
   }) {
     _require(actor == coach && b.isMonthly && b.isApproved);
     final s = _session(b, sessionId);
-    _require(!s.isCompleted && s.status != 'cancelled' && !s.isReschedulePending);
+    _require(
+      !s.isCompleted && s.status != 'cancelled' && !s.isReschedulePending,
+    );
     if (!s.hasStarted(now)) {
       throw const BookingActionException(BookingActionError.notStartedYet);
     }
@@ -292,6 +326,59 @@ abstract class BookingTransitions {
     return first ?? b.startDateTime;
   }
 
+  /// Latest time the booking refers to: its sessions and any proposal.
+  static DateTime? _latestStart(BookingModel b) {
+    final starts = <DateTime?>[
+      if (b.isSession) ...[
+        b.startDateTime,
+        if (b.proposedDate != null && b.proposedStartTime != null)
+          BookingSessionModel.parseStart(b.proposedDate!, b.proposedStartTime!),
+      ] else
+        for (final s in b.sessions) ...[
+          s.startDateTime,
+          if (s.proposedDate != null && s.proposedStartTime != null)
+            BookingSessionModel.parseStart(
+              s.proposedDate!,
+              s.proposedStartTime!,
+            ),
+        ],
+    ];
+    DateTime? latest;
+    for (final t in starts) {
+      if (t != null && (latest == null || t.isAfter(latest))) latest = t;
+    }
+    return latest;
+  }
+
+  /// The coach never approved the request and every time it mentions has
+  /// passed. Shown as "Expired"; it can no longer be approved. (Same rule as
+  /// isOpenRequest in functions/src/utils/booking_request.ts.)
+  static bool isExpired(BookingModel b, DateTime now) {
+    final neverApproved =
+        b.status == 'pending' ||
+        (b.status == 'reschedule_pending' && b.restorableStatus == 'pending');
+    if (!neverApproved) return false;
+    final latest = _latestStart(b);
+    return latest != null && !latest.isAfter(now);
+  }
+
+  /// 'expired' for expired requests, otherwise the stored status.
+  static String displayStatus(BookingModel b, DateTime now) =>
+      isExpired(b, now) ? 'expired' : b.status;
+
+  static void _requireNotExpired(BookingModel b, DateTime now) {
+    if (isExpired(b, now)) {
+      throw const BookingActionException(BookingActionError.expired);
+    }
+  }
+
+  static void _requireFuture(String date, String startTime, DateTime now) {
+    final t = BookingSessionModel.parseStart(date, startTime);
+    if (t == null || !t.isAfter(now)) {
+      throw const BookingActionException(BookingActionError.timeInPast);
+    }
+  }
+
   static bool _hasStartedApproved(BookingModel b, DateTime now) {
     if (!b.isApproved) return false;
     final start = firstStart(b);
@@ -300,7 +387,9 @@ abstract class BookingTransitions {
 
   /// Which buttons a screen may show (keeps UI and rules in step).
   static bool canCompleteBooking(BookingModel b, DateTime now) =>
-      b.isSession && b.status == 'confirmed' && (b.startDateTime?.isAfter(now) == false);
+      b.isSession &&
+      b.status == 'confirmed' &&
+      (b.startDateTime?.isAfter(now) == false);
 
   static bool canActOnSessions(BookingModel b) => _active.contains(b.status);
 
@@ -317,5 +406,7 @@ abstract class BookingTransitions {
       s.hasStarted(now);
 
   static bool canCancel(BookingModel b, DateTime now) =>
-      _active.contains(b.status) && !_hasStartedApproved(b, now);
+      _active.contains(b.status) &&
+      !isExpired(b, now) &&
+      !_hasStartedApproved(b, now);
 }

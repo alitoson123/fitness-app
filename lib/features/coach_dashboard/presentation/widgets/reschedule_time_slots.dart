@@ -9,6 +9,8 @@ class RescheduleTimeSlots extends StatelessWidget {
   final String? selectedSlot;
   final ValueChanged<String> onSelectSlot;
   final bool isLoading;
+  final bool hasError;
+  final VoidCallback? onRetry;
 
   const RescheduleTimeSlots({
     super.key,
@@ -16,6 +18,8 @@ class RescheduleTimeSlots extends StatelessWidget {
     required this.selectedSlot,
     required this.onSelectSlot,
     this.isLoading = false,
+    this.hasError = false,
+    this.onRetry,
   });
 
   @override
@@ -31,6 +35,33 @@ class RescheduleTimeSlots extends StatelessWidget {
       );
     }
 
+    if (hasError) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 8.h),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                S.of(context).slotsLoadFailed,
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.textSecondary,
+                ),
+              ),
+            ),
+            if (onRetry != null)
+              TextButton.icon(
+                onPressed: onRetry,
+                icon: Icon(Icons.refresh_rounded, size: 16.r),
+                label: Text(S.of(context).retry),
+              ),
+          ],
+        ),
+      );
+    }
+
     if (availableSlots.isEmpty) {
       return Padding(
         padding: EdgeInsets.symmetric(vertical: 12.h),
@@ -38,7 +69,9 @@ class RescheduleTimeSlots extends StatelessWidget {
           S.of(context).noAvailableSlotsForDay,
           style: TextStyle(
             fontSize: 12.sp,
-            color: isDark ? AppColors.darkTextSecondary : AppColors.textSecondary,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.textSecondary,
           ),
         ),
       );
@@ -74,8 +107,8 @@ class RescheduleTimeSlots extends StatelessWidget {
                 color: isSelected
                     ? Colors.white
                     : (isDark
-                        ? AppColors.darkTextPrimary
-                        : AppColors.textPrimary),
+                          ? AppColors.darkTextPrimary
+                          : AppColors.textPrimary),
               ),
             ),
           ),

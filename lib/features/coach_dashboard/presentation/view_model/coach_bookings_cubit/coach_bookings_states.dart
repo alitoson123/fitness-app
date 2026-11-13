@@ -1,3 +1,4 @@
+import 'package:fitness_app/features/booking_request/data/repos/booking_actions/booking_transitions.dart';
 import 'package:fitness_app/features/booking_request/data/models/booking_model.dart';
 
 enum CoachBookingTab { pending, confirmed, past }
@@ -19,18 +20,30 @@ class CoachBookingsState {
     this.successMessage,
   });
 
+  // Requests the coach never answered before their time are "expired":
+  // they move from the active tabs to Past.
+  static bool _expired(BookingModel b) =>
+      BookingTransitions.isExpired(b, DateTime.now());
+
   List<BookingModel> get pendingBookings =>
-      allBookings.where((b) => b.status == 'pending').toList();
+      allBookings.where((b) => b.status == 'pending' && !_expired(b)).toList();
 
   List<BookingModel> get confirmedBookings => allBookings
-      .where((b) => b.status == 'confirmed' || b.status == 'reschedule_pending')
+      .where(
+        (b) =>
+            (b.status == 'confirmed' || b.status == 'reschedule_pending') &&
+            !_expired(b),
+      )
       .toList();
 
   List<BookingModel> get pastBookings => allBookings
-      .where((b) =>
-          b.status == 'rejected' ||
-          b.status == 'completed' ||
-          b.status == 'cancelled')
+      .where(
+        (b) =>
+            b.status == 'rejected' ||
+            b.status == 'completed' ||
+            b.status == 'cancelled' ||
+            _expired(b),
+      )
       .toList();
 
   List<BookingModel> get currentTabBookings {

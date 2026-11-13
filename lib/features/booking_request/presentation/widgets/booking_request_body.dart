@@ -60,7 +60,8 @@ class BookingRequestBody extends StatelessWidget {
               totalRequired: state.requiredMonthlySessions,
               onRemoveSession: cubit.removeMonthlySession,
             ),
-            if (state.selectedMonthlySessions.isNotEmpty) SizedBox(height: 14.h),
+            if (state.selectedMonthlySessions.isNotEmpty)
+              SizedBox(height: 14.h),
           ],
           if (coach.sports.isNotEmpty) ...[
             BookingSportChips(
@@ -83,8 +84,12 @@ class BookingRequestBody extends StatelessWidget {
             dates: state.availableDates,
             selectedDate: state.selectedDate,
             coach: coach,
-            title: state.isMonthly ? s.selectPackageStartDate : s.selectTrainingDate,
-            hasSessionIndicator: state.isMonthly ? state.hasSessionOnDate : null,
+            title: state.isMonthly
+                ? s.selectPackageStartDate
+                : s.selectTrainingDate,
+            hasSessionIndicator: state.isMonthly
+                ? state.hasSessionOnDate
+                : null,
             onSelectDate: cubit.loadSlotsForDate,
           ),
           SizedBox(height: 18.h),
@@ -93,6 +98,8 @@ class BookingRequestBody extends StatelessWidget {
             selectedSlot: activeDateSlot,
             isLoading: state.status == BookingRequestStatus.loadingSlots,
             onSelectSlot: cubit.selectSlot,
+            hasError: state.slotsLoadFailed,
+            onRetry: cubit.retryLoadingSlots,
           ),
           SizedBox(height: 18.h),
           BookingSummaryCard(
