@@ -86,5 +86,19 @@ class CoachProfileSerializer {
         'verificationStatus': m.verificationStatus,
         if (m.updatedAt != null) 'updatedAt': m.updatedAt!.toIso8601String(),
       };
+
+  /// Fields controlled by the admin dashboard, never written by the coach app.
+  static const adminControlledKeys = {
+    'verificationStatus',
+    'rating',
+    'reviewsCount',
+  };
+
+  /// Payload for coach-initiated Firestore writes. Omits admin-controlled
+  /// fields so a stale local copy can never overwrite the admin's values
+  /// (and so the writes satisfy the `coach_profiles` security rules).
+  static Map<String, dynamic> toFirestoreMap(CoachProfileModel m) =>
+      Map.of(toMap(m))
+        ..removeWhere((key, _) => adminControlledKeys.contains(key));
 }
 

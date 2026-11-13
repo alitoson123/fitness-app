@@ -61,6 +61,8 @@ class PhoneAuthRemoteDataSource {
     return await _authService.signInWithCredential(credential);
   }
 
+  Future<void> signOut() => _authService.signOut();
+
   Future<UserModel?> getUser(String uid) async {
     LoggerService.debug(
       'Fetching user document for $uid',

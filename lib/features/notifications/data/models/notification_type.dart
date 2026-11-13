@@ -16,6 +16,11 @@ abstract class NotificationType {
       'booking_monthly_session_completed';
   static const String bookingCancelled = 'booking_cancelled';
 
+  /// Server-only: sent by `onAuthUserDeleted` when the other participant
+  /// deleted their account and the booking was cancelled automatically.
+  static const String bookingCancelledAccountDeleted =
+      'booking_cancelled_account_deleted';
+
   static const String coachVerificationSubmitted =
       'coach_verification_submitted';
   static const String coachProfileApproved = 'coach_profile_approved';

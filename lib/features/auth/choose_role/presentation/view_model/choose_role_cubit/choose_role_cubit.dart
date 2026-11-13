@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../core/constant/app_constants.dart';
+import '../../../../../../core/errors/auth_error_messages.dart';
 import '../../../../../../core/services/auth_service/auth_service.dart';
 import '../../../../../../core/services/database_service/firestore_service.dart';
 import '../../../../../../core/services/notification_service/notification_service.dart';
@@ -25,10 +26,11 @@ class ChooseRoleCubit extends Cubit<ChooseRoleStates> {
     try {
       var cachedUser = await authLocalDataSource.getUser();
       final firebaseUser = authService.currentUser;
-      final uid = cachedUser?.uid ?? firebaseUser?.uid;
+      // The signed-in Firebase account is the source of truth.
+      final uid = firebaseUser?.uid ?? cachedUser?.uid;
 
       if (uid == null) {
-        emit(ChooseRoleErrorState(errMessage: 'User session not found. Please log in again.'));
+        emit(ChooseRoleErrorState(errMessage: AuthErrorMessages.unexpected));
         return;
       }
 
@@ -48,8 +50,14 @@ class ChooseRoleCubit extends Cubit<ChooseRoleStates> {
 
       await notificationService?.syncUserPreferences(uid: uid, role: role);
       emit(ChooseRoleSuccessState(role: role));
-    } catch (e) {
-      emit(ChooseRoleErrorState(errMessage: e.toString()));
+    } on FirebaseException catch (e) {
+      emit(ChooseRoleErrorState(
+        errMessage: e.code == 'unavailable' || e.code == 'network-request-failed'
+            ? AuthErrorMessages.connection
+            : AuthErrorMessages.unexpected,
+      ));
+    } catch (_) {
+      emit(ChooseRoleErrorState(errMessage: AuthErrorMessages.unexpected));
     }
   }
 }

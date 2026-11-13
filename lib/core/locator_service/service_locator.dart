@@ -195,8 +195,7 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory<CoachVerificationStatusCubit>(
     () => CoachVerificationStatusCubit(
       repository: getIt<CoachSetupRepo>(),
-      authService: getIt<AuthService>(),
-      notificationService: getIt<NotificationService>(),
+      authSessionRepo: getIt<AuthSessionRepo>(),
     ),
   );
 
@@ -204,7 +203,6 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<AuthSessionRepo>(
     () => AuthSessionRepoImpl(
       authService: getIt<AuthService>(),
-      firestoreService: getIt<FirestoreService>(),
       authLocalDataSource: getIt<AuthLocalDataSource>(),
       notificationService: getIt<NotificationService>(),
     ),

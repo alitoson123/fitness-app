@@ -21,6 +21,7 @@ class _FakeDocSnapshot implements DocumentSnapshot<Map<String, dynamic>> {
 
 class FakeFirestoreService implements FirestoreService {
   final Map<String, Map<String, Map<String, dynamic>>> store = {};
+  Object? throwOnRead;
 
   void setDocData(String collection, String docId, Map<String, dynamic>? data) {
     store.putIfAbsent(collection, () => {})[docId] = data ?? {};
@@ -31,6 +32,7 @@ class FakeFirestoreService implements FirestoreService {
     required String collection,
     required String docId,
   }) async {
+    if (throwOnRead != null) throw throwOnRead!;
     final col = store[collection];
     if (col == null || !col.containsKey(docId)) {
       return _FakeDocSnapshot(false, null);
@@ -125,6 +127,58 @@ void main() {
 
       final route = await resolver.resolveTargetRoute(uid: 'trainee1', role: 'trainee');
       expect(route, AppRoutes.traineeHome);
+    });
+
+    test('throws suspended for a suspended account (any role)', () async {
+      fakeFirestore.setDocData(AppConstants.usersCollection, 'u1', {
+        'status': 'suspended',
+        'role': '',
+      });
+
+      expect(
+        () => resolver.resolveTargetRoute(uid: 'u1', role: ''),
+        throwsA(isA<AuthAccessDeniedException>().having(
+          (e) => e.reason, 'reason', AuthAccessDeniedReason.suspended,
+        )),
+      );
+    });
+
+    test('throws adminAccount for admins (never reaches choose-role)', () async {
+      fakeFirestore.setDocData(AppConstants.usersCollection, 'a1', {
+        'status': 'active',
+        'role': 'admin',
+      });
+
+      expect(
+        () => resolver.resolveTargetRoute(uid: 'a1', role: ''),
+        throwsA(isA<AuthAccessDeniedException>().having(
+          (e) => e.reason, 'reason', AuthAccessDeniedReason.adminAccount,
+        )),
+      );
+    });
+
+    test('server role wins over a stale cached role', () async {
+      fakeFirestore.setDocData(AppConstants.usersCollection, 'u2', {
+        'status': 'active',
+        'role': 'trainee',
+      });
+      fakeFirestore.setDocData(
+        AppConstants.traineeProfilesCollection,
+        'u2',
+        {'isProfileCompleted': true},
+      );
+
+      final route = await resolver.resolveTargetRoute(uid: 'u2', role: '');
+      expect(route, AppRoutes.traineeHome);
+    });
+
+    test('read errors are rethrown instead of guessing a setup route', () async {
+      fakeFirestore.throwOnRead = Exception('offline');
+
+      expect(
+        () => resolver.resolveTargetRoute(uid: 'trainee1', role: 'trainee'),
+        throwsException,
+      );
     });
   });
 }

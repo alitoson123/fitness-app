@@ -40,6 +40,7 @@ class NotificationAvatar extends StatelessWidget {
       case NotificationType.bookingRescheduleDeclined:
       case NotificationType.bookingMonthlySessionRescheduleDeclined:
       case NotificationType.bookingCancelled:
+      case NotificationType.bookingCancelledAccountDeleted:
       case NotificationType.coachProfileRejected:
         return (Icons.cancel_rounded, AppColors.error);
 

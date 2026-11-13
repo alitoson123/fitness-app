@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../services/logger_service/logger_service.dart';
 
@@ -58,6 +59,28 @@ class AuthService {
     return await _firebaseAuth.signInWithCredential(credential);
   }
 
+  /// Waits until Firebase has restored the persisted session at app start,
+  /// then returns the signed-in user (or null when signed out).
+  Future<User?> restoreCurrentUser({
+    Duration timeout = const Duration(seconds: 5),
+  }) async {
+    try {
+      return await _firebaseAuth.authStateChanges().first.timeout(timeout);
+    } on TimeoutException {
+      return _firebaseAuth.currentUser;
+    }
+  }
+
+  /// Confirms the current user's identity with a fresh SMS code so Firebase
+  /// allows sensitive actions such as account deletion.
+  Future<void> reauthenticate(AuthCredential credential) async {
+    final user = _firebaseAuth.currentUser;
+    if (user == null) {
+      throw FirebaseAuthException(code: 'no-current-user');
+    }
+    await user.reauthenticateWithCredential(credential);
+  }
+
   /// Signs out the currently authenticated user.
   Future<void> signOut() async {
     LoggerService.info('Signing out current user', tag: 'AuthService');
@@ -67,6 +90,10 @@ class AuthService {
   /// Permanently deletes the current user account from Firebase Auth.
   Future<void> deleteAccount() async {
     LoggerService.warning('Deleting current user account', tag: 'AuthService');
-    await _firebaseAuth.currentUser?.delete();
+    final user = _firebaseAuth.currentUser;
+    if (user == null) {
+      throw FirebaseAuthException(code: 'no-current-user');
+    }
+    await user.delete();
   }
 }

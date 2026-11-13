@@ -9,95 +9,30 @@ class BookingRequestRemoteDataSource {
 
   BookingRequestRemoteDataSource({required this.firestoreService});
 
+  /// Busy start times for [coachUid] on [date] (`YYYY-MM-DD`).
+  ///
+  /// Reads the public `coach_busy_slots/{coachUid}` document, which a Cloud
+  /// Function (`onBookingWritten`) rebuilds from the coach's bookings. The app
+  /// no longer reads other users' bookings, so the `bookings` collection can
+  /// stay private to each booking's coach and trainee.
   Future<List<String>> getBookedSlots({
     required String coachUid,
     required String date,
   }) async {
     LoggerService.info(
-      'Fetching remote booked slots for coach: $coachUid on $date',
+      'Fetching busy slots for coach: $coachUid on $date',
       tag: 'BookingRequestRemoteDataSource',
     );
 
-    final bookedSlots = <String>{};
-
-    final singleSnapshot = await firestoreService.getCollection(
-      collection: AppConstants.bookingsCollection,
-      queryBuilder: (query) => query
-          .where('coachUid', isEqualTo: coachUid)
-          .where('date', isEqualTo: date),
+    final doc = await firestoreService.getDoc(
+      collection: AppConstants.coachBusySlotsCollection,
+      docId: coachUid,
     );
-
-    for (final doc in singleSnapshot.docs) {
-      final data = doc.data();
-      final bookingType = data['bookingType'] as String? ?? 'session';
-      if (bookingType != 'session') continue;
-
-      final status = data['status'] as String? ?? '';
-      if (status != 'rejected' && status != 'cancelled') {
-        final slot = data['startTime'] as String?;
-        if (slot != null && slot.isNotEmpty) bookedSlots.add(slot);
-      }
-    }
-
-    final proposedSnapshot = await firestoreService.getCollection(
-      collection: AppConstants.bookingsCollection,
-      queryBuilder: (query) => query
-          .where('coachUid', isEqualTo: coachUid)
-          .where('proposedDate', isEqualTo: date),
-    );
-
-    for (final doc in proposedSnapshot.docs) {
-      final data = doc.data();
-      final bookingType = data['bookingType'] as String? ?? 'session';
-      if (bookingType != 'session') continue;
-
-      final status = data['status'] as String? ?? '';
-      if (status == 'reschedule_pending') {
-        final slot = data['proposedStartTime'] as String?;
-        if (slot != null && slot.isNotEmpty) bookedSlots.add(slot);
-      }
-    }
-
-    final monthlySnapshot = await firestoreService.getCollection(
-      collection: AppConstants.bookingsCollection,
-      queryBuilder: (query) => query
-          .where('coachUid', isEqualTo: coachUid)
-          .where('bookingType', isEqualTo: 'monthly')
-          .where(
-            'status',
-            whereIn: ['pending', 'confirmed', 'reschedule_pending'],
-          ),
-    );
-
-    for (final doc in monthlySnapshot.docs) {
-      final data = doc.data();
-      final status = data['status'] as String? ?? '';
-      if (status != 'rejected' && status != 'cancelled') {
-        final sessions = data['sessions'];
-        if (sessions is List) {
-          for (final s in sessions) {
-            if (s is Map) {
-              final sessionStatus = s['status'] as String? ?? 'scheduled';
-              if (sessionStatus != 'cancelled') {
-                if (s['date'] == date) {
-                  final slot = s['startTime'] as String?;
-                  if (slot != null && slot.isNotEmpty) bookedSlots.add(slot);
-                }
-                if (sessionStatus == 'reschedule_pending' &&
-                    s['proposedDate'] == date) {
-                  final proposedSlot = s['proposedStartTime'] as String?;
-                  if (proposedSlot != null && proposedSlot.isNotEmpty) {
-                    bookedSlots.add(proposedSlot);
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    return bookedSlots.toList();
+    final slots = doc.data()?['slots'];
+    if (slots is! Map) return const [];
+    final forDate = slots[date];
+    if (forDate is! List) return const [];
+    return forDate.whereType<String>().where((s) => s.isNotEmpty).toList();
   }
 
   Future<String> createBooking(BookingModel booking) async {

@@ -67,6 +67,10 @@ class CoachProfileModel {
 
   Map<String, dynamic> toMap() => CoachProfileSerializer.toMap(this);
 
+  /// Use for coach-initiated Firestore writes (excludes admin-only fields).
+  Map<String, dynamic> toFirestoreMap() =>
+      CoachProfileSerializer.toFirestoreMap(this);
+
   CoachProfileModel copyWith({
     String? uid,
     String? name,

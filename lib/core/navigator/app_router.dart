@@ -46,10 +46,12 @@ abstract class AppRouter {
       ),
       GoRoute(
         path: AppRoutes.otpVerification,
-        builder: (context, state) {
-          final cubit = state.extra as PhoneAuthCubit? ?? getIt<PhoneAuthCubit>();
-          return OtpVerificationView(cubit: cubit);
-        },
+        // The OTP screen only works with the cubit that sent the code; without
+        // it (e.g. restored deep link) there is nothing to verify.
+        redirect: (context, state) =>
+            state.extra is PhoneAuthCubit ? null : AppRoutes.signIn,
+        builder: (context, state) =>
+            OtpVerificationView(cubit: state.extra! as PhoneAuthCubit),
       ),
       GoRoute(
         path: AppRoutes.chooseRole,

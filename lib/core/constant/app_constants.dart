@@ -22,6 +22,8 @@ abstract class AppConstants {
   static const String notificationsCollection = 'notifications';
   static const String adminNotificationsCollection = 'admin_notifications';
   static const String fcmTokensCollection = 'fcm_tokens';
+  // Public per-coach busy slots, maintained server-side (Cloud Function).
+  static const String coachBusySlotsCollection = 'coach_busy_slots';
 
   // User & Reschedule Roles
   static const String roleCoach = 'coach';

@@ -42,6 +42,10 @@ class _PhoneSignInViewState extends State<PhoneSignInView> {
     return Scaffold(
       body: SafeArea(
         child: BlocConsumer<PhoneAuthCubit, PhoneAuthState>(
+          // While the OTP screen is on top it handles this cubit's states
+          // (resend, errors, success). Reacting here too used to push a
+          // second OTP screen on every resend and show every error twice.
+          listenWhen: (_, _) => ModalRoute.of(context)?.isCurrent ?? true,
           listener: (context, state) {
             if (state is PhoneAuthCodeSentState) {
               Message.showSuccess(context, S.of(context).codeSentSuccess);

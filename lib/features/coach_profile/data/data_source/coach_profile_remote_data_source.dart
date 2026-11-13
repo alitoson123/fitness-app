@@ -38,7 +38,7 @@ class CoachProfileRemoteDataSource {
     await firestoreService.setData(
       collection: AppConstants.coachProfilesCollection,
       docId: profile.uid,
-      data: profile.toMap(),
+      data: profile.toFirestoreMap(),
       merge: true,
     );
   }

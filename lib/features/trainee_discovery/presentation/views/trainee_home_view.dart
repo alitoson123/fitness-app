@@ -8,6 +8,7 @@ import '../../../../core/services/auth_service/auth_service.dart';
 import '../../../../generated/l10n.dart';
 import '../../../auth/core/presentation/view_model/auth_session_cubit/auth_session_cubit.dart';
 import '../../../auth/core/presentation/view_model/auth_session_cubit/auth_session_states.dart';
+import '../../../auth/core/widgets/reauth_delete_dialog.dart';
 import '../../../notifications/presentation/view_model/notifications_cubit/notifications_cubit.dart';
 import '../../../trainee_bookings/presentation/view_model/trainee_bookings_cubit/trainee_bookings_cubit.dart';
 import '../../../trainee_bookings/presentation/views/trainee_bookings_page.dart';
@@ -77,6 +78,8 @@ class _TraineeHomeViewState extends State<TraineeHomeView> {
                 S.of(context).accountDeletedSuccess,
               );
               context.go(AppRoutes.signIn);
+            } else if (state is AuthSessionReauthRequiredState) {
+              ReauthDeleteDialog.show(context);
             } else if (state is AuthSessionErrorState) {
               Message.showError(context, state.errorMessage);
             }

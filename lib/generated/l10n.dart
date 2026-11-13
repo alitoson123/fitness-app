@@ -7529,6 +7529,116 @@ class S {
       args: [],
     );
   }
+
+  /// `Your account has been suspended. Please contact support.`
+  String get accountSuspendedMessage {
+    return Intl.message(
+      'Your account has been suspended. Please contact support.',
+      name: 'accountSuspendedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Admin accounts can't use the mobile app. Please use the admin dashboard.`
+  String get adminUseDashboardMessage {
+    return Intl.message(
+      'Admin accounts can\'t use the mobile app. Please use the admin dashboard.',
+      name: 'adminUseDashboardMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We couldn't connect. Check your internet connection and try again.`
+  String get connectionErrorMessage {
+    return Intl.message(
+      'We couldn\'t connect. Check your internet connection and try again.',
+      name: 'connectionErrorMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We couldn't send the code. Please try again.`
+  String get smsSendFailed {
+    return Intl.message(
+      'We couldn\'t send the code. Please try again.',
+      name: 'smsSendFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Something went wrong. Please try again.`
+  String get unexpectedErrorMessage {
+    return Intl.message(
+      'Something went wrong. Please try again.',
+      name: 'unexpectedErrorMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The code is incorrect or has expired.`
+  String get otpIncorrectOrExpired {
+    return Intl.message(
+      'The code is incorrect or has expired.',
+      name: 'otpIncorrectOrExpired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Too many attempts. Please try again later.`
+  String get tooManyAttemptsMessage {
+    return Intl.message(
+      'Too many attempts. Please try again later.',
+      name: 'tooManyAttemptsMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm it's you`
+  String get confirmDeletionTitle {
+    return Intl.message(
+      'Confirm it\'s you',
+      name: 'confirmDeletionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `For your security, enter the 6-digit code we sent to {phone} to delete your account.`
+  String confirmDeletionMessage(Object phone) {
+    return Intl.message(
+      'For your security, enter the 6-digit code we sent to $phone to delete your account.',
+      name: 'confirmDeletionMessage',
+      desc: '',
+      args: [phone],
+    );
+  }
+
+  /// `Sending code...`
+  String get sendingCode {
+    return Intl.message(
+      'Sending code...',
+      name: 'sendingCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancelled automatically because the other account was deleted.`
+  String get cancelledAccountDeletedReason {
+    return Intl.message(
+      'Cancelled automatically because the other account was deleted.',
+      name: 'cancelledAccountDeletedReason',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -1,11 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app/core/constant/app_constants.dart';
+import 'package:fitness_app/core/errors/failure.dart';
 import 'package:fitness_app/core/services/auth_service/auth_service.dart';
 import 'package:fitness_app/core/services/database_service/firestore_service.dart';
 import 'package:fitness_app/core/services/notification_service/notification_service.dart';
 import 'package:fitness_app/features/auth/core/data/data_source/auth_local_data_source.dart';
 import 'package:fitness_app/features/auth/core/data/repo_impl/auth_session_repo_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fitness_app/generated/l10n.dart';
+import 'package:flutter/widgets.dart';
+
 
 class _FakeUser implements User {
   @override
@@ -18,6 +22,7 @@ class _FakeUser implements User {
 class _FakeAuthService implements AuthService {
   User? user;
   final List<String> events = [];
+  FirebaseAuthException? deleteError;
   _FakeAuthService(this.user);
   @override
   User? get currentUser => user;
@@ -29,8 +34,14 @@ class _FakeAuthService implements AuthService {
 
   @override
   Future<void> deleteAccount() async {
+    if (deleteError != null) throw deleteError!;
     events.add('auth_delete');
     user = null;
+  }
+
+  @override
+  Future<void> reauthenticate(AuthCredential credential) async {
+    events.add('reauth');
   }
 
   @override
@@ -56,6 +67,9 @@ class _FakeAuthLocalDataSource implements AuthLocalDataSource {
   @override
   Future<void> deleteUser(String boxName) async => clearedBoxes.add(boxName);
   @override
+  Future<void> clearSession() async =>
+      clearedBoxes.addAll(AuthLocalDataSource.sessionBoxes);
+  @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
@@ -70,7 +84,17 @@ class _SpyNotificationService extends NotificationService {
       events.add('delete_token_doc:$uid');
 }
 
+class _ThrowingNotificationService extends NotificationService {
+  _ThrowingNotificationService(List<String> _)
+    : super(firestoreService: _FakeFirestoreService());
+  @override
+  Future<void> detachFcmToken(String uid) async =>
+      throw Exception('offline');
+}
+
 void main() {
+  setUpAll(() => S.load(const Locale('en')));
+
   group('AuthSessionRepoImpl Token Lifecycle Tests (Milestone 11.2)', () {
     late _FakeAuthService authService;
     late _FakeFirestoreService firestore;
@@ -85,48 +109,78 @@ void main() {
       notificationService = _SpyNotificationService(authService.events);
       repo = AuthSessionRepoImpl(
         authService: authService,
-        firestoreService: firestore,
         authLocalDataSource: localDataSource,
         notificationService: notificationService,
       );
     });
 
     test(
-      'signOut detaches FCM token before signing out of FirebaseAuth',
+      'signOut detaches FCM token, signs out, and wipes every account cache',
       () async {
         final result = await repo.signOut();
 
         expect(result.isRight(), isTrue);
         expect(authService.events, ['detach:user_99', 'auth_sign_out']);
-        expect(localDataSource.clearedBoxes, [AppConstants.userBox]);
+        expect(localDataSource.clearedBoxes, [
+          AppConstants.userBox,
+          AppConstants.traineeProfileBox,
+          AppConstants.coachProfileBox,
+        ]);
       },
     );
 
+    test('signOut still signs out and wipes caches when detach fails', () async {
+      final failing = _ThrowingNotificationService(authService.events);
+      repo = AuthSessionRepoImpl(
+        authService: authService,
+        authLocalDataSource: localDataSource,
+        notificationService: failing,
+      );
+
+      final result = await repo.signOut();
+
+      expect(result.isRight(), isTrue);
+      expect(authService.events, ['auth_sign_out']);
+      expect(localDataSource.clearedBoxes, AuthLocalDataSource.sessionBoxes);
+    });
+
     test(
-      'deleteAccount deletes fcm_tokens doc and user collections before auth deletion',
+      'deleteAccount deletes the login first and leaves data to the server',
       () async {
         final result = await repo.deleteAccount();
 
         expect(result.isRight(), isTrue);
-        expect(authService.events, ['delete_token_doc:user_99', 'auth_delete']);
-        expect(
-          firestore.deletedDocs,
-          containsAll([
-            '${AppConstants.usersCollection}/user_99',
-            '${AppConstants.coachProfilesCollection}/user_99',
-            '${AppConstants.traineeProfilesCollection}/user_99',
-            '${AppConstants.verificationsCollection}/user_99',
-          ]),
-        );
-        expect(
-          localDataSource.clearedBoxes,
-          containsAll([
-            AppConstants.userBox,
-            AppConstants.traineeProfileBox,
-            AppConstants.coachProfileBox,
-          ]),
-        );
+        expect(authService.events, ['auth_delete']);
+        expect(firestore.deletedDocs, isEmpty);
+        expect(localDataSource.clearedBoxes, AuthLocalDataSource.sessionBoxes);
       },
     );
+
+    test(
+      'deleteAccount asks for re-auth and deletes nothing when sign-in is old',
+      () async {
+        authService.deleteError =
+            FirebaseAuthException(code: 'requires-recent-login');
+
+        final result = await repo.deleteAccount();
+
+        expect(
+          result.fold((f) => f, (_) => null),
+          isA<ReauthRequiredFailure>(),
+        );
+        expect(authService.events, isEmpty);
+        expect(firestore.deletedDocs, isEmpty);
+        expect(localDataSource.clearedBoxes, isEmpty);
+      },
+    );
+
+    test('reauthenticateAndDelete confirms identity then deletes', () async {
+      final result = await repo.reauthenticateAndDelete(
+        PhoneAuthProvider.credential(verificationId: 'v', smsCode: '123456'),
+      );
+
+      expect(result.isRight(), isTrue);
+      expect(authService.events, ['reauth', 'auth_delete']);
+    });
   });
 }

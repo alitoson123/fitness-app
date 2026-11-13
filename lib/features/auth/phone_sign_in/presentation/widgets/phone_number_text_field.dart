@@ -28,7 +28,9 @@ class PhoneNumberTextField extends StatelessWidget {
       controller: controller,
       keyboardType: TextInputType.phone,
       textInputAction: TextInputAction.done,
-      maxLength: selectedCountry.maxLength,
+      // +1 so the local trunk "0" fits (e.g. Egyptians type 01012345678);
+      // PhoneNumberHelper strips it before validating.
+      maxLength: selectedCountry.maxLength + 1,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],

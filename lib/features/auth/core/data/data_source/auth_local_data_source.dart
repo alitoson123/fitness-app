@@ -66,9 +66,34 @@ class AuthLocalDataSource {
     }
   }
 
-
-
   Future<void> deleteUser(String boxName) async {
     await generalLocalService.clearBox(boxName);
+  }
+
+  /// Boxes holding data that belongs to the signed-in account. All of them
+  /// must be wiped on sign-out / account switch, otherwise the next account
+  /// on this device sees (and writes with) the previous account's data.
+  /// App settings (language, theme) are device-level and are kept.
+  static const List<String> sessionBoxes = [
+    AppConstants.userBox,
+    AppConstants.traineeProfileBox,
+    AppConstants.coachProfileBox, // also holds the coach sign-up draft
+  ];
+
+  /// Clears every account-specific local cache. Each box is cleared
+  /// independently so one failure doesn't leave the others behind.
+  Future<void> clearSession() async {
+    for (final box in sessionBoxes) {
+      try {
+        await generalLocalService.clearBox(box);
+      } catch (error, stackTrace) {
+        LoggerService.error(
+          'Failed to clear local box $box: $error',
+          tag: 'AuthLocalDataSource',
+          error: error,
+          stackTrace: stackTrace,
+        );
+      }
+    }
   }
 }

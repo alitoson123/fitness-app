@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../generated/l10n.dart';
+import '../../../booking_request/data/models/booking_model.dart';
 
 class TraineeCancelledBookingSection extends StatelessWidget {
   final String? cancellationReason;
@@ -25,7 +26,7 @@ class TraineeCancelledBookingSection extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(bottom: 8.h),
             child: Text(
-              cancellationReason!,
+              BookingModel.displayCancellationReason(cancellationReason!, s),
               style: TextStyle(
                 fontSize: 11.sp,
                 fontStyle: FontStyle.italic,

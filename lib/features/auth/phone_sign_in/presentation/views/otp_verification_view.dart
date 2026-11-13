@@ -54,9 +54,14 @@ class _OtpVerificationViewState extends State<OtpVerificationView> {
         ),
         body: SafeArea(
           child: BlocConsumer<PhoneAuthCubit, PhoneAuthState>(
+            listenWhen: (_, _) => ModalRoute.of(context)?.isCurrent ?? true,
             listener: (context, state) {
               if (state is PhoneAuthSuccessState) {
                 context.go(state.targetRoute);
+              } else if (state is PhoneAuthCodeSentState) {
+                // A resend from this screen: stay here, just confirm it.
+                _pinController.clear();
+                Message.showSuccess(context, S.of(context).codeSentSuccess);
               } else if (state is PhoneAuthErrorState) {
                 Message.showError(context, state.errorMessage);
               }

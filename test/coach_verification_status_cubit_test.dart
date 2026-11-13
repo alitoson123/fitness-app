@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:fitness_app/core/errors/failure.dart';
-import 'package:fitness_app/core/services/auth_service/auth_service.dart';
+import 'package:fitness_app/features/auth/core/domain/repo/auth_session_repo.dart';
 import 'package:fitness_app/features/coach_setup/data/models/coach_application_model.dart';
 import 'package:fitness_app/features/coach_setup/data/models/coach_profile_model.dart';
 import 'package:fitness_app/features/coach_setup/domain/repo/coach_setup_repo.dart';
@@ -35,30 +35,31 @@ class FakeCoachSetupRepo implements CoachSetupRepo {
   }
 }
 
-class FakeAuthService implements AuthService {
+class FakeAuthSessionRepo implements AuthSessionRepo {
   bool signOutCalled = false;
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 
   @override
-  Future<void> signOut() async {
+  Future<Either<Failure, void>> signOut() async {
     signOutCalled = true;
+    return const Right(null);
   }
 }
 
 void main() {
   group('CoachVerificationStatusCubit Tests', () {
     late FakeCoachSetupRepo fakeRepo;
-    late FakeAuthService fakeAuthService;
+    late FakeAuthSessionRepo fakeAuthSessionRepo;
     late CoachVerificationStatusCubit cubit;
 
     setUp(() {
       fakeRepo = FakeCoachSetupRepo();
-      fakeAuthService = FakeAuthService();
+      fakeAuthSessionRepo = FakeAuthSessionRepo();
       cubit = CoachVerificationStatusCubit(
         repository: fakeRepo,
-        authService: fakeAuthService,
+        authSessionRepo: fakeAuthSessionRepo,
       );
     });
 
@@ -161,14 +162,14 @@ void main() {
       );
     });
 
-    test('signOut calls AuthService and emits SignedOutState', () async {
+    test('signOut uses the shared sign-out (wipes caches) and emits SignedOutState', () async {
       expectLater(
         cubit.stream,
         emits(isA<CoachVerificationStatusSignedOutState>()),
       );
 
       await cubit.signOut();
-      expect(fakeAuthService.signOutCalled, isTrue);
+      expect(fakeAuthSessionRepo.signOutCalled, isTrue);
     });
   });
 }

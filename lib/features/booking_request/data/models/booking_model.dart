@@ -1,7 +1,17 @@
+import '../../../../generated/l10n.dart';
 import 'booking_serializer.dart';
 import 'booking_session_model.dart';
 
 class BookingModel {
+  /// Set by the `onAuthUserDeleted` Cloud Function when the other
+  /// participant deleted their account.
+  static const String accountDeletedReason = 'account_deleted';
+
+  /// Turns system reason codes into localized text; free text written by a
+  /// user is shown as-is.
+  static String displayCancellationReason(String reason, S s) =>
+      reason == accountDeletedReason ? s.cancelledAccountDeletedReason : reason;
+
   final String id, coachUid, coachName, coachPhotoUrl;
   final String traineeUid, traineeName, traineePhotoUrl;
   final String sport, bookingType, date, startTime, endTime;

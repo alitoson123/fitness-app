@@ -1,6 +1,5 @@
 import 'dart:async';
-import 'package:fitness_app/core/services/auth_service/auth_service.dart';
-import 'package:fitness_app/core/services/notification_service/notification_service.dart';
+import 'package:fitness_app/features/auth/core/domain/repo/auth_session_repo.dart';
 import 'package:fitness_app/features/coach_setup/data/models/coach_application_model.dart';
 import 'package:fitness_app/features/coach_setup/domain/repo/coach_setup_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,14 +8,12 @@ import 'coach_status_states.dart';
 class CoachVerificationStatusCubit
     extends Cubit<CoachVerificationStatusState> {
   final CoachSetupRepo repository;
-  final AuthService authService;
-  final NotificationService? notificationService;
+  final AuthSessionRepo authSessionRepo;
   StreamSubscription<CoachApplicationModel?>? _subscription;
 
   CoachVerificationStatusCubit({
     required this.repository,
-    required this.authService,
-    this.notificationService,
+    required this.authSessionRepo,
   }) : super(const CoachVerificationStatusInitialState());
 
   void listenToVerificationStatus() {
@@ -90,15 +87,17 @@ class CoachVerificationStatusCubit
     }
   }
 
+  /// Uses the shared sign-out so the local caches are wiped too (the old
+  /// version only signed out of Firebase, leaving the cached user behind).
   Future<void> signOut() async {
-    if (notificationService != null) {
-      final uid = authService.currentUser?.uid;
-      if (uid != null && uid.isNotEmpty) {
-        await notificationService!.detachFcmToken(uid);
-      }
-    }
-    await authService.signOut();
-    emit(const CoachVerificationStatusSignedOutState());
+    final result = await authSessionRepo.signOut();
+    if (isClosed) return;
+    result.fold(
+      (failure) => emit(
+        CoachVerificationStatusErrorState(errorMessage: failure.errorMessage),
+      ),
+      (_) => emit(const CoachVerificationStatusSignedOutState()),
+    );
   }
 
   @override

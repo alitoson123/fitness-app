@@ -8,7 +8,23 @@ import '../../../../core/services/notification_service/notification_service.dart
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../generated/l10n.dart';
+import '../../../../core/services/auth_service/auth_service.dart';
 import '../../../auth/core/data/data_source/auth_local_data_source.dart';
+import '../../../auth/core/domain/repo/auth_session_repo.dart';
+
+sealed class _SplashOutcome {
+  const _SplashOutcome();
+}
+
+class _SplashRoute extends _SplashOutcome {
+  final String route;
+  const _SplashRoute(this.route);
+}
+
+class _SplashBlocked extends _SplashOutcome {
+  final _SplashProblem problem;
+  const _SplashBlocked(this.problem);
+}
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -17,46 +33,148 @@ class SplashView extends StatefulWidget {
   State<SplashView> createState() => _SplashViewState();
 }
 
+enum _SplashProblem { connection, suspended, adminAccount }
+
 class _SplashViewState extends State<SplashView> {
+  _SplashProblem? _problem;
+  bool _isWorking = true;
+
   @override
   void initState() {
     super.initState();
-    _navigateToNext();
+    _navigateToNext(withMinimumDelay: true);
   }
 
-  Future<void> _navigateToNext() async {
-    await Future.delayed(const Duration(seconds: 2));
+  Future<void> _navigateToNext({bool withMinimumDelay = false}) async {
+    if (_problem != null) {
+      setState(() {
+        _problem = null;
+        _isWorking = true;
+      });
+    }
+    // Keep the brand visible briefly, but do the real work in parallel.
+    final minimumDelay = withMinimumDelay
+        ? Future<void>.delayed(const Duration(milliseconds: 1200))
+        : Future<void>.value();
+    final outcome = await _resolve();
+    await minimumDelay;
     if (!mounted) return;
 
-    final authLocalDataSource = getIt<AuthLocalDataSource>();
-    final currentUser = await authLocalDataSource.getUser();
-
-    if (currentUser != null && mounted) {
-      final notificationService = getIt<NotificationService>();
-      notificationService.syncFcmToken(
-        currentUser.uid,
-        role: currentUser.role,
-      );
-      final routeResolver = getIt<AuthRouteResolver>();
-      final targetRoute = await routeResolver.resolveTargetRoute(
-        uid: currentUser.uid,
-        role: currentUser.role,
-      );
-      if (mounted) {
-        context.go(targetRoute);
-        if (targetRoute != AppRoutes.signIn) {
+    final notificationService = getIt<NotificationService>();
+    switch (outcome) {
+      case _SplashRoute(:final route):
+        context.go(route);
+        if (route != AppRoutes.signIn) {
           await notificationService.consumePendingDeepLink();
         } else {
           notificationService.clearPendingDeepLink();
         }
+      case _SplashBlocked(:final problem):
+        if (problem != _SplashProblem.connection) {
+          notificationService.clearPendingDeepLink();
+        }
+        setState(() {
+          _problem = problem;
+          _isWorking = false;
+        });
+    }
+  }
+
+  Future<_SplashOutcome> _resolve() async {
+    final firebaseUser = await getIt<AuthService>().restoreCurrentUser();
+    final cachedUser = await getIt<AuthLocalDataSource>().getUser();
+
+    // Only a real Firebase session that matches the cached account counts as
+    // signed in. Anything else (signed out elsewhere, login deleted/disabled,
+    // stale cache from another account) starts clean.
+    if (firebaseUser == null ||
+        cachedUser == null ||
+        cachedUser.uid != firebaseUser.uid) {
+      if (firebaseUser != null || cachedUser != null) {
+        await getIt<AuthSessionRepo>().signOut();
       }
-      return;
+      return const _SplashRoute(AppRoutes.signIn);
     }
 
-    if (mounted) {
-      context.go(AppRoutes.signIn);
-      getIt<NotificationService>().clearPendingDeepLink();
+    try {
+      final route = await getIt<AuthRouteResolver>().resolveTargetRoute(
+        uid: cachedUser.uid,
+        role: cachedUser.role,
+      );
+      getIt<NotificationService>().syncFcmToken(
+        cachedUser.uid,
+        role: cachedUser.role,
+      );
+      return _SplashRoute(route);
+    } on AuthAccessDeniedException catch (e) {
+      await getIt<AuthSessionRepo>().signOut();
+      return _SplashBlocked(
+        e.reason == AuthAccessDeniedReason.suspended
+            ? _SplashProblem.suspended
+            : _SplashProblem.adminAccount,
+      );
+    } catch (_) {
+      return const _SplashBlocked(_SplashProblem.connection);
     }
+  }
+
+  Future<void> _signOutAndContinue() async {
+    setState(() => _isWorking = true);
+    await getIt<AuthSessionRepo>().signOut();
+    if (!mounted) return;
+    getIt<NotificationService>().clearPendingDeepLink();
+    context.go(AppRoutes.signIn);
+  }
+
+  Widget _buildProblemPanel(BuildContext context, _SplashProblem problem) {
+    final s = S.of(context);
+    final message = switch (problem) {
+      _SplashProblem.connection => s.connectionErrorMessage,
+      _SplashProblem.suspended => s.accountSuspendedMessage,
+      _SplashProblem.adminAccount => s.adminUseDashboardMessage,
+    };
+    final buttonStyle = ElevatedButton.styleFrom(
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.black87,
+      minimumSize: Size(double.infinity, 48.h),
+    );
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 32.w),
+      child: Column(
+        children: [
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 14.sp,
+              height: 1.4,
+              color: Colors.white.withOpacity(0.85),
+            ),
+          ),
+          SizedBox(height: 20.h),
+          if (problem == _SplashProblem.connection) ...[
+            ElevatedButton(
+              style: buttonStyle,
+              onPressed: () => _navigateToNext(),
+              child: Text(s.retry),
+            ),
+            TextButton(
+              onPressed: _signOutAndContinue,
+              child: Text(
+                s.signOut,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          ] else
+            ElevatedButton(
+              style: buttonStyle,
+              onPressed: () => context.go(AppRoutes.signIn),
+              child: Text(s.ok),
+            ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -111,6 +229,18 @@ class _SplashViewState extends State<SplashView> {
                 color: Colors.white.withOpacity(0.60),
               ),
             ),
+            SizedBox(height: 40.h),
+            if (_problem != null && !_isWorking)
+              _buildProblemPanel(context, _problem!)
+            else if (_isWorking && _problem == null)
+              SizedBox(
+                width: 22.r,
+                height: 22.r,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white.withOpacity(0.7),
+                ),
+              ),
           ],
         ),
       ),

@@ -8,6 +8,9 @@ import 'package:fitness_app/features/auth/phone_sign_in/data/repos/phone_auth_re
 import 'package:fitness_app/features/auth/phone_sign_in/presentation/view_model/phone_auth_cubit/phone_auth_cubit.dart';
 import 'package:fitness_app/features/auth/phone_sign_in/presentation/view_model/phone_auth_cubit/phone_auth_states.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fitness_app/generated/l10n.dart';
+import 'package:flutter/widgets.dart';
+
 
 class FakePhoneAuthRepo implements PhoneAuthRepo {
   bool sendOtpCalled = false;
@@ -53,6 +56,8 @@ class FakePhoneAuthRepo implements PhoneAuthRepo {
 }
 
 void main() {
+  setUpAll(() => S.load(const Locale('en')));
+
   late FakePhoneAuthRepo fakeRepo;
   late PhoneAuthCubit cubit;
 
@@ -114,4 +119,37 @@ void main() {
     final state = cubit.state as PhoneAuthErrorState;
     expect(state.errorMessage, 'Invalid OTP code.');
   });
+
+  test('sendOtp accepts an Egyptian number typed with the leading 0', () async {
+    await cubit.sendOtp(rawNumber: '01012345678');
+    expect(fakeRepo.sentPhoneNumber, '+201012345678');
+    expect(cubit.state, isA<PhoneAuthCodeSentState>());
+  });
+
+  test('a code-sent callback after the cubit is closed does not throw', () async {
+    final lateRepo = _LateCallbackRepo();
+    final lateCubit = PhoneAuthCubit(phoneAuthRepo: lateRepo);
+    await lateCubit.sendOtp(rawNumber: '1012345678');
+    await lateCubit.close();
+
+    expect(() => lateRepo.fireCodeSent(), returnsNormally);
+  });
+}
+
+class _LateCallbackRepo extends FakePhoneAuthRepo {
+  PhoneCodeSent? _codeSent;
+
+  @override
+  Future<void> sendOtp({
+    required String fullPhoneNumber,
+    required PhoneVerificationCompleted verificationCompleted,
+    required PhoneVerificationFailed verificationFailed,
+    required PhoneCodeSent codeSent,
+    required PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
+    int? resendToken,
+  }) async {
+    _codeSent = codeSent;
+  }
+
+  void fireCodeSent() => _codeSent?.call('late-id', 1);
 }

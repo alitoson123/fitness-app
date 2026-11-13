@@ -6,7 +6,8 @@
     "build:watch": "tsc --watch",
     "test": "tsc -p tsconfig.test.json && node --test dist-test/test/*.test.js",
     "serve": "npm run build && firebase emulators:start --only functions,firestore",
-    "deploy": "firebase deploy --only functions"
+    "deploy": "firebase deploy --only functions",
+    "backfill:busy-slots": "npm run build && node lib/scripts/backfill_busy_slots.js"
   },
   "engines": {
     "node": "22"

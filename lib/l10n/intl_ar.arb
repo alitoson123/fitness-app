@@ -744,5 +744,16 @@
   "timeHoursAgo": "منذ {hours} س",
   "timeDaysAgo": "منذ {days} ي",
   "notificationsTooltip": "الإشعارات",
-  "viewBookingAction": "عرض الحجز"
+  "viewBookingAction": "عرض الحجز",
+  "accountSuspendedMessage": "تم إيقاف حسابك. يرجى التواصل مع الدعم.",
+  "adminUseDashboardMessage": "لا يمكن لحسابات المشرفين استخدام تطبيق الهاتف. يرجى استخدام لوحة التحكم.",
+  "connectionErrorMessage": "تعذر الاتصال. تحقق من اتصالك بالإنترنت وحاول مرة أخرى.",
+  "smsSendFailed": "تعذر إرسال الرمز. يرجى المحاولة مرة أخرى.",
+  "unexpectedErrorMessage": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+  "otpIncorrectOrExpired": "الرمز غير صحيح أو انتهت صلاحيته.",
+  "tooManyAttemptsMessage": "محاولات كثيرة جدًا. يرجى المحاولة لاحقًا.",
+  "confirmDeletionTitle": "تأكيد هويتك",
+  "confirmDeletionMessage": "لحماية حسابك، أدخل الرمز المكوّن من 6 أرقام الذي أرسلناه إلى {phone} لحذف حسابك.",
+  "sendingCode": "جارٍ إرسال الرمز...",
+  "cancelledAccountDeletedReason": "أُلغي تلقائيًا لأن الحساب الآخر تم حذفه."
 }

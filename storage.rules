@@ -1,9 +1,71 @@
 rules_version = '2';
 
+// Upload paths used by the app:
+//   avatars/{uid}_{timestamp}.jpg            (setup avatar picker)
+//   coach_avatars/{uid}.jpg                  (coach profile edit)
+//   trainee_avatars/{uid}.jpg                (trainee profile edit)
+//   coach_documents/{uid}_{folder}_{ts}.ext  (ID + certificates)
+//
+// Note: files fetched through a Firebase download URL (with its token) bypass
+// these read rules. Read rules only govern direct SDK access and listing.
 service firebase.storage {
   match /b/{bucket}/o {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.get('admin', false) == true ||
+        firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'admin'
+      );
+    }
+
+    function ownsPrefixedFile(fileName) {
+      return isSignedIn() && fileName.matches(request.auth.uid + '_.*');
+    }
+
+    function ownsExactFile(fileName) {
+      return isSignedIn() && fileName == request.auth.uid + '.jpg';
+    }
+
+    function isImageUpload() {
+      return request.resource.size < 10 * 1024 * 1024 &&
+        request.resource.contentType.matches('image/.*');
+    }
+
+    function isDocumentUpload() {
+      return request.resource.size < 10 * 1024 * 1024 &&
+        (request.resource.contentType.matches('image/.*') ||
+         request.resource.contentType == 'application/pdf');
+    }
+
+    match /avatars/{fileName} {
+      allow read: if isSignedIn();
+      allow create, update: if ownsPrefixedFile(fileName) && isImageUpload();
+      allow delete: if ownsPrefixedFile(fileName) || isAdmin();
+    }
+
+    match /coach_avatars/{fileName} {
+      allow read: if isSignedIn();
+      allow create, update: if ownsExactFile(fileName) && isImageUpload();
+      allow delete: if ownsExactFile(fileName) || isAdmin();
+    }
+
+    match /trainee_avatars/{fileName} {
+      allow read: if isSignedIn();
+      allow create, update: if ownsExactFile(fileName) && isImageUpload();
+      allow delete: if ownsExactFile(fileName) || isAdmin();
+    }
+
+    match /coach_documents/{fileName} {
+      allow read: if ownsPrefixedFile(fileName) || isAdmin();
+      allow create, update: if ownsPrefixedFile(fileName) && isDocumentUpload();
+      allow delete: if ownsPrefixedFile(fileName) || isAdmin();
+    }
+
     match /{allPaths=**} {
-      allow read, write: if true;
+      allow read, write: if false;
     }
   }
 }

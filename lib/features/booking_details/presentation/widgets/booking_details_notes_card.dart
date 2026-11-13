@@ -94,7 +94,10 @@ class BookingDetailsNotesCard extends StatelessWidget {
             ),
             SizedBox(height: 4.h),
             Text(
-              booking.cancellationReason!,
+              BookingModel.displayCancellationReason(
+                booking.cancellationReason!,
+                S.of(context),
+              ),
               style: TextStyle(
                 fontSize: 12.sp,
                 color: AppColors.error,

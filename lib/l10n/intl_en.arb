@@ -744,5 +744,16 @@
   "timeHoursAgo": "{hours}h ago",
   "timeDaysAgo": "{days}d ago",
   "notificationsTooltip": "Notifications",
-  "viewBookingAction": "View Booking"
+  "viewBookingAction": "View Booking",
+  "accountSuspendedMessage": "Your account has been suspended. Please contact support.",
+  "adminUseDashboardMessage": "Admin accounts can't use the mobile app. Please use the admin dashboard.",
+  "connectionErrorMessage": "We couldn't connect. Check your internet connection and try again.",
+  "smsSendFailed": "We couldn't send the code. Please try again.",
+  "unexpectedErrorMessage": "Something went wrong. Please try again.",
+  "otpIncorrectOrExpired": "The code is incorrect or has expired.",
+  "tooManyAttemptsMessage": "Too many attempts. Please try again later.",
+  "confirmDeletionTitle": "Confirm it's you",
+  "confirmDeletionMessage": "For your security, enter the 6-digit code we sent to {phone} to delete your account.",
+  "sendingCode": "Sending code...",
+  "cancelledAccountDeletedReason": "Cancelled automatically because the other account was deleted."
 }

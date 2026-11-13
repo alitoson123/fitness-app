@@ -8,6 +8,7 @@ import '../../../../core/services/auth_service/auth_service.dart';
 import '../../../../generated/l10n.dart';
 import '../../../auth/core/presentation/view_model/auth_session_cubit/auth_session_cubit.dart';
 import '../../../auth/core/presentation/view_model/auth_session_cubit/auth_session_states.dart';
+import '../../../auth/core/widgets/reauth_delete_dialog.dart';
 import '../../../coach_availability/presentation/views/coach_availability_view.dart';
 import '../../../coach_profile/presentation/views/coach_profile_view.dart';
 import '../../../coach_setup/presentation/view_model/coach_status_cubit/coach_status_cubit.dart';
@@ -81,6 +82,8 @@ class _CoachMainShellState extends State<CoachMainShell> {
                     S.of(context).accountDeletedSuccess,
                   );
                   context.go(AppRoutes.signIn);
+                } else if (state is AuthSessionReauthRequiredState) {
+                  ReauthDeleteDialog.show(context);
                 } else if (state is AuthSessionErrorState) {
                   Message.showError(context, state.errorMessage);
                 }

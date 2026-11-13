@@ -10,68 +10,239 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == uid;
     }
 
+    function userDocPath(uid) {
+      return /databases/$(database)/documents/users/$(uid);
+    }
+
     function isAdmin() {
       return isSignedIn() && (
-        request.auth.token.admin == true ||
-        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+        request.auth.token.get('admin', false) == true ||
+        (exists(userDocPath(request.auth.uid)) &&
+         get(userDocPath(request.auth.uid)).data.role == 'admin')
+      );
+    }
+
+    // Suspended accounts may still read and sign out, but cannot write data.
+    function isActive() {
+      return isSignedIn() && (
+        !exists(userDocPath(request.auth.uid)) ||
+        get(userDocPath(request.auth.uid)).data.get('status', 'active') != 'suspended'
       );
     }
 
     match /users/{uid} {
       allow read: if isOwner(uid) || isAdmin();
       allow create: if isOwner(uid) &&
-        request.resource.data.role != 'admin' &&
-        request.resource.data.status != 'suspended';
+        request.resource.data.get('role', '') in ['', 'coach', 'trainee'] &&
+        request.resource.data.get('status', 'active') == 'active';
+      // The role is chosen once (from empty) and only as coach or trainee.
+      // Changing it later, or self-promoting to admin, is admin-only.
+      function roleUnchangedOrFirstPick() {
+        return !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']) || (
+          resource.data.get('role', '') == '' &&
+          request.resource.data.role in ['coach', 'trainee']
+        );
+      }
+
       allow update: if isAdmin() || (
         isOwner(uid) &&
+        isActive() &&
         !request.resource.data.diff(resource.data).affectedKeys().hasAny(['status']) &&
-        (request.resource.data.role != 'admin' || resource.data.role == 'admin')
+        roleUnchangedOrFirstPick()
       );
-      allow delete: if isOwner(uid) || isAdmin();
+      // Account deletion removes this doc server-side (onAuthUserDeleted), so
+      // users never delete it themselves. That also blocks the
+      // delete-and-recreate trick that would reset `status` or `role`.
+      allow delete: if isAdmin();
     }
 
     match /coach_profiles/{coachUid} {
+      // Fields only an admin (or a trusted backend) may set.
+      function adminOnlyKeys() {
+        return ['verificationStatus', 'rating', 'reviewsCount'];
+      }
+
       allow read: if isSignedIn();
-      allow create, update, delete: if isOwner(coachUid) || isAdmin();
+      allow create: if isAdmin() || (
+        isOwner(coachUid) &&
+        isActive() &&
+        request.resource.data.get('verificationStatus', 'pending') == 'pending' &&
+        request.resource.data.get('rating', 0) == 0 &&
+        request.resource.data.get('reviewsCount', 0) == 0
+      );
+      allow update: if isAdmin() || (
+        isOwner(coachUid) &&
+        isActive() &&
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(adminOnlyKeys())
+      );
+      allow delete: if isOwner(coachUid) || isAdmin();
     }
 
     match /trainee_profiles/{uid} {
       allow read: if isOwner(uid) || isAdmin();
-      allow create, update, delete: if isOwner(uid) || isAdmin();
+      allow create, update: if isAdmin() || (isOwner(uid) && isActive());
+      allow delete: if isOwner(uid) || isAdmin();
     }
 
     match /coach_verifications/{coachUid} {
-      allow read: if isSignedIn();
+      // Contains identity-document URLs: owner and admins only.
+      allow read: if isOwner(coachUid) || isAdmin();
       allow create: if isOwner(coachUid) &&
+        isActive() &&
         request.resource.data.status == 'pending';
       allow update: if isAdmin() || (
         isOwner(coachUid) &&
+        isActive() &&
         request.resource.data.status == 'pending'
       );
       allow delete: if isOwner(coachUid) || isAdmin();
     }
 
     match /bookings/{bookingId} {
-      allow read: if isSignedIn();
-      allow create: if isSignedIn() &&
-        request.resource.data.traineeUid == request.auth.uid;
+      // Identity and commercial terms are fixed once a booking is created.
+      function lockedKeys() {
+        return [
+          'id', 'coachUid', 'traineeUid', 'sport', 'bookingType', 'price',
+          'currency', 'durationMonths', 'trainingLocation', 'isOnline',
+          'createdAt',
+        ];
+      }
+
+      function isCoachOfBooking() {
+        return request.auth.uid == resource.data.coachUid;
+      }
+
+      function isTraineeOfBooking() {
+        return request.auth.uid == resource.data.traineeUid;
+      }
+
+      // Who proposed the pending single-session reschedule ('' for monthly,
+      // where the proposer is stored per session).
+      function proposer() {
+        return resource.data.get('rescheduledBy', '');
+      }
+
+      function priceMatchesCoach(b, coach) {
+        return (
+          b.bookingType == 'session' &&
+          (!(coach.get('sessionPriceUSD', null) is number) ||
+           b.price == coach.sessionPriceUSD)
+        ) || (
+          b.bookingType == 'monthly' &&
+          b.durationMonths is int &&
+          b.durationMonths >= 1 && b.durationMonths <= 12 &&
+          (!(coach.get('monthlyPriceUSD', null) is number) ||
+           b.price == coach.monthlyPriceUSD * b.durationMonths)
+        );
+      }
+
+      function isValidNewBooking() {
+        let b = request.resource.data;
+        let coach = get(/databases/$(database)/documents/coach_profiles/$(b.coachUid)).data;
+        return b.traineeUid == request.auth.uid &&
+          b.coachUid != request.auth.uid &&
+          b.status == 'pending' &&
+          b.bookingType in ['session', 'monthly'] &&
+          b.price is number && b.price >= 0 &&
+          coach.get('verificationStatus', '') == 'approved' &&
+          priceMatchesCoach(b, coach);
+      }
+
+      function isValidStatusChange() {
+        let before = resource.data.status;
+        let after = request.resource.data.status;
+        return after == before ||
+          (after == 'confirmed' && (
+            (isCoachOfBooking() && (
+              before == 'pending' ||
+              (before == 'reschedule_pending' && proposer() != 'coach'))) ||
+            (isTraineeOfBooking() &&
+              before == 'reschedule_pending' && proposer() != 'trainee'))) ||
+          (after == 'reschedule_pending' && before in ['pending', 'confirmed']) ||
+          (after == 'rejected' && isCoachOfBooking() &&
+            before in ['pending', 'reschedule_pending']) ||
+          (after == 'completed' && isCoachOfBooking() &&
+            before in ['confirmed', 'reschedule_pending']) ||
+          (after == 'cancelled' && isTraineeOfBooking() &&
+            before in ['pending', 'confirmed', 'reschedule_pending']);
+      }
+
+      // Only the booking's own coach and trainee (and admins) may read it.
+      // Other users see availability through `coach_busy_slots` instead.
+      allow read: if isSignedIn() && (
+        resource == null ||
+        resource.data.coachUid == request.auth.uid ||
+        resource.data.traineeUid == request.auth.uid ||
+        isAdmin()
+      );
+      allow create: if isSignedIn() && isActive() && isValidNewBooking();
       allow update: if isAdmin() || (
         isSignedIn() &&
-        (resource.data.coachUid == request.auth.uid ||
-         resource.data.traineeUid == request.auth.uid)
+        (isCoachOfBooking() || isTraineeOfBooking()) &&
+        isActive() &&
+        !(resource.data.status in ['rejected', 'cancelled', 'completed']) &&
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(lockedKeys()) &&
+        isValidStatusChange()
       );
       allow delete: if isAdmin();
     }
 
+    // Public, read-only availability per coach (dates + start times only).
+    // Written exclusively by the `onBookingWritten` Cloud Function.
+    match /coach_busy_slots/{coachUid} {
+      allow read: if isSignedIn();
+      allow write: if false;
+    }
+
     match /notifications/{notificationId} {
+      function eitherWayTypes() {
+        return [
+          'booking_reschedule_proposed', 'booking_reschedule_accepted',
+          'booking_reschedule_declined',
+          'booking_monthly_session_reschedule_proposed',
+          'booking_monthly_session_reschedule_accepted',
+          'booking_monthly_session_reschedule_declined',
+        ];
+      }
+
+      function coachToTraineeTypes() {
+        return [
+          'booking_approved', 'booking_rejected',
+          'booking_monthly_session_completed',
+        ];
+      }
+
+      function traineeToCoachTypes() {
+        return ['booking_new', 'booking_cancelled'];
+      }
+
+      // Non-admin users may only notify the other participant of a real
+      // booking, with a booking notification type that fits their role.
+      // The title/body text is rebuilt server-side by the Cloud Function.
+      function isValidBookingNotification() {
+        let n = request.resource.data;
+        let b = get(/databases/$(database)/documents/bookings/$(n.data.bookingId)).data;
+        let fromCoach = n.senderUid == b.coachUid &&
+          n.recipientUid == b.traineeUid && n.recipientRole == 'trainee';
+        let fromTrainee = n.senderUid == b.traineeUid &&
+          n.recipientUid == b.coachUid && n.recipientRole == 'coach';
+        return n.data.bookingId is string &&
+          n.get('isRead', false) == false &&
+          n.get('pushStatus', 'pending') == 'pending' &&
+          ((n.type in eitherWayTypes() && (fromCoach || fromTrainee)) ||
+           (n.type in coachToTraineeTypes() && fromCoach) ||
+           (n.type in traineeToCoachTypes() && fromTrainee));
+      }
+
       allow read, delete: if isAdmin() || (
         isSignedIn() &&
         resource.data.recipientUid == request.auth.uid
       );
       allow create: if isAdmin() || (
         isSignedIn() &&
-        request.resource.data.senderUid == request.auth.uid
+        isActive() &&
+        request.resource.data.senderUid == request.auth.uid &&
+        isValidBookingNotification()
       );
       allow update: if isAdmin() || (
         isSignedIn() &&
@@ -81,14 +252,29 @@ service cloud.firestore {
     }
 
     match /admin_notifications/{notificationId} {
+      // App-originated alerts for the admin dashboard, each tied to a real
+      // record of the sender (their booking or their verification request).
+      function isValidAdminAlert() {
+        let n = request.resource.data;
+        return n.recipientUid == 'admin' &&
+          n.senderUid == request.auth.uid &&
+          (
+            (n.type in ['booking_new', 'booking_cancelled'] &&
+             n.data.bookingId is string &&
+             get(/databases/$(database)/documents/bookings/$(n.data.bookingId)).data.traineeUid == request.auth.uid) ||
+            (n.type == 'coach_verification_submitted' &&
+             n.data.coachUid == request.auth.uid &&
+             exists(/databases/$(database)/documents/coach_verifications/$(request.auth.uid)))
+          );
+      }
+
       allow read, update, delete: if isAdmin();
       allow create: if isAdmin() || (
-        isSignedIn() &&
-        (request.resource.data.senderUid == request.auth.uid ||
-         request.resource.data.sourceUid == request.auth.uid)
+        isSignedIn() && isActive() && isValidAdminAlert()
       );
     }
 
+    // Left writable while suspended so sign-out can detach the device token.
     match /fcm_tokens/{uid} {
       allow read, write: if isOwner(uid) || isAdmin();
     }
@@ -98,4 +284,3 @@ service cloud.firestore {
     }
   }
 }
-

@@ -105,3 +105,9 @@ class ServerFailure extends Failure {
 class CancelFailure extends Failure {
   CancelFailure({super.errorMessage = 'Operation cancelled'});
 }
+
+/// Firebase refused a sensitive action (e.g. deleting the account) because
+/// the sign-in is too old. The user must confirm with a fresh SMS code.
+class ReauthRequiredFailure extends Failure {
+  ReauthRequiredFailure({required super.errorMessage});
+}
