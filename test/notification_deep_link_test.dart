@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:fitness_app/core/errors/failure.dart';
 import 'package:fitness_app/core/navigator/app_routes.dart';
 import 'package:fitness_app/core/services/notification_service/notification_deep_link_handler.dart';
 import 'package:fitness_app/features/booking_details/presentation/view_model/booking_details_args.dart';
@@ -114,6 +115,37 @@ void main() {
         goRoute: (_) {},
       );
       expect(pushed, isEmpty);
+    });
+
+    test('from the inbox, a booking that cannot load shows a message and '
+        'stays on the screen', () async {
+      final went = <String>[];
+      final messages = <String>[];
+      await NotificationDeepLinkHandler.handlePayloadWith(
+        data: {'bookingId': 'b_200', 'recipientRole': 'trainee'},
+        currentUid: 'trainee_1',
+        fetchBooking: (_) async =>
+            Left(ServerFailure(errorMessage: 'No connection')),
+        pushRoute: (route, {extra}) => went.add(route),
+        goRoute: went.add,
+        onBookingLoadFailed: messages.add,
+      );
+      expect(went, isEmpty);
+      expect(messages, ['No connection']);
+    });
+
+    test('from a push tap (no message callback), a failed booking load '
+        'still falls back to home', () async {
+      final went = <String>[];
+      await NotificationDeepLinkHandler.handlePayloadWith(
+        data: {'bookingId': 'b_200', 'recipientRole': 'trainee'},
+        currentUid: 'trainee_1',
+        fetchBooking: (_) async =>
+            Left(ServerFailure(errorMessage: 'No connection')),
+        pushRoute: (route, {extra}) {},
+        goRoute: went.add,
+      );
+      expect(went, [AppRoutes.traineeHome]);
     });
   });
 }

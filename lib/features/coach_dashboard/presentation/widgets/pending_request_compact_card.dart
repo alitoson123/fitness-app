@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/constant/app_sports.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../booking_request/data/models/booking_model.dart';
@@ -85,7 +86,7 @@ class PendingRequestCompactCard extends StatelessWidget {
                     ),
                     SizedBox(height: 1.h),
                     Text(
-                      booking.sport,
+                      AppSports.getLocalizedSportName(context, booking.sport),
                       style: TextStyle(
                         fontSize: 11.sp,
                         fontWeight: FontWeight.w600,

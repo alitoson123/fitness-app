@@ -67,7 +67,7 @@ describe('Cloud Functions: onNotificationCreated', () => {
 
     assert.ok(sentMsg);
     assert.equal(sentMsg.notification?.title, 'طلب حجز جديد');
-    assert.equal(sentMsg.notification?.body, 'طلب حجز جديد من Ali لرياضة football (monthly)');
+    assert.equal(sentMsg.notification?.body, 'طلب حجز جديد من Ali لرياضة كرة القدم (باقة شهرية)');
     assert.deepEqual(sentMsg.tokens, ['token_ios', 'token_android']);
     assert.equal(sentMsg.data?.notificationId, 'notif_100');
     assert.equal(sentMsg.data?.bookingId, 'booking_42');
@@ -104,7 +104,7 @@ describe('Cloud Functions: onNotificationCreated', () => {
     await handleNotificationCreated(deps, 'notif_en', makeNotificationDoc());
 
     assert.equal(sentMsg?.notification?.title, 'New Booking Request');
-    assert.equal(sentMsg?.notification?.body, 'New booking request from Ali for football (monthly)');
+    assert.equal(sentMsg?.notification?.body, 'New booking request from Ali for Football (Monthly Plan)');
   });
 
   it('skips dispatch and marks pushStatus as skipped when notificationsEnabled is false', async () => {
@@ -344,6 +344,33 @@ describe('notification templates', () => {
       },
     );
     assert.equal(copy?.bodyEn, 'Session #2 was marked as completed. Progress: 2/3 done!');
+  });
+
+  it('translates sport and booking type in the new-booking text', () => {
+    const copy = buildTrustedBookingCopy(
+      { type: 'booking_new', senderUid: 'trainee_1', data: {} },
+      booking42,
+    );
+    assert.equal(copy?.bodyEn, 'New booking request from Ali for Football (Monthly Plan)');
+    assert.equal(copy?.bodyAr, 'طلب حجز جديد من Ali لرياضة كرة القدم (باقة شهرية)');
+  });
+
+  it('words an empty decline reason in each language', () => {
+    const copy = buildTrustedBookingCopy(
+      { type: 'booking_rejected', senderUid: 'coach_1', data: { reason: '' } },
+      booking42,
+    );
+    assert.ok(copy?.bodyEn.endsWith('Reason: No reason given'));
+    assert.ok(copy?.bodyAr.endsWith('السبب: لم يُذكر سبب'));
+  });
+
+  it('builds the single-session completed notice from the booking', () => {
+    const copy = buildTrustedBookingCopy(
+      { type: 'booking_completed', senderUid: 'coach_1', data: { date: '1999-01-01' } },
+      booking42,
+    );
+    assert.equal(copy?.titleEn, 'Session Completed');
+    assert.ok(copy?.bodyEn.includes(String(booking42.date)));
   });
 
   it('returns null for admin types (trusted as-is)', () => {

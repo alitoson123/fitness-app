@@ -787,5 +787,9 @@
   "applicationNotFoundMessage": "We couldn't find your coach application.",
   "rejectionReasonFallback": "Your application needs some changes. Please review it and submit again.",
   "coachNoLongerAvailable": "This coach is no longer available.",
-  "sessionNotFoundMessage": "Your session has ended. Please sign in again."
+  "sessionNotFoundMessage": "Your session has ended. Please sign in again.",
+  "bookingsTabActive": "Active ({count})",
+  "@bookingsTabActive": {"placeholders": {"count": {"type": "int"}}},
+  "bookingsTabHistory": "History ({count})",
+  "@bookingsTabHistory": {"placeholders": {"count": {"type": "int"}}}
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../core/errors/app_error_messages.dart';
 import '../../../../../core/services/notification_service/notification_service.dart';
 import '../../../data/models/notification_model.dart';
 import '../../../data/repos/notifications_repo.dart';
@@ -40,7 +41,12 @@ class NotificationsCubit extends Cubit<NotificationsState> {
         ));
       },
       onError: (e) {
-        emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
+        emit(
+          state.copyWith(
+            isLoading: false,
+            errorMessage: AppErrorMessages.from(e),
+          ),
+        );
       },
     );
   }

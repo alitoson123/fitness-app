@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
+import '../../../../generated/l10n.dart';
 import '../view_model/trainee_bookings_cubit/trainee_bookings_states.dart';
 
 class TraineeBookingsTabBar extends StatelessWidget {
@@ -32,7 +33,7 @@ class TraineeBookingsTabBar extends StatelessWidget {
         children: [
           Expanded(
             child: _TabButton(
-              title: 'Active ($activeCount)',
+              title: S.of(context).bookingsTabActive(activeCount),
               isSelected: selectedTab == TraineeBookingTab.active,
               onTap: () => onTabChanged(TraineeBookingTab.active),
               isDark: isDark,
@@ -40,7 +41,7 @@ class TraineeBookingsTabBar extends StatelessWidget {
           ),
           Expanded(
             child: _TabButton(
-              title: 'History ($historyCount)',
+              title: S.of(context).bookingsTabHistory(historyCount),
               isSelected: selectedTab == TraineeBookingTab.history,
               onTap: () => onTabChanged(TraineeBookingTab.history),
               isDark: isDark,

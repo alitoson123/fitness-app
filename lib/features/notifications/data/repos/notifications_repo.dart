@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import '../../../../core/errors/app_error_messages.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/services/logger_service/logger_service.dart';
 import '../data_source/notifications_remote_data_source.dart';
@@ -30,7 +31,7 @@ class NotificationsRepository {
         error: e,
         stackTrace: st,
       );
-      return Left(ServerFailure(errorMessage: e.toString()));
+      return Left(ServerFailure(errorMessage: AppErrorMessages.from(e)));
     }
   }
 
@@ -53,7 +54,7 @@ class NotificationsRepository {
         error: e,
         stackTrace: st,
       );
-      return Left(ServerFailure(errorMessage: e.toString()));
+      return Left(ServerFailure(errorMessage: AppErrorMessages.from(e)));
     }
   }
 
@@ -68,7 +69,7 @@ class NotificationsRepository {
         error: e,
         stackTrace: st,
       );
-      return Left(ServerFailure(errorMessage: e.toString()));
+      return Left(ServerFailure(errorMessage: AppErrorMessages.from(e)));
     }
   }
 
@@ -83,7 +84,7 @@ class NotificationsRepository {
         error: e,
         stackTrace: st,
       );
-      return Left(ServerFailure(errorMessage: e.toString()));
+      return Left(ServerFailure(errorMessage: AppErrorMessages.from(e)));
     }
   }
 
@@ -100,7 +101,7 @@ class NotificationsRepository {
         error: e,
         stackTrace: st,
       );
-      return Left(ServerFailure(errorMessage: e.toString()));
+      return Left(ServerFailure(errorMessage: AppErrorMessages.from(e)));
     }
   }
 }

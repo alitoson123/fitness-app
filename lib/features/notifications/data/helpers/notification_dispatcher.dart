@@ -43,6 +43,14 @@ class NotificationDispatcher {
         reason: reason,
       );
 
+  Future<void> dispatchBookingCompleted({
+    required BookingModel booking,
+    required String coachName,
+  }) => bookingDispatcher.dispatchBookingCompleted(
+        booking: booking,
+        coachName: coachName,
+      );
+
   Future<void> dispatchBookingCancelled({
     required BookingModel booking,
     required String traineeName,

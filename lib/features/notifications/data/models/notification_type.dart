@@ -16,6 +16,9 @@ abstract class NotificationType {
       'booking_monthly_session_completed';
   static const String bookingCancelled = 'booking_cancelled';
 
+  /// Coach marked a single-session booking as completed.
+  static const String bookingCompleted = 'booking_completed';
+
   /// Server-only: sent by `onAuthUserDeleted` when the other participant
   /// deleted their account and the booking was cancelled automatically.
   static const String bookingCancelledAccountDeleted =

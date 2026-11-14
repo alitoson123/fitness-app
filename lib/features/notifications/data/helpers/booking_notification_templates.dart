@@ -11,12 +11,18 @@ abstract class BookingNotificationTemplates {
     required String traineeName,
     required String sport,
     required String bookingType,
-  }) => (
-    titleEn: 'New Booking Request',
-    titleAr: 'طلب حجز جديد',
-    bodyEn: 'New booking request from $traineeName for $sport ($bookingType)',
-    bodyAr: 'طلب حجز جديد من $traineeName لرياضة $sport ($bookingType)',
-  );
+  }) {
+    final sportName = NotificationDisplayNames.sport(sport);
+    final kind = NotificationDisplayNames.bookingType(bookingType);
+    return (
+      titleEn: 'New Booking Request',
+      titleAr: 'طلب حجز جديد',
+      bodyEn:
+          'New booking request from $traineeName for ${sportName.en} (${kind.en})',
+      bodyAr:
+          'طلب حجز جديد من $traineeName لرياضة ${sportName.ar} (${kind.ar})',
+    );
+  }
 
   static NotificationText bookingApproved({
     required String coachName,
@@ -34,8 +40,20 @@ abstract class BookingNotificationTemplates {
   }) => (
     titleEn: 'Booking Declined',
     titleAr: 'تم رفض الحجز',
-    bodyEn: 'Coach $coachName declined your request. Reason: $reason',
-    bodyAr: 'اعتذر المدرب $coachName عن قبول طلبك. السبب: $reason',
+    bodyEn:
+        'Coach $coachName declined your request. Reason: ${reason.isEmpty ? 'No reason given' : reason}',
+    bodyAr:
+        'اعتذر المدرب $coachName عن قبول طلبك. السبب: ${reason.isEmpty ? 'لم يُذكر سبب' : reason}',
+  );
+
+  static NotificationText bookingCompleted({
+    required String coachName,
+    required String date,
+  }) => (
+    titleEn: 'Session Completed',
+    titleAr: 'اكتملت الجلسة',
+    bodyEn: 'Coach $coachName marked your session on $date as completed',
+    bodyAr: 'حدد المدرب $coachName جلستك بتاريخ $date كمكتملة',
   );
 
   static NotificationText singleRescheduleProposed({
@@ -127,4 +145,41 @@ abstract class BookingNotificationTemplates {
     bodyEn: '$traineeName cancelled the booking for $date',
     bodyAr: 'ألغى $traineeName الحجز لتاريخ $date',
   );
+}
+
+/// English/Arabic names for notification text, which is stored in both
+/// languages at once (so `S.of(context)` can't be used). Same values as the
+/// sport* / singleSessionType / monthlyPackageType keys in lib/l10n (a test
+/// checks this) and functions/src/utils/display_names.ts.
+abstract class NotificationDisplayNames {
+  static const Map<String, ({String en, String ar})> _sports = {
+    'football': (en: 'Football', ar: 'كرة القدم'),
+    'basketball': (en: 'Basketball', ar: 'كرة السلة'),
+    'swimming': (en: 'Swimming', ar: 'السباحة'),
+    'tennis': (en: 'Tennis', ar: 'التنس'),
+    'running': (en: 'Running', ar: 'الجري'),
+    'boxing': (en: 'Boxing', ar: 'الملاكمة'),
+    'gym': (en: 'Gym', ar: 'جيم وكمال أجسام'),
+    'cycling': (en: 'Cycling', ar: 'ركوب الدراجات'),
+    'martial_arts': (en: 'Martial Arts', ar: 'فنون قتالية'),
+    'volleyball': (en: 'Volleyball', ar: 'كرة الطائرة'),
+    'padel': (en: 'Padel', ar: 'بادل'),
+    'badminton': (en: 'Badminton', ar: 'كرة الريشة'),
+    'table_tennis': (en: 'Table Tennis', ar: 'كرة الطاولة'),
+    'crossfit': (en: 'CrossFit', ar: 'كروس فيت'),
+    'handball': (en: 'Handball', ar: 'كرة اليد'),
+  };
+
+  /// Known sports are translated; a custom sport keeps the coach's text.
+  static ({String en, String ar}) sport(String raw) {
+    final key = raw.trim().toLowerCase().replaceAll(' ', '_');
+    return _sports[key] ?? (en: raw.trim(), ar: raw.trim());
+  }
+
+  static ({String en, String ar}) bookingType(String raw) => raw == 'monthly'
+      ? (en: 'Monthly Plan', ar: 'باقة شهرية')
+      : (en: 'Single Session', ar: 'جلسة فردية');
+
+  /// For the drift test.
+  static Iterable<String> get sportKeys => _sports.keys;
 }

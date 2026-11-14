@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/constant/app_sports.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../generated/l10n.dart';
 import '../../../booking_request/data/models/booking_model.dart';
@@ -38,7 +39,7 @@ class MonthlySessionsScheduleHeader extends StatelessWidget {
                 ),
                 SizedBox(height: 2.h),
                 Text(
-                  '${booking.sport} • ${isCoach ? booking.traineeName : booking.coachName}',
+                  '${AppSports.getLocalizedSportName(context, booking.sport)} • ${isCoach ? booking.traineeName : booking.coachName}',
                   style: TextStyle(fontSize: 12.sp, color: AppColors.primary),
                 ),
               ],

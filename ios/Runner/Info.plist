@@ -65,5 +65,9 @@
 			</array>
 		</dict>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>CoachHub uses the camera so you can take a profile photo or photograph your ID and certificates.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>CoachHub uses your photo library so you can choose a profile photo or upload your ID and certificates.</string>
 </dict>
 </plist>

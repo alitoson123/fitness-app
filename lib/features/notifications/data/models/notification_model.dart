@@ -88,7 +88,9 @@ class NotificationModel {
       'isRead': isRead,
       'pushStatus': pushStatus,
       if (pushSentAt != null) 'pushSentAt': Timestamp.fromDate(pushSentAt!),
-      'createdAt': Timestamp.fromDate(createdAt),
+      // Firebase stamps the time itself, so a wrong phone clock can't give
+      // a notification a wrong time or order (the rules require this).
+      'createdAt': FieldValue.serverTimestamp(),
     };
   }
 

@@ -8,6 +8,8 @@
  * Keep the wording in sync with the Dart templates.
  */
 
+import { bookingTypeName, sportName } from './display_names';
+
 export interface NotificationText {
   titleEn: string;
   titleAr: string;
@@ -24,6 +26,7 @@ export const BOOKING_NOTIFICATION_TYPES = new Set<string>([
   'booking_approved',
   'booking_rejected',
   'booking_cancelled',
+  'booking_completed',
   'booking_reschedule_proposed',
   'booking_reschedule_accepted',
   'booking_reschedule_declined',
@@ -107,13 +110,13 @@ export function buildTrustedBookingCopy(
   const text = ((): NotificationText => {
     switch (type) {
       case 'booking_new': {
-        const sport = str(booking.sport);
-        const bookingType = str(booking.bookingType) || 'session';
+        const sport = sportName(str(booking.sport));
+        const kind = bookingTypeName(str(booking.bookingType));
         return {
           titleEn: 'New Booking Request',
           titleAr: 'طلب حجز جديد',
-          bodyEn: `New booking request from ${traineeName} for ${sport} (${bookingType})`,
-          bodyAr: `طلب حجز جديد من ${traineeName} لرياضة ${sport} (${bookingType})`,
+          bodyEn: `New booking request from ${traineeName} for ${sport.en} (${kind.en})`,
+          bodyAr: `طلب حجز جديد من ${traineeName} لرياضة ${sport.ar} (${kind.ar})`,
         };
       }
       case 'booking_approved': {
@@ -130,8 +133,8 @@ export function buildTrustedBookingCopy(
         return {
           titleEn: 'Booking Declined',
           titleAr: 'تم رفض الحجز',
-          bodyEn: `Coach ${coachName} declined your request. Reason: ${reason}`,
-          bodyAr: `اعتذر المدرب ${coachName} عن قبول طلبك. السبب: ${reason}`,
+          bodyEn: `Coach ${coachName} declined your request. Reason: ${reason || 'No reason given'}`,
+          bodyAr: `اعتذر المدرب ${coachName} عن قبول طلبك. السبب: ${reason || 'لم يُذكر سبب'}`,
         };
       }
       case 'booking_cancelled': {
@@ -141,6 +144,15 @@ export function buildTrustedBookingCopy(
           titleAr: 'تم إلغاء الحجز',
           bodyEn: `${traineeName} cancelled the booking for ${date}`,
           bodyAr: `ألغى ${traineeName} الحجز لتاريخ ${date}`,
+        };
+      }
+      case 'booking_completed': {
+        const date = safeDate(booking.date, data.date);
+        return {
+          titleEn: 'Session Completed',
+          titleAr: 'اكتملت الجلسة',
+          bodyEn: `Coach ${coachName} marked your session on ${date} as completed`,
+          bodyAr: `حدد المدرب ${coachName} جلستك بتاريخ ${date} كمكتملة`,
         };
       }
       case 'booking_reschedule_proposed': {

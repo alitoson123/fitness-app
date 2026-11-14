@@ -61,9 +61,8 @@ class BookingActionsRepo {
           (d) => d.dispatchBookingRejected(
             booking: before,
             coachName: _coachName(before),
-            reason: (reason?.trim().isNotEmpty ?? false)
-                ? reason!.trim()
-                : 'Unavailable',
+            // Empty = no reason; the template words that per language.
+            reason: reason?.trim() ?? '',
           ),
         ),
       );
@@ -84,7 +83,12 @@ class BookingActionsRepo {
   Future<Either<Failure, void>> completeBooking(String bookingId) => _run(
     bookingId,
     (b, actor) => BookingTransitions.completeBooking(b, actor, now: _now()),
-    null,
+    (before, _) => _notify(
+      (d) => d.dispatchBookingCompleted(
+        booking: before,
+        coachName: _coachName(before),
+      ),
+    ),
   );
 
   // ------------------------------------------------- single-session reschedule

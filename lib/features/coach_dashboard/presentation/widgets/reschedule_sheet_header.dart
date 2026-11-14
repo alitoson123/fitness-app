@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/constant/app_sports.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../generated/l10n.dart';
@@ -46,7 +47,7 @@ class RescheduleSheetHeader extends StatelessWidget {
               Icon(Icons.fitness_center_rounded, size: 12.r, color: AppColors.flameRed),
               SizedBox(width: 4.w),
               Text(
-                booking!.sport,
+                AppSports.getLocalizedSportName(context, booking!.sport),
                 style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700, color: AppColors.flameRed),
               ),
               if (booking!.isOnline || booking!.trainingLocation.isNotEmpty) ...[

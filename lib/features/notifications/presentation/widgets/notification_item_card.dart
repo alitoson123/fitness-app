@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/helpers/message.dart';
 import '../../../../core/services/notification_service/notification_deep_link_handler.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/notification_model.dart';
@@ -24,7 +25,8 @@ class NotificationItemCard extends StatelessWidget {
       key: ValueKey(notification.id),
       direction: DismissDirection.endToStart,
       background: Container(
-        alignment: Alignment.centerRight,
+        // "End" side: right in English, left in Arabic (the side revealed).
+        alignment: AlignmentDirectional.centerEnd,
         padding: EdgeInsets.symmetric(horizontal: 20.w),
         margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
         decoration: BoxDecoration(
@@ -136,6 +138,11 @@ class NotificationItemCard extends StatelessWidget {
     final payload = Map<String, dynamic>.from(notification.data);
     payload['type'] = notification.type;
     payload['recipientRole'] = notification.recipientRole;
-    NotificationDeepLinkHandler.handlePayload(payload);
+    NotificationDeepLinkHandler.handlePayload(
+      payload,
+      onBookingLoadFailed: (message) {
+        if (context.mounted) Message.showError(context, message);
+      },
+    );
   }
 }

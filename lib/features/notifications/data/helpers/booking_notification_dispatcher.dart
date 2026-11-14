@@ -115,6 +115,32 @@ class BookingNotificationDispatcher {
     );
   }
 
+  Future<void> dispatchBookingCompleted({
+    required BookingModel booking,
+    required String coachName,
+  }) async {
+    final text = BookingNotificationTemplates.bookingCompleted(
+      coachName: coachName,
+      date: booking.date,
+    );
+    await repository.sendNotification(
+      NotificationModel(
+        id: '',
+        recipientUid: booking.traineeUid,
+        recipientRole: AppConstants.roleTrainee,
+        senderUid: booking.coachUid,
+        senderName: coachName,
+        type: NotificationType.bookingCompleted,
+        titleEn: text.titleEn,
+        titleAr: text.titleAr,
+        bodyEn: text.bodyEn,
+        bodyAr: text.bodyAr,
+        data: {'bookingId': booking.id, 'date': booking.date},
+        createdAt: DateTime.now(),
+      ),
+    );
+  }
+
   Future<void> dispatchBookingCancelled({
     required BookingModel booking,
     required String traineeName,

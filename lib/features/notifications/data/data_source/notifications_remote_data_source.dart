@@ -36,6 +36,12 @@ class NotificationsRemoteDataSource {
     return id;
   }
 
+  /// How many notifications the inbox shows (the newest ones). Older ones
+  /// stay in Firestore but aren't downloaded on every app start.
+  static const int inboxLimit = 50;
+
+  /// Needs the composite index (recipientUid ASC, createdAt DESC) from
+  /// firestore.indexes.json.
   Stream<List<NotificationModel>> streamNotifications(String recipientUid) {
     LoggerService.info(
       'Streaming notifications for: $recipientUid',
@@ -44,8 +50,10 @@ class NotificationsRemoteDataSource {
     return firestoreService
         .streamCollection(
           collection: AppConstants.notificationsCollection,
-          queryBuilder: (query) =>
-              query.where('recipientUid', isEqualTo: recipientUid),
+          queryBuilder: (query) => query
+              .where('recipientUid', isEqualTo: recipientUid)
+              .orderBy('createdAt', descending: true)
+              .limit(inboxLimit),
         )
         .map((snapshot) {
           final list = snapshot.docs

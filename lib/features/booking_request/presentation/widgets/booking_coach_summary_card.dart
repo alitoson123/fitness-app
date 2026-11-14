@@ -63,7 +63,10 @@ class BookingCoachSummaryCard extends StatelessWidget {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  '${coach.city.isNotEmpty ? coach.city : 'Fitness'}, ${coach.country}',
+                  // Shown as the coach typed it; skip whichever part is empty.
+                  [coach.city, coach.country]
+                      .where((part) => part.trim().isNotEmpty)
+                      .join(', '),
                   style: TextStyle(fontSize: 12.sp, color: textSecondary),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

@@ -2,6 +2,7 @@ import 'package:fitness_app/features/booking_request/data/repos/booking_actions/
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/constant/app_sports.dart';
 import '../../../../core/constant/app_constants.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../generated/l10n.dart';
@@ -77,7 +78,10 @@ class BookingCardHeader extends StatelessWidget {
                   Flexible(
                     child: BookingCardHeaderBadge(
                       icon: Icons.fitness_center_rounded,
-                      label: booking.sport,
+                      label: AppSports.getLocalizedSportName(
+                        context,
+                        booking.sport,
+                      ),
                       iconColor: AppColors.flameRed,
                       textColor: AppColors.flameRed,
                       bg: badgeBg,
@@ -92,7 +96,7 @@ class BookingCardHeader extends StatelessWidget {
                             ? Icons.laptop_chromebook_rounded
                             : Icons.location_on_rounded,
                         label: booking.isOnline
-                            ? 'Online'
+                            ? s.onlineTrainingOption
                             : booking.trainingLocation,
                         iconColor: textSecondary,
                         textColor: textSecondary,

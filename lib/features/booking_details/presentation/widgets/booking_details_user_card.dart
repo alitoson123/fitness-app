@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/constant/app_sports.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../generated/l10n.dart';
@@ -99,7 +100,7 @@ class BookingDetailsUserCard extends StatelessWidget {
                 ),
                 SizedBox(width: 4.w),
                 Text(
-                  booking.sport,
+                  AppSports.getLocalizedSportName(context, booking.sport),
                   style: TextStyle(
                     fontSize: 11.sp,
                     fontWeight: FontWeight.w600,

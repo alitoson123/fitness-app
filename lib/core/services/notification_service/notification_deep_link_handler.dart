@@ -14,16 +14,32 @@ typedef BookingFetcher =
     Future<Either<Failure, BookingModel>> Function(String bookingId);
 
 class NotificationDeepLinkHandler {
-  static Future<void> handlePayload(Map<String, dynamic> data) {
-    return handlePayloadWith(
-      data: data,
-      currentUid: getIt<AuthService>().currentUser?.uid,
-      fetchBooking: getIt<BookingDetailsRepo>().getBooking,
-      pushRoute: (route, {extra}) => AppRouter.router.push(route, extra: extra),
-      goRoute: (route) => AppRouter.router.go(route),
-      currentLocation: () =>
-          AppRouter.router.routeInformationProvider.value.uri.path,
-    );
+  static bool _busy = false;
+
+  /// [onBookingLoadFailed]: when given (taps inside the inbox), a booking
+  /// that can't be loaded shows this message instead of leaving the screen.
+  static Future<void> handlePayload(
+    Map<String, dynamic> data, {
+    void Function(String message)? onBookingLoadFailed,
+  }) async {
+    // A second tap while the booking is still loading would open it twice.
+    if (_busy) return;
+    _busy = true;
+    try {
+      await handlePayloadWith(
+        data: data,
+        currentUid: getIt<AuthService>().currentUser?.uid,
+        fetchBooking: getIt<BookingDetailsRepo>().getBooking,
+        pushRoute: (route, {extra}) =>
+            AppRouter.router.push(route, extra: extra),
+        goRoute: (route) => AppRouter.router.go(route),
+        currentLocation: () =>
+            AppRouter.router.routeInformationProvider.value.uri.path,
+        onBookingLoadFailed: onBookingLoadFailed,
+      );
+    } finally {
+      _busy = false;
+    }
   }
 
   static Future<void> handlePayloadWith({
@@ -33,6 +49,7 @@ class NotificationDeepLinkHandler {
     required void Function(String route, {Object? extra}) pushRoute,
     required void Function(String route) goRoute,
     String Function()? currentLocation,
+    void Function(String message)? onBookingLoadFailed,
   }) async {
     try {
       if (currentUid == null || currentUid.isEmpty) {
@@ -59,7 +76,11 @@ class NotificationDeepLinkHandler {
               'Could not load booking for deep link: ${failure.errorMessage}',
               tag: 'NotificationDeepLinkHandler',
             );
-            _fallbackRoute(data, goRoute);
+            if (onBookingLoadFailed != null) {
+              onBookingLoadFailed(failure.errorMessage);
+            } else {
+              _fallbackRoute(data, goRoute);
+            }
           },
           (booking) {
             final isCoach = currentUid == booking.coachUid;

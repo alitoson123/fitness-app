@@ -246,7 +246,7 @@ service cloud.firestore {
 
       function coachToTraineeTypes() {
         return [
-          'booking_approved', 'booking_rejected',
+          'booking_approved', 'booking_rejected', 'booking_completed',
           'booking_monthly_session_completed',
         ];
       }
@@ -281,6 +281,7 @@ service cloud.firestore {
         isSignedIn() &&
         isActive() &&
         request.resource.data.senderUid == request.auth.uid &&
+        request.resource.data.createdAt == request.time &&
         isValidBookingNotification()
       );
       allow update: if isAdmin() || (
@@ -297,6 +298,7 @@ service cloud.firestore {
         let n = request.resource.data;
         return n.recipientUid == 'admin' &&
           n.senderUid == request.auth.uid &&
+          n.createdAt == request.time &&
           (
             (n.type in ['booking_new', 'booking_cancelled'] &&
              n.data.bookingId is string &&

@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import '../../../../core/errors/app_error_messages.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/services/logger_service/logger_service.dart';
 import '../../../../generated/l10n.dart';
@@ -28,7 +29,9 @@ class BookingDetailsRepo {
       return Right(booking);
     } catch (e, st) {
       LoggerService.error('Error fetching booking', error: e, stackTrace: st);
-      return Left(ServerFailure(errorMessage: S.current.unexpectedErrorMessage));
+      // "No connection" vs "something went wrong", shown when a notification
+      // tap can't open the booking.
+      return Left(ServerFailure(errorMessage: AppErrorMessages.from(e)));
     }
   }
 

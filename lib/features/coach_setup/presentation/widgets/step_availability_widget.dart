@@ -42,8 +42,9 @@ class StepAvailabilityWidget extends StatelessWidget {
           AvailabilitySelector(
             schedule: cubit.weeklyAvailability,
             onScheduleChanged: (schedule) {
-              final summary = AvailabilityHelper.formatSummary(
-                context,
+              // Saved in one fixed format (like the availability screen);
+              // screens translate the schedule itself when showing it.
+              final summary = AvailabilityHelper.buildRawSummaryString(
                 schedule,
               );
               cubit.setWeeklyAvailability(schedule, summary);

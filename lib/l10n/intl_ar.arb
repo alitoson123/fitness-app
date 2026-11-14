@@ -787,5 +787,7 @@
   "applicationNotFoundMessage": "لم نتمكن من العثور على طلب التدريب الخاص بك.",
   "rejectionReasonFallback": "يحتاج طلبك إلى بعض التعديلات. يرجى مراجعته وإرساله مرة أخرى.",
   "coachNoLongerAvailable": "هذا المدرب لم يعد متاحًا.",
-  "sessionNotFoundMessage": "انتهت جلستك. يرجى تسجيل الدخول مرة أخرى."
+  "sessionNotFoundMessage": "انتهت جلستك. يرجى تسجيل الدخول مرة أخرى.",
+  "bookingsTabActive": "النشطة ({count})",
+  "bookingsTabHistory": "السجل ({count})"
 }

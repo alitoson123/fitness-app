@@ -7959,6 +7959,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Active ({count})`
+  String bookingsTabActive(int count) {
+    return Intl.message(
+      'Active ($count)',
+      name: 'bookingsTabActive',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `History ({count})`
+  String bookingsTabHistory(int count) {
+    return Intl.message(
+      'History ($count)',
+      name: 'bookingsTabHistory',
+      desc: '',
+      args: [count],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

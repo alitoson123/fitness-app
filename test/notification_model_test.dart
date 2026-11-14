@@ -27,7 +27,7 @@ void main() {
       createdAt: now,
     );
 
-    test('serializes to Map correctly with Timestamp', () {
+    test('serializes to Map with a server-set createdAt', () {
       final map = notification.toMap();
 
       expect(map['id'], 'notif_1');
@@ -39,7 +39,7 @@ void main() {
       expect(map['titleEn'], 'New Booking Request');
       expect(map['titleAr'], 'طلب حجز جديد');
       expect(map['isRead'], isFalse);
-      expect(map['createdAt'], isA<Timestamp>());
+      expect(map['createdAt'], FieldValue.serverTimestamp());
       expect(map['data']['bookingId'], 'b_1');
     });
 

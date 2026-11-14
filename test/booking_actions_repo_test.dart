@@ -190,6 +190,9 @@ void main() {
       final c = makeActionsRepo(store, uid: () => coachUid, now: when);
       expect((await c.repo.completeBooking('b1')).isRight(), isTrue);
       expect(store.booking('b1').status, 'completed');
+      // The trainee is told, like for monthly sessions.
+      expect(c.sent.map((n) => n.method), ['dispatchBookingCompleted']);
+      expect(t.sent, isEmpty);
     });
 
     test('a pending (unapproved) booking cannot be completed', () async {

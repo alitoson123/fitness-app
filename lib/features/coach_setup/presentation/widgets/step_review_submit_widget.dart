@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/widgets/availability_selector/availability_helper.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../generated/l10n.dart';
 import '../helpers/coach_setup_localization_helper.dart';
@@ -117,7 +118,13 @@ class StepReviewSubmitWidget extends StatelessWidget {
             stepIndex: 3,
             onEditTapped: cubit.goToStep,
             items: [
-              (S.of(context).reviewAvailability, cubit.availabilitySummary),
+              (
+                S.of(context).reviewAvailability,
+                AvailabilityHelper.formatSummary(
+                  context,
+                  cubit.weeklyAvailability,
+                ),
+              ),
             ],
           ),
           SizedBox(height: 12.h),
